@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+	<name>
+		Liqpay
+	</name>
+	<settings>
+		<variable>liqpay_public_key</variable>
+		<name>Публичный ключ</name>
+	</settings>
+	<settings>
+		<variable>liqpay_private_key</variable>
+		<name>Приватный ключ</name>
+	</settings>
+</module>

@@ -1,0 +1,5 @@
+AddType application/octet-stream csv
+AuthName "OkayCMS"
+AuthType Basic
+AuthUserFile D:\program\server\home\localhost\www\okay-git/backend/.passwd
+require valid-user

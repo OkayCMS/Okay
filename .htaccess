@@ -1,0 +1,85 @@
+# php_flag display_errors on
+# php_flag display_startup_errors on
+AddDefaultCharset UTF-8
+ErrorDocument 404 /404
+ErrorDocument 401 /password.php
+RewriteEngine on
+
+# Админка теперь по адресу /backend
+RewriteRule	^admin/?$  backend [L]
+
+# Каталог товаров
+RewriteRule ^([a-z]{2}/)?catalog/([^/]+)/?$	index.php?module=ProductsView&category=$2&lang_label=$1 [L,QSA]
+#RewriteRule ^([a-z]{2}/)?catalog/([^/]+)/([^/]+)/?$	index.php?module=ProductsView&category=$2&brand=$3&lang_label=$1 [L,QSA]
+RewriteRule ^([a-z]{2}/)?catalog/([^/]+)	index.php?module=ProductsView&category=$2&lang_label=$1 [L,QSA]
+
+RewriteRule ^([a-z]{2}/)?products/([^/]+)/?$	index.php?module=ProductView&product_url=$2&lang_label=$1 [L,QSA]
+RewriteRule ^([a-z]{2}/)?all-products/?	index.php?module=ProductsView&lang_label=$1 [L,QSA]
+
+RewriteRule ^([a-z]{2}/)?brands/?$	index.php?module=BrandsView&lang_label=$1 [L,QSA]
+RewriteRule ^([a-z]{2}/)?brands/([^/]+)/?$	index.php?module=ProductsView&brand=$2&lang_label=$1 [L,QSA]
+RewriteRule ^([a-z]{2}/)?brands/([^/]+)/page_([^/]+)/?$	index.php?module=ProductsView&brand=$2&page=$3&lang_label=$1 [L,QSA]
+
+# Поиск товаров
+RewriteRule ^([a-z]{2}/)?search/([^/]+)/?$	index.php?module=ProductsView&keyword=$2&lang_label=$1 [L,QSA]
+RewriteRule ^([a-z]{2}/)?search/?$	index.php?module=ProductsView&lang_label=$1 [L,QSA]
+
+# Блог
+RewriteRule ^([a-z]{2}/)?blog/([^/]+)/?$	index.php?module=BlogView&url=$2&lang_label=$1 [L,QSA]
+RewriteRule ^([a-z]{2}/)?blog/?$	index.php?module=BlogView&lang_label=$1 [L,QSA]
+
+# Избранное
+RewriteRule ^([a-z]{2}/)?wishlist/?$	index.php?module=WishlistView&lang_label=$1 [L,QSA]
+RewriteRule ^([a-z]{2}/)?wishlist/([^/]+)/?$	index.php?module=WishlistView&id=$2&lang_label=$1 [L,QSA]
+RewriteRule ^([a-z]{2}/)?wishlist/delete/([^/]+)/?$	index.php?module=WishlistView&id=$2&action=delete&lang_label=$1 [L,QSA]
+
+# Сравнение
+RewriteRule ^([a-z]{2}/)?comparison/?$	index.php?module=ComparisonView&lang_label=$1  [L,QSA]
+
+# Корзина и заказы
+RewriteRule ^([a-z]{2}/)?cart/?$	index.php?module=CartView&lang_label=$1   [L,QSA]
+RewriteRule ^([a-z]{2}/)?cart/([^/]+)/?$	index.php?module=CartView&add_variant=$2&lang_label=$1  [L,QSA]
+RewriteRule ^([a-z]{2}/)?cart/remove/([^/]+)/?$	index.php?module=CartView&delete_variant=$2&lang_label=$1  [L,QSA]
+RewriteRule ^([a-z]{2}/)?order/([^/]+)/?$	index.php?module=OrderView&url=$2&lang_label=$1  [L,QSA]
+RewriteRule ^([a-z]{2}/)?order/?$	index.php?module=OrderView&lang_label=$1  [L,QSA]
+
+# Для пользователей
+RewriteRule ^([a-z]{2}/)?user/login/?$	index.php?module=LoginView&lang_label=$1  [L,QSA]
+RewriteRule ^([a-z]{2}/)?user/register/?$	index.php?module=RegisterView&lang_label=$1  [L,QSA]
+RewriteRule ^([a-z]{2}/)?user/logout/?$	index.php?module=LoginView&action=logout&lang_label=$1  [L,QSA]
+RewriteRule ^([a-z]{2}/)?user/password_remind/?$	index.php?module=LoginView&action=password_remind&lang_label=$1  [L,QSA]
+RewriteRule ^([a-z]{2}/)?user/password_remind/([0-9a-z]+)/?$	index.php?module=LoginView&action=password_remind&code=$2&lang_label=$1  [L,QSA]
+RewriteRule ^([a-z]{2}/)?user/?$	index.php?module=UserView&lang_label=$1  [L,QSA]
+
+# Google sitemap
+RewriteRule ^sitemap.xml?$	sitemap.php  [L,QSA]
+
+# XML
+RewriteRule ^yandex.xml?$	yandex.php  [L,QSA]
+
+# feedback
+RewriteRule ^([a-z]{2}/)?contact/?$	index.php?module=FeedbackView&lang_label=$1  [L,QSA]
+
+#downloads
+RewriteRule ^([a-z]{2}/)?order/([^/]+)/([^/]+)/?$	index.php?module=OrderView&url=$2&file=$3&lang_label=$1  [L,QSA]
+
+# Статические страницы
+RewriteRule ^([a-z]{2}/?)?/?$	index.php?module=MainView&page_url=&lang_label=$1 [L,QSA]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-z]{2}/)?([^/]+)/?$ index.php?lang_label=$1&module=PageView&page_url=$2 [L,QSA]
+
+# Статические страницы
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]*)/?$	index.php?module=PageView&page_url=$1 [L,QSA]
+
+#RewriteRule ^([^/]*)/?$	index.php?module=PageView&page_url=$1 [L,QSA]
+#RewriteRule ^/?$	index.php?module=MainView&page_url= [L,QSA]
+
+# Ресайз картинок на лету
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+#resizing_image
+RewriteRule ^files/(.+)/(.+) resize/resize.php?object=$1&file=$2&token=%{QUERY_STRING}
+##resizing_image
