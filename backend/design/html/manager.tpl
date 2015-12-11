@@ -16,8 +16,6 @@
 {/if}
 
 {* On document load *}
-<script src="design/js/jquery/jquery.js"></script>
-<script src="design/js/jquery/jquery-ui.min.js"></script>
 <script>
 {literal}
 $(function() {

@@ -82,6 +82,13 @@ class ProductAdmin extends Okay {
                     $images = $this->products->get_images(array('product_id'=>$product->id));
                 }
             }
+            // Не допустить пустую ссылку.
+            elseif(empty($product->url)) {
+                $this->design->assign('message_error', 'empty_url');
+                if(!empty($product->id)) {
+                    $images = $this->products->get_images(array('product_id'=>$product->id));
+                }
+            }
             // Не допустить одинаковые URL разделов.
             elseif(($p = $this->products->get_product($product->url)) && $p->id!=$product->id) {
                 $this->design->assign('message_error', 'url_exists');

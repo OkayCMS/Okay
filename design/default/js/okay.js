@@ -107,8 +107,6 @@ function ajax_set_result(data) {
     $('#ajax_deliveries').replaceWith(data.cart_deliveries);
 }
 
-
-
 // Аяксовый список избранного
 $(document).on('click', 'a.wishlist', function(e){
     e.preventDefault();
@@ -120,8 +118,6 @@ $(document).on('click', 'a.wishlist', function(e){
         data: {id: $(this).attr('rel'), action: action },
         dataType: 'json',
         success: function(data){
-            /*mt1sk*/
-            //$('#wishlist').html(data);
             $('#wishlist').html(data.info);
             $('#wishlist_amount').text(data.cnt);
             if (data.cnt > 0) {
@@ -129,7 +125,6 @@ $(document).on('click', 'a.wishlist', function(e){
             } else {
                 $('#wishlist_amount').closest('a').hide();
             }
-            /*/mt1sk*/
             (action == '') ? button.addClass('selected') : button.removeClass('selected');
             if(button.attr('data-result-text')) {
                 text = button.html();
@@ -169,13 +164,60 @@ function amount_change(input, action) {
 }
 
 $(document).ready( function(){
+	
+	$(document).on('change', '.variants select[name=variant]', function() {
+        var selected = $(this).children(':selected'),
+            parent = selected.closest('form.variants'),
+            price = parent.find('.price span'),
+            cprice = parent.find('.old_price span'),
+            sku = $(this).closest('.product').find('.sku span'),
+            stock = selected.data('stock'),
+            button = parent.find('button[type=submit]');
+        
+        price.html(selected.data('price'));
+        if(typeof(selected.data('cprice')) != 'undefined') {
+            cprice.html(selected.data('cprice'));
+            cprice.parent().removeClass('hidden');
+        } else {
+            cprice.parent().addClass('hidden');
+        }
+        if(typeof(selected.data('sku')) != 'undefined') {
+            sku.html(selected.data('sku'));
+            sku.parent().removeClass('hidden');
+        } else {
+            sku.parent().addClass('hidden');
+        }
+        
+        /*Предзаказ*/
+        if (stock > 0) {
+            parent.find('p.not_in_stock').hide();
+            button.text(button.data('in_cart'));            
+            if (!is_preorder) {
+                button.show();
+            }
+        } else {
+            parent.find('p.not_in_stock').show();
+            button.text(button.data('preorder'));            
+            if (!is_preorder) {
+                button.hide();
+            }
+        }
+        
+        /*Max amount*/
+        var max = (stock > 0 ? stock : (is_preorder ? max_order_amount : 0)),
+            amount = parent.find('#product_amount input');
+        amount.data('max', max);
+        amount_change(amount, 'keyup');
+    });
+    $('select[name=variant]').each(function() {
+        $(this).trigger('change');
+    });
 
 	//Количество товара в карточке
     $('#product_amount span').click(function(){
         var amount_input = $(this).closest('#product_amount').find('input');
         amount_change(amount_input, $(this).hasClass('plus') ? 'plus' : ($(this).hasClass('minus') ? 'minus' : ''));
     });
-
 
     //Количество товара в корзине
     $(document).on('click', '#cart_amount .minus', function(){

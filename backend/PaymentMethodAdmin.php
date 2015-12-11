@@ -20,18 +20,22 @@ class PaymentMethodAdmin extends Okay {
                 $payment_deliveries = array();
             }
             
-            if(empty($payment_method->id)) {
-                $payment_method->id = $this->payment->add_payment_method($payment_method);
-                $this->design->assign('message_success', 'Добавлено');
+            if (empty($payment_method->name)) {
+                $this->design->assign('message_error', 'empty_name');
             } else {
-                $this->payment->update_payment_method($payment_method->id, $payment_method);
-                $this->design->assign('message_success', 'Обновлено');
+                if(empty($payment_method->id)) {
+                    $payment_method->id = $this->payment->add_payment_method($payment_method);
+                    $this->design->assign('message_success', 'added');
+                } else {
+                    $this->payment->update_payment_method($payment_method->id, $payment_method);
+                    $this->design->assign('message_success', 'updated');
+                }
+                if($payment_method->id) {
+                    $this->payment->update_payment_settings($payment_method->id, $payment_settings);
+                    $this->payment->update_payment_deliveries($payment_method->id, $payment_deliveries);
+                }
+                $payment_method = $this->payment->get_payment_method($payment_method->id);
             }
-            if($payment_method->id) {
-                $this->payment->update_payment_settings($payment_method->id, $payment_settings);
-                $this->payment->update_payment_deliveries($payment_method->id, $payment_deliveries);
-            }
-            $payment_method = $this->payment->get_payment_method($payment_method->id);
         } else {
             $payment_method->id = $this->request->get('id', 'integer');
             if(!empty($payment_method->id)) {

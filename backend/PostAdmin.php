@@ -24,6 +24,10 @@ class PostAdmin extends Okay {
             // Не допустить одинаковые URL разделов.
             if(($a = $this->blog->get_post($post->url)) && $a->id!=$post->id) {
                 $this->design->assign('message_error', 'url_exists');
+            } elseif(empty($post->name)) {
+                $this->design->assign('message_error', 'empty_name');
+            } elseif(empty($post->url)) {
+                $this->design->assign('message_error', 'empty_url');
             } else {
                 if(empty($post->id)) {
                     $post->id = $this->blog->add_post($post);

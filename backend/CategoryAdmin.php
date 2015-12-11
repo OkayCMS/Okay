@@ -29,6 +29,10 @@ class CategoryAdmin extends Okay {
             // Не допустить одинаковые URL разделов.
             if(($c = $this->categories->get_category($category->url)) && $c->id!=$category->id) {
                 $this->design->assign('message_error', 'url_exists');
+            } elseif(empty($category->name)) {
+                $this->design->assign('message_error', 'empty_name');
+            } elseif(empty($category->url)) {
+                $this->design->assign('message_error', 'empty_url');
             } else {
                 if(empty($category->id)) {
                     $category->id = $this->categories->add_category($category);

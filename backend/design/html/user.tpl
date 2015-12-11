@@ -97,7 +97,8 @@
 		{foreach $orders as $order}
 		<div class="{if $order->paid}green{/if} row">
 	 		<div class="checkbox cell">
-				<input type="checkbox" name="check[]" value="{$order->id}" />				
+				<input type="checkbox" name="check[]" id="user_order_{$order->id}" value="{$order->id}" />
+                <label for="user_order_{$order->id}"></label>
 			</div>
 			<div class="order_date cell">
 				{$order->date|date} {$order->date|time}
@@ -110,10 +111,10 @@
 			</div>
 			<div class="icons cell">
 				{if $order->paid}
-					<img src='design/images/cash_stack.png' alt='Оплачен' title='Оплачен'>
-				{else}
-					<img src='design/images/cash_stack_gray.png' alt='Не оплачен' title='Не оплачен'>				
-				{/if}	
+                    <img src='design/images/moneybox_paid.png' height="16px" alt='Оплачен' title='Оплачен'>
+                {else}
+                    <img src='design/images/moneybox.png' height="16px" alt='Не оплачен' title='Не оплачен'>
+                {/if}	
 			</div>
 			<div class="icons cell">
 				<a href='#' class=delete></a>		 	
@@ -155,7 +156,7 @@ $(function() {
 
 	// Выделить все
 	$("#check_all").click(function() {
-		$('#list input[type="checkbox"][name*="check"]').attr('checked', 1-$('#list input[type="checkbox"][name*="check"]').attr('checked'));
+		$('#list input[type="checkbox"][name*="check"]').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:checked)').length>0);
 	});	
 
 	// Удалить 

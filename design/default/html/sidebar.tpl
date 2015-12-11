@@ -41,7 +41,7 @@
 {get_browsed_products var=browsed_products limit=9}
 {if $browsed_products}
 <div class="block">
-	<h2 class="block_heading">{$lang->vy_prosmatrivali}</h2>
+	<div class="block_heading">{$lang->vy_prosmatrivali}</div>
 	<ul id="browsed_products">
 	{foreach $browsed_products as $browsed_product}
 		<li>
@@ -56,7 +56,7 @@
 
 
 {* Сравнение *}
-<h2 id="comparison_anim" class="block_heading">{$lang->papka_sravneniya}</h2>
+<div id="comparison_anim" class="block_heading">{$lang->papka_sravneniya}</div>
 <div id="comparison_informer" class="block">
 	{include "comparison_informer.tpl"}
 </div>

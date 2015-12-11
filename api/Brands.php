@@ -5,7 +5,6 @@ require_once('Okay.php');
 class Brands extends Okay {
     
     public function get_brands($filter = array()) {
-        $brands = array();
         $category_id_filter = '';
         $category_join = '';
         $visible_filter = '';

@@ -150,7 +150,7 @@ function translit(str)
 {if $message_error}
 <!-- Системное сообщение -->
 <div class="message message_error">
-	<span class="text">{if $message_error == 'url_exists'}Страница с таким адресом уже существует{/if}</span>
+	<span class="text">{if $message_error == 'url_exists'}Страница с таким адресом уже существует{elseif $message_error=='empty_header'}Введите заголовок{else}{$message_error}{/if}</span>
 	<a class="button" href="">Вернуться</a>
 </div>
 <!-- Системное сообщение (The End)-->

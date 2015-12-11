@@ -16,7 +16,12 @@
 	<meta name="viewport" content="width=1170"/>
 	
 	{* Канонический адрес страницы *}
-	{if isset($canonical)}<link rel="canonical" href="{$config->root_url}{$canonical}"/>{/if}
+	{if isset($canonical)}<link rel="canonical" href="{$config->root_url}{if $lang_link}/{str_replace('/', '', $lang_link)}{/if}{$canonical}"/>{/if}
+    {foreach $languages as $l}
+		{if $l->enabled}
+            <link rel="alternate" hreflang="{$l->label}" href="{$config->root_url}/{$l->url}" />
+		{/if}
+	{/foreach}
 	
 	{* Стили *}
 	<link rel="stylesheet" href="js/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
@@ -25,8 +30,6 @@
 	<link href="design/{$settings->theme|escape}/images/favicon.png" rel="icon"          type="image/x-icon"/>
 	<link href="design/{$settings->theme|escape}/images/favicon.png" rel="shortcut icon" type="image/x-icon"/>
 
-
-	
 	{* JQuery *}
 	<script src="design/{$settings->theme}/js/jquery-2.1.4.min.js"></script>
     <script src="design/{$settings->theme}/js/jquery-ui.min.js"></script>
@@ -41,8 +44,6 @@
 
 	{* Fancybox *}
 	<script type="text/javascript" src="js/fancybox/jquery.fancybox.pack.js"></script>
-
-
 	
 	{* Всплывающие подсказки для администратора *}
 	{if $smarty.session.admin == 'admin'}
@@ -92,17 +93,6 @@
 	  				return (suggestion.data.image?"<img align=absmiddle src='"+suggestion.data.image+"'> ":'') +"<a href="+suggestion.lang+"products/"+suggestion.data.url+'>'+suggestion.value.replace(new RegExp(pattern, 'gi'),  '<strong>$1<\/strong>')+'<\/a>';
                 }
 		});
-        $(window).scroll(function() {
-
-            var top = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
-            if(top > $('header').height())
-            {
-                $(".msg").slideUp('open');
-            }
-            else{
-                $(".msg").slideDown('open');
-            }
-        });
 	});
 	</script>
 	{/literal}
@@ -314,7 +304,7 @@
 					{if $page->body}
     					<div class="block text_block">
     						{* Заголовок страницы *}
-    						<h1 class="h1">{$page->header}</h1>
+    						<div class="h1">{$page->header}</div>
     						{$page->body}
     					</div>
 					{/if}
@@ -327,9 +317,9 @@
 						<ul class="row">
 						{foreach $last_posts as $post}
 							<li class="column col_4" data-post="{$post->id}">
-								<h3 class="block_heading">
-									<a  href="{$lang_link}blog/{$post->url}">{$post->name|escape}</a>
-								</h3>
+								<div class="block_heading">
+								<a href="{$lang_link}blog/{$post->url}">{$post->name|escape}</a>
+								</div>
 								{if $post->image}
 								<div class="post_img">
 									<a href="{$lang_link}blog/{$post->url}">
@@ -354,7 +344,7 @@
 					{get_brands var=all_brands}
 					{if $all_brands}
 					<div class="block no_bottom">
-						<h2 class="block_heading">{$lang->brendy}</h2>
+						<div class="block_heading">{$lang->brendy}</div>
 						<div id="all_brands">	
 							{foreach $all_brands as $b}	
 								{if $b->image}
@@ -428,7 +418,7 @@
 			</div>
 
 			<div id="copyright">
-				<span>Okay © 2015</span> 
+				<span>Okay &copy; 2015</span> 
 				<a href="http://okay-cms.com" target="_blank">E-commerce software by Okay</a>
 			</div>	
 		</div>

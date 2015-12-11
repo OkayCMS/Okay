@@ -19,16 +19,20 @@ class DeliveryAdmin extends Okay {
                 $delivery_payments = array();
             }
             
-            if(empty($delivery->id)) {
-                $delivery->id = $this->delivery->add_delivery($delivery);
-                $this->design->assign('message_success', 'added');
+            if(empty($delivery->name)) {
+                $this->design->assign('message_error', 'empty_name');
             } else {
-                $this->delivery->update_delivery($delivery->id, $delivery);
-                $this->design->assign('message_success', 'updated');
+                if(empty($delivery->id)) {
+                    $delivery->id = $this->delivery->add_delivery($delivery);
+                    $this->design->assign('message_success', 'added');
+                } else {
+                    $this->delivery->update_delivery($delivery->id, $delivery);
+                    $this->design->assign('message_success', 'updated');
+                }
+                $this->delivery->update_delivery_payments($delivery->id, $delivery_payments);
+                $delivery = $this->delivery->get_delivery($delivery->id);
             }
             
-            $this->delivery->update_delivery_payments($delivery->id, $delivery_payments);
-            $delivery = $this->delivery->get_delivery($delivery->id);
     	} else {
             $delivery->id = $this->request->get('id', 'integer');
             if(!empty($delivery->id)) {

@@ -24,8 +24,6 @@
 
 {* On document load *}
 {literal}
-<script src="design/js/jquery/jquery.js"></script>
-<script src="design/js/jquery/jquery-ui.min.js"></script>
 
 <script>
 $(function() {
@@ -143,7 +141,7 @@ $(function() {
                     </li>
                     <li class="name">
                         <input name="currency[id][{$c->id}]" type="hidden" value="{$c->id|escape}"/>
-                        <input name="currency[name][{$c->id}]" type="" value="{$c->name|escape}"/>
+                        <input name="currency[name][{$c->id}]" type="text" value="{$c->name|escape}"/>
                     </li>
                     <li class="icons currency">
                         <a class="cents" href="#" title="Выводить копейки"></a>

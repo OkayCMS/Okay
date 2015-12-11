@@ -147,7 +147,7 @@
 							<!-- Имя и дата комментария-->
 							<div class="comment_header">	
 								<span class="comment_name">{$comment->name|escape}</span> <i>{$comment->date|date}, {$comment->date|time}</i>
-								<b>{if !$comment->approved}{$lang->ozhidaet_moderatsii}</b>{/if}
+								{if !$comment->approved}<strong>{$lang->ozhidaet_moderatsii}</strong>{/if}
 							</div>
 							<!-- Имя и дата комментария (The End)-->
 							
@@ -166,7 +166,7 @@
 					
 					<!--Форма отправления комментария-->	
 					<form class="form comment_form" method="post">
-						<h2>{$lang->napisat_kommentarij}</h2>
+						<div class="comment_form_title">{$lang->napisat_kommentarij}</div>
 						{if $error}
 							<div class="message_error">
 								{if $error=='captcha'}
@@ -201,7 +201,7 @@
 {* Связанные товары *}
 {if $related_products}
 <div id="related" class="clearfix">
-	<h2 class="block_heading">{$lang->sovetuem_posmotret}</h2>
+	<div class="block_heading">{$lang->sovetuem_posmotret}</div>
 	<!-- Подключаем список товаров и передаем переменную со связанными-->
 
     <ul id="test" class="products row">

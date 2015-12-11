@@ -559,7 +559,16 @@ function import_product($xml_product) {
         if(!empty($xml_product->Описание)) {
             $description = $xml_product->Описание;
         }
-        $product_id = $okay->products->add_product(array('external_id'=>$product_1c_id, 'url'=>translit($xml_product->Наименование), 'name'=>$xml_product->Наименование, 'meta_title'=>$xml_product->Наименование, 'meta_keywords'=>$xml_product->Наименование, 'meta_description'=>$xml_product->$description,  'annotation'=>$description, 'body'=>$description));
+        $product_id = $okay->products->add_product(array(
+            'external_id'=>$product_1c_id, 
+            'url'=>translit($xml_product->Наименование), 
+            'name'=>$xml_product->Наименование, 
+            'meta_title'=>$xml_product->Наименование, 
+            'meta_keywords'=>$xml_product->Наименование, 
+            'meta_description'=>$description,  
+            'annotation'=>$description, 
+            'body'=>$description
+        ));
         
         // Добавляем товар в категории
         if(isset($category_id)) {
@@ -592,7 +601,6 @@ function import_product($xml_product) {
             $p = new stdClass();
             if(!empty($xml_product->Описание)) {
                 $description = strval($xml_product->Описание);
-                $p->meta_description = $description;
                 $p->meta_description = $description;
                 $p->annotation = $description;
                 $p->body = $description;

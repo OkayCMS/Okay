@@ -21,6 +21,8 @@ class PageAdmin extends Okay {
             ## Не допустить одинаковые URL разделов.
             if(($p = $this->pages->get_page($page->url)) && $p->id!=$page->id) {
                 $this->design->assign('message_error', 'url_exists');
+            } elseif(empty($page->header)) {
+                $this->design->assign('message_error', 'empty_header');
             } else {
                 if(empty($page->id)) {
                     $page->id = $this->pages->add_page($page);

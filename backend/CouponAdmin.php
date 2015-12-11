@@ -22,6 +22,8 @@ class CouponAdmin extends Okay {
             // Не допустить одинаковые URL разделов.
             if(($a = $this->coupons->get_coupon((string)$coupon->code)) && $a->id!=$coupon->id) {
                 $this->design->assign('message_error', 'code_exists');
+            } elseif(empty($coupon->code)) {
+                $this->design->assign('message_error', 'empty_code');
             } else {
                 if(empty($coupon->id)) {
                     $coupon->id = $this->coupons->add_coupon($coupon);

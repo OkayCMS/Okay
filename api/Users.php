@@ -100,7 +100,6 @@ class Users extends Okay {
                 1 
                 $group_id_filter 
                 $keyword_filter 
-            ORDER BY u.name
         ");
         $this->db->query($query);
         return $this->db->result('count');

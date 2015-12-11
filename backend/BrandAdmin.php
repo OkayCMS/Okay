@@ -26,6 +26,10 @@ class BrandAdmin extends Okay {
             // Не допустить одинаковые URL разделов.
             if(($c = $this->brands->get_brand($brand->url)) && $c->id!=$brand->id) {
                 $this->design->assign('message_error', 'url_exists');
+            } elseif(empty($brand->name)) {
+                $this->design->assign('message_error', 'empty_name');
+            } elseif(empty($brand->url)) {
+                $this->design->assign('message_error', 'empty_url');
             } else {
                 if(empty($brand->id)) {
                     $brand->id = $this->brands->add_brand($brand);

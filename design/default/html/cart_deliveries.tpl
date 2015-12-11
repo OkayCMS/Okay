@@ -1,6 +1,6 @@
 {if $deliveries}
     <div id="ajax_deliveries" class="block">
-        <h2 class="block_heading">{$lang->vyberite_sposob_dostavki}:</h2>
+        <div class="block_heading">{$lang->vyberite_sposob_dostavki}:</div>
         <ul id="deliveries">
         	{foreach $deliveries as $delivery}
         	<li>

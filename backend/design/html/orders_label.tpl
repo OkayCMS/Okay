@@ -18,9 +18,6 @@
 {$meta_title = 'Новая метка' scope=parent}
 {/if}
 
-{* Подключаем Tiny MCE *}
-{include file='tinymce_init.tpl'}
-
 {* On document load *}
 {literal}
 <link rel="stylesheet" media="screen" type="text/css" href="design/js/colorpicker/css/colorpicker.css" />
@@ -46,8 +43,6 @@ $(function() {
 	});
 });
 </script>
-
-
 {/literal}
 
 
@@ -58,6 +53,15 @@ $(function() {
 	{if $smarty.get.return}
 	<a class="button" href="{$smarty.get.return}">Вернуться</a>
 	{/if}
+</div>
+<!-- Системное сообщение (The End)-->
+{/if}
+
+{if $message_error}
+<!-- Системное сообщение -->
+<div class="message message_error">
+	<span class="text">{if $message_error=='empty_name'}Введите название{else}{$message_error}{/if}</span>
+	<a class="button" href="">Вернуться</a>
 </div>
 <!-- Системное сообщение (The End)-->
 {/if}

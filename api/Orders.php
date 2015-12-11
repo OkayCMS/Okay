@@ -526,20 +526,6 @@ class Orders extends Okay {
         return $order->id;
     }
     
-    public function pay($order_id) {
-        $order = $this->get_order(intval($order_id));
-        if(empty($order)) {
-            return false;
-        }
-        
-        if(!$this->close($order->id)) {
-            return false;
-        }
-        $query = $this->db->placehold("UPDATE __orders SET payment_status=1, payment_date=NOW(), modified=NOW() WHERE id=? LIMIT 1", $order->id);
-        $this->db->query($query);
-        return $order->id;
-    }
-    
     private function update_total_price($order_id) {
         $order = $this->get_order(intval($order_id));
         if(empty($order)) {

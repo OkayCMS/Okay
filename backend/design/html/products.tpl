@@ -146,7 +146,7 @@
                 {if $categories|count>1}
                     <option value="move_to_category">Переместить в категорию</option>
                 {/if}
-                {if $brands|count>0}
+                {if $all_brands|count>0}
                     <option value="move_to_brand">Указать бренд</option>
                 {/if}
                 <option value="delete">Удалить</option>

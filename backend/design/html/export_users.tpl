@@ -10,7 +10,6 @@ var keyword='{$keyword|escape}';
 var sort='{$sort|escape}';
 
 {literal}	
-var in_process=false;
 
 $(function() {
 

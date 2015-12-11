@@ -102,7 +102,7 @@
 </table>
 
 {* Детали заказа *}
-<h2 class="block_heading">{$lang->detali_zakaza}</h2>
+<div class="block_heading">{$lang->detali_zakaza}</div>
 <table class="order_info">
 	<tr>
 		<td>
@@ -170,7 +170,7 @@
     {* Выбор способа оплаты *}
     {if $payment_methods && !$payment_method && $order->total_price>0}
         <form method="post">
-        <h2 class="block_heading">{$lang->vyberite_sposob_oplaty}</h2>
+        <div class="block_heading">{$lang->vyberite_sposob_oplaty}</div>
         <ul id="deliveries">
             {foreach $payment_methods as $payment_method}
             	<li>
@@ -184,15 +184,15 @@
         </form>
     {* Выбраный способ оплаты *}
     {elseif $payment_method}
-        <h2 class="block_heading">{$lang->sposob_oplaty} &mdash; {$payment_method->name}</h2>
+        <div class="block_heading">{$lang->sposob_oplaty} &mdash; {$payment_method->name}</div>
         <form method=post>
         	<input class="button" type=submit name='reset_payment_method' value='{$lang->vybrat_drugoj_sposob_oplaty}'>
         </form>
         <p>{$payment_method->description}</p>
         
-        <h2 class="block_heading">
+        <div class="block_heading">
 	        {$lang->k_oplate} {$order->total_price|convert:$payment_method->currency_id}&nbsp;{$all_currencies[$payment_method->currency_id]->sign}
-        </h2>
+        </div>
         
         {* Форма оплаты, генерируется модулем оплаты *}
         {checkout_form order_id=$order->id module=$payment_method->module}

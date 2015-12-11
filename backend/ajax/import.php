@@ -197,7 +197,7 @@ class ImportAjax extends Okay {
         }
         
         if(isset($item['price'])) {
-            $variant['price'] = str_replace(',', '.', trim($item['price']));
+            $variant['price'] = str_replace(',', '.', str_replace(' ', '', trim($item['price'])));
         }
         
         if(isset($item['compare_price'])) {

@@ -16,7 +16,7 @@
 	{* Доставка *}
 	{include file='cart_deliveries.tpl'}
 	    
-	<h2 class="block_heading">{$lang->adres_poluchatelya}</h2>
+	<div class="block_heading">{$lang->adres_poluchatelya}</div>
 		
 	<div class="cart_form block">         
 		{if $error}

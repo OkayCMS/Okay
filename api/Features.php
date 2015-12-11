@@ -60,8 +60,8 @@ class Features extends Okay {
                 f.position, 
                 f.in_filter, 
                 f.yandex, 
-                auto_name_id, 
-                auto_value_id, 
+                f.auto_name_id, 
+                f.auto_value_id, 
                 f.url, 
                 $lang_sql->fields 
             FROM __features f 
@@ -72,8 +72,7 @@ class Features extends Okay {
             LIMIT 1 
         ");
         $this->db->query($query);
-        $feature = $this->db->result();
-        return $feature;
+        return $this->db->result();
     }
     
     public function get_feature_categories($id) {
@@ -321,9 +320,7 @@ class Features extends Okay {
         ");
         
         $this->db->query($query);
-        $res = $this->db->results();
-        
-        return $res;
+        return $this->db->results();
     }
     
     public function get_product_options($filter = array()) {
@@ -366,8 +363,7 @@ class Features extends Okay {
         							   WHERE po.product_id in(?@) $lang_id_filter ORDER BY f.position", (array)$product_id);*/
         
         $this->db->query($query);
-        $res = $this->db->results();
-        return $res;
+        return $this->db->results();
     }
     
     public function get_comparison_options($products_ids = array()) {

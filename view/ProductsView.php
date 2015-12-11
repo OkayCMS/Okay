@@ -107,16 +107,16 @@ class ProductsView extends View {
         }
         
         if(!empty($this->meta['h1'])) {
-            $this->meta['h1']           = ' '.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['h1']          .' '.$this->translations->ceo_filter_v_magazine.' '.$this->settings->site_name;
+            $this->meta['h1']           = ' '.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['h1'];
         }
         if(!empty($this->meta['title'])) {
-            $this->meta['title']        = ' '.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['title']       .' '.$this->translations->ceo_filter_v_magazine.' '.$this->settings->site_name;
+            $this->meta['title']        = ' '.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['title'];
         }
         if(!empty($this->meta['keywords'])) {
-            $this->meta['keywords']     = ' '.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['keywords']    .' '.$this->translations->ceo_filter_v_magazine.' '.$this->settings->site_name;
+            $this->meta['keywords']     = ' '.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['keywords'];
         }
         if(!empty($this->meta['description'])) {
-            $this->meta['description']  = ' '.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['description'] .' '.$this->translations->ceo_filter_v_magazine.' '.$this->settings->site_name;
+            $this->meta['description']  = ' '.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['description'];
         }
         
         if($this->set_canonical) {

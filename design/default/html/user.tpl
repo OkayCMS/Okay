@@ -33,7 +33,7 @@
 
 {if $orders}
 <p></p>
-<h2>{$lang->vashi_zakazy}</h2>
+<div class="h2">{$lang->vashi_zakazy}</div>
 <ul id="orders_history">
 {foreach $orders as $order}
 	<li>

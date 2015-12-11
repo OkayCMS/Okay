@@ -32,7 +32,8 @@
 				<input type="hidden" name="positions[{$label->id}]" value="{$label->position}">
 				<div class="move cell"><div class="move_zone"></div></div>
 		 		<div class="checkbox cell">
-					<input type="checkbox" name="check[]" value="{$label->id}" />				
+					<input type="checkbox" name="check[]" id="order_label_{$order->id}" value="{$label->id}" />
+                    <label for="order_label_{$order->id}"></label>
 				</div>
 				<div class="name cell">
 					<span style="background-color:#{$label->color};" class="order_label"></span>

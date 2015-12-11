@@ -11,14 +11,18 @@ class OrdersLabelAdmin extends Okay {
             $label->id = $this->request->post('id', 'integer');
             $label->name = $this->request->post('name');
             $label->color = $this->request->post('color');
-            if(empty($label->id)) {
-                $label->id = $this->orders->add_label($label);
-                $label = $this->orders->get_label($label->id);
-                $this->design->assign('message_success', 'added');
+            if (empty($label->name)) {
+                $this->design->assign('message_error', 'empty_name');
             } else {
-                $this->orders->update_label($label->id, $label);
-                $label = $this->orders->get_label($label->id);
-                $this->design->assign('message_success', 'updated');
+                if(empty($label->id)) {
+                    $label->id = $this->orders->add_label($label);
+                    $label = $this->orders->get_label($label->id);
+                    $this->design->assign('message_success', 'added');
+                } else {
+                    $this->orders->update_label($label->id, $label);
+                    $label = $this->orders->get_label($label->id);
+                    $this->design->assign('message_success', 'updated');
+                }
             }
         } else {
             $id = $this->request->get('id', 'integer');

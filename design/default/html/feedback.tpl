@@ -11,7 +11,7 @@
 </div>
 {/if}
 
-<h2 class="block_heading">{$lang->obratnaya_svyaz}</h2>
+<div class="block_heading">{$lang->obratnaya_svyaz}</div>
 
 {if $message_sent}
 	{$name|escape}, {$lang->vashe_soobschenie_otpravleno}.

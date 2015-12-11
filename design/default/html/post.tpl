@@ -13,7 +13,7 @@
 
 <!-- Комментарии -->
 <div id="comments">
-	<h2 class="block_name">{$lang->kommentarii}</h2>
+	<div class="block_name">{$lang->kommentarii}</div>
 	{if $comments}
     	<!-- Список с комментариями -->
     	<ul class="comment_list">
@@ -44,7 +44,7 @@
 	<!--Подключаем js-проверку формы -->
 	
 	<form class="form comment_form" method="post" action="">
-		<h2>{$lang->napisat_kommentarij}</h2>
+		<div class="comment_form_title">{$lang->napisat_kommentarij}</div>
 		{if $error}
 			<div class="message_error">
 				{if $error=='captcha'}
