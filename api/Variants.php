@@ -109,8 +109,11 @@ class Variants extends Okay {
         $variant = (object)$variant;
         $result = $this->languages->get_description($variant, 'variant');
         
-        $query = $this->db->placehold("UPDATE __variants SET ?% WHERE id=? LIMIT 1", $variant, intval($id));
-        $this->db->query($query);
+        $v = (array)$variant;
+        if (!empty($v)) {
+            $query = $this->db->placehold("UPDATE __variants SET ?% WHERE id=? LIMIT 1", $variant, intval($id));
+            $this->db->query($query);
+        }
         
         if(!empty($result->description)) {
             $this->languages->action_description($id, $result->description, 'variant', $this->languages->lang_id());

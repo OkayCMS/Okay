@@ -11,7 +11,7 @@ class OrdersAdmin extends Okay {
         $filter['limit'] = 40;
         
         // Поиск
-        $keyword = $this->request->get('keyword', 'string');
+        $keyword = $this->request->get('keyword');
         if(!empty($keyword)) {
             $filter['keyword'] = $keyword;
             $this->design->assign('keyword', $keyword);

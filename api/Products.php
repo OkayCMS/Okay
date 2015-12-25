@@ -472,7 +472,7 @@ class Products extends Okay {
         $product = $this->get_product($id);
         $product->id = null;
         $product->external_id = '';
-        $product->created = null;
+        unset($product->created);
         
         // Сдвигаем товары вперед и вставляем копию на соседнюю позицию
         $this->db->query('UPDATE __products SET position=position+1 WHERE position>?', $product->position);
@@ -524,6 +524,8 @@ class Products extends Okay {
         foreach($related as $r) {
             $this->add_related_product($new_id, $r->related_id);
         }
+        
+        $this->multi_duplicate_product($id, $new_id);
         return $new_id;
     }
     
@@ -669,4 +671,47 @@ class Products extends Okay {
         return $this->get_product((integer)$this->db->result('id'));
     }
     
+    public function multi_duplicate_product($id, $new_id) {
+        $lang_id = $this->languages->lang_id();
+        if (!empty($lang_id)) {
+            $languages = $this->languages->get_languages();
+            $prd_fields = $this->languages->get_fields('products');
+            $variant_fields = $this->languages->get_fields('variants');
+            foreach ($languages as $language) {
+                if ($language->id != $lang_id) {
+                    $this->languages->set_lang_id($language->id);
+                    //Product
+                    if (!empty($prd_fields)) {
+                        $old_prd = $this->get_product($id);
+                        $upd_prd = new stdClass();
+                        foreach($prd_fields as $field) {
+                            $upd_prd->{$field} = $old_prd->{$field};
+                        }
+                        $this->update_product($new_id, $upd_prd);
+                    }
+                    
+                    // Дублируем варианты
+                    if (!empty($variant_fields)) {
+                        $variants = $this->variants->get_variants(array('product_id'=>$new_id));
+                        $old_variants = $this->variants->get_variants(array('product_id'=>$id));
+                        foreach($old_variants as $i=>$old_variant) {
+                            $upd_variant = new stdClass();
+                            foreach ($variant_fields as $field) {
+                                $upd_variant->{$field} = $old_variant->{$field};
+                            }
+                            $this->variants->update_variant($variants[$i]->id, $upd_variant);
+                        }
+                    }
+            		
+                    // Дублируем свойства
+                    $options = $this->features->get_options(array('product_id'=>$id));
+                    foreach($options as $o) {
+                        $this->features->update_option($new_id, $o->feature_id, $o->value);
+                    }
+                    
+                    $this->languages->set_lang_id($lang_id);
+                }
+            }
+        }
+    }
 }

@@ -65,6 +65,10 @@
         
         $deliveries = $okay->delivery->get_deliveries(array('enabled'=>1));
     	$okay->design->assign('deliveries', $deliveries);
+        foreach($deliveries as $delivery) {
+            $delivery->payment_methods = $okay->payment->get_payment_methods(array('delivery_id'=>$delivery->id, 'enabled'=>1));
+        }
+        $okay->design->assign('all_currencies', $okay->money->get_currencies());
         if($okay->coupons->count_coupons(array('valid'=>1))>0) {
             $okay->design->assign('coupon_request', true);
         }

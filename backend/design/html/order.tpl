@@ -531,14 +531,9 @@ $(function() {
 
 	// Посмотреть адрес на карте
 	$("a#address_link").attr('href', 'http://maps.yandex.ru/?text='+$('#order_details textarea[name="address"]').val());
-  
-	// Подтверждение удаления
+    
 	$('select[name*=purchases][name*=variant_id]').bind('change', function(){change_variant($(this));});
-	$("input[name='status_deleted']").click(function() {
-		if(!confirm('Подтвердите удаление'))
-			return false;	
-	});
-
+    
 });
 
 </script>

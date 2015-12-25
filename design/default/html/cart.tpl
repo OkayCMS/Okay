@@ -63,6 +63,19 @@
 	</div>
    
 </form>
+
+<script>
+    $(document).ready(function() {
+        $('[name="delivery_id"]').first().click();
+    });
+    
+    function change_payment_method($id) {
+        $("#delivery_payment_"+$id+" [name='payment_method_id']").first().attr('checked','checked');
+        $(".delivery_payment").css("display","none");
+        $("#delivery_payment_"+$id).css("display","block");
+    }
+</script>
+
 {else}
 	{$lang->cartinfo_empty}
 {/if}

@@ -34,6 +34,7 @@ function ajax_change_amount(object, variant_id) {
     var amount = $(object).val();
     var coupon_code = $('input[name="coupon_code"]').val();
     var delivery_id = $('input[name="delivery_id"]:checked').val();
+    var payment_id = $('input[name="payment_method_id"]:checked').val();
     $.ajax({
         url: 'ajax/cart_ajax.php',
         data: {
@@ -47,6 +48,7 @@ function ajax_change_amount(object, variant_id) {
             if(data.result == 1) {
                 ajax_set_result(data);
                 $('#deliveries_'+delivery_id).trigger('click');
+                $('#payment_'+delivery_id+'_'+payment_id).trigger('click');
             } else {
                 $('#cart_informer').html(data.cart_informer);
                 /*$('#content').html('<h1>Корзина пуста</h1>В корзине нет товаров');*/
@@ -58,6 +60,7 @@ function ajax_change_amount(object, variant_id) {
 function ajax_remove(object, variant_id) {
     var coupon_code = $('input[name="coupon_code"]').val();
     var delivery_id = $('input[name="delivery_id"]:checked').val();
+    var payment_id = $('input[name="payment_method_id"]:checked').val();
     $.ajax({
         url: 'ajax/cart_ajax.php',
         data: {
@@ -70,6 +73,7 @@ function ajax_remove(object, variant_id) {
             if(data.result == 1) {
                 ajax_set_result(data);
                 $('#deliveries_'+delivery_id).trigger('click');
+                $('#payment_'+delivery_id+'_'+payment_id).trigger('click');
             } else {
                 $('#cart_informer').html(data.cart_informer);
                 /*$('#content').html('<h1>Корзина пуста</h1>В корзине нет товаров');*/
@@ -81,6 +85,7 @@ function ajax_remove(object, variant_id) {
 function ajax_coupon() {
     var coupon_code = $('input[name="coupon_code"]').val();
     var delivery_id = $('input[name="delivery_id"]:checked').val();
+    var payment_id = $('input[name="payment_method_id"]:checked').val();
     $.ajax({
         url: 'ajax/cart_ajax.php',
         data: {
@@ -92,6 +97,7 @@ function ajax_coupon() {
             if(data.result == 1) {
                 ajax_set_result(data);
                 $('#deliveries_'+delivery_id).trigger('click');
+                $('#payment_'+delivery_id+'_'+payment_id).trigger('click');
             } else {
                 $('#cart_informer').html(data.cart_informer);
                 /*$('#content').html('<h1>Корзина пуста</h1>В корзине нет товаров');*/

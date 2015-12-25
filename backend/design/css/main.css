@@ -94,40 +94,40 @@ body{
 #main_menu i.icon_banner{
     background-position: 0px -500px;
 }
-#main_menu li:hover, #main_menu li:hover i {
+#main_menu li:hover, #main_menu li:hover i, #main_menu li.active, #main_menu li.active i {
     background-color: #384956;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_catalog {
+#main_menu li:hover, #main_menu li:hover i.icon_catalog, #main_menu li.active i.icon_catalog {
     background-position: -40px -160px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_orders {
+#main_menu li:hover, #main_menu li:hover i.icon_orders, #main_menu li.active i.icon_orders {
     background-position: -40px -280px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_users {
+#main_menu li:hover, #main_menu li:hover i.icon_users, #main_menu li.active i.icon_users {
     background-position: -40px 0px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_pages {
+#main_menu li:hover, #main_menu li:hover i.icon_pages, #main_menu li.active i.icon_pages {
     background-position: -40px -120px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_blog {
+#main_menu li:hover, #main_menu li:hover i.icon_blog, #main_menu li.active i.icon_blog {
     background-position: -40px -320px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_comments {
+#main_menu li:hover, #main_menu li:hover i.icon_comments, #main_menu li.active i.icon_comments {
     background-position: -40px -240px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_automatic {
+#main_menu li:hover, #main_menu li:hover i.icon_automatic, #main_menu li.active i.icon_automatic {
     background-position: -40px -360px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_statistic {
+#main_menu li:hover, #main_menu li:hover i.icon_statistic, #main_menu li.active i.icon_statistic {
     background-position: -40px -40px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_design {
+#main_menu li:hover, #main_menu li:hover i.icon_design, #main_menu li.active i.icon_design {
     background-position: -40px -200px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_settings {
+#main_menu li:hover, #main_menu li:hover i.icon_settings, #main_menu li.active i.icon_settings {
     background-position: -40px -80px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_banner {
+#main_menu li:hover, #main_menu li:hover i.icon_banner, #main_menu li.active i.icon_banner {
     background-position: -41px -500px;
 }
 #main_menu a {
@@ -139,7 +139,7 @@ body{
 	-moz-transition: all 0.3s ease;
 	transition: all 0.3s ease;
 }
-#main_menu a:hover {
+#main_menu a:hover, #main_menu li.active a {
     color: #ffffff;
 }
 #main_menu div.counter {
@@ -385,7 +385,9 @@ a.edit {
     background-color: #ed145b;
 }
 #main_menu  a:hover .comments_num,
-#main_menu  a:hover .orders_num {
+#main_menu  a:hover .orders_num,
+#main_menu  li.active .comments_num,
+#main_menu  li.active .orders_num {
 	color: #fff;
 }
 #header .add:hover {

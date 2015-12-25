@@ -26,6 +26,7 @@ class CartView extends View {
         // Если нажали оформить заказ
         if(isset($_POST['checkout'])) {
             $order = new stdClass;
+            $order->payment_method_id = $this->request->post('payment_method_id', 'integer');
             $order->delivery_id = $this->request->post('delivery_id', 'integer');
             $order->name        = $this->request->post('name');
             $order->email       = $this->request->post('email');
@@ -124,6 +125,10 @@ class CartView extends View {
     public function fetch() {
         // Способы доставки
         $deliveries = $this->delivery->get_deliveries(array('enabled'=>1));
+        foreach($deliveries as $delivery) {
+            $delivery->payment_methods = $this->payment->get_payment_methods(array('delivery_id'=>$delivery->id, 'enabled'=>1));
+        }
+        $this->design->assign('all_currencies', $this->money->get_currencies());
         $this->design->assign('deliveries', $deliveries);
         
         // Данные пользователя

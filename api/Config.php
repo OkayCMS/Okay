@@ -9,7 +9,7 @@ require_once('Okay.php');
 
 class Config {
     
-    public $version = '1.0.1';
+    public $version = '1.0.2';
     
     // Файл для хранения настроек
     public $config_file = 'config/config.php';

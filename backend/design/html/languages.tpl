@@ -58,9 +58,7 @@
                         <div class="icons cell lang">
                             <a class="default" title="По умолчанию" href="#"></a>
                             <a class="enable" title="Активен" href="#"></a>
-                            {if !$language@first}
                             <a class="delete" title="Удалить" href="#" {if $language->is_default}style='display:none;'{/if}></a>
-                            {/if}
                         </div>
                         <div class="clear"></div>
                     </div>

@@ -237,7 +237,7 @@ class Languages extends Okay {
                 $options = $this->db->results();
                 if(!empty($options)) {
                     foreach($options as $o) {
-                        $this->db->query("REPLACE INTO __options SET lang_id=?, value=?, product_id=?, feature_id=?", $last_id, $o->value, $o->product_id, $o->feature_id);
+                        $this->db->query("REPLACE INTO __options SET lang_id=?, value=?, product_id=?, feature_id=?, translit=?", $last_id, $o->value, $o->product_id, $o->feature_id, $o->translit);
                     }
                 }
             } else {
@@ -247,7 +247,7 @@ class Languages extends Okay {
         }
     }
     
-    public function delete_language($id) {
+    public function delete_language($id, $save_main = false) {
         if(!empty($id)) {
             $lang = $this->get_language($id);
             if(!$lang->is_default) {
@@ -258,7 +258,11 @@ class Languages extends Okay {
                     $this->db->query("DELETE FROM  __lang_".$table." WHERE lang_id=?", intval($id));
                 }
                 
-                $this->db->query("DELETE FROM  __options WHERE lang_id=?", intval($id));
+                if (!$save_main) {
+                    $this->db->query("DELETE FROM  __options WHERE lang_id=?", intval($id));
+                } else {
+                    $this->db->query("UPDATE __options set lang_id=0 where lang_id=?", intval($id));
+                }
             }
         }
     }

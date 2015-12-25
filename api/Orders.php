@@ -102,6 +102,7 @@ class Orders extends Okay {
                     OR o.name LIKE "%'.$this->db->escape(trim($keyword)).'%" 
                     OR REPLACE(o.phone, "-", "")  LIKE "%'.$this->db->escape(str_replace('-', '', trim($keyword))).'%" 
                     OR o.address LIKE "%'.$this->db->escape(trim($keyword)).'%" 
+                    OR o.email LIKE "%'.$this->db->escape(trim($keyword)).'%" 
                 ) ');
             }
         }
@@ -179,6 +180,7 @@ class Orders extends Okay {
                     OR o.name LIKE "%'.$this->db->escape(trim($keyword)).'%" 
                     OR REPLACE(o.phone, "-", "")  LIKE "%'.$this->db->escape(str_replace('-', '', trim($keyword))).'%" 
                     OR o.address LIKE "%'.$this->db->escape(trim($keyword)).'%" 
+                    OR o.email LIKE "%'.$this->db->escape(trim($keyword)).'%" 
                 ) ');
             }
         }

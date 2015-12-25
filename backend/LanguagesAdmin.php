@@ -12,8 +12,12 @@ class LanguagesAdmin extends Okay {
             if(is_array($ids)) {
                 switch($this->request->post('action')) {
                     case 'delete': {
+                        $languages = $this->languages->get_languages();
+                        if (count($languages) == count($ids)) {
+                            $first = reset($languages);
+                        }
                         foreach($ids as $id) {
-                            $this->languages->delete_language($id);
+                            $this->languages->delete_language($id, (isset($first) && $id == $first->id));
                         }
                         break;
                     }

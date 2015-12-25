@@ -73,18 +73,7 @@ class OrderAdmin extends Okay {
                     }
                 }
                 
-                // Принять?
-                if($this->request->post('status_new')) {
-                    $new_status = 0;
-                } elseif($this->request->post('status_accept')) {
-                    $new_status = 1;
-                } elseif($this->request->post('status_done')) {
-                    $new_status = 2;
-                } elseif($this->request->post('status_deleted')) {
-                    $new_status = 3;
-                } else {
-                    $new_status = $this->request->post('status', 'string');
-                }
+                $new_status = $this->request->post('status', 'integer');
                 
                 if($new_status == 0) {
                     if(!$this->orders->open(intval($order->id))) {

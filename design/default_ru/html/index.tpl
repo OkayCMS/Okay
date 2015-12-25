@@ -14,6 +14,7 @@
 	<meta name="keywords"    content="{$meta_keywords|escape}{$filter_meta->keywords|escape}" />
     <meta name="robots" content="index,follow"/>
 	<meta name="viewport" content="width=1170"/>
+    <meta name="generator" content="OkayCMS {$config->version}" />
 	
 	{* Канонический адрес страницы *}
 	{if isset($canonical)}<link rel="canonical" href="{$config->root_url}{if $lang_link}/{str_replace('/', '', $lang_link)}{/if}{$canonical}"/>{/if}

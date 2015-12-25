@@ -5,6 +5,74 @@ require_once('api/Okay.php');
 // Этот класс выбирает модуль в зависимости от параметра Section и выводит его на экран
 class IndexAdmin extends Okay {
     
+    private $left_menu = array(
+        'ProductsAdmin'       => 'catalog',
+        'ProductAdmin'        => 'catalog',
+        'CategoriesAdmin'     => 'catalog',
+        'CategoryAdmin'       => 'catalog',
+        'BrandsAdmin'         => 'catalog',
+        'BrandAdmin'          => 'catalog',
+        'FeaturesAdmin'       => 'catalog',
+        'FeatureAdmin'        => 'catalog',
+        'SpecialAdmin'        => 'catalog',
+        
+        'OrdersAdmin'         => 'orders',
+        'OrderAdmin'          => 'orders',
+        'OrdersLabelsAdmin'   => 'orders',
+        'OrdersLabelAdmin'    => 'orders',
+        
+        'UsersAdmin'          => 'users',
+        'UserAdmin'           => 'users',
+        'ExportUsersAdmin'    => 'users',
+        'GroupsAdmin'         => 'users',
+        'GroupAdmin'          => 'users',
+        'CouponsAdmin'        => 'users',
+        'CouponAdmin'         => 'users',
+        'SubscribeMailingAdmin'=> 'users',
+        
+        'PagesAdmin'          => 'pages',
+        'PageAdmin'           => 'pages',
+        
+        'BlogAdmin'           => 'blog',
+        'PostAdmin'           => 'blog',
+        
+        'CommentsAdmin'       => 'comments',
+        'FeedbacksAdmin'      => 'comments',
+        'CallbacksAdmin'      => 'comments',
+        
+        'ImportAdmin'         => 'auto',
+        'ExportAdmin'         => 'auto',
+        
+        'StatsAdmin'          => 'stats',
+        'ReportStatsAdmin'    => 'stats',
+        'CategoryStatsAdmin'  => 'stats',
+        
+        'ThemeAdmin'          => 'design',
+        'StylesAdmin'         => 'design',
+        'TemplatesAdmin'      => 'design',
+        'ImagesAdmin'         => 'design',
+        
+        'BannersAdmin'		  => 'banners',
+		'BannerAdmin'		  => 'banners',
+		'BannersImagesAdmin'  => 'banners',
+		'BannersImageAdmin'   => 'banners',
+        
+        'SettingsAdmin'       => 'settings',
+        'CurrencyAdmin'       => 'settings',
+        'DeliveriesAdmin'     => 'settings',
+        'DeliveryAdmin'       => 'settings',
+        'PaymentMethodAdmin'  => 'settings',
+        'PaymentMethodsAdmin' => 'settings',
+        'ManagersAdmin'       => 'settings',
+        'ManagerAdmin'        => 'settings',
+        'LanguageAdmin'       => 'settings',
+        'LanguagesAdmin'      => 'settings',
+        'TranslationAdmin'    => 'settings',
+        'TranslationsAdmin'   => 'settings',
+        'LicenseAdmin'        => 'license'
+        
+    );
+    
     // Соответсвие модулей и названий соответствующих прав
     private $modules_permissions = array(
         'ProductsAdmin'       => 'products',
@@ -34,7 +102,6 @@ class IndexAdmin extends Okay {
         'FeedbacksAdmin'      => 'feedbacks',
         'ImportAdmin'         => 'import',
         'ExportAdmin'         => 'export',
-        'BackupAdmin'         => 'backup',
         'StatsAdmin'          => 'stats',
         'ThemeAdmin'          => 'design',
         'StylesAdmin'         => 'design',
@@ -115,7 +182,7 @@ class IndexAdmin extends Okay {
             if ($admin_lang_id) {
                 $_SESSION['admin_lang_id'] = $admin_lang_id;
             }
-            if (!isset($_SESSION['admin_lang_id'])) {
+            if (!isset($_SESSION['admin_lang_id']) || !isset($languages[$_SESSION['admin_lang_id']])) {
                 $l = reset($languages);
                 $_SESSION['admin_lang_id'] = $l->id;
             }
@@ -159,6 +226,7 @@ class IndexAdmin extends Okay {
         if(empty($module)) {
             $module = 'ProductsAdmin';
         }
+        $this->design->assign('menu_selected', $this->left_menu[$module]);
         
         // Подключаем файл с необходимым модулем
         require_once('backend/'.$module.'.php');
@@ -182,6 +250,7 @@ class IndexAdmin extends Okay {
             $this->design->assign("content", $content);
         } else {
             $this->design->assign("content", "Permission denied");
+            $this->design->assign('menu_selected', '');
         }
         
         // Счетчики для верхнего меню
