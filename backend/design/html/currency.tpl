@@ -144,7 +144,7 @@ $(function() {
                         <input name="currency[name][{$c->id}]" type="text" value="{$c->name|escape}"/>
                     </li>
                     <li class="icons currency">
-                        <a class="cents" href="#" title="Выводить копейки"></a>
+                        <a class="cents" href="#" title="Отображать копейки"></a>
                         <a class="enable" href="#" title="Показывать на сайте"></a>
                     </li>
                     <li class="sign"><input name="currency[sign][{$c->id}]" type="text" value="{$c->sign|escape}"/></li>
@@ -190,6 +190,10 @@ $(function() {
         <input type=hidden name=recalculate value='0'>
         <input type=hidden name=action value=''>
         <input type=hidden name=action_id value=''>
+
+        <span class="curr_info">
+            Количество десятичных знаков дробной части цены влияет только на ОТОБРАЖЕНИЕ цен. Все расчеты ведутся с неокругленными данными. Это может привести к визуальным ошибкам при конвертации валют и применении скидок. В качестве примера рассмотрим такую ситуацию. Стоимость товара 98,10 руб. Если задать количество десятичных знаков равным 0, цена будет показана как 98 руб. Однако стоимость 10 единиц в корзине будет показана как 981 руб.
+        </span>
         <input id='apply_action' class="button_green" type=submit value="Применить">
     </div>
 </form>

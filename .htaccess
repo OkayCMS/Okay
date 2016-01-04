@@ -52,7 +52,7 @@ RewriteRule ^([a-z]{2}/)?user/password_remind/([0-9a-z]+)/?$	index.php?module=Lo
 RewriteRule ^([a-z]{2}/)?user/?$	index.php?module=UserView&lang_label=$1  [L,QSA]
 
 # Google sitemap
-RewriteRule ^sitemap.xml?$	sitemap.php  [L,QSA]
+RewriteRule ^([a-z]{2}/)?sitemap.xml?$	sitemap.php?lang_label=$1  [L,QSA]
 
 # XML
 RewriteRule ^yandex.xml?$	yandex.php  [L,QSA]

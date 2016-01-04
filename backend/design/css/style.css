@@ -1102,7 +1102,7 @@ div#order_details div#user
 
 .order_details textarea
 {
-	width:100%;	
+	width:100%;
 	height:40px;
 	margin-bottom: 10px;
 }
@@ -1421,7 +1421,7 @@ div.upload_image input{
 	background-position: right center;
 	font-size: 12px;
 	height: 16px;
-	width: 290px;
+	width: 275px;
 	margin-top: 4px;
 }
 
@@ -1456,7 +1456,7 @@ div.upload_image input{
 .banners_group table td:first-child {
 	padding-right: 15px;
 }
-.banners_group table nth-child(2n) {
+.banners_group table:nth-child(2n) {
 	padding-left: 15px;
 }
 .banners_group select[multiple="multiple"] {
@@ -1541,4 +1541,10 @@ ul.seo_notice li {
     line-height: 1.3;
     color: #243541;
 	font-size: 12px;
+}
+.curr_info{
+    display: block;
+    float: left;
+    text-align: justify;
+    width: 773px;
 }

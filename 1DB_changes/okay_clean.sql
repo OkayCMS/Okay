@@ -3,7 +3,7 @@
 # Server version:               5.5.39
 # Server OS:                    Win64
 # HeidiSQL version:             6.0.0.3603
-# Date/time:                    2015-12-25 16:22:33
+# Date/time:                    2015-12-29 16:22:22
 # --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -2609,9 +2609,9 @@ CREATE TABLE IF NOT EXISTS `s_settings` (
   `name` varchar(255) NOT NULL DEFAULT '',
   `value` text NOT NULL,
   PRIMARY KEY (`setting_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=132 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=133 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_settings: 31 rows
+# Dumping data for table okaycms-git.s_settings: 32 rows
 DELETE FROM `s_settings`;
 /*!40000 ALTER TABLE `s_settings` DISABLE KEYS */;
 INSERT INTO `s_settings` (`setting_id`, `name`, `value`) VALUES
@@ -2645,7 +2645,8 @@ INSERT INTO `s_settings` (`setting_id`, `name`, `value`) VALUES
 	(128, 'yandex_short_description', ''),
 	(129, 'yandex_has_manufacturer_warranty', ''),
 	(130, 'yandex_has_seller_warranty', ''),
-	(131, 'yandex_sales_notes', '');
+	(131, 'yandex_sales_notes', ''),
+	(132, 'posts_num', '10');
 /*!40000 ALTER TABLE `s_settings` ENABLE KEYS */;
 
 

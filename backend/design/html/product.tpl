@@ -140,7 +140,7 @@ $(function() {
 			reader.onload = (function(theFile) {
 				return function(e) {
 					// Render thumbnail.
-					$("<li class=wizard><a href='' class='delete'><img src='design/images/cross-circle-frame.png'></a><img onerror='$(this).closest(\"li\").remove();' src='"+e.target.result+"' /><input name=images_urls[] type=hidden value='"+theFile.name+"'></li>").appendTo('div .images ul');
+					$("<li class=wizard><a href='' class='delete'></a><img onerror='$(this).closest(\"li\").remove();' src='"+e.target.result+"' /><input name=images_urls[] type=hidden value='"+theFile.name+"'></li>").appendTo('div .images ul');
 					temp_input =  dropInput.clone();
 					$('.dropInput').hide();
 					$('#dropZone').append(temp_input);

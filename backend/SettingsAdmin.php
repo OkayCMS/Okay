@@ -31,6 +31,7 @@ class SettingsAdmin extends Okay {
             $this->settings->max_order_amount = $this->request->post('max_order_amount');
             $this->settings->comparison_count = $this->request->post('comparison_count');
             $this->settings->units = $this->request->post('units');
+            $this->settings->posts_num = $this->request->post('posts_num');
             $this->settings->is_preorder = $this->request->post('is_preorder', 'integer');
             
             $this->settings->yandex_export_not_in_stock = $this->request->post('yandex_export_not_in_stock', 'boolean');

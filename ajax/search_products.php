@@ -37,13 +37,20 @@
     $products = $okay->db->results();
     
     $suggestions = array();
-    
+    $ids = array();
+    foreach($products as $p){
+        $ids[] = $p->id;
+    }
+    $variants = array();
+    foreach ($okay->variants->get_variants(array('product_id'=>$ids)) as $v){
+        $variants[$v->product_id][] = $v;
+    }
     foreach($products as $product) {
         $suggestion = new stdClass();
         if(!empty($product->image)) {
             $product->image = $okay->design->resize_modifier($product->image, 35, 35);
         }
-        
+        $suggestion->price = $variants[$product->id][0]->price;
         $suggestion->value = $product->name;
         $suggestion->data = $product;
         $suggestion->lang = $lang_link;

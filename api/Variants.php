@@ -18,7 +18,7 @@ class Variants extends Okay {
         }
         
         if(!empty($filter['in_stock']) && $filter['in_stock']) {
-            $variant_id_filter = $this->db->placehold('AND (v.stock>0 OR v.stock IS NULL)');
+            $instock_filter = $this->db->placehold('AND (v.stock>0 OR v.stock IS NULL)');
         }
         
         if(!$product_id_filter && !$variant_id_filter) {
@@ -47,6 +47,7 @@ class Variants extends Okay {
                 1
                 $product_id_filter
                 $variant_id_filter
+                $instock_filter
             GROUP BY v.id
             ORDER BY v.position
         ", $this->settings->max_order_amount);

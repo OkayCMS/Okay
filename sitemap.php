@@ -7,8 +7,22 @@ header("Content-type: text/xml; charset=UTF-8");
 print '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 print '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
 
+$languages = $okay->languages->languages();
+$lang_link = '';
+if (!empty($languages)) {
+    $first_lang = reset($languages);
+    if($_GET['lang_label']) {
+        $language = $okay->languages->languages(array('id'=>$okay->languages->lang_id()));
+    } else {
+        $okay->languages->set_lang_id($first_lang->id);
+    }
+    if(!empty($language) && is_object($language) && $language->id != $first_lang->id) {
+        $lang_link = $language->label.'/';
+    }
+}
+
 // Главная страница
-$url = $okay->config->root_url;
+$url = $okay->config->root_url.'/'.$lang_link;
 print "\t<url>"."\n";
 print "\t\t<loc>$url</loc>"."\n";
 print "\t\t<changefreq>daily</changefreq>"."\n";
@@ -18,7 +32,7 @@ print "\t</url>"."\n";
 // Страницы
 foreach($okay->pages->get_pages() as $p) {
     if($p->visible && $p->menu_id == 1 && $p->url) {
-        $url = $okay->config->root_url.'/'.esc($p->url);
+        $url = $okay->config->root_url.'/'.$lang_link.esc($p->url);
         print "\t<url>"."\n";
         print "\t\t<loc>$url</loc>"."\n";
         //lastModify
@@ -41,7 +55,7 @@ foreach($okay->pages->get_pages() as $p) {
 
 // Блог
 foreach($okay->blog->get_posts(array('visible'=>1)) as $p) {
-    $url = $okay->config->root_url.'/blog/'.esc($p->url);
+    $url = $okay->config->root_url.'/'.$lang_link.'blog/'.esc($p->url);
     print "\t<url>"."\n";
     print "\t\t<loc>$url</loc>"."\n";
     //lastModify
@@ -56,7 +70,7 @@ foreach($okay->blog->get_posts(array('visible'=>1)) as $p) {
 // Категории
 foreach($okay->categories->get_categories() as $c) {
     if($c->visible) {
-        $url = $okay->config->root_url.'/catalog/'.esc($c->url);
+        $url = $okay->config->root_url.'/'.$lang_link.'catalog/'.esc($c->url);
         print "\t<url>"."\n";
         print "\t\t<loc>$url</loc>"."\n";
         //lastModify
@@ -82,7 +96,7 @@ foreach($okay->categories->get_categories() as $c) {
 
 // Бренды
 foreach($okay->brands->get_brands() as $b) {
-    $url = $okay->config->root_url.'/brands/'.esc($b->url);
+    $url = $okay->config->root_url.'/'.$lang_link.'brands/'.esc($b->url);
     print "\t<url>"."\n";
     print "\t\t<loc>$url</loc>"."\n";
     //lastModify
@@ -106,7 +120,7 @@ foreach($okay->brands->get_brands() as $b) {
 // Товары
 $okay->db->query("SELECT url, last_modify FROM __products WHERE visible=1");
 foreach($okay->db->results() as $p) {
-    $url = $okay->config->root_url.'/products/'.esc($p->url);
+    $url = $okay->config->root_url.'/'.$lang_link.'products/'.esc($p->url);
     print "\t<url>"."\n";
     print "\t\t<loc>$url</loc>"."\n";
     //lastModify

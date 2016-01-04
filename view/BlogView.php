@@ -99,7 +99,7 @@ class BlogView extends View {
         $this->setHeaderLastModify(max($last_modify));
         
         // Количество постов на 1 странице
-        $items_per_page = 20;
+        $items_per_page = max(1, intval($this->settings->posts_num));
         
         $filter = array();
         

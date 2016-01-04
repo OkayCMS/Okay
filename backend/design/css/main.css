@@ -216,6 +216,7 @@ body{
 }
 .icons a.print {
     background-image: url(../images/print_small.png);
+    width: 7px;
 }
 .feature a.delete{
     background-position: -81px -422px;
@@ -238,6 +239,7 @@ body{
 .icons a.cents {
     background-image: url("../images/money.png");
     background-size: 100%;
+    margin-left: 10px;
 }
 .cents .icons a.cents {
     background-image: url("../images/money_on.png");
@@ -527,16 +529,12 @@ select {
     color: #353b3e;
 } 
 input[type="file"] {
-    height: 24px;
     font-size: 14px;
 }
 .form_group {
     margin-bottom: 15px;
 }
 /*стилизация яндекса*/
-/*input.yandex{
-    display: none;
-}*/
 label.yandex_icon:before{
     cursor: pointer;
     width: 24px;

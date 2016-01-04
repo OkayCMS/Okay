@@ -33,7 +33,7 @@
             {$content}
         </div>
         <div id="footer">
-            <span>&copy; 2014</span> 
+            <span>&copy; 2016</span>
             <a href='http://okay-cms.com'>Okay {$config->version}</a>
             <span>Вы вошли как {$manager->login}.</span>
             <a href='{$config->root_url}?logout' id="logout">Выход</a>

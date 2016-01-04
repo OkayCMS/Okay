@@ -68,38 +68,40 @@
 	{* Автозаполнитель поиска *}
 	{literal}
 	<script src="js/autocomplete/jquery.autocomplete-min.js" type="text/javascript"></script>
-	<style>
-		.autocomplete-suggestions{
-		background-color: #ffffff;
-		overflow: hidden;
-		border: 1px solid #e0e0e0;
-		overflow-y: auto;
-		}
-		.autocomplete-suggestions .autocomplete-suggestion{cursor: default;}
-		.autocomplete-suggestions .selected { background:#F0F0F0; }
-		.autocomplete-suggestions div { padding:2px 5px; white-space:nowrap; }
-		.autocomplete-suggestions strong { font-weight:normal; color:#3399FF; }
-	</style>	
-	<script>
-	$(function() {
-		//  Автозаполнитель поиска
-		$(".input_search").autocomplete({
-			serviceUrl:'ajax/search_products.php',
-			minChars:1,
-			noCache: false, 
-			onSelect:
-				function(suggestion){
-					 $(".input_search").closest('form').submit();
-				},
-			formatResult:
-				function(suggestion, currentValue){
-					var reEscape = new RegExp('(\\' + ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'].join('|\\') + ')', 'g');
-					var pattern = '(' + currentValue.replace(reEscape, '\\$1') + ')';
-	  				return (suggestion.data.image?"<img align=absmiddle src='"+suggestion.data.image+"'> ":'') +"<a href="+suggestion.lang+"products/"+suggestion.data.url+'>'+suggestion.value.replace(new RegExp(pattern, 'gi'),  '<strong>$1<\/strong>')+'<\/a>';
-                }
-		});
-	});
-	</script>
+        <style>
+            .autocomplete-suggestions{
+                background-color: #ffffff;
+                overflow: hidden;
+                border: 1px solid #e0e0e0;
+                overflow-y: auto;
+            }
+            .autocomplete-suggestions .autocomplete-suggestion{cursor: default;}
+            .autocomplete-suggestions .selected { background:#F0F0F0; }
+            .autocomplete-suggestions div { padding:2px 5px; }
+            .autocomplete-suggestions strong { font-weight:normal; color:#3399FF; }
+            .autocomplete-suggestions span { float: right; margin-top: -32px;}
+            .autocomplete-suggestions > div > div {margin-right: 65px}
+        </style>
+        <script>
+            $(function() {
+                //  Автозаполнитель поиска
+                $(".input_search").autocomplete({
+                    serviceUrl:'ajax/search_products.php',
+                    minChars:1,
+                    noCache: false,
+                    onSelect:
+                            function(suggestion){
+                                $(".input_search").closest('form').submit();
+                            },
+                    formatResult:
+                            function(suggestion, currentValue){
+                                var reEscape = new RegExp('(\\' + ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'].join('|\\') + ')', 'g');
+                                var pattern = '(' + currentValue.replace(reEscape, '\\$1') + ')';
+                                return "<div>"+(suggestion.data.image?"<img align=absmiddle src='"+suggestion.data.image+"'> ":'') +"<a href="+suggestion.lang+"products/"+suggestion.data.url+'>'+suggestion.value.replace(new RegExp(pattern, 'gi'),  '<strong>$1<\/strong>')+'<\/a>'+"</div>" +"<span>"+suggestion.price +"</span>";
+                            }
+                });
+            });
+        </script>
 	{/literal}
 		
 	<script>
@@ -233,33 +235,33 @@
 			</div>
 		</div>
 	</header>
-
-	{if $module == 'MainView'}
-		<!-- Баннеры -->
-		<div id="main_banner">
-	        {get_banner var=banner1 group=1}
-			{if $banner1->items}
-				<div class="banner banner1">
-					{foreach $banner1->items as $bi}
-						<div>
-							{if $bi->url}
-								<a href="{$bi->url}" target="_blank">
-							{/if}
-							{if $bi->image}
-								<img src="{$config->banners_images_dir}{$bi->image}" alt="{$bi->alt}" title="{$bi->title}"/>
-							{else}
-								{$bi->description}
-							{/if}
-							{if $bi->url}
-								</a>
-							{/if}
-						</div>
-					{/foreach}
-				</div>
-			{/if}
-		</div>
-		<!-- Баннеры (The End) -->
-
+    
+	<!-- Баннеры -->
+	<div id="main_banner">
+        {get_banner var=banner1 group=1}
+		{if $banner1->items}
+			<div class="banner banner1">
+				{foreach $banner1->items as $bi}
+					<div>
+						{if $bi->url}
+							<a href="{$bi->url}" target="_blank">
+						{/if}
+						{if $bi->image}
+							<img src="{$config->banners_images_dir}{$bi->image}" alt="{$bi->alt}" title="{$bi->title}"/>
+						{else}
+							{$bi->description}
+						{/if}
+						{if $bi->url}
+							</a>
+						{/if}
+					</div>
+				{/foreach}
+			</div>
+		{/if}
+	</div>
+	<!-- Баннеры (The End) -->
+    
+    {if $module == 'MainView'}
 		<!-- Блок преимущества -->	
 		<div id="advantages">
 			<div class="container">

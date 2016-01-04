@@ -86,6 +86,7 @@
 				<li><label class=property>Максимум товаров в заказе</label><input name="max_order_amount" class="okay_inp" type="text" value="{$settings->max_order_amount|escape}" /></li>
 				<li><label class=property>Единицы измерения товаров</label><input name="units" class="okay_inp" type="text" value="{$settings->units|escape}" /></li>
                 <li><label class="property">Максимальное количество товаров в папке сравнения</label><input name="comparison_count" class="okay_inp" type="text" value="{$settings->comparison_count|escape}" /></li>
+                <li><label class="property">Статей на странице блога</label><input name="posts_num" class="okay_inp" type="text" value="{$settings->posts_num|escape}" /></li>
                 <li>
                     <label class="property">Если нет в наличии</label>
                     <select name="is_preorder">
