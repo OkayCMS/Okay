@@ -49,6 +49,14 @@
                                             <input type="checkbox" name="check[]" id="{$category->id}" value="{$category->id}"/>
                                             <label for="{$category->id}"></label>
                                         </div>
+                                        <div class="image cell">
+                                            {if $category->image}
+                                                <a href="{url module=CategoryAdmin id=$category->id return=$smarty.server.REQUEST_URI}">
+                                                    <img src="{$category->image|resize:35:35:false:$config->resized_categories_dir}" alt="" /></a>
+                                                {else}
+                                                    <img height="35" width="35" src="../design/{$settings->theme|escape}/images/no_image.png"/>
+                                            {/if}
+                                        </div>
                                         <div class="cell categ_name">
                                             <a href="{url module=CategoryAdmin id=$category->id return=$smarty.server.REQUEST_URI}">{$category->name|escape}</a>
                                         </div>
@@ -58,8 +66,14 @@
                                             <a class="delete" title="Удалить" href="#"></a>
                                         </div>
                                         <div class="icons cell">
-                                            <a class="yandex" data-to_yandex="1" href="javascript:;">В яндекс</a>
-                                            <a class="yandex" data-to_yandex="0" href="javascript:;">Из яндекса</a>
+                                            <div class="helper_wrap">
+                                                <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                                                <div class="helper_block">
+                                                    Отметить/снять отметку выгрузки всех товаров из этой категории и её подкатегорий в файл экспорта для ЯндексМаркета
+                                                </div>
+                                            </div>
+                                            <a class="yandex" data-to_yandex="1" href="javascript:;">В Я.Маркет</a>
+                                            <a class="yandex" data-to_yandex="0" href="javascript:;">Из Я.Маркета</a>
                                         </div>
                                         <div class="clear"></div>
                                     </div>

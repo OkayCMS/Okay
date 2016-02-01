@@ -51,12 +51,15 @@ class Pay2Pay extends Okay
 		
 		$merc_sign = $settings['pay2pay_secret'];
 		$sign_encoded = base64_encode(md5($merc_sign.$xml.$merc_sign));
-					
+
+        $res['xml_encoded'] = $xml_encoded;
+        $res['sign_encoded'] = $sign_encoded;
+
 		$button =	'<form action="https://merchant.pay2pay.com/?page=init" method="POST" />'.
 					'<input type="hidden" name="xml" value="'.$xml_encoded.'" />'.
 					'<input type="hidden" name="sign" value="'.$sign_encoded.'" />'.
 					'<input type="submit" class="checkout_button" value="'.$button_text.'">'.
 					'</form>';
-		return $button;
+		return $res;
 	}
 }

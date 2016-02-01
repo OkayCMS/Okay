@@ -12,17 +12,11 @@
 {$meta_title = 'Новая страница' scope=parent}
 {/if}
 
-{* Подключаем Tiny MCE *}
-{include file='tinymce_init.tpl'}
 
 {* On document load *}
 {literal}
-<script src="design/js/jquery/jquery.js"></script>
-<script src="design/js/jquery/jquery-ui.min.js"></script>
-
-
 <script>
-$(function() {
+    $(window).on("load", function() {
 
 	// Автозаполнение мета-тегов
 	menu_item_name_touched = true;
@@ -45,6 +39,18 @@ $(function() {
 	$('textarea[name="meta_description"]').change(function() { meta_description_touched = true; });
 	
 	$('input[name="header"]').keyup(function() { set_meta(); });
+
+    CKEDITOR.instances.body.on('change', function(){
+        var data = CKEDITOR.instances.body.getData();
+        if(data !='')
+            var description = data.replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
+        if(!meta_description_touched)
+        {
+            descr = $('textarea[name="meta_description"]');
+            descr.val(generate_meta_description(description));
+            descr.scrollTop(descr.outerHeight());
+        }
+    });
 });
 
 function set_meta()
@@ -55,12 +61,6 @@ function set_meta()
 		$('input[name="meta_title"]').val(generate_meta_title());
 	if(!meta_keywords_touched)
 		$('input[name="meta_keywords"]').val(generate_meta_keywords());
-	if(!meta_description_touched)
-	{
-		descr = $('textarea[name="meta_description"]');
-		descr.val(generate_meta_description());
-		descr.scrollTop(descr.outerHeight());
-	}
 	if(!$('#block_translit').is(':checked'))
 		$('input[name="url"]').val(generate_url());
 }
@@ -83,15 +83,9 @@ function generate_meta_keywords()
 	return name;
 }
 
-function generate_meta_description()
+function generate_meta_description(description)
 {
-	if(typeof(tinyMCE.get("body")) =='object')
-	{
-		description = tinyMCE.get("body").getContent().replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
-		return description;
-	}
-	else
-		return $('textarea[name=body]').val().replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
+    return description;
 }
 
 function generate_url()
@@ -150,7 +144,7 @@ function translit(str)
 {if $message_error}
 <!-- Системное сообщение -->
 <div class="message message_error">
-	<span class="text">{if $message_error == 'url_exists'}Страница с таким адресом уже существует{elseif $message_error=='empty_header'}Введите заголовок{else}{$message_error}{/if}</span>
+	<span class="text">{if $message_error == 'url_exists'}Страница с таким адресом уже существует{elseif $message_error=='empty_header'}Введите заголовок{elseif $message_error == 'url_wrong'}Адресс не должен начинаться или заканчиваться символом '-'{else}{$message_error}{/if}</span>
 	<a class="button" href="">Вернуться</a>
 </div>
 <!-- Системное сообщение (The End)-->
@@ -166,7 +160,7 @@ function translit(str)
 		<input class="name" name=header type="text" value="{$page->header|escape}"/> 
 		<input name=id type="hidden" value="{$page->id|escape}"/> 
 		<div class="checkbox">
-			<input name=visible value='1' type="checkbox" id="active_checkbox" {if $page->visible}checked{/if}/> <label for="active_checkbox">Активна</label>
+			<input name=visible value='1' type="checkbox" id="active_checkbox" {if $page->visible}checked{/if}/> <label for="active_checkbox" class="visible_icon">Активна</label>
 		</div>
 	</div> 
 
@@ -192,11 +186,48 @@ function translit(str)
 		<div class="block layer">
 			<h2>Параметры страницы</h2>
 			<ul>
-                <li><label class="property" for="block_translit">Заблокировать авто генерацию ссылки</label><input type="checkbox" id="block_translit" {if $page->id}checked=""{/if} /></li>
-				<li><label class=property>Адрес</label><div class="page_url">/</div><input name="url" class="page_url" type="text" value="{$page->url|escape}" /></li>
-				<li><label class=property>Заголовок</label><input name="meta_title" class="okay_inp" type="text" value="{$page->meta_title|escape}" /></li>
-				<li><label class=property>Ключевые слова</label><input name="meta_keywords" class="okay_inp" type="text" value="{$page->meta_keywords|escape}" /></li>
-				<li><label class=property>Описание</label><textarea name="meta_description" class="okay_inp">{$page->meta_description|escape}</textarea></li>
+                <li><label class="property" for="block_translit">Заблокировать авто генерацию ссылки</label>
+                    <input type="checkbox" id="block_translit" {if $page->id}checked=""{/if} />
+                    <div class="helper_wrap">
+                        <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                        <div class="right helper_block">
+                            <b>Запрещает изменение URL.</b>
+                            <span>Используется для предотвращения случайного изменения URL.</span>
+                            <span>Активируется после сохранения товара с заполненным полем адрес.</span>
+                        </div>
+                    </div>
+                </li>
+				<li><label class=property>Адрес (URL)</label><div class="page_url">/</div><input name="url" class="page_url" type="text" value="{$page->url|escape}" /></li>
+				<li><label class=property>Title (<span class="count_title_symbol"></span>/<span class="word_title"></span>)
+                        <div class="helper_wrap">
+                            <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                            <div class="right helper_block">
+                                <b>Название страницы</b>
+                                <span>В скобках указывается количество символов/слов в строке</span>
+                            </div>
+                        </div>
+                    </label>
+                    <input name="meta_title" class="okay_inp" type="text" value="{$page->meta_title|escape}" /></li>
+				<li><label class=property>Keywords (<span class="count_keywords_symbol"></span>/<span class="word_keywords"></span>)
+                        <div class="helper_wrap">
+                            <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                            <div class="right helper_block">
+                                <b>Ключевые слова страницы</b>
+                                <span> В скобках указывается количество символов/слов в строке</span>
+                            </div>
+                        </div>
+                    </label>
+                    <input name="meta_keywords" class="okay_inp" type="text" value="{$page->meta_keywords|escape}" /></li>
+				<li><label class=property>Description (<span class="count_desc_symbol"></span>/<span class="word_desc"></span>)
+                        <div class="helper_wrap">
+                            <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                            <div class="right helper_block">
+                                <b>Текст описания страницы,</b>
+                                <span> который используется поисковыми системами для формирования сниппета.</span>
+                                <span>В скобках указывается количество символов/слов в строке</span>
+                            </div>
+                        </div>
+                    </label><textarea name="meta_description" class="okay_inp">{$page->meta_description|escape}</textarea></li>
 			</ul>
 		</div>
 		<!-- Параметры страницы (The End)-->		
@@ -208,7 +239,7 @@ function translit(str)
 	<!-- Описагние товара -->
 	<div class="block layer">
 		<h2>Текст страницы</h2>
-		<textarea name="body"  class="editor_large">{$page->body|escape}</textarea>
+		<textarea name="body"  class="ckeditor">{$page->body|escape}</textarea>
 	</div>
 	<!-- Описание товара (The End)-->
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />

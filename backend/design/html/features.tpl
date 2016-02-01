@@ -43,12 +43,9 @@
                             <a href="{url module=FeatureAdmin id=$feature->id return=$smarty.server.REQUEST_URI}">{$feature->name|escape}</a>
                         </div>
                         <div class="icons cell">
+                            <label title="Передавать в выгрузку Я.Маркет" data-vid="{$feature->id}" class="yandex_icon {if $feature->yandex}active{/if}"></label>
                             <a title="Использовать в фильтре" class="in_filter" href='#'></a>
                             <a title="Удалить" class="delete" href='#'></a>
-                        </div>
-                        <div class="icons cell">
-                            {*<input type="checkbox" id="ya_{$feature->id}" class="yandex" name="yandex" {if $feature->yandex}checked=""{/if} title="В яндекс"/>*}
-                            <label data-vid="{$feature->id}" class="yandex_icon {if $feature->yandex}active{/if}"></label>
                         </div>
                         <div class="clear"></div>
                     </div>
@@ -81,7 +78,7 @@
 <div id="right_menu">
     {function name=categories_tree}
         {if $categories}
-            <ul>
+            <ul class="cats_right{if $level > 1} sub_menu{/if}" >
                 {if $categories[0]->parent_id == 0}
                     <li {if !$category->id}class="selected"{/if}>
                         <a href="{url category_id=null}">Все категории</a>
@@ -90,13 +87,14 @@
                 {foreach $categories as $c}
                     <li {if $category->id == $c->id}class="selected"{/if}>
                         <a href="index.php?module=FeaturesAdmin&category_id={$c->id}">{$c->name}</a>
+                        {if $c->subcategories}<span class="slide_menu"></span>{/if}
                     </li>
-                    {categories_tree categories=$c->subcategories}
+                    {categories_tree categories=$c->subcategories level=$level+1}
                 {/foreach}
             </ul>
         {/if}
     {/function}
-    {categories_tree categories=$categories}
+    {categories_tree categories=$categories level=1}
 </div>
 
 
@@ -225,6 +223,16 @@ $(function() {
 			if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
 				return false;	
 	});
+
+    $('.slide_menu').on('click',function(){
+        if($(this).hasClass('open')){
+            $(this).removeClass('open');
+        }
+        else{
+            $(this).addClass('open');
+        }
+        $(this).parent().next().slideToggle(500);
+    })
 	
 });
 </script>

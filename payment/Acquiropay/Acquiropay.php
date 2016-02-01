@@ -22,6 +22,16 @@ class Acquiropay extends Okay
 
 		$token = md5($settings[acquiropay_mid].$settings[acquiropay_product].$price.$order_id.$settings[acquiropay_sw]);
 
+        $res['order'] = $order;
+        $res['payment_method'] = $payment_method;
+        $res['payment_currency'] = $payment_currency;
+        $res['settings_pay'] = $settings;
+        $res['price'] = $price;
+        $res['desc'] = $desc;
+        $res['cb_url'] = $cb_url;
+        $res['ok_url'] = $ok_url;
+        $res['token'] = $token;
+
 		$button =  "<form accept-charset='UTF-8' name='payment_form' method='POST' action='https://secure.acquiropay.com'>
 					    <input type='hidden' name='product_id' value='$settings[acquiropay_product]'/> 
 					    <input type='hidden' name='product_name' value='$desc' />
@@ -39,6 +49,6 @@ class Acquiropay extends Okay
 	  				    <input type='hidden' name='ko_url' value='$settings[acquiropay_uerror]'/>
 						<input type='submit' class='checkout_button' value='$button_text'>
   			</form>";
-		return $button;
+		return $res;
 	}
 }

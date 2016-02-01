@@ -49,15 +49,11 @@ class ReportStat extends Okay {
                 p.variant_id,
                 p.product_name,
                 p.variant_name,
-                /*  cat.category_id,
-                cc.name as category_name,*/
                 SUM(p.price * p.amount) as sum_price,
                 SUM(p.amount) as amount,
                 p.sku 
             FROM __purchases AS p
             LEFT JOIN __orders AS o ON o.id = p.order_id
-            /* LEFT JOIN __products_categories as cat ON p.product_id = cat.product_id
-            LEFT JOIN __categories cc on cc.id = cat.category_id*/
             WHERE 
                 1 
                 $all_filters
@@ -76,11 +72,11 @@ class ReportStat extends Okay {
         
         // Выбираем заказы
         $query = $this->db->placehold("SELECT 
-                count(DISTINCT p.variant_id) as count
+            count(DISTINCT p.variant_id) as count
             FROM __purchases AS p
             LEFT JOIN __orders AS o ON o.id = p.order_id
-            WHERE 
-                1 
+            WHERE
+                1
                 $all_filters
         ");
         $this->db->query($query);
@@ -187,16 +183,16 @@ class ReportStat extends Okay {
                 pc.category_id, 
                 SUM(pp.amount) as amount, 
                 SUM(pp.amount * pp.price) as price
-            FROM __purchases pp
-            LEFT JOIN __products p ON p.id=pp.product_id
-            $category_join
-            $orders_join
-            WHERE 
-                1
-                $category_filter
-                $brand_filter
-                $period_filter
-            GROUP BY pc.category_id
+                FROM __purchases pp
+                LEFT JOIN __products p ON p.id=pp.product_id
+                $category_join
+                $orders_join
+                WHERE
+                    1
+                    $category_filter
+                    $brand_filter
+                    $period_filter
+                GROUP BY pc.category_id
         ");
         $this->db->query($query);
         $result = array();

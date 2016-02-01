@@ -1,39 +1,33 @@
-<div style="display: none;">
-	<form id="callback_form" class="form" method="post">
-		<div class="callback_title">{$lang->zakaz_obratnogo_zvonka}</div>
-		<div class="form_group">
-			<label for="callback_name">{$lang->vvedite_imya}</label>
-			<input id="callback_name" class="form_input" type="text" name="name" data-format=".+" data-notice="{$lang->vvedite_imya}" value=""/>
+{* Форма обратного звонка *}
+<div class="hidden-xs-up">
+	<form id="fn-callback" class="bg-info p-a-1" method="post">
+		{* Заголовок формы *}
+		<div class="h3 m-b-1 text-xs-center" data-language="{$translate_id['callback_header']}">{$lang->callback_header}</div>
+		{* @END Заголовок формы *}
+		{* Имя клиента *}
+		<div class="form-group">
+			<input class="form-control" type="text" name="name" data-format=".+" data-notice="{$lang->form_enter_name}" value="{$name|escape}" data-language="{$translate_id['form_name']}" placeholder="{$lang->form_name}*"/>
 		</div>
-
-		<div class="form_group">
-			<label for="callback_phone">{$lang->vvedite_nomer_telefona}</label>
-			<input id="callback_phone" class="form_input" type="text" name="phone" data-format=".+" data-notice="{$lang->vvedite_nomer_telefona}" value="" maxlength="255"/>
+		{* @END Имя клиента *}
+		{* Телефон клиента *}
+		<div class="form-group">
+			<input class="form-control" type="text" name="phone" data-format=".+" data-notice="{$lang->form_enter_phone}" value="{$phone|escape}" data-language="{$translate_id['form_phone']}" placeholder="{$lang->form_phone}*"/>
 		</div>
-		<input class="button" type="submit" name="callback" value="{$lang->zakazat}"/>
+		{* Телефон клиента *}
+		{* Кнопка отправки формы *}
+		<div class="text-xs-center">
+			<input class="btn btn-warning" type="submit" name="callback" data-language="{$translate_id['callback_order']}" value="{$lang->callback_order}"/>
+		</div>
+		{* Кнопка отправки формы *}
 	</form>
-
-	<a id="callback_sent" href="#callback_notice" class="callback_link"></a>
-	<div id="callback_notice">
-		<div class="callback_title">{$lang->vasha_zayavka_prinyata}</div>
-		{$lang->my_svyazhemsya_s_vami_v_blizhajshee_vremya}
-	</div>
 </div>
-
-{literal}
-    <script>
-        $(function() {
-            $('.callback_link').fancybox();
-        });
-    </script>
-{/literal}
-
+{* Модальное окно после отправки заявки *}
 {if $call_sent}
-  {literal}
-	<script>
-	    $(function() {
-			$('#callback_sent').trigger('click');
-		});
-	</script>
-  {/literal}
+	<div class="hidden-xs-up">
+		<div id="fn-callback-sent" class="bg-info p-a-1">
+			<div class="h4 m-b-1 text-xs-center" data-language="{$translate_id['callback_sent_header']}">{$lang->callback_sent_header}</div>
+			<div data-language="{$translate_id['callback_sent_text']}">{$lang->callback_sent_text}</div>
+		</div>
+	</div>
 {/if}
+{* @END Модальное окно после отправки заявки *}

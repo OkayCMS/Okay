@@ -8,15 +8,21 @@ class Brands extends Okay {
         $category_id_filter = '';
         $category_join = '';
         $visible_filter = '';
+        $product_id_filter = '';
+        $product_join = '';
         if(isset($filter['visible'])) {
             $visible_filter = $this->db->placehold('AND p.visible=?', intval($filter['visible']));
         }
-        
+
+        if(isset($filter['product_id'])) {
+            $product_id_filter = $this->db->placehold('AND p.id in (?@)', (array)$filter['product_id']);
+            $product_join = $this->db->placehold("LEFT JOIN __products p ON p.brand_id=b.id");
+        }
+
         if(!empty($filter['category_id'])) {
             $category_join = $this->db->placehold("LEFT JOIN __products p ON p.brand_id=b.id LEFT JOIN __products_categories pc ON p.id = pc.product_id");
             $category_id_filter = $this->db->placehold("AND pc.category_id in(?@) $visible_filter", (array)$filter['category_id']);
         }
-        
         $lang_sql = $this->languages->get_query(array('object'=>'brand'));
         // Выбираем все бренды
         $query = $this->db->placehold("SELECT 
@@ -28,9 +34,11 @@ class Brands extends Okay {
             FROM __brands b
             $lang_sql->join
             $category_join
+            $product_join
             WHERE 
                 1 
-                $category_id_filter 
+                $category_id_filter
+                $product_id_filter
             ORDER BY b.name
         ");
         $this->db->query($query);

@@ -24,7 +24,7 @@ $(function() {
 		$('input[type="checkbox"][name*="permissions"]:not(:disabled)').attr('checked', $('input[type="checkbox"][name*="permissions"]:not(:disabled):not(:checked)').length>0);
 	});
 
-	{/literal}{if $m->login}$('#password_input').hide();{/if}{literal}
+	{/literal}{if $m->id}$('#password_input').hide();{/if}{literal}
 	$('#change_password').click(function() {
 		$('#password_input').show();
 	});
@@ -65,12 +65,12 @@ $(function() {
 <input type=hidden name="session_id" value="{$smarty.session.id}">
 	<div id="name">
 		Логин:
-		<input class="name" name="login" type="text" value="{$m->login|escape}" maxlength="32"/> 
-		<input name="old_login" type="hidden" value="{$m->login|escape}"/>
+		<input class="name" name="login" type="text" value="{$m->login|escape}" maxlength="32"/>
+		<input name=id type="hidden" value="{$m->id|escape}"/>
 		Пароль:
-		{if $m->login}<a class="dash_link"id="change_password">изменить</a>{/if}
+		{if $m->id}<a class="dash_link"id="change_password">изменить</a>{/if}
 		<input id="password_input" class="name" name="password" type="password" value=""/> 
-	</div> 
+	</div>
 
 	<!-- Левая колонка -->
 	<div id="column_left">
@@ -109,13 +109,14 @@ $(function() {
 					'license'    =>'Управление лицензией',
                     'banners'	 =>'Управление баннерами',
                     'callbacks'  =>'Заказ обратного звонка',
-                    'special'    =>'Промо-изображения'
+                    'special'    =>'Промо-изображения',
+                    'topvisor'   =>'Топвизор'
 				]}
 				
 				{foreach $perms as $p=>$name}
 				<li><label class=property for="{$p}">{$name}</label>
 				<input id="{$p}" name="permissions[]" class="okay_inp" type="checkbox" value="{$p}"
-				{if $m->permissions && in_array($p, $m->permissions)}checked{/if} {if $m->login==$manager->login}disabled{/if}/></li>
+				{if $m->permissions && in_array($p, $m->permissions)}checked{/if} {if $m->id==$manager->id}disabled{/if}/></li>
 				{/foreach}
 				
 			</ul>
@@ -126,10 +127,13 @@ $(function() {
 
 			
 	</div>
-	<!-- Левая колонка (The End)--> 
-	
-	
+	<!-- Левая колонка (The End)-->
+
+
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />
+	{if $m->cnt_try >= 10}
+		<input class="button_green button_save" type="submit" name="unlock_manager" value="Разблокировать" />
+	{/if}
 	
 </form>
 <!-- Основная форма (The End) -->

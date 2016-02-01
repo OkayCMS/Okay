@@ -24,10 +24,10 @@
     {include file='pagination.tpl'}
     {if $callbacks}
         <form id="list_form" method="post">
-            <input type="hidden" name="session_id" value="{$smarty.session.id}">
-            <div id="list" style="width:100%;">
+            <input type="hidden" name="session_id" value="{$smarty.session.id}"/>
+            <div id="list" class="sortable">
                 {foreach $callbacks as $callback}
-                    <div class="row{if $callback->processed} active{/if}">
+                    <div class="{if !$callback->processed}unapproved{/if} row">
                         <div class="checkbox cell">
                             <input type="checkbox" id="{$callback->id}" name="check[]" value="{$callback->id}"/>
                             <label for="{$callback->id}"></label>
@@ -35,6 +35,7 @@
                         <div class="name cell">
                             <div class='comment_name'>
                                 {$callback->name|escape}
+                                <a class="approve" href="#">Обработать</a>
                             </div>
                             <div class='comment_text'>
                                 Телефон: {$callback->phone|escape|nl2br}
@@ -47,7 +48,6 @@
                             </div>
                         </div>
                         <div class="icons cell">
-                            <a href='#' title='Обработать' class="processed">Обработать</a>
                             <a href='#' title='Удалить' class="delete"></a>
                         </div>
                         <div class="clear"></div>
@@ -98,22 +98,17 @@ $(function() {
 	});
 	
 	// Обработать
-	$("a.processed").click(function() {
-		var icon        = $(this);
-		var line        = icon.closest(".row");
+	$("a.approve").click(function() {
+		var line        = $(this).closest(".row");
 		var id          = line.find('input[type="checkbox"][name*="check"]').val();
-		var state       = line.hasClass('active')?null:1;
-		icon.addClass('loading_icon');
+		line.addClass('loading_icon');
 		$.ajax({
 			type: 'POST',
 			url: 'ajax/update_object.php',
-			data: {'object': 'callback', 'id': id, 'values': {'processed': state}, 'session_id': '{/literal}{$smarty.session.id}{literal}'},
+			data: {'object': 'callback', 'id': id, 'values': {'processed': 1}, 'session_id': '{/literal}{$smarty.session.id}{literal}'},
 			success: function(data){
-				icon.removeClass('loading_icon');
-				if(state)
-					line.addClass('active');
-				else
-					line.removeClass('active');				
+				line.removeClass('loading_icon');
+                line.removeClass('unapproved');
 			},
 			dataType: 'json'
 		});	

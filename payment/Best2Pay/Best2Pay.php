@@ -72,13 +72,19 @@ class Best2Pay extends Okay
 			$button_text = $best2pay_id;
 				 
 		$signature  = base64_encode(md5($sector.$best2pay_id.$password));
+
+        $res['best2pay_url'] = $best2pay_url;
+        $res['sector'] = $sector;
+        $res['best2pay_id'] = $best2pay_id;
+        $res['signature'] = $signature;
+
 		$button =	"<form accept-charset='utf8' action='".$best2pay_url."/webapi/Purchase' method=POST>".
 					"<input type=hidden name=sector value='$sector'>".
 					"<input type=hidden name=id value='$best2pay_id'>".
 					"<input type=hidden name=signature value='$signature'>".
 					"<input type=submit class=checkout_button value='$button_text'>".
 					"</form>";
-		return $button;
+		return $res;
 	}
 
 }

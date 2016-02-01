@@ -120,18 +120,22 @@
             {assign 'total_summ' 0}
             {assign 'total_amount' 0}
 
-            <table width="100%">
-                <tbody>
+            <table class="table_blue" width="100%">
                 <thead class="thead">
-                <th width="30%">Категория</th>
-                <th width="40%">Наименование товара</th>
-                <th width="15%" class="c"><a class="sort {if $sort_prod=='price'}top{elseif $sort_prod=='price_in'}bottom{/if}" href="{if $sort_prod=='price'}{url sort_prod=price_in}{else}{url sort_prod=price}{/if}">Сумма продаж</a></th>
-                <th width="15%" class="c"><a class="sort {if $sort_prod=='amount'}top{elseif $sort_prod=='amount_in'}bottom{/if}" href="{if $sort_prod=='amount'}{url sort_prod=amount_in}{else}{url sort_prod=amount}{/if}">Кол-во</a></th>
-                <thead>
+                    <tr>
+                        <th width="27%">Категория</th>
+                        <th width="40%">Наименование товара</th>
+                        <th width="20%" class="c"><a class="sort {if $sort_prod=='price'}top{elseif $sort_prod=='price_in'}bottom{/if}" href="{if $sort_prod=='price'}{url sort_prod=price_in}{else}{url sort_prod=price}{/if}">Сумма продаж</a>
+                        </th>
+                        <th width="13%" class="c"><a class="sort {if $sort_prod=='amount'}top{elseif $sort_prod=='amount_in'}bottom{/if}" href="{if $sort_prod=='amount'}{url sort_prod=amount_in}{else}{url sort_prod=amount}{/if}">Кол-во</a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
                 {foreach $report_stat_purchases as $purchase}
                     {assign var='total_summ'  value=$total_summ+$purchase->sum_price}
                     {assign var='total_amount' value=$total_amount+$purchase->amount}
-                    <tr class="row">
+                    <tr>
                         <td>
                             {foreach $purchase->category->path as $c}
                                 {$c->name}/
@@ -144,13 +148,18 @@
                         <td class="c">{$purchase->amount} {$settings->units}</td>
                     </tr>
                 {/foreach}
-                <tfoot>
-                <td></td>
-                <td style="text-align: right">Итого:</td>
-                <td class="c">{$total_summ|string_format:'%.2f'} {$currency->sign|escape}</td>
-                <td class="c">{$total_amount} {$settings->units}</td>
-                </tfoot>
                 </tbody>
+                <tfoot>
+                    <tr class="top_row">
+                        <td  colspan="4"></td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th style="text-align: right">Итого:</th>
+                        <th class="c">{$total_summ|string_format:'%.2f'} {$currency->sign|escape}</th>
+                        <th class="c">{$total_amount} {$settings->units}</th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </form>
@@ -160,25 +169,37 @@
 <!-- Меню -->
 <div id="right_menu">
 
-    <div style="display: block; clear:both; border: 1px solid #C0C0C0; margin: 10px 0; padding: 10px">
-        <form method="get">
-            <div id='filter_check'>
-                <label for="check">Заданный период</label>
-            </div>
+    <form class="date_filter" method="get">
 
-            <div id='filter_fields'>
-                <input type="hidden" name="module" value="ReportStatsAdmin">
-                <input type="hidden" name="date_filter" value="">
-                <div style="margin: 15px 0">
-                    <label>Дата с:&nbsp;</label><input type=text name=date_from value='{$date_from}' style="width: 95%">&nbsp;
-                    <label>По:&nbsp;</label><input type=text name=date_to value='{$date_to}' style="width: 95%">
+        <div class="date_filter_title">
+            <span>Заказы за период</span>
+            <div class="helper_wrap">
+                <a id="show_help_filter" class="helper_link" href="javascript:;"></a>
+                <div id="help_date_filter" class="helper_block">
+                    <span> Если не указана дата «С», то выбираются заказы начиная с самого первого.</span>
+                    <span> Если не указана конечная дата «По», то автоматом подставляется текущая дата.</span>
                 </div>
-                <input id="apply_action" class="button_green" type="submit" value="Применить">
             </div>
-        </form>
-    </div>
+        </div>
 
-    <h4>Статусы заказов</h4>
+        <div class="form_group">
+            <label for="from_date">C</label>
+            <input id="from_date" class="okay_inp" type=text name=date_from value='{$date_from}' />
+        </div>
+
+        <div class="form_group">
+            <label for="to_date">По</label>
+            <input id="to_date" class="okay_inp" type=text name=date_to value='{$date_to}' />
+        </div>
+
+        <input type="hidden" name="module" value="ReportStatsAdmin">
+        <input type="hidden" name="date_filter" value="">
+          
+        <input id="apply_action" class="button" type="submit" value="Применить">
+        
+    </form>
+
+    <span class="right_block_name">Статусы заказов</span>
     <ul id="status-order">
         <li {if !$status}class="selected"{/if}><a href="{url status=null}">Все заказы</a></li>
         <li {if $status==1}class="selected"{/if}><a href="{url status=1}">Новые</a></li>
@@ -187,7 +208,7 @@
         <li {if $status==4}class="selected"{/if}><a href="{url status=4}">Удаленные</a></li>
     </ul>
 
-    <h4>Период</h4>
+    <span class="right_block_name">Период</span>
     <ul id="filter-date">
         <li {if !$date_filter}class="selected"{/if}><a onclick="show_fields();" href="{url date_filter=null date_to=null date_from=null filter_check=null}">Все заказы</a></li>
         <li {if $date_filter == today}class="selected"{/if}><a onclick="show_fields();" href="{url date_filter=today date_to=null date_from=null filter_check=null}">Сегодня</a></li>
@@ -207,18 +228,22 @@
 
     {function name=categories_tree}
         {if $categories}
-            <ul>
+            <ul class="cats_right{if $level > 1} sub_menu{/if}">
                 {if $categories[0]->parent_id == 0}
                     <li {if !$category->id}class="selected"{/if}><a href="{url category_id=null brand_id=null}">Все категории</a></li>
                 {/if}
                 {foreach $categories as $c}
-                    <li category_id="{$c->id}" {if $category->id == $c->id}class="selected"{else}class="droppable category"{/if}><a href='{url keyword=null brand_id=null page=all category_id={$c->id}}'>{$c->name}</a></li>
-                    {categories_tree categories=$c->subcategories}
+                    <li category_id="{$c->id}" {if $category->id == $c->id}class="selected"{else}class="droppable category"{/if}>
+                        <a href='{url keyword=null brand_id=null page=all category_id={$c->id}}'>{$c->name}</a>
+                        {if $c->subcategories}<span class="slide_menu"></span>{/if}
+                    </li>
+
+                    {categories_tree categories=$c->subcategories level=$level+1}
                 {/foreach}
             </ul>
         {/if}
     {/function}
-    {categories_tree categories=$categories}
+    {categories_tree categories=$categories level=1}
 
 
 </div>
@@ -240,14 +265,16 @@
                 opacity:           0.7
             });
 
-            // Раскраска строк
-            function colorize()
-            {
-                $("#list tr.row:even").addClass('even');
-                $("#list tr.row:odd").removeClass('even');
-            }
-            // Раскрасить строки сразу
-            colorize();
+
+            $('.slide_menu').on('click',function(){
+                if($(this).hasClass('open')){
+                    $(this).removeClass('open');
+                }
+                else{
+                    $(this).addClass('open');
+                }
+                $(this).parent().next().slideToggle(500);
+            })
         });
 
     </script>

@@ -56,7 +56,7 @@ class ProductView extends View {
             $this->design->assign('comment_name', $comment->name);
             
             // Проверяем капчу и заполнение формы
-            if ($_SESSION['captcha_code'] != $captcha_code || empty($captcha_code)) {
+            if ($this->settings->captcha_product && ($_SESSION['captcha_code'] != $captcha_code || empty($captcha_code))) {
                 $this->design->assign('error', 'captcha');
             } elseif (empty($comment->name)) {
                 $this->design->assign('error', 'empty_name');
@@ -124,10 +124,6 @@ class ProductView extends View {
         // Отзывы о товаре
         $comments = $this->comments->get_comments(array('type'=>'product', 'object_id'=>$product->id, 'approved'=>1, 'ip'=>$_SERVER['REMOTE_ADDR']));
         
-        // Соседние товары
-        $this->design->assign('next_product', $this->products->get_next_product($product->id));
-        $this->design->assign('prev_product', $this->products->get_prev_product($product->id));
-        
         // И передаем его в шаблон
         $this->design->assign('product', $product);
         $this->design->assign('comments', $comments);
@@ -135,8 +131,15 @@ class ProductView extends View {
         // Категория и бренд товара
         $product->categories = $this->categories->get_categories(array('product_id'=>$product->id));
         $this->design->assign('brand', $this->brands->get_brand(intval($product->brand_id)));
-        $this->design->assign('category', reset($product->categories));
-        
+        $category = reset($product->categories);
+        $this->design->assign('category', $category);
+
+        // Соседние товары
+        if (!empty($category)) {
+            $neighbors_products = $this->products->get_neighbors_products($category->id, $product->position);
+            $this->design->assign('next_product', $neighbors_products['next']);
+            $this->design->assign('prev_product', $neighbors_products['prev']);
+        }
         
         // Добавление в историю просмотров товаров
         $max_visited_products = 100; // Максимальное число хранимых товаров в истории
@@ -154,7 +157,6 @@ class ProductView extends View {
         setcookie("browsed_products", $cookie_val, $expire, "/");
         
         //Автоматичекска генерация мета тегов и описания товара
-        $category = $this->design->smarty->getTemplateVars('category');
         if (!empty($category)) {
             $auto_meta_title = "";
             $auto_meta_keywords = "";
@@ -162,6 +164,7 @@ class ProductView extends View {
             //$auto_h1 = "";
             $parts = array(
                 '{$category}' => ($category->name ? $category->name : ''),
+                '{$category_h1}' => ($category->name_h1 ? $category->name_h1 : ''),
                 '{$brand}' => ($this->design->get_var('brand') ? $this->design->get_var('brand')->name : ''),
                 '{$product}' => ($product->name ? $product->name : ''),
                 '{$price}' => ($product->variant->price != null ? $this->money->convert($product->variant->price, $this->currency->id, false).' '.$this->currency->sign : ''),

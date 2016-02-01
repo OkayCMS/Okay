@@ -22,7 +22,7 @@ class FeedbackView extends View {
                 $this->design->assign('error', 'empty_email');
             } elseif(empty($feedback->message)) {
                 $this->design->assign('error', 'empty_text');
-            } elseif(empty($_SESSION['captcha_code']) || $_SESSION['captcha_code'] != $captcha_code || empty($captcha_code)) {
+            } elseif($this->settings->captcha_feedback && ($_SESSION['captcha_code'] != $captcha_code || empty($captcha_code))) {
                 $this->design->assign('error', 'captcha');
             } else {
                 $this->design->assign('message_sent', true);

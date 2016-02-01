@@ -2,39 +2,57 @@
 {capture name=tabs}
     {if in_array('orders', $manager->permissions)}
         <li {if $status===0}class="active"{/if}>
-            <a href="{url module=OrdersAdmin status=0 keyword=null id=null page=null label=null}">Новые</a>
+            <a href="{url module=OrdersAdmin status=0 keyword=null id=null page=null label=null from_date=null to_date=null}">Новые</a>
         </li>
         <li {if $status==1}class="active"{/if}>
-            <a href="{url module=OrdersAdmin status=1 keyword=null id=null page=null label=null}">Приняты</a>
+            <a href="{url module=OrdersAdmin status=1 keyword=null id=null page=null label=null from_date=null to_date=null}">Приняты</a>
         </li>
         <li {if $status==2}class="active"{/if}>
-            <a href="{url module=OrdersAdmin status=2 keyword=null id=null page=null label=null}">Выполнены</a>
+            <a href="{url module=OrdersAdmin status=2 keyword=null id=null page=null label=null from_date=null to_date=null}">Выполнены</a>
         </li>
         <li {if $status==3}class="active"{/if}>
-            <a href="{url module=OrdersAdmin status=3 keyword=null id=null page=null label=null}">Удалены</a>
+            <a href="{url module=OrdersAdmin status=3 keyword=null id=null page=null label=null from_date=null to_date=null}">Удалены</a>
         </li>
         {if $keyword}
             <li class="active">
-                <a href="{url module=OrdersAdmin keyword=$keyword id=null label=null}">Поиск</a>
+                <a href="{url module=OrdersAdmin keyword=$keyword id=null label=null from_date=null to_date=null}">Поиск</a>
             </li>
         {/if}
     {/if}
     {if in_array('labels', $manager->permissions)}
-        <li><a href="{url module=OrdersLabelsAdmin keyword=null id=null page=null label=null}">Метки</a></li>
+        <li><a href="{url module=OrdersLabelsAdmin keyword=null id=null page=null label=null from_date=null to_date=null}">Метки</a></li>
     {/if}
 {/capture}
 
 {* Title *}
 {$meta_title='Заказы' scope=parent}
 
+{literal}
+    <script src="design/js/jquery/datepicker/jquery.ui.datepicker-ru.js"></script>
+{/literal}
 {* Поиск *}
-<form method="get">
-<div id="search">
-	<input type="hidden" name="module" value="OrdersAdmin">
-	<input class="search" type="text" name="keyword" value="{$keyword|escape}"/>
-	<input class="search_button" type="submit" value=""/>
-</div>
+<form id="search_form" method="get">
+ 
+    <div id="search">
+    	<input type="hidden" name="module" value="OrdersAdmin">
+    	<input class="search" type="text" name="keyword" value="{$keyword|escape}"/>
+    	<input class="search_button" type="submit" value=""/> 
+    </div>
+
+    <div class="helper_wrap">
+       <a href="javascript:;" id="show_help_search" class="helper_link"></a> 
+       <div class="search_help helper_block">
+            <b>В поиске участвуют следующие данные:</b>
+            <span>1.    Номер заказа</span>
+            <span>2.    Имя покупателя</span>
+            <span>3.    Телефон</span>
+            <span>4.    Адрес</span>
+            <span>5.    E-mail</span>
+            <span>6.    Название товара или название варианта товара в заказе</span>
+        </div>
+    </div> 
 </form>
+
 	
 {* Заголовок *}
 <div id="header">
@@ -70,29 +88,61 @@
                         <div class="order_date cell">
                             {$order->date|date} в {$order->date|time}
                         </div>
+
                         <div class="order_name cell">
                             {foreach $order->labels as $l}
                                 <span class="order_label" style="background-color:#{$l->color};" title="{$l->name}"></span>
                             {/foreach}
-                            <a href="{url module=OrderAdmin id=$order->id return=$smarty.server.REQUEST_URI}">Заказ №{$order->id}</a> {$order->name|escape}
+
+                            <div class="order_info_wrap">
+                                 <a class="show_purchases" href="javascript:;"><span>{$order->purchases|count}</span><i class="info_icon"></i></a>
+
+                                <div class="order_info">
+                                    <p>Товары в заказе №{$order->id}</p>
+                                    <table class="orders_purchases">
+                                        {foreach $order->purchases as $purchase}
+                                            <tr>
+                                                <td>
+                                                {$purchase->product_name}
+                                                {if $purchase->variant_name}({$purchase->variant_name}){/if}
+                                                </td>
+                                                <td>{$purchase->price}</td>
+                                                <td>{$purchase->amount}{$settings->units}</td>
+                                            </tr>
+                                        {/foreach}
+                                    </table>
+                                </div>
+                            </div>
+
+                           
+                            <a href="{url module=OrderAdmin id=$order->id return=$smarty.server.REQUEST_URI}">Заказ №{$order->id}</a> 
+                            <span>{$order->name|escape}</span>
+
                             {if $order->note}
                                 <div class="note">{$order->note|escape}</div>
                             {/if}
+                            
+                            
                         </div>
+
+                        <div class="name cell" style='white-space:nowrap;'>
+                            {$order->total_price|escape} {$currency->sign}
+                        </div>
+
                         <div class="icons cell">
                             <a href='{url module=OrderAdmin id=$order->id view=print}' target="_blank" class="print" title="Печать заказа"></a>
                             <a href='#' class=delete title="Удалить"></a>
                         </div>
-                        <div class="name cell" style='white-space:nowrap;'>
-                            {$order->total_price|escape} {$currency->sign}
-                        </div>
-                        <div class="icons cell">
+
+                         <div class="icons cell">
                             {if $order->paid}
-                                <img src='design/images/moneybox_paid.png' height="16px" alt='Оплачен' title='Оплачен'>
+                                <img src='design/images/moneybox_paid.png'  alt='Оплачен' title='Оплачен'>
                             {else}
-                                <img src='design/images/moneybox.png' height="16px" alt='Не оплачен' title='Не оплачен'>
+                                <img src='design/images/moneybox.png'  alt='Не оплачен' title='Не оплачен'>
                             {/if}
                         </div>
+
+                       
                         {if $keyword}
                             <div class="icons cell">
                                 {if $order->status == 0}
@@ -109,6 +159,7 @@
                                 {/if}
                             </div>
                         {/if}
+
                         <div class="clear"></div>
                     </div>
                 {/foreach}
@@ -147,6 +198,34 @@
 
 <div id="right_menu">
 
+    <form class="date_filter" method="get">
+        <input type="hidden" name="module" value="OrdersAdmin">
+        <input type="hidden" name="status" value="{$status}">
+
+        <div class="date_filter_title">
+            <span>Заказы за период</span>
+            <div class="helper_wrap">
+                <a id="show_help_filter" class="helper_link" href="javascript:;"></a>
+                <div id="help_date_filter" class="helper_block">
+                    <span> Если не указана дата «С» то выбираются заказы начиная с самого первого.</span>
+                    <span> Если не указана конечная дата «По» то автоматом подставляется текущая дата.</span>
+                </div>
+            </div>
+        </div>
+            
+        <div class="form_group">
+           <label for="from_date">C</label>
+            <input class="okay_inp" type="text" id="from_date" name="from_date" value="{$from_date}" autocomplete="off"> 
+        </div>
+
+         <div class="form_group">
+            <label for="to_date">По</label>
+            <input class="okay_inp" type="text" id="to_date" name="to_date" value="{$to_date}" autocomplete="off">
+         </div>
+            
+        <input class="button" type="submit" value="Показать"/>
+    </form>
+
     {if $labels}
         <ul id="labels">
             <li {if !$label}class="selected"{/if}>
@@ -155,8 +234,8 @@
             </li>
             {foreach $labels as $l}
                 <li data-label-id="{$l->id}" {if $label->id==$l->id}class="selected"{/if}>
-                    <span style="background-color:#{$l->color};" class="order_label"></span>
-                    <a href="{url label=$l->id}">{$l->name}</a></li>
+                    
+                    <a href="{url label=$l->id}"><span style="background-color:#{$l->color};" class="order_label"></span>{$l->name}</a></li>
             {/foreach}
         </ul>
     {/if}
@@ -179,6 +258,14 @@ $(function() {
 		scrollSensitivity: 40,
 		opacity:           0.7
 	});
+
+    $("#from_date, #to_date").datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+
+    $('.show_purchases').on('click',function(){
+       $(this).next().slideToggle(300);
+    });
 	
 
 	$("#main_list #list .row").droppable({

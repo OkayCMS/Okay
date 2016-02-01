@@ -1,7 +1,8 @@
 <?php
-    
-    require_once('../../api/Okay.php');
-    $okay = new Okay();
+
+    if(!$okay->managers->access('products')) {
+        exit();
+    }
     
     $category_id = $okay->request->get('category_id', 'integer');
     $product_id = $okay->request->get('product_id', 'integer');

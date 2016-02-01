@@ -17,7 +17,7 @@ if(empty($max_exec_time)) {
 
 session_start();
 chdir('../..');
-include('api/Okay.php');
+include_once('api/Okay.php');
 $okay = new Okay();
 
 if($okay->request->get('type') == 'sale' && $okay->request->get('mode') == 'checkauth') {

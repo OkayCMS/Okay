@@ -23,6 +23,13 @@ class OKPay extends Okay
 		
 
 		$return_url = $this->config->root_url.'/payment/OKPay/callback.php';
+
+        $res['settings_pay'] = $settings;
+        $res['order'] = $order;
+        $res['desc'] = $desc;
+        $res['price'] = $price;
+        $res['currency'] = $currency;
+        $res['return_url'] = $return_url;
 		
 		$button =	'<form action="https://www.okpay.com/process.html" method="POST"/>'.
 					'<input type="hidden" name="ok_receiver" value="'.$settings['okpay_reciever'].'" />'.
@@ -35,6 +42,6 @@ class OKPay extends Okay
 					'<input type=image src="https://www.okpay.com/img/buttons/x03.gif" alt="'.$button_text.'">'.
 					'</form>';
 				
-		return $button;
+		return $res;
 	}
 }

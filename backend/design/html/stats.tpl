@@ -62,7 +62,7 @@ var options = {
 
 };
 
-$.get('ajax/stat/stat.php', function(data){
+$.get('ajax/stat.php', function(data){
 	var series = {
 		data: []
 	};

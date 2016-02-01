@@ -1,7 +1,5 @@
 <?php
 
-require_once('../../api/Okay.php');
-
 class ExportAjax extends Okay {
     
     private $columns_names = array(
@@ -17,7 +15,7 @@ class ExportAjax extends Okay {
     
     private $column_delimiter = ';';
     private $users_count = 10;
-    private $export_files_dir = '../files/export_users/';
+    private $export_files_dir = 'backend/files/export_users/';
     private $filename = 'users.csv';
     
     public function fetch() {
@@ -80,9 +78,12 @@ class ExportAjax extends Okay {
 }
 
 $export_ajax = new ExportAjax();
-$json = json_encode($export_ajax->fetch());
-header("Content-type: application/json; charset=utf-8");
-header("Cache-Control: must-revalidate");
-header("Pragma: no-cache");
-header("Expires: -1");
-print $json;
+$data = $export_ajax->fetch();
+if ($data) {
+    header("Content-type: application/json; charset=utf-8");
+    header("Cache-Control: must-revalidate");
+    header("Pragma: no-cache");
+    header("Expires: -1");
+    $json = json_encode($data);
+    print $json;
+}

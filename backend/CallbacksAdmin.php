@@ -18,7 +18,9 @@ class CallbacksAdmin extends Okay {
                         break;
                     }
                     case 'processed': {
-                        $this->callbacks->update_callback($ids,array('processed'=>1));
+                        foreach ($ids as $id) {
+                            $this->callbacks->update_callback($id, array('processed'=>1));
+                        }
                         break;
                     }
                 }

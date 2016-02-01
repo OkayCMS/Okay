@@ -19,7 +19,10 @@ class Paysto extends Okay
 		$success_url = $this->config->root_url.'/order/'.$order->url;
 		
 		$fail_url = $this->config->root_url.'/order/'.$order->url;
-		
+
+        $res['payment_settings'] = $payment_settings;
+        $res['amount'] = $amount;
+        $res['order'] = $order;
 		
 		$button = "<form accept-charset='UTF-8' method='POST' action='https://paysto.com/ru/pay'>
 					<input type='hidden' name='PAYSTO_SHOP_ID' value='".$payment_settings['paysto_shop_id']."'>
@@ -29,7 +32,7 @@ class Paysto extends Okay
 					<input type='hidden' name='PayerEMail' value='".htmlentities($order->email)."'>
 					<input class=checkout_button type='submit' value='".$button_text."' />
 					</form>";
-		return $button;
+		return $res;
 	}
 
 }

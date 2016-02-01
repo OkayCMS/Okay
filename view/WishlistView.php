@@ -64,8 +64,8 @@ class WishlistView extends View {
                     if(isset($products[$id]->images[0])) {
                         $products[$id]->image = $products[$id]->images[0];
                     }
-                    if(isset($product->variants[0])) {
-                        $product->variant = $product->variants[0];
+                    if(isset($products[$id]->variants[0])) {
+                        $products[$id]->variant = $products[$id]->variants[0];
                     }
                 }
             }

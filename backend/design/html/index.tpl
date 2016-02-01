@@ -11,12 +11,54 @@
     <script src="design/js/jquery/jquery.form.js"></script>
     <script src="design/js/jquery/jquery-ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="design/js/jquery/jquery-ui.css" media="screen" />
-
+    <script src="design/js/ckeditor/ckeditor.js"></script>
     <meta name="viewport" content="width=1024">
 
 </head>
 <body>
+{if $smarty.get.module == "ProductAdmin"
+    || $smarty.get.module == "CategoryAdmin"
+    || $smarty.get.module == "BrandAdmin"
+    || $smarty.get.module == "PostAdmin"
+    || $smarty.get.module == "PageAdmin"}
+<script>
+    $(window).on("load", function() {
+        var title = $("input[name='meta_title']"),
+            keywords = $("input[name='meta_keywords']"),
+            desc = $("textarea[name='meta_description']");
+        number = title.val().length;
+        $(".count_title_symbol").html(number);
+        $(".word_title").html(title.val().split(/[\s\.\?]+/).length);
 
+        number = keywords.val().length;
+        $(".count_keywords_symbol").html(number);
+        $(".word_keywords").html(keywords.val().split(/[\s\.\?]+/).length);
+
+        number = desc.text().length;
+        $(".count_desc_symbol").html(number);
+        $(".word_desc").html(desc.val().split(/[\s\.\?]+/).length);
+
+        title.keyup(function count() {
+            number = title.val().length;
+            $(".count_title_symbol").html(number);
+            total_words=$(this).val().split(/[\s\.\?]+/).length;
+            $(".word_title").html(total_words);
+        });
+        keywords.keyup(function count() {
+            number = keywords.val().length;
+            $(".count_keywords_symbol").html(number);
+            total_words=$(this).val().split(/[\s\.\?]+/).length;
+            $(".word_keywords").html(total_words);
+        });
+        desc.keyup(function count() {
+            number = desc.val().length;
+            $(".count_desc_symbol").html(number);
+            total_words=$(this).val().split(/[\s\.\?]+/).length;
+            $(".word_desc").html(total_words);
+        });
+    });
+</script>
+{/if}
 <a href='{$config->root_url}/{$lang_link}' class='admin_bookmark'></a>
 
 <div class="container">
@@ -43,38 +85,3 @@
 </body>
 </html>
 
-{literal}
-<script>
-    $(function() {
-
-        if($.browser.opera)
-            $("#logout").hide();
-
-        $("#logout").click( function(event) {
-            event.preventDefault();
-
-            if($.browser.msie)
-            {
-                try{document.execCommand("ClearAuthenticationCache");}
-                catch (exception){}
-                window.location.href='/';
-            }
-            else
-            {
-                $.ajax({
-                    url: $(this).attr('href'),
-                    username: '',
-                    password: '',
-                    complete: function () {
-                        window.location.href='/';
-                    },
-                    beforeSend : function(req) {
-                        req.setRequestHeader('Authorization', 'Basic');
-                    }
-                });
-            }
-        });
-        {/literal}
-
-    });
-</script>

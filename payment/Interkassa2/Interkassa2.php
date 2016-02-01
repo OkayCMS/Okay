@@ -23,7 +23,16 @@ class Interkassa2 extends Okay
 		$success_url = $this->config->root_url.'/order/'.$order->url;
 		$callback_url = $this->config->root_url.'/payment/Interkassa2/callback.php';
 
-					
+
+        $res['settings_pay'] = $settings;
+        $res['order'] = $order;
+        $res['settings_pay'] = $settings;
+        $res['payment_currency'] = $payment_currency;
+        $res['price'] = $price;
+        $res['desc'] = $desc;
+        $res['success_url'] = $success_url;
+        $res['callback_url'] = $callback_url;
+
 		$button = "<form name='payment' method='post' action='https://sci.interkassa.com/' accept-charset='UTF-8'> 
 					<input type='hidden' name='ik_co_id' value='".$settings['ik_co_id']."'>
 					<input type='hidden' name='ik_pm_no' value='".$order->id."'>
@@ -36,6 +45,6 @@ class Interkassa2 extends Okay
 
 					<input type='submit' name='process'  value='$button_text' class='checkout_button'>
 					</form>";
-		return $button;
+		return $res;
 	}
 }

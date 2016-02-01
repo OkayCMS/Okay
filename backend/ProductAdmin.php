@@ -95,6 +95,13 @@ class ProductAdmin extends Okay {
                 if(!empty($product->id)) {
                     $images = $this->products->get_images(array('product_id'=>$product->id));
                 }
+            }
+            // Не допусть URL с '-' в начале или конце
+            elseif(substr($product->url, -1) == '-' || substr($product->url, 0, 1) == '-') {
+                $this->design->assign('message_error', 'url_wrong');
+                if(!empty($product->id)) {
+                    $images = $this->products->get_images(array('product_id'=>$product->id));
+                }
             } else {
                 if(empty($product->id)) {
                     //lastModify
@@ -377,10 +384,9 @@ class ProductAdmin extends Okay {
         }
         
         // Промо изображения	
-        $query_spec = $this->db->placehold("SELECT * FROM __spec_img order by id");	
-        $res=$this->db->query($query_spec);
-        $kartinki = $this->db->results();
-        $this->design->assign('kartinki', $kartinki);
+        $this->db->query("SELECT * FROM __spec_img ORDER BY position DESC");	
+        $special_images = $this->db->results();
+        $this->design->assign('special_images', $special_images);
         // END Промо изображения
         
         return $this->design->fetch('product.tpl');

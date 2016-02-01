@@ -36,6 +36,7 @@ class Okay {
         /*statistic*/
         ,'reportstat' => 'ReportStat'
         /*statistic*/
+        ,'topvisor'  => 'Topvisor'
         
 	);
     

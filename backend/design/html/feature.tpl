@@ -90,7 +90,16 @@ function translit(str) {
 
     <div id="column_left">
         <div class="block layer">
-            <h2>Идентификаторы для описаний в категориях</h2>
+            <h2>Идентификаторы для описаний в категориях
+                <div class="helper_wrap">
+                    <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                    <div class="right helper_block">
+                        <span>
+                         Используются в категориях при автоматическом формировании мета данных товаров
+                        </span>
+                    </div>
+                </div>
+            </h2>
             <ul>
                 <li><label class="property">ID свойства</label>
                     <input name="auto_name_id" class="okay_inp" type="text" value="{$feature->auto_name_id|escape}"/>
@@ -102,7 +111,16 @@ function translit(str) {
         </div>
 
         <div class="block">
-            <h2>Использовать в категориях</h2>
+            <h2>Использовать в категориях
+                <div class="helper_wrap">
+                    <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                    <div class="right helper_block">
+                        <span>
+                            Чекбоксами отмечается в каких категориях будет использоваться данное свойство
+                        </span>
+                    </div>
+                </div>
+            </h2>
             <select class=multiple_categories multiple name="feature_categories[]">
                 {function name=category_select selected_id=$product_category level=0}
                     {foreach $categories as $category}
@@ -123,6 +141,14 @@ function translit(str) {
                 <li>
                     <label for="url">url</label>
                     <input type="text" name="url" id="url" value="{$feature->url}"/>
+                    <div class="helper_wrap">
+                        <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                        <div class="helper_block">
+                            <span>
+                            Используется при формиировании URL после применения фильтра
+                            </span>
+                        </div>
+                    </div>
                 </li>
                 <li>
                     <input type=checkbox name=in_filter id=in_filter {if $feature->in_filter}checked{/if} value="1">

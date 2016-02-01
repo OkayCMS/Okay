@@ -7,9 +7,9 @@ require_once('view/IndexView.php');
 $view = new IndexView();
 
 if(isset($_GET['logout'])) {
-    header('WWW-Authenticate: Basic realm="OkayCMS"');
-    header('HTTP/1.0 401 Unauthorized');
     unset($_SESSION['admin']);
+    header('location: '.$view->config->root_url);
+    exit();
 }
 
 if(($res = $view->fetch()) !== false) {

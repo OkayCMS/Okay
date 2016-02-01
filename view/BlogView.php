@@ -42,7 +42,7 @@ class BlogView extends View {
             $this->design->assign('comment_name', $comment->name);
             
             // Проверяем капчу и заполнение формы
-            if ($_SESSION['captcha_code'] != $captcha_code || empty($captcha_code)) {
+            if ($this->settings->captcha_post && ($_SESSION['captcha_code'] != $captcha_code || empty($captcha_code))) {
                 $this->design->assign('error', 'captcha');
             } elseif (empty($comment->name)) {
                 $this->design->assign('error', 'empty_name');

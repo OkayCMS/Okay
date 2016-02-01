@@ -46,6 +46,14 @@ class Robokassa extends Okay
 		// формирование подписи
 		// generate signature
 		$crc  = md5("$mrh_login:$price:$inv_id:$mrh_pass1");
+
+        $res['mrh_login'] = $mrh_login;
+        $res['price'] = $price;
+        $res['inv_id'] = $inv_id;
+        $res['inv_desc'] = $inv_desc;
+        $res['crc'] = $crc;
+        $res['in_curr'] = $in_curr;
+        $res['culture'] = $culture;
 		
 		$button =	"<form accept-charset='cp1251' action='https://merchant.roboxchange.com/Index.aspx' method=POST>".
 					"<input type=hidden name=MrchLogin value='$mrh_login'>".
@@ -57,7 +65,7 @@ class Robokassa extends Okay
 					"<input type=hidden name=Culture value='$culture'>".
 					"<input type=submit class=checkout_button value='Перейти к оплате &#8594;'>".
 					"</form>";
-		return $button;
+		return $res;
 	}
 
 }

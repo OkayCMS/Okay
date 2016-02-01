@@ -9,7 +9,7 @@ require_once('Okay.php');
 
 class Config {
     
-    public $version = '1.0.3';
+    public $version = '1.1.0';
     
     // Файл для хранения настроек
     public $config_file = 'config/config.php';
@@ -48,7 +48,7 @@ class Config {
             $this->vars['root_url'] .= '/'.$subdir;
         }
         
-        // Подпапка в которую установлена симпла относительно корня веб-сервера
+        // Подпапка в которую установлен OkayCMS относительно корня веб-сервера
         $this->vars['subfolder'] = $subdir.'/';
         
         // Определяем корневую директорию сайта

@@ -65,9 +65,22 @@ class Paypal extends Okay
 			$button .=	"<input type='hidden' name='shipping_1' value='".$delivery_price."'>";
 		}
 
+        $res['paypal_url'] = $paypal_url;
+        $res['currency'] = $currency;
+        $res['order'] = $order;
+        $res['payment_settings'] = $payment_settings;
+        $res['ipn_url'] = $ipn_url;
+        $res['success_url'] = $success_url;
+        $res['fail_url'] = $fail_url;
+        if($coupon_discount > 0) {
+            $res['coupon_discount'] = $coupon_discount;
+        }
+        $res['purchases'] = $purchases;
+        $res['payment_method'] = $payment_method;
+
 		$button .=	"<input type='image' src='https://www.paypalobjects.com/en_US/i/btn/btn_xpressCheckout.gif' value='".$button_text."'>
 					</form>";
-		return $button;
+		return $res;
 	}
 
 }

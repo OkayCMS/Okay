@@ -27,7 +27,8 @@
 		{foreach $translations as $translation}
 		<div class="{if !$translation->enabled}invisible{/if} row">
 	 		<div class="checkbox cell">
-				<input type="checkbox" name="check[]" value="{$translation->id}" />
+				<input type="checkbox" id="{$translation->id}" name="check[]" value="{$translation->id}" />
+                <label for="{$translation->id}"></label>
 			</div>
 			<div class="name cell">
 				<span style='width:350px;display:inline-block;overflow:hidden'>

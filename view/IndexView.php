@@ -13,6 +13,7 @@ class IndexView extends View {
     public function fetch() {
         
         if($this->request->method('post') && $this->request->post('callback')) {
+            $callback = new stdClass();
             $callback->phone        = $this->request->post('phone');
             $callback->name         = $this->request->post('name');
             //$callback->message      = $this->request->post('message');
@@ -98,6 +99,10 @@ class IndexView extends View {
         $wrapper = $this->design->get_var('wrapper');
         if(is_null($wrapper)) {
             $wrapper = 'index.tpl';
+        }
+
+        if($this->settings->site_work == "off"){
+            return $this->design->fetch('tech.tpl');
         }
         
         if(!empty($wrapper)) {

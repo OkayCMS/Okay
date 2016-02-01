@@ -40,7 +40,16 @@ class RBKMoney extends Okay
 		// Email покупателя
 		$user_email = $order->email;
 
-		
+		$res['shop_id'] = $shop_id;
+        $res['order_id'] = $order_id;
+        $res['order_description'] = $order_description;
+        $res['amount'] = $amount;
+        $res['currency_code'] = $currency_code;
+        $res['redirect_url_ok'] = $redirect_url_ok;
+        $res['redirect_url_failed'] = $redirect_url_failed;
+        $res['user_email'] = $user_email;
+
+
 		$button =	"<form action='https://rbkmoney.ru/acceptpurchase.aspx' method=POST>".
 					"<input type=hidden name=eshopId value='$shop_id'>".
 					"<input type=hidden name=orderId value='$order_id'>".
@@ -52,6 +61,6 @@ class RBKMoney extends Okay
 					"<input type=hidden name=user_email value='$user_email'>".
 					"<input type=submit class=payment_button value='$button_text'>".
 					"</form>";
-		return $button;
+		return $res;
 	}
 }

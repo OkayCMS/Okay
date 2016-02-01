@@ -17,10 +17,6 @@ Header("Cache-Control: no-cache, must-revalidate");
 header("Expires: -1");
 Header("Pragma: no-cache");
 
-
-// Установим переменную сессии, чтоб фронтенд нас узнал как админа
-$_SESSION['admin'] = 'admin';
-
 $backend = new IndexAdmin();
 
 // Проверка сессии для защиты от xss

@@ -8,7 +8,7 @@ class BannersImagesAdmin extends Okay {
         $filter = array();
         $filter['page'] = max(1, $this->request->get('page', 'integer'));
         
-        $filter['limit'] = $this->settings->products_num_admin;
+        $filter['limit'] = 20;
         
         // Баннера
         $banners = $this->banners->get_banners();

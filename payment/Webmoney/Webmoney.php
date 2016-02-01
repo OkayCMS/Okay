@@ -18,6 +18,13 @@ class Webmoney extends Okay
 		$success_url = $this->config->root_url.'/order/'.$order->url;
 		
 		$fail_url = $this->config->root_url.'/order/'.$order->url;
+
+        $res['order'] = $order;
+        $res['payment_method'] = $payment_method;
+        $res['payment_settings'] = $payment_settings;
+        $res['amount'] = $amount;
+        $res['success_url'] = $success_url;
+        $res['fail_url'] = $fail_url;
 		
 		
 		$button = "<form accept-charset='cp1251' method='POST' action='https://merchant.webmoney.ru/lmi/payment.asp'>
@@ -30,7 +37,7 @@ class Webmoney extends Okay
 					<input type='hidden' name='LMI_FAIL_URL' value='$fail_url'>
 					<input class=checkout_button type='submit' value='".$button_text."' />
 					</form>";
-		return $button;
+		return $res;
 	}
 
 }

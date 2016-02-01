@@ -46,6 +46,16 @@ class Qiwi extends Okay
 		$message = "Введите логин Qiwi-кошелька или номер телефона (10 последних цифр):";
 		$phone = preg_replace('/[^\d]/', '', $order->phone);
 		$phone = substr($phone, -min(10, strlen($phone)), 10);
+
+        $res['login'] = $login;
+        $res['price'] = $price;
+        $res['inv_id'] = $inv_id;
+        $res['payment_currency'] = $payment_currency;
+        $res['inv_desc'] = $inv_desc;
+        $res['success_url'] = $success_url;
+        $res['fail_url'] = $login;
+        $res['message'] = $message;
+        $res['phone'] = $phone;
 		
 		$button =	"<form action='https://w.qiwi.com/order/external/create.action'>".
 					"<input type=hidden name=from value='$login'>".
@@ -58,7 +68,7 @@ class Qiwi extends Okay
 					"<label>$message</label><input type=text name=to value='".$phone."'>".
 					"<input type=submit class=checkout_button value='$button_text'>".
 					"</form>";
-		return $button;
+		return $res;
 	}
 
 }

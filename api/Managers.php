@@ -6,67 +6,65 @@ class Managers extends Okay {
     
     public $permissions_list = array('products', 'categories', 'brands', 'features', 'orders', 'labels',
         'users', 'groups', 'coupons', 'pages', 'blog', 'comments', 'feedbacks', 'import', 'export',
-        'backup', 'stats', 'design', 'settings', 'currency', 'delivery', 'payment', 'managers', 'license', 'languages',
-        'banners', 'special', 'callbacks'
+        'stats', 'design', 'settings', 'currency', 'delivery', 'payment', 'managers', 'license', 'languages',
+        'banners', 'special', 'callbacks', 'topvisor'
         
     );
+
+    private $all_managers = array();
     
-    public $passwd_file = "backend/.passwd";
-    
-    public function __construct() {
-        // Для совсестимости с режимом CGI
-        if (isset($_SERVER['REDIRECT_REMOTE_USER']) && empty($_SERVER['PHP_AUTH_USER'])) {
-            $_SERVER['PHP_AUTH_USER'] = $_SERVER['REDIRECT_REMOTE_USER'];
-        } elseif(empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER["REMOTE_USER"])) {
-            $_SERVER['PHP_AUTH_USER'] = $_SERVER["REMOTE_USER"];
-        }
-    }
-    
-    public function get_managers() {
-        $lines = explode("\n", @file_get_contents(dirname(dirname(__FILE__)).'/'.$this->passwd_file));
-        $managers = array();
-        foreach($lines as $line) {
-            if(!empty($line)) {
-                $manager = null;
-                $fields = explode(":", $line);
-                $manager = new stdClass();
-                $manager->login = trim($fields[0]);
-                $manager->permissions = array();
-                if(isset($fields[2])) {
-                    $manager->permissions = explode(",", $fields[2]);
-                    foreach($manager->permissions as &$permission) {
-                        $permission = trim($permission);
-                    }
-                } else {
-                    $manager->permissions = $this->permissions_list;
+    public function __construct() {}
+
+    private function init_managers() {
+        $this->all_managers = array();
+        $this->db->query("SELECT * FROM __managers ORDER BY id");
+        foreach ($this->db->results() as $m) {
+            $this->all_managers[$m->id] = $m;
+            if (!is_null($m->permissions)) {
+                $m->permissions = explode(',', $m->permissions);
+                foreach ($m->permissions as &$permission) {
+                    $permission = trim($permission);
                 }
-                $managers[] = $manager;
+            } else {
+                $m->permissions = $this->permissions_list;
             }
         }
-        return $managers;
+    }
+
+    public function get_managers() {
+        if (empty($this->all_managers)) {
+            $this->init_managers();
+        }
+        return $this->all_managers;
     }
     
     public function count_managers($filter = array()) {
-        return count($this->get_managers());
+        return count($this->all_managers);
     }
     
-    public function get_manager($login = null) {
+    public function get_manager($id = null) {
+        if (empty($this->all_managers)) {
+            $this->init_managers();
+        }
         // Если не запрашивается по логину, отдаём текущего менеджера или false
-        if(empty($login)) {
-            if(!empty($_SERVER['PHP_AUTH_USER'])) {
-                $login = $_SERVER['PHP_AUTH_USER'];
-            } else {
+        if(empty($id)) {
+            if (!empty($_SESSION['admin'])) {
+                $id = $_SESSION['admin'];
+            }/* else {
                 // Тестовый менеджер, если отключена авторизация
                 $m = new stdClass();
                 $m->login = 'manager';
                 $m->permissions = $this->permissions_list;
                 return $m;
-            }
+            }*/
         }
-        
-        foreach($this->get_managers() as $manager) {
-            if($manager->login == $login) {
-                return $manager;
+        if(is_int($id) && isset($this->all_managers[$id])) {
+            return $this->all_managers[$id];
+        } elseif(is_string($id)) {
+            foreach ($this->all_managers as $m) {
+                if ($m->login == $id) {
+                    return $m;
+                }
             }
         }
         return false;
@@ -74,84 +72,58 @@ class Managers extends Okay {
     
     public function add_manager($manager) {
         $manager = (object)$manager;
-        if(!empty($manager->login)) {
-            $m[0] = $manager->login;
-        }
         if(!empty($manager->password)) {
             // захешировать пароль
-            $m[1] = $this->crypt_apr1_md5($manager->password);
-        } else {
-            $m[1] = "";
+            $manager->password = $this->crypt_apr1_md5($manager->password);
         }
         if(is_array($manager->permissions)) {
             if(count(array_diff($this->permissions_list, $manager->permissions))>0) {
-                $m[2] = implode(",", $manager->permissions);
+                $manager->permissions = implode(",", $manager->permissions);
             } else {
-                unset($m[2]);
+                // все права
+                $manager->permissions = null;
             }
         }
-        $line = implode(":", $m);
-        file_put_contents($this->passwd_file, @file_get_contents($this->passwd_file)."\n".$line);
-        if($m = $this->get_manager($manager->login)) {
-            return $m->login;
-        } else {
-            return false;
-        }
+        $this->db->query("INSERT INTO __managers SET ?%", $manager);
+        $id = $this->db->insert_id();
+        $this->init_managers();
+        return $id;
     }
     
-    public function update_manager($login, $manager) {
+    public function update_manager($id, $manager) {
         $manager = (object)$manager;
-        // Не допускаем двоеточия в логине
-        if(!empty($manager->login)) {
-            $manager->login = str_replace(":", "", $manager->login);
+        if(!empty($manager->password)) {
+            // захешировать пароль
+            $manager->password = $this->crypt_apr1_md5($manager->password);
         }
-        
-        $lines = explode("\n", @file_get_contents($this->passwd_file));
-        $updated_flag = false;
-        foreach($lines as &$line) {
-            $m = explode(":", $line);
-            if($m[0] == $login) {
-                if(!empty($manager->login)) {
-                    $m[0] = $manager->login;
-                }
-                if(!empty($manager->password)) {
-                    // захешировать пароль
-                    $m[1] = $this->crypt_apr1_md5($manager->password);
-                }
-                if(isset($manager->permissions) && is_array($manager->permissions)) {
-                    if(count(array_diff($this->permissions_list, $manager->permissions))>0) {
-                        $m[2] = implode(",", array_intersect($this->permissions_list, $manager->permissions));
-                    } else {
-                        unset($m[2]);
-                    }
-                }
-                $line = implode(":", $m);
-                $updated_flag = true;
+
+        if(isset($manager->permissions) && is_array($manager->permissions)) {
+            if(count(array_diff($this->permissions_list, $manager->permissions))>0) {
+                $manager->permissions = implode(",", array_intersect($this->permissions_list, $manager->permissions));
+            } else {
+                // все права
+                $manager->permissions = null;
             }
         }
-        if($updated_flag) {
-            file_put_contents($this->passwd_file, implode("\n", $lines));
-            if($m = $this->get_manager($manager->login)) {
-                return $m->login;
-            }
+
+        $this->db->query("UPDATE __managers SET ?% WHERE id=?", $manager, intval($id));
+        $this->init_managers();
+        return $id;
+    }
+    
+    public function delete_manager($id) {
+        if (!empty($id)) {
+            $this->db->query("DELETE FROM __managers WHERE id=?", intval($id));
+            $this->init_managers();
+            return true;
         }
         return false;
     }
     
-    public function delete_manager($login) {
-        $lines = explode("\n", @file_get_contents($this->passwd_file));
-        foreach($lines as $i=>$line) {
-            $m = explode(":", $line);
-            if($m[0] == $login) {
-                unset($lines[$i]);
-            }
+    private function crypt_apr1_md5($plainpasswd, $salt = '') {
+        if (empty($salt)) {
+            $salt = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz0123456789"), 0, 8);
         }
-        file_put_contents($this->passwd_file, implode("\n", $lines));
-        return true;
-    }
-    
-    private function crypt_apr1_md5($plainpasswd) {
-        $salt = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz0123456789"), 0, 8);
         $len = strlen($plainpasswd);
         $text = $plainpasswd.'$apr1$'.$salt;
         $bin = pack("H32", md5($plainpasswd.$salt.$plainpasswd));
@@ -187,5 +159,10 @@ class Managers extends Okay {
             return false;
         }
     }
-    
+
+    public function check_password($password, $crypt_pass) {
+        $salt = explode('$', $crypt_pass);
+        $salt = $salt[2];
+        return ($crypt_pass == $this->crypt_apr1_md5($password, $salt));
+    }
 }

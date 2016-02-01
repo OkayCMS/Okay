@@ -61,11 +61,7 @@
             }
         });
     </script>
-    <style>
-        .stats_price,.stats_amount{
-            width:150px;
-        }
-    </style>
+
 {/literal}
 <div>
     <div id="header">
@@ -79,100 +75,102 @@
 
     <div id="main_list">
         <div id="list">
-            <div class="tree_row" style="margin-left:15px;">
-                <div class="cell">
-                    Категория
-                </div>
-                <div class="icons cell stats_price">Сумма, {$currency->sign}</div>
-                <div class="icons cell stats_amount">Количество, {$settings->units}</div>
-                <div class="clear"></div>
-            </div>
-            <div class="tree_row" style="margin-left:15px;font-size:16px;">
-                <div class="cell">
-                    <b>Итого</b>
-                </div>
-                <div class="icons cell stats_price">
-                    <b>{$total_price} {$currency->sign}</b>
-                </div>
-                <div class="icons cell stats_amount">
-                    <b>{$total_amount} {$settings->units}</b>
-                </div>
-                <div class="clear"></div>
-            </div>
-            {function name=categories_list_tree level=0}
-                {if $categories}
-                    <div id="list" class="sortable">
-
+            <table class="table_blue" width="100%">
+                <thead class="thead">
+                    <tr>
+                        <td>Категория</td>
+                        <td class="stats_amount">Количество, {$settings->units}</td>
+                        <td class="stats_price">Сумма, {$currency->sign}</td>
+                    </tr>
+                </thead>
+                <tbody>
+                {function name=categories_list_tree level=0}
+                    {if $categories}
                         {foreach $categories as $category}
-                            <div class="row">
-                                <div class="tree_row" style="margin-left:{($level+1)*15}px">
-                                    <div class="cell">
-                                        {$category->name|escape}
-                                    </div>
-                                    <div class="icons cell stats_price">{if $category->price}<b>{$category->price}</b>{else}{$category->price}{/if} {$currency->sign}</div>
-                                    <div class="icons cell stats_amount">{if $category->amount}<b>{$category->amount}</b>{else}{$category->amount}{/if} {$settings->units}</div>
-                                    <div class="clear"></div>
-                                </div>
+                            <tr>
+
+                                <td style="padding-left:{($level+1)*15}px">{$category->name|escape}</td>
+
+                                <td class="stats_amount">{if $category->amount}<b>{$category->amount}</b>{else}{$category->amount}{/if} {$settings->units}</td>
+
+                                <td class="stats_price">{if $category->price}<b>{$category->price}</b>{else}{$category->price}{/if} {$currency->sign}</td>
+                                
                                 {categories_list_tree categories=$category->subcategories level=$level+1}
-                            </div>
+                            </tr>
                         {/foreach}
-
-                    </div>
-                {/if}
-            {/function}
-            {categories_list_tree categories=$categories_list}
-
+                    {/if}
+                {/function}
+                {categories_list_tree categories=$categories_list}
+                </tbody>
+                <tfoot>
+                    <tr class="top_row">
+                        <td  colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: right">Итого</th>
+                        <th>{$total_price} {$currency->sign}</th>
+                        <th style="text-align: right">{$total_amount} {$settings->units}</th>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
-        <div id="list">
-            <div class="tree_row" style="margin-left:15px;font-size:16px;">
-                <div class="cell">
-                    <b>Итого</b>
-                </div>
-                <div class="icons cell stats_price">
-                    <b>{$total_price} {$currency->sign}</b>
-                </div>
-                <div class="icons cell stats_amount">
-                    <b>{$total_amount} {$settings->units}</b>
-                </div>
-                <div class="clear"></div>
-            </div>
-        </div>
+          
+    </div>
+        
 
     </div>
 
     <div id="right_menu">
-        <h4>Период</h4>
         {* Фильтр *}
-        <div style="display: block; clear:both; border: 1px solid #C0C0C0; margin: 10px 0; padding: 10px">
-            <form method="get">
-                <input type="hidden" name="module" value="CategoryStatsAdmin" />
-                <div id='filter_fields'>
-                    <div style="margin: 15px 0">
-                        <label>Дата с:&nbsp;</label><input type=text name=date_from value='{$date_from}' style="width:95%;"><br /><br />
-                        <label>По:&nbsp;</label></br><input type=text name=date_to value='{$date_to}' style="width:95%;">
+       
+            <form class="date_filter" method="get">
+                <div class="date_filter_title">
+                    <span>Выбрать период</span>
+
+                    <div class="helper_wrap">
+                        <a id="show_help_filter" class="helper_link" href="javascript:;"></a>
+                        <div id="help_date_filter" class="helper_block">
+                            <span> Если не указана дата «С», то выбираются продажи начиная с самой первой.</span>
+                            <span> Если не указана конечная дата «По», то автоматом подставляется текущая дата.</span>
+                        </div>
                     </div>
-                    <input id="apply_action" class="button_green" type="submit" value="Применить">
                 </div>
+
+                <div class="form_group">
+                    <label for="from_date">C</label>
+                    <input id="to_date" class="okay_inp" type=text name=date_from value='{$date_from}' />
+                </div>
+
+                <input type="hidden" name="module" value="CategoryStatsAdmin" />
+
+                <div class="form_group">
+                    <label for="to_date">По</label>
+                    <input id="to_date" class="okay_inp" type=text name=date_to value='{$date_to}' />
+                </div>
+
+                <input id="apply_action" class="button_green" type="submit" value="Применить" />
+                
             </form>
-        </div>
+        
 
         <h4>Категории</h4>
         {function name=categories_tree}
             {if $categories}
-                <ul>
+                <ul {if $level > 1}class="sub_menu"{/if}>
                     {if $categories[0]->parent_id == 0}
                         <li {if !$category->id}class="selected"{/if}><a href="{url category=null brand=null}">Все категории</a></li>
                     {/if}
                     {foreach $categories as $c}
                         <li category_id="{$c->id}" {if $category->id == $c->id}class="selected"{else}class="droppable category"{/if}>
                             <a href='{url brand=null supplier=null category={$c->id}}'>{$c->name}</a>
+                            {if $c->subcategories}<span class="slide_menu"></span>{/if}
                         </li>
-                        {categories_tree categories=$c->subcategories}
+                        {categories_tree categories=$c->subcategories level=$level+1}
                     {/foreach}
                 </ul>
             {/if}
         {/function}
-        {categories_tree categories=$categories}
+        {categories_tree categories=$categories level=1}
 
         <h4>Бренды</h4>
         {if $brands}
@@ -188,3 +186,16 @@
     </div>
     <!-- Меню  (The End) -->
 </div>
+<script>
+    $(function(){
+        $('.slide_menu').on('click',function(){
+            if($(this).hasClass('open')){
+                $(this).removeClass('open');
+            }
+            else{
+                $(this).addClass('open');
+            }
+            $(this).parent().next().slideToggle(500);
+        })
+    });
+</script>

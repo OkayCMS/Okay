@@ -59,7 +59,22 @@ class InvoiceBox extends Okay
 				$participant_apikey
 		); //
 		$shp_item 		= $payment_method->id;
-	
+
+        $res['participant_id'] = $participant_id;
+        $res['participant_ident'] = $participant_ident;
+        $res['participant_sign'] = $participant_sign;
+        $res['participant_order_id'] = $participant_order_id;
+        $res['itransfer_order_amount'] = $itransfer_order_amount;
+        $res['itransfer_order_quantity'] = $itransfer_order_quantity;
+        $res['participant_description'] = $participant_description;
+        $res['personName'] = $personName;
+        $res['personEmail'] = $personEmail;
+        $res['personPhone'] = $personPhone;
+        $res['itransfer_language'] = $itransfer_language;
+        $res['itransfer_url_success'] = $itransfer_url_success;
+        $res['itransfer_url_fail'] = $itransfer_url_fail;
+
+
 		$button =	"<form action='https://go.invoicebox.ru/module_inbox_auto.u' method='post'>".
 					"<input type='hidden' name='itransfer_participant_id' 		value='" . $participant_id . "'/>".
 					"<input type='hidden' name='itransfer_participant_ident' 	value='" . $participant_ident . "'/>".
@@ -84,7 +99,7 @@ class InvoiceBox extends Okay
 
 					"<input type='submit' class='checkout_button' 			value='$button_text' />".
 					"</form>";
-		return $button;
+		return $res;
 	}
 
 }

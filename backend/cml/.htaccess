@@ -1,0 +1,4 @@
+RewriteEngine on
+
+RewriteRule ^([^/]+)\.php$	index.php?file=$1 [L,QSA]
+RewriteRule ^(.+)$	index.php?file= [L,QSA]

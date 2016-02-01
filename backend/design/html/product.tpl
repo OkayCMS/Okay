@@ -1,6 +1,6 @@
 {capture name=tabs}
-    <li class="active"><a
-                href="{url module=ProductsAdmin category_id=$product->category_id return=null brand_id=null id=null}">Товары</a>
+    <li class="active">
+        <a href="{url module=ProductsAdmin category_id=$product->category_id return=null brand_id=null id=null}">Товары</a>
     </li>
     {if in_array('categories', $manager->permissions)}
         <li><a href="index.php?module=CategoriesAdmin">Категории</a></li>
@@ -22,15 +22,13 @@
 {$meta_title = 'Новый товар' scope=parent}
 {/if}
 
-{* Подключаем Tiny MCE *}
-{include file='tinymce_init.tpl'}
 
 {* On document load *}
 {literal}
 <script src="design/js/autocomplete/jquery.autocomplete-min.js"></script>
 
 <script>
-$(function() {
+    $(window).on("load", function() {
     
     // Промо изображения
     $("#special_img img").click(function() {
@@ -318,41 +316,6 @@ $(function() {
 		if($(this).val() == '')
 			$(this).val('∞');
 	});
-	
-	// Волшебные изображения
-	name_changed = false;
-	$("input[name=name]").change(function() {
-		name_changed = true;
-		images_loaded = 0;
-	});	
-	images_num = 8;
-	images_loaded = 0;
-	old_wizar_dicon_src = $('#images_wizard img').attr('src');
-	$('#images_wizard').click(function() {
-		
-		$('#images_wizard img').attr('src', 'design/images/loader.gif');
-		if(name_changed)
-			$('div.images ul li.wizard').remove();
-		name_changed = false;
-		key = $('input[name=name]').val();
-		$.ajax({
- 			 url: "ajax/get_images.php",
- 			 	data: {keyword: key, start: images_loaded},
- 			 	dataType: 'json',
-  				success: function(data){
-    				for(i=0; i<Math.min(data.length, images_num); i++)
-    				{
-	    				image_url = data[i];
-						$("<li class=wizard><a href='' class='delete'><img src='design/images/cross-circle-frame.png'></a><a href='"+image_url+"' target=_blank><img onerror='$(this).closest(\"li\").remove();' src='"+image_url+"' /><input name=images_urls[] type=hidden value='"+image_url+"'></a></li>").appendTo('div .images ul');
-    				}
-					$('#images_wizard img').attr('src', old_wizar_dicon_src);
-					images_loaded += images_num;
-  				}
-		});
-		return false;
-	});
-    
-    
 
 	// Автозаполнение мета-тегов
 	meta_title_touched = true;
@@ -369,11 +332,25 @@ $(function() {
 	$('input[name="meta_title"]').change(function() { meta_title_touched = true; });
 	$('input[name="meta_keywords"]').change(function() { meta_keywords_touched = true; });
 	$('textarea[name="meta_description"]').change(function() { meta_description_touched = true; });
-	
+
 	$('input[name="name"]').keyup(function() { set_meta(); });
 	$('select[name="brand_id"]').change(function() { set_meta(); });
 	$('select[name="categories[]"]').change(function() { set_meta(); });
-	
+        $('textarea[name="annotation"]').change(function() { set_meta();  });
+
+        CKEDITOR.instances.annotation.on('change', function(){
+            var data = CKEDITOR.instances.annotation.getData();
+            if(data !='')
+                var description = data.replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
+            console.log(description);
+            if(!meta_description_touched) {
+                $('textarea[name="meta_description"]').val(generate_meta_description(description));
+            }
+        });
+
+        $("#show_translit").on('click',function(){
+           $(".grey_translit").slideToggle(500);
+        });
 });
 
 function set_meta()
@@ -382,8 +359,6 @@ function set_meta()
 		$('input[name="meta_title"]').val(generate_meta_title());
 	if(!meta_keywords_touched)
 		$('input[name="meta_keywords"]').val(generate_meta_keywords());
-	if(!meta_description_touched)
-		$('textarea[name="meta_description"]').val(generate_meta_description());
 	if(!$('#block_translit').is(':checked'))
 		$('input[name="url"]').val(generate_url());
 }
@@ -408,16 +383,9 @@ function generate_meta_keywords()
 	}); 
 	return result;
 }
-
-function generate_meta_description()
+function generate_meta_description(description)
 {
-	if(typeof(tinyMCE.get("annotation")) =='object')
-	{
-		description = tinyMCE.get("annotation").getContent().replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
-		return description;
-	}
-	else
-		return $('textarea[name=annotation]').val().replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
+    return description;
 }
 
 function generate_url()
@@ -454,7 +422,7 @@ function translit_option($elem)
 $(function(){
     $('.option_value').live('keyup click change',function(){
         $(this).next().val(translit_option($(this)));
-    })
+    });
 });
 
 </script>
@@ -483,7 +451,7 @@ $(function(){
 
 {if $message_error}
 <div class="message message_error">
-	<span class="text">{if $message_error=='url_exists'}Товар с таким адресом уже существует{elseif $message_error=='empty_name'}Введите название{elseif $message_error == 'empty_url'}Введите адрес{else}{$message_error|escape}{/if}</span>
+	<span class="text">{if $message_error=='url_exists'}Товар с таким адресом уже существует{elseif $message_error=='empty_name'}Введите название{elseif $message_error == 'empty_url'}Введите адрес{elseif $message_error == 'url_wrong'}Адресс не должен начинаться или заканчиваться символом '-'{else}{$message_error|escape}{/if}</span>
 	{if $smarty.get.return}
 	<a class="button" href="{$smarty.get.return}">Вернуться</a>
 	{/if}
@@ -498,11 +466,11 @@ $(function(){
 
         <div class="checkbox">
             <input name=visible value='1' type="checkbox" id="active_checkbox" {if $product->visible}checked{/if}/>
-            <label for="active_checkbox">Активен</label>
+            <label class="visible_icon" for="active_checkbox">Активен</label>
         </div>
         <div class="checkbox">
             <input name=featured value="1" type="checkbox" id="featured_checkbox" {if $product->featured}checked{/if}/>
-            <label for="featured_checkbox">Рекомендуемый</label>
+            <label class="featured_icon" for="featured_checkbox">Рекомендуемый</label>
         </div>
     </div>
     <div id="product_brand" {if !$brands}style='display:none;'{/if}>
@@ -530,7 +498,7 @@ $(function(){
                             {/function}
                             {category_select categories=$categories selected_id=$product_category->id}
                         </select>
-                        <span {if not $smarty.foreach.categories.first}style='display:none;'{/if} class="add">
+                        <span {if not $smarty.foreach.categories.first}style='display:none;'{/if} class="f_right add">
                             <i class="dash_link">Дополнительная категория</i>
                         </span>
                         <span {if $smarty.foreach.categories.first}style='display:none;'{/if} class="delete">
@@ -585,7 +553,8 @@ $(function(){
                         <input name="variants[stock][]" type="text" value="{if $variant->infinity || $variant->stock == ''}∞{else}{$variant->stock|escape}{/if}"/>{$settings->units}
                     </li>
                     <li class="variant_yandex">
-                        <input name="yandex[{$variant->id|escape}]" value="1" type="checkbox" {if $variant->yandex}checked=""{/if}/>
+                        <input id="ya_input" name="yandex[{$variant->id|escape}]" value="1" type="checkbox" {if $variant->yandex}checked=""{/if}/>
+                        <label class="yandex_icon" for="ya_input"></label>
                     </li>
                     <li class="variant_download">
                         {if $variant->attachment}
@@ -650,22 +619,56 @@ $(function(){
             <ul>
                 <li>
                     <label class="property" for="block_translit">Заблокировать авто генерацию ссылки</label>
-                    <input type="checkbox" id="block_translit" {if $product->id}checked=""{/if} />
+                    <input type="checkbox" id="block_translit" {if $product->url}checked=""{/if} />
+                    <div class="helper_wrap">
+                        <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                        <div class="right helper_block" style="width: 207px;">
+                            <b>Запрещает изменение URL.</b>
+                            <span>Используется для предотвращения случайного изменения URL</span>
+                            <span>Активируется после сохранения товара с заполненным полем адрес.</span>
+                        </div>
+                    </div>
                 </li>
                 <li>
-                    <label class=property>Адрес</label>
+                    <label class=property>Адрес (URL)</label>
                     <div class="page_url"> /products/</div>
                     <input name="url" class="page_url" type="text" value="{$product->url|escape}"/></li>
                 <li>
-                    <label class=property>Заголовок</label>
-                    <input name="meta_title" class="okay_inp" type="text" value="{$product->meta_title|escape}"/>
+                    <label class=property>Title  (<span class="count_title_symbol"></span>/<span class="word_title"></span>)
+                        <div class="helper_wrap">
+                            <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                            <div class="right helper_block">
+                            	<b>Название страницы</b>
+                            	<p>В скобках указывается количество символов/слов в строке</p>
+                            </div>
+                        </div>
+                    </label>
+
+                    <input name="meta_title" class="okay_inp word_count" type="text" value="{$product->meta_title|escape}"/>
                 </li>
                 <li>
-                    <label class=property>Ключевые слова</label>
-                    <input name="meta_keywords" class="okay_inp" type="text" value="{$product->meta_keywords|escape}"/>
+                    <label class=property>Keywords (<span class="count_keywords_symbol"></span>/<span class="word_keywords"></span>)
+                        <div class="helper_wrap">
+                            <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                            <div class="right helper_block">
+                            	<b>Ключевые слова страницы</b>
+                            	<span> В скобках указывается количество символов/слов в строке</span>
+                            </div>
+                        </div>
+                    </label>
+                    <input name="meta_keywords" class="okay_inp word_count" type="text" value="{$product->meta_keywords|escape}"/>
                 </li>
                 <li>
-                    <label class=property>Описание</label>
+                    <label class=property>Description (<span class="count_desc_symbol"></span>/<span class="word_desc"></span>)
+                        <div class="helper_wrap">
+                            <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                            <div class="right helper_block">
+                            	<b>Описание страницы</b>
+                            	<span>Используется поисковыми системами для формирования сниппета</span>
+                                <span>В скобках указывается количество символов/слов в строке</span>
+                            </div>
+                        </div>
+                    </label>
                     <textarea name="meta_description" class="okay_inp">{$product->meta_description|escape}</textarea>
                 </li>
             </ul>
@@ -685,7 +688,17 @@ $(function(){
         </div>
 
         <div class="block layer" {if !$categories}style='display:none;'{/if}>
-            <h2>Свойства товара</h2>
+            <h2>Свойства товара  <a href="javascript:;" id="show_translit">Показать транслит</a>
+                <div class="helper_wrap">
+                    <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                    <div class="right helper_block">
+                    	<b>Транслит свойства</b>
+                        <span>Используется для формирования URL после применения фильтра.</span>
+                        <span>Гернерируется автоматически.</span>
+                    </div>
+                </div>
+            </h2>
+
 
             <ul class="prop_ul">
                 {foreach $features as $feature}
@@ -693,7 +706,7 @@ $(function(){
                     <li feature_id="{$feature_id}">
                         <label class="property">{$feature->name}</label>
                         <input class="okay_inp option_value" type="text" name="options[{$feature_id}][value]" value="{$options.$feature_id->value|escape}"/>
-                        <input class="okay_inp" style="margin-left:170px;margin-top:2px;" type="text" name="options[{$feature_id}][translit]" readonly="" value="{$options.$feature_id->translit|escape}"/>
+                        <input class="okay_inp grey_translit" style="margin-left:170px;margin-top:2px;" type="text" name="options[{$feature_id}][translit]" readonly="" value="{$options.$feature_id->translit|escape}"/>
                     </li>
                 {/foreach}
             </ul>
@@ -710,9 +723,12 @@ $(function(){
     <div id="column_right">
         <div class="block layer images">
             <h2>Изображения товара
-                <a href="#" id=images_wizard>
-                    <img src="design/images/wand.png" alt="Подобрать автоматически" title="Подобрать автоматически"/>
-                </a>
+                <div class="helper_wrap">
+                    <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                    <div class="right helper_block">
+                        <span>Первое изображение считается основным и выводится в списке товаров</span>
+                    </div>
+                </div>
             </h2>
             <ul>
                 {foreach $product_images as $image}
@@ -730,10 +746,18 @@ $(function(){
             <div id="add_image"></div>
             <span class=upload_image><i class="dash_link" id="upload_image">Добавить изображение</i></span> или
             <span class=add_image_url><i class="dash_link" id="add_image_url">загрузить из интернета</i></span>
-            <h2>Промо-изображения</h2>
+            <h2>Промо-изображение
+                <div class="helper_wrap">
+                    <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                    <div class="right helper_block" style="width: 168px;">
+                    	<b>Промо-ярлык</b>
+                        <span>Выводится поверх основного изображения товара</span>
+                    </div>
+                </div>
+            </h2>
             <div id="special_img">
-                {foreach $kartinki as $im}
-                    <img title="{$im->name}" class="{if $product->special == $im->filename}selected{/if}" src="../files/special/{$im->filename}" alt="{$im->filename}"/>
+                {foreach $special_images as $special}
+                    <img title="{$special->name}" class="{if $product->special == $special->filename}selected{/if}" src="../{$config->special_images_dir}{$special->filename}" alt="{$special->filename}"/>
                 {/foreach}
             </div>
             <div class="del_cont" style="margin-top:10px">
@@ -743,7 +767,7 @@ $(function(){
         </div>
 
         <div class="block layer">
-            <h2>Связанные товары</h2>
+            <h2>Рекомендуемые товары</h2>
             <div id=list class="sortable related_products">
                 {foreach $related_products as $related_product}
                     <div class="row">
@@ -789,11 +813,11 @@ $(function(){
 
     <div class="block layer">
         <h2>Краткое описание</h2>
-        <textarea name="annotation" class="editor_small">{$product->annotation|escape}</textarea>
+        <textarea name="annotation" id="annotation" class="ckeditor">{$product->annotation|escape}</textarea>
     </div>
     <div class="block">
         <h2>Полное описание</h2>
-        <textarea name="body" class="editor_large">{$product->body|escape}</textarea>
+        <textarea name="body" class="ckeditor">{$product->body|escape}</textarea>
     </div>
     <input class="button_green button_save" type="submit" name="" value="Сохранить"/>
 

@@ -1,6 +1,6 @@
 {* Вкладки *}
 {capture name=tabs}
-	<li class="active"><a href="{url module=ProductsAdmin keyword=null category_id=null brand_id=null filter=null page=null}">Товары</a></li>
+	<li class="active"><a href="{url module=ProductsAdmin keyword=null category_id=null brand_id=null filter=null page=null limit=null}">Товары</a></li>
     {if in_array('categories', $manager->permissions)}
         <li><a href="index.php?module=CategoriesAdmin">Категории</a></li>
     {/if}
@@ -49,7 +49,25 @@
 
 <div id="main_list">
 	{include file='pagination.tpl'}
-{if $products}
+	<div class="limit_show">
+		<span>Показывать по: </span>
+        <select onchange="location = this.value;">
+            <option value="{url limit=5}" {if $current_limit == 5}selected{/if}>5</option>
+            <option value="{url limit=10}" {if $current_limit == 10}selected{/if}>10</option>
+            <option value="{url limit=25}" {if $current_limit == 25}selected{/if}>25</option>
+            <option value="{url limit=50}" {if $current_limit == 50}selected{/if}>50</option>
+            <option value="{url limit=100}" {if $current_limit == 100}selected=""{/if}>100</option>
+        </select>
+
+        <div class="helper_wrap">
+            <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+            <div class="helper_block right">
+               <span>Количество товаров на одной странице в админ. панели</span>
+            </div>
+        </div>
+	</div>
+    
+    {if $products}
 
 	<div id="expand">
 	<a href="#" class="dash_link" id="expand_all">Развернуть все варианты ↓</a>
@@ -60,7 +78,7 @@
 	<form id="list_form" method="post">
 	<input type="hidden" name="session_id" value="{$smarty.session.id}">
 	
-		<div id="list">
+		<div id="list" class="catalog">
 		{foreach $products as $product}
             <div class="{if !$product->visible}invisible{/if} {if $product->featured}featured{/if} row">
                 <input type="hidden" name="positions[{$product->id}]" value="{$product->position}">
@@ -114,7 +132,7 @@
             </div>
 				
 				<a href="{url module=ProductAdmin id=$product->id return=$smarty.server.REQUEST_URI}">{$product->name|escape}</a>
-	 			
+	 			<span>{$brands_name[$product->brand_id]->name}</span>
 			</div>
 			<div class="icons cell products">
 				<a class="preview"   title="Предпросмотр в новом окне" href="../{$lang_link}products/{$product->url}" target="_blank"></a>
@@ -190,6 +208,23 @@
     {*Пагинация*}
 	{include file='pagination.tpl'}
     {*Пагинация END*}
+    <div class="limit_show">
+        <span>Показывать по: </span>
+        <select onchange="location = this.value;">
+            <option value="{url limit=5}" {if $current_limit == 5}selected{/if}>5</option>
+            <option value="{url limit=10}" {if $current_limit == 10}selected{/if}>10</option>
+            <option value="{url limit=25}" {if $current_limit == 25}selected{/if}>25</option>
+            <option value="{url limit=50}" {if $current_limit == 50}selected{/if}>50</option>
+            <option value="{url limit=100}" {if $current_limit == 100}selected=""{/if}>100</option>
+        </select>
+
+        <div class="helper_wrap">
+            <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+            <div class="right helper_block">
+                <span>Количество товаров на одной странице в админ. панели</span>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -198,27 +233,27 @@
 	{*Фильтр*}
     <ul class="filter_right">
         <li {if !$filter}class="selected"{/if}>
-            <a href="{url brand_id=null category_id=null keyword=null page=null filter=null}">Все товары</a></li>
+            <a href="{url brand_id=null category_id=null keyword=null page=null limit=null filter=null}">Все товары</a></li>
         <li {if $filter=='featured'}class="selected"{/if}>
-            <a href="{url keyword=null brand_id=null category_id=null page=null filter='featured'}">Рекомендуемые</a>
+            <a href="{url keyword=null brand_id=null category_id=null page=null limit=null filter='featured'}">Рекомендуемые</a>
         </li>
         <li {if $filter=='discounted'}class="selected"{/if}>
-            <a href="{url keyword=null brand_id=null category_id=null page=null filter='discounted'}">Со скидкой</a>
+            <a href="{url keyword=null brand_id=null category_id=null page=null limit=null filter='discounted'}">Со скидкой</a>
         </li>
         <li {if $filter=='visible'}class="selected"{/if}>
-            <a href="{url keyword=null brand_id=null category_id=null page=null filter='visible'}">Активные</a>
+            <a href="{url keyword=null brand_id=null category_id=null page=null limit=null filter='visible'}">Активные</a>
         </li>
         <li {if $filter=='hidden'}class="selected"{/if}>
-            <a href="{url keyword=null brand_id=null category_id=null page=null filter='hidden'}">Неактивные</a>
+            <a href="{url keyword=null brand_id=null category_id=null page=null limit=null filter='hidden'}">Неактивные</a>
         </li>
         <li {if $filter=='outofstock'}class="selected"{/if}>
-            <a href="{url keyword=null brand_id=null category_id=null page=null filter='outofstock'}">Отсутствующие</a>
+            <a href="{url keyword=null brand_id=null category_id=null page=null limit=null filter='outofstock'}">Отсутствующие</a>
         </li>
         <li {if $filter=='in_yandex'}class="selected"{/if}>
-            <a href="{url keyword=null brand_id=null category_id=null page=null filter='in_yandex'}">В яндексе</a>
+            <a href="{url keyword=null brand_id=null category_id=null page=null limit=null filter='in_yandex'}">В яндексе</a>
         </li>
         <li {if $filter=='out_yandex'}class="selected"{/if}>
-            <a href="{url keyword=null brand_id=null category_id=null page=null filter='out_yandex'}">Не в яндексе</a>
+            <a href="{url keyword=null brand_id=null category_id=null page=null limit=null filter='out_yandex'}">Не в яндексе</a>
         </li>
     </ul>
     {*Фильтр END*}
@@ -227,22 +262,24 @@
 	{*Категории товаров *}
     {function name=categories_tree}
         {if $categories}
-            <ul>
+
+            <ul class="cats_right{if $level > 1} sub_menu{/if}">
                 {if $categories[0]->parent_id == 0}
-                    <li {if !$category->id}class="selected"{/if}>
-                        <a href="{url category_id=null brand_id=null}">Все категории</a></li>
+                    <li class="clearfix {if !$category->id}selected{/if}">
+                        <a href="{url category_id=null brand_id=null}">Все категории</a>
+                    </li>
                 {/if}
                 {foreach $categories as $c}
-                    <li category_id="{$c->id}" {if $category->id == $c->id}class="selected"
-                        {else}class="droppable category"{/if}>
-                        <a href='{url keyword=null brand_id=null page=null category_id={$c->id}}'>{$c->name}</a>
+                    <li category_id="{$c->id}" {if $category->id == $c->id}class="selected clearfix"{else}class="droppable category clearfix"{/if}>
+                        <a href='{url keyword=null brand_id=null page=null limit=null category_id={$c->id}}'>{$c->name}</a>
+                        {if $c->subcategories}<span class="slide_menu"></span>{/if}
                     </li>
-                    {categories_tree categories=$c->subcategories}
+                    {categories_tree categories=$c->subcategories level=$level+1}
                 {/foreach}
             </ul>
         {/if}
     {/function}
-    {categories_tree categories=$categories}
+    {categories_tree categories=$categories level=1}
     {*Категории товаров END*}
 
     {*Бренды*}
@@ -253,7 +290,7 @@
             </li>
             {foreach $brands as $b}
                 <li brand_id="{$b->id}" {if $brand->id == $b->id}class="selected" {else}class="droppable brand"{/if}>
-                    <a href="{url keyword=null page=null brand_id=$b->id}">{$b->name}</a>
+                    <a href="{url keyword=null page=null limit=null brand_id=$b->id}">{$b->name}</a>
                 </li>
             {/foreach}
         </ul>
@@ -540,6 +577,16 @@ $(function() {
 		if($(this).val() == '')
 			$(this).val('∞');
 	});
+
+    $('.slide_menu').on('click',function(){
+        if($(this).hasClass('open')){
+            $(this).removeClass('open');
+        }
+        else{
+            $(this).addClass('open');
+        }
+        $(this).parent().next().slideToggle(500);
+    })
 });
 
 </script>

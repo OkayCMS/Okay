@@ -21,6 +21,11 @@ class Interkassa extends Okay
 		$desc = 'Оплата заказа №'.$order->id;
 		
 		$shop_id = $settings['interkassa_shop_id'];
+
+        $res['shop_id'] = $shop_id;
+        $res['price'] = $price;
+        $res['order'] = $order;
+        $res['desc'] = $desc;
 					
 		$button = "<form name='payment' action='https://interkassa.com/lib/payment.php' method='post' 
 					enctype='application/x-www-form-urlencoded' accept-charset='UTF-8'>
@@ -30,6 +35,6 @@ class Interkassa extends Okay
 					<input type='hidden' name='ik_payment_desc' value='$desc'>
 					<input type='submit' name='process' value='$button_text' class='checkout_button'>
 					</form>";
-		return $button;
+		return $res;
 	}
 }

@@ -1,46 +1,108 @@
-{* Шаблон страницы зарегистрированного пользователя *}
-
-<h1 class="block_heading">{$user->name|escape}</h1>
-
-<form class="form" method="post">
-	{if $error}
-	<div class="message_error">
-		{if $error == 'empty_name'}{$lang->vvedite_imya}
-		{elseif $error == 'empty_email'}{$lang->vvedite_email}
-		{elseif $error == 'empty_password'}{$lang->vvedite_parol}
-		{elseif $error == 'user_exists'}{$lang->polzovatel_s_takim_email_uzhe_zaregistrirovan}
-		{else}{$error}{/if}
+{* Страница личного кабинета *}
+{* Тайтл страницы *}
+{$meta_title = $lang->user_title scope=parent}
+{* @END Тайтл страницы *}
+<div class="container">
+	{* Хлебные крошки *}
+	{include file='breadcrumb.tpl'}
+	{* @END Хлебные крошки *}
+	{* Заголовок страницы *}
+	<h1 class="m-b-1">
+		<span data-language="{$translate_id['user_header']}">{$lang->user_header}</span>
+	</h1>
+	{* @END Заголовок страницы *}
+	<div class="row m-b-2">
+		<div class="col-lg-5">
+			<form class="p-a-1 bg-info" method="post">
+				{* Вывод ошибок *}
+				{if $error}
+					<div class="p-x-1 p-y-05 bg-danger text-white m-b-1">
+						{if $error == 'empty_name'}
+							<span data-language="{$translate_id['form_enter_name']}">{$lang->form_enter_name}</span>
+						{elseif $error == 'empty_email'}
+							<span data-language="{$translate_id['form_enter_email']}">{$lang->form_enter_email}</span>
+						{elseif $error == 'empty_password'}
+							<span data-language="{$translate_id['form_enter_password']}">{$lang->form_enter_password}</span>
+						{elseif $error == 'user_exists'}
+							<span data-language="{$translate_id['register_user_registered']}">{$lang->register_user_registered}</span>
+						{else}
+							{$error}
+						{/if}
+					</div>
+				{/if}
+				{* @END Вывод ошибок *}
+				{* Имя пользователя *}
+				<div class="form-group">
+					<input class="form-control" data-format=".+" data-notice="{$lang->form_enter_name}" value="{$name|escape}" name="name" type="text" data-language="{$translate_id['form_name']}" placeholder="{$lang->form_name}*"/>
+				</div>
+				{* @END Имя пользователя *}
+				{* Почта пользователя *}
+				<div class="form-group">
+					<input class="form-control" data-format="email" data-notice="{$lang->form_enter_email}" value="{$email|escape}" name="email" type="text" data-language="{$translate_id['form_email']}" placeholder="{$lang->form_email}*"/>
+				</div>
+				{* @END Почта пользователя *}
+				{* Пароль пользователя *}
+				<div class="input-group m-b-1">
+				<span class="input-group-btn">
+					<button class="btn btn-success" type="button" onclick="$('#password').toggle();return false;" data-language="{$translate_id['user_change_password']}">{$lang->user_change_password}</button>
+				</span>
+					<input class="form-control" id="password" value="" name="password" type="password" style="display:none;"/>
+				</div>
+				{* @END Пароль пользователя *}
+				{* Кнопка отправки формы *}
+				<div class="clearfix">
+					<input type="submit" class="btn btn-warning" data-language="{$translate_id['form_save']}" value="{$lang->form_save}">
+					<a href="{$lang_link}user/logout" class="btn btn-danger pull-xs-right" data-language="{$translate_id['user_logout']}">{$lang->user_logout}</a>
+				</div>
+				{* @END Кнопка отправки формы *}
+			</form>
+		</div>
+		{* История заказов *}
+		{if $orders}
+			<div class="col-lg-7 m-t-1-md_down">
+				<table class="table bg-info">
+					<thead>
+						<tr>
+							<th>
+								<span data-language="{$translate_id['user_number_of_order']}">{$lang->user_number_of_order}</span>
+							</th>
+							<th>
+								<span data-language="{$translate_id['user_order_date']}">{$lang->user_order_date}</span>
+							</th>
+							<th>
+								<span data-language="{$translate_id['user_order_status']}">{$lang->user_order_status}</span>
+							</th>
+						</tr>
+					</thead>
+					{foreach $orders as $order}
+						<tr>
+							{* Номер заказа *}
+							<td>
+								<a href='{$language->label}/order/{$order->url}'><span data-language="{$translate_id['user_order_number']}">{$lang->user_order_number}</span>{$order->id}</a>
+							</td>
+							{* @END Номер заказа *}
+							{* Дата заказа *}
+							<td>{$order->date|date}</td>
+							{* @END Дата заказа *}
+							{* Статус заказа *}
+							<td>
+								{if $order->paid == 1}
+									<span data-language="{$translate_id['status_paid']}">{$lang->status_paid}</span>,
+								{/if}
+								{if $order->status == 0}
+									<span data-language="{$translate_id['status_pending']}">{$lang->status_pending}</span>
+								{elseif $order->status == 1}
+									<span data-language="{$translate_id['status_processing']}">{$lang->status_processing}</span>
+								{elseif $order->status == 2}
+									<span data-language="{$translate_id['status_made']}">{$lang->status_made}</span>
+								{/if}
+							</td>
+							{* @END Статус заказа *}
+						</tr>
+					{/foreach}
+				</table>
+			</div>
+		{/if}
+		{* История заказов *}
 	</div>
-	{/if}
-
-	<div class="form_group">
-		<label>{$lang->vvedite_imya}</label>
-		<input class="form_input" data-format=".+" data-notice="{$lang->vvedite_imya}" value="{$name|escape}" name="name" maxlength="255" type="text"/>
-	</div>
- 	
- 	<div class="form_group">
-		<label>{$lang->vvedite_email}</label>
-		<input class="form_input" data-format="email" data-notice="{$lang->vvedite_email}" value="{$email|escape}" name="email" maxlength="255" type="text"/>
-	</div>
-
-	<div class="form_group">
-		<label><a href='#' onclick="$('#password').show();return false;">{$lang->izmenit_parol}</a></label>
-		<input class="form_input" id="password" value="" name="password" type="password" style="display:none;"/>
-	</div>
-	
-	<input type="submit" class="button" value="{$lang->sohranit}">
-</form>
-
-{if $orders}
-<p></p>
-<div class="h2">{$lang->vashi_zakazy}</div>
-<ul id="orders_history">
-{foreach $orders as $order}
-	<li>
-	{$order->date|date} <a href='{$language->label}/order/{$order->url}'>{$lang->zakaz_nomer}{$order->id}</a>
-	{if $order->paid == 1}{$lang->oplachen},{/if}
-	{if $order->status == 0}{$lang->zhdet_obrabotki}{elseif $order->status == 1}{$lang->v_obrabotke}{elseif $order->status == 2}{$lang->vypolnen}{/if}
-	</li>
-{/foreach}
-</ul>
-{/if}
+</div>

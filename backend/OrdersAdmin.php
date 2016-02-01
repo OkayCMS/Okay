@@ -98,6 +98,16 @@ class OrdersAdmin extends Okay {
             $filter['status'] = $status;
             $this->design->assign('status', $status);
         }
+
+        //Поиск до дате заказа
+        $from_date = $this->request->get('from_date');
+        $to_date = $this->request->get('to_date');
+        if(!empty($from_date) || !empty($to_date)){
+            $filter['from_date'] = $from_date;
+            $filter['to_date'] = $to_date;
+            $this->design->assign('from_date', $from_date);
+            $this->design->assign('to_date', $to_date);
+        }
         
         $orders_count = $this->orders->count_orders($filter);
         // Показать все страницы сразу
@@ -109,8 +119,8 @@ class OrdersAdmin extends Okay {
         $orders = array();
         foreach($this->orders->get_orders($filter) as $o) {
             $orders[$o->id] = $o;
+            $orders[$o->id]->purchases = $this->orders->get_purchases(array('order_id'=>$o->id));
         }
-        
         // Метки заказов
         $orders_labels = array();
         foreach($this->orders->get_order_labels(array_keys($orders)) as $ol) {

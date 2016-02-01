@@ -160,6 +160,15 @@
 				<span>Статистика</span>
 			</a>
 		</li>
+    {/if}
+        
+    {if in_array('topvisor', $manager->permissions)}
+        <li class="{if $menu_selected == 'topvisor'}active{/if}">
+			<a href="index.php?module=TopvisorProjectsAdmin">
+				<i class="icon_topvisor"></i>
+				<span>Topvisor</span>
+			</a>
+		</li>
 	{/if}
 
 	{if in_array('design', $manager->permissions)}

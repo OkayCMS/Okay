@@ -77,6 +77,9 @@ resized_categories_dir = files/categories_resized/;
 ;Изображения баннеров
 banners_images_dir = files/slides/;
 
+;Промо изображения
+special_images_dir = files/special/;
+
 [files]
 
 ;Директория хранения цифровых товаров

@@ -5,6 +5,26 @@ ErrorDocument 404 /404
 ErrorDocument 401 /password.php
 RewriteEngine on
 
+# Кэширование / поддерживается не на всех хостингах
+<ifmodule mod_expires.c>
+    <filesmatch "\.(jpg|jpeg|png|gif|js|css|swf|ico|woff|mp3)$">
+        ExpiresActive on
+        ExpiresDefault "access plus 7 days"
+    </filesmatch>
+</ifmodule>
+
+# Gzip сжатие / поддерживается не на всех хостингах
+<ifmodule mod_deflate.c>
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE text/css
+    <ifmodule mod_setenvif.c>
+        BrowserMatch ^Mozilla/4 gzip-only-text/html
+        BrowserMatch ^Mozilla/4\.0[678] no-gzip
+        BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+    </ifmodule>
+</ifmodule>
+
 # Админка теперь по адресу /backend
 RewriteRule	^admin/?$  backend [L]
 

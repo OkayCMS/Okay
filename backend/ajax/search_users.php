@@ -1,6 +1,8 @@
 <?php
-    require_once('../../api/Okay.php');
-    $okay = new Okay();
+
+    if(!$okay->managers->access('orders') && !$okay->managers->access('users')) {
+        exit();
+    }
     $limit = 100;
     
     $keyword = $okay->request->get('query', 'string');

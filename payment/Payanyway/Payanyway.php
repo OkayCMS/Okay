@@ -31,6 +31,16 @@ class Payanyway extends Okay
 		} else {
 			$url = $this->config->root_url.'/payment/Payanyway/callback.php?invoice=true';
 		}
+
+        $res['url'] = $url;
+        $res['payment_system'] = $payment_system;
+        $res['payment_settings'] = $payment_settings;
+        $res['order'] = $order;
+        $res['price'] = $price;
+        $res['currency_code'] = $currency_code;
+        $res['signature'] = $signature;
+        $res['success_url'] = $success_url;
+        $res['fail_url'] = $fail_url;
 			
 		$button =	"<form class='form' action='".$url."' method=POST>".
 					"<input type=hidden name=payment_system value='".$payment_system[0]."'>".
@@ -111,7 +121,7 @@ class Payanyway extends Okay
 				
 		$button .=  "<input type=submit class=checkout_button value='Перейти к оплате &#8594;'>".
 					"</form>";
-		return $button;
+		return $res;
 	}
 
 }

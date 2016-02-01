@@ -10,11 +10,8 @@
 {$meta_title = 'Добавить баннер' scope=parent}
 {/if}
 
-
-
 {* On document load *}
 {literal}
-<script src="design/js/jquery/jquery.js"></script>
 <script>
 $(function() {
 
@@ -26,8 +23,6 @@ $(function() {
 	});
 	  
 });
-
-
 </script>
  
 {/literal}
@@ -61,8 +56,9 @@ $(function() {
 		<input class="name" name=name type="text" value="{$banners_image->name|escape}"/> 
 		<input name=id type="hidden" value="{$banners_image->id}"/> 
 		<div class="checkbox">
-			<input name=visible value='1' type="checkbox" id="active_checkbox" {if $banners_image->visible}checked{/if}/> <label for="active_checkbox">Активен</label>
-		</div>
+			<input name=visible value='1' type="checkbox" id="active_checkbox" {if $banners_image->visible}checked{/if}/>
+            <label class="visible_icon" for="active_checkbox">Активен</label>
+        </div>
 	</div> 
 	
 	{if $banners}
@@ -82,9 +78,9 @@ $(function() {
 		<div class="block layer">
 			<h2>Параметры баннера</h2>
 			<ul>
-				<li><label class=property>Адрес(url)</label><input name="url" class="okay_inp" type="text" value="{$banners_image->url|escape}" /></li>
-				<li><label class=property>Alt</label><input name="alt" class="okay_inp" type="text" value="{$banners_image->alt|escape}" /></li>
-				<li><label class=property>Title</label><input name="title" class="okay_inp" type="text" value="{$banners_image->title|escape}" /></li>
+				<li><label class=property>Адрес (URL)</label><input name="url" class="okay_inp" type="text" value="{$banners_image->url|escape}" /></li>
+				<li><label class=property>Alt изображения</label><input name="alt" class="okay_inp" type="text" value="{$banners_image->alt|escape}" /></li>
+				<li><label class=property>Title изображения</label><input name="title" class="okay_inp" type="text" value="{$banners_image->title|escape}" /></li>
 				<li><label class=property>Описание</label><textarea name="description" class="okay_inp" />{$banners_image->description|escape}</textarea></li>
 			</ul>
 		</div>

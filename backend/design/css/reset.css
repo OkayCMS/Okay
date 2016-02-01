@@ -29,3 +29,6 @@ table {
 strong {
 	font-weight: bold;
 }
+*:focus {
+    outline: none;
+}

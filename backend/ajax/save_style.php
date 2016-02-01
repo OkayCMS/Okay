@@ -1,12 +1,7 @@
 <?php
 
-session_start();
-
-require_once('../../api/Okay.php');
-$okay = new Okay();
-
 if(!$okay->managers->access('design')) {
-    return false;
+    exit();
 }
 
 // Проверка сессии для защиты от xss
@@ -27,7 +22,7 @@ if(is_file($file) && is_writable($file) && !is_file($okay->config->root_dir.'des
     file_put_contents($file, $content);
 }
 
-$result= true;
+$result = true;
 header("Content-type: application/json; charset=UTF-8");
 header("Cache-Control: must-revalidate");
 header("Pragma: no-cache");

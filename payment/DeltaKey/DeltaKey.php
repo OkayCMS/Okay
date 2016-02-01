@@ -38,6 +38,12 @@ class DeltaKey extends Okay
 		
 		$param = $order->id. $settings['num_shop'].$settings['keyt_shop'].'1'.$price.'Order '.$order->id;
 		$sign = $this->hmac($skeys, $param);
+
+        $res['payment_url'] = $payment_url;
+        $res['settings_pay'] = $settings;
+        $res['price'] = $price;
+        $res['order'] = $order;
+        $res['sign'] = $sign;
 		
 		$button = '<form method="POST" action="'.$payment_url.'">
 					<input type=hidden name="keyt_shop" value="'.$settings['keyt_shop'].'">
@@ -49,6 +55,6 @@ class DeltaKey extends Okay
 					<input type=hidden name="sign" value="'.$sign.'">
 					<input type="submit" name="submit-button" value="'.$button_text.'" class="checkout_button">
 					</form>';
-		return $button;
+		return $res;
 	}
 }

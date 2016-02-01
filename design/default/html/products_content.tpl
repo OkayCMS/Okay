@@ -1,8 +1,6 @@
-<ul class="products row">
-	{foreach $products as $product}
-	<!-- Товар-->
-	{include file="product_list.tpl"}
-	<!-- Товар (The End)-->
-	{/foreach}
-</ul>
-	
+{* Список товаров *}
+{foreach $products as $product}
+	<div class="col-md-4">
+		{include file="tiny_products.tpl"}
+	</div>
+{/foreach}

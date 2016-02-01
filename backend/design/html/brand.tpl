@@ -13,14 +13,12 @@
 {$meta_title = 'Новый бренд' scope=parent}
 {/if}
 
-{* Подключаем Tiny MCE *}
-{include file='tinymce_init.tpl'}
 
 
 {* On document load *}
 {literal}
 <script>
-$(function() {
+    $(window).on("load", function() {
 
 	// Удаление изображений
 	$(".images a.delete").click( function() {
@@ -46,6 +44,16 @@ $(function() {
 	$('input[textarea="meta_description"]').change(function() { meta_description_touched = true; });
 	
 	$('input[name="name"]').keyup(function() { set_meta(); });
+
+        CKEDITOR.instances.annotation.on('change', function(){
+            var data = CKEDITOR.instances.annotation.getData();
+            if(data !='')
+                var description = data.replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
+            console.log(description);
+            if(!meta_description_touched) {
+                $('textarea[name="meta_description"]').val(generate_meta_description(description));
+            }
+        });
 	
 	function set_meta()
 	{
@@ -53,8 +61,6 @@ $(function() {
 			$('input[name="meta_title"]').val(generate_meta_title());
 		if(!meta_keywords_touched)
 			$('input[name="meta_keywords"]').val(generate_meta_keywords());
-		if(!meta_description_touched)
-			$('textarea[name="meta_description"]').val(generate_meta_description());
 		if(!$('#block_translit').is(':checked'))
 			$('input[name="url"]').val(generate_url());
 	}
@@ -71,11 +77,10 @@ $(function() {
 		return name;
 	}
 
-	function generate_meta_description()
-	{
-		name = $('input[name="name"]').val();
-		return name;
-	}
+    function generate_meta_description(description)
+    {
+        return description;
+    }
 		
 	function generate_url()
 	{
@@ -148,9 +153,9 @@ $(function() {
 		<input class="name" name=name type="text" value="{$brand->name|escape}"/> 
 		<input name=id type="hidden" value="{$brand->id|escape}"/> 
         <div class="checkbox">
-			<a class="yandex" data-to_yandex="1" href="javascript:;">В яндекс</a>
+			<a class="yandex" data-to_yandex="1" href="javascript:;">В Я.Маркет</a>
             &nbsp;&nbsp;&nbsp;
-            <a class="yandex" data-to_yandex="0" href="javascript:;">Из яндекса</a>
+            <a class="yandex" data-to_yandex="0" href="javascript:;">Из Я.Маркета</a>
 		</div>
 	</div> 
 
@@ -162,26 +167,50 @@ $(function() {
 		<div class="block layer">
 			<h2>Параметры страницы</h2>
 			<ul>
-                <li><label class="property" for="block_translit">Заблокировать авто генерацию ссылки</label><input type="checkbox" id="block_translit" {if $brand->id}checked=""{/if} /></li>
+                <li><label class="property" for="block_translit">Заблокировать авто генерацию ссылки</label>
+                    <input type="checkbox" id="block_translit" {if $brand->id}checked=""{/if} />
+                    <div class="helper_wrap">
+                        <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                        <div class="right helper_block">
+                            <b>Запрещает изменение URL.</b>
+                            <span>Используется для предотвращения случайного изменения URL.</span>
+                            <span>Активируется после сохранения товара с заполненным полем адрес.</span>
+                        </div>
+                    </div>
+                </li>
 				<li><label class=property>Адрес</label><div class="page_url"> /brands/</div><input name="url" class="page_url" type="text" value="{$brand->url|escape}" /></li>
-				<li><label class=property>Заголовок</label><input name="meta_title" class="okay_inp" type="text" value="{$brand->meta_title|escape}" /></li>
-				<li><label class=property>Ключевые слова</label><input name="meta_keywords" class="okay_inp" type="text" value="{$brand->meta_keywords|escape}" /></li>
-				<li><label class=property>Описание</label><textarea name="meta_description" class="okay_inp">{$brand->meta_description|escape}</textarea></li>
+				<li><label class=property>Title (<span class="count_title_symbol"></span>/<span class="word_title"></span>)
+                        <div class="helper_wrap">
+                            <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                            <div class="right helper_block">
+                                <b>Название страницы</b>
+                                <span> В скобках указывается количество символов/слов в строке</span>
+                            </div>
+                        </div>
+                    </label>
+                    <input name="meta_title" class="okay_inp" type="text" value="{$brand->meta_title|escape}" /></li>
+				<li><label class=property>Keywords (<span class="count_keywords_symbol"></span>/<span class="word_keywords"></span>)
+                        <div class="helper_wrap">
+                            <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                            <div class="right helper_block">
+                                <b>Ключевые слова страницы</b>
+                                <span>В скобках указывается количество символов/слов в строке</span>
+                            </div>
+                        </div>
+                    </label><input name="meta_keywords" class="okay_inp" type="text" value="{$brand->meta_keywords|escape}" /></li>
+				<li><label class=property>Description (<span class="count_desc_symbol"></span>/<span class="word_desc"></span>)
+                        <div class="helper_wrap">
+                            <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                            <div class="right helper_block">
+                                <b>Текст описания страницы,</b>
+                                <span> который используется поисковыми системами для формирования сниппета.</span>
+                                <span>В скобках указывается количество символов/слов в строке.</span>
+                            </div>
+                        </div>
+                    </label><textarea name="meta_description" class="okay_inp">{$brand->meta_description|escape}</textarea></li>
 			</ul>
 		</div>
 		<!-- Параметры страницы (The End)-->
-		
- 		{*
-		<!-- Экспорт-->
-		<div class="block">
-			<h2>Экспорт товара</h2>
-			<ul>
-				<li><input id="exp_yad" type="checkbox" /> <label for="exp_yad">Яндекс Маркет</label> Бид <input class="okay_inp" type="" name="" value="12" /> руб.</li>
-				<li><input id="exp_goog" type="checkbox" /> <label for="exp_goog">Google Base</label> </li>
-			</ul>
-		</div>
-		<!-- Свойства товара (The End)-->
-		*}
 			
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />
 	</div>
@@ -210,13 +239,13 @@ $(function() {
 	
     <div class="block layer">
 		<h2>Краткое описание</h2>
-		<textarea name="annotation" class="editor_small">{$brand->annotation|escape}</textarea>
+		<textarea name="annotation" class="ckeditor">{$brand->annotation|escape}</textarea>
 	</div>
     
 	<!-- Описагние бренда -->
 	<div class="block layer">
 		<h2>Описание</h2>
-		<textarea name="description" class="editor_large">{$brand->description|escape}</textarea>
+		<textarea name="description" class="ckeditor">{$brand->description|escape}</textarea>
 	</div>
 	<!-- Описание бренда (The End)-->
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />

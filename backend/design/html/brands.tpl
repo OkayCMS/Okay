@@ -35,6 +35,14 @@
                             <input type="checkbox" id="{$brand->id}" name="check[]" value="{$brand->id}"/>
                             <label for="{$brand->id}"></label>
                         </div>
+                        <div class="image cell">
+                            {if $brand->image}
+                                <a href="{url module=BrandAdmin id=$brand->id return=$smarty.server.REQUEST_URI}">
+                                    <img src="{$brand->image|resize:35:35:false:$config->resized_brands_dir}" alt="" /></a>
+                            {else}
+                                <img height="35" width="35" src="../design/{$settings->theme|escape}/images/no_image.png"/>
+                            {/if}
+                        </div>
                         <div class="cell">
                             <a href="{url module=BrandAdmin id=$brand->id return=$smarty.server.REQUEST_URI}">{$brand->name|escape}</a>
                         </div>

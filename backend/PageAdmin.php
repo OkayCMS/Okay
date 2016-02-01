@@ -23,6 +23,8 @@ class PageAdmin extends Okay {
                 $this->design->assign('message_error', 'url_exists');
             } elseif(empty($page->header)) {
                 $this->design->assign('message_error', 'empty_header');
+            } elseif(substr($page->url, -1) == '-' || substr($page->url, 0, 1) == '-') {
+                $this->design->assign('message_error', 'url_wrong');
             } else {
                 if(empty($page->id)) {
                     $page->id = $this->pages->add_page($page);

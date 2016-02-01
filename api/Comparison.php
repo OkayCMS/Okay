@@ -43,12 +43,14 @@ class Comparison extends Okay {
                     $features_ids[] = $o->feature_id;
                 }
                 $features = array();
-                foreach($this->features->get_features(array('id'=>$features_ids)) as $f) {
-                    $features[$f->id] = $f;
-                    foreach($products as $p) {
-                        $features[$f->id]->products[$p->id] = $options[$f->id][$p->id];
+                if (!empty($features_ids)) {
+                    foreach ($this->features->get_features(array('id' => $features_ids)) as $f) {
+                        $features[$f->id] = $f;
+                        foreach ($products as $p) {
+                            $features[$f->id]->products[$p->id] = $options[$f->id][$p->id];
+                        }
+                        $features[$f->id]->not_unique = (count(array_unique($features[$f->id]->products)) == 1) ? true : false;
                     }
-                    $features[$f->id]->not_unique = (count(array_unique($features[$f->id]->products)) == 1) ? true : false;
                 }
                 if(!empty($features)) {
                     $comparison->features = $features;

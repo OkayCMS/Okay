@@ -34,9 +34,9 @@ class Languages extends Okay {
     }
     
     public function get_fields($object = '') {
-        $fields['categories']      = array('name', 'meta_title', 'meta_keywords', 'meta_description', 'annotation', 'description', 'auto_meta_title', 'auto_meta_keywords', 'auto_meta_desc', 'auto_body');
+        $fields['categories']      = array('name', 'name_h1', 'meta_title', 'meta_keywords', 'meta_description', 'annotation', 'description', 'auto_meta_title', 'auto_meta_keywords', 'auto_meta_desc', 'auto_body');
         $fields['brands']          = array('name', 'meta_title', 'meta_keywords', 'meta_description', 'annotation', 'description');
-        $fields['products']        = array('name', 'meta_title', 'meta_keywords', 'meta_description', 'annotation', 'body');
+        $fields['products']        = array('name', 'meta_title', 'meta_keywords', 'meta_description', 'annotation', 'body', 'special');
         $fields['variants']        = array('name');
         $fields['blog']            = array('name', 'meta_title', 'meta_keywords', 'meta_description', 'annotation', 'text');
         $fields['pages']           = array('name', 'meta_title', 'meta_keywords', 'meta_description', 'header', 'body');

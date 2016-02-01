@@ -15,9 +15,6 @@
 {$meta_title = 'Новый способ доставки' scope=parent}
 {/if}
 
-{* Подключаем Tiny MCE *}
-{include file='tinymce_init.tpl'}
-
 {if $languages}{include file='include_languages.tpl'}{/if}
 
 {if $message_success}
@@ -49,7 +46,8 @@
 		<input class="name" name=name type="text" value="{$delivery->name|escape}"/> 
 		<input name=id type="hidden" value="{$delivery->id}"/> 
 		<div class="checkbox">
-			<input name=enabled value='1' type="checkbox" id="active_checkbox" {if $delivery->enabled}checked{/if}/> <label for="active_checkbox">Активен</label>
+			<input name=enabled value='1' type="checkbox" id="active_checkbox" {if $delivery->enabled}checked{/if}/>
+            <label class="visible_icon" for="active_checkbox">Активен</label>
 		</div>
 	</div> 
 
@@ -87,7 +85,7 @@
 	<!-- Описагние товара -->
 	<div class="block layer">
 		<h2>Описание</h2>
-		<textarea name="description" class="editor_small">{$delivery->description|escape}</textarea>
+		<textarea name="description" class="ckeditor">{$delivery->description|escape}</textarea>
 	</div>
 	<!-- Описание товара (The End)-->
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />

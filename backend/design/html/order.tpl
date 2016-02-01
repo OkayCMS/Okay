@@ -147,7 +147,7 @@
     {if $labels}
         <div class='layer'>
             <h2>Метка</h2>
-            <ul>
+            <ul class="label_list">
                 {foreach $labels as $l}
                     <li>
                         <label for="label_{$l->id}">

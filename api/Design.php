@@ -200,6 +200,16 @@ class Design extends Okay {
         $resized_filename = $this->image->add_resize_params($filename, $width, $height, $set_watermark);
         $resized_filename_encoded = $resized_filename;
         
+        $size = $width.'x'.$height;
+        $image_sizes = array();
+        if ($this->settings->image_sizes) {
+            $image_sizes = explode('|', $this->settings->image_sizes);
+        }
+        if (!in_array($size, $image_sizes)) {
+            $image_sizes[] = $size;
+            $this->settings->image_sizes = implode('|', $image_sizes);
+        }
+        
         if(substr($resized_filename_encoded, 0, 7) == 'http://') {
             $resized_filename_encoded = rawurlencode($resized_filename_encoded);
         }
@@ -210,8 +220,8 @@ class Design extends Okay {
         if (!$resized_dir) {
             $resized_dir = $this->config->resized_images_dir;
         }
-        return $this->config->root_url.'/'.$resized_dir.$resized_filename_encoded.'?'.$this->config->token($resized_filename);
-        //return $this->config->root_url.'/'.$this->config->resized_images_dir.$resized_filename_encoded.'?'.$this->config->token($resized_filename);
+        return $this->config->root_url.'/'.$resized_dir.$resized_filename_encoded;
+        //return $this->config->root_url.'/'.$this->config->resized_images_dir.$resized_filename_encoded;
         /*/resizing_image*/
     }
     

@@ -1,11 +1,5 @@
 <?php
 
-session_start();
-
-chdir('../..');
-require_once('api/Okay.php');
-$okay = new Okay();
-
 // Проверка сессии для защиты от xss
 if(!$okay->request->check_session()) {
     trigger_error('Session expired', E_USER_WARNING);

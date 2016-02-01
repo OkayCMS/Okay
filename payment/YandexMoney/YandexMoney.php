@@ -27,6 +27,14 @@ class YandexMoney extends Okay
 		if($settings['yandex_paymenttype'])
 			$payment_type = '<input type="hidden" name="paymenttype" value="'.$settings['yandex_paymenttype'].'">';
 
+        $res['payment_url'] = $payment_url;
+        $res['settings_pay'] = $settings;
+        $res['price'] = $price;
+        $res['success_url'] = $success_url;
+        $res['fail_url'] = $fail_url;
+        $res['order'] = $order;
+        $res['payment_type'] = $payment_type;
+
 		$button = '<form method="POST" action="'.$payment_url.'">
 					<input type="hidden" name="shopid" value="'.$settings['yandex_shopid'].'">
 					<input type="hidden" name="sum" value="'.$price.'">
@@ -44,6 +52,6 @@ class YandexMoney extends Okay
 					<input type="hidden" name="cms_name" value="okaycms"/>
 					<input type="submit" name="submit-button" value="'.$button_text.'" class="checkout_button">
 					</form>';
-		return $button;
+		return $res;
 	}
 }

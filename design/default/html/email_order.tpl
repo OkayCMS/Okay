@@ -1,3 +1,4 @@
+{* todo Заверстать *}
 {* Шаблон письма пользователю о заказе *}
 
 {$subject = "`$lang->email_order_order` №`$order->id`" scope=parent}

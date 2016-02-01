@@ -20,6 +20,16 @@ class Image extends Okay {
     public function resize($filename/*resizing_image*/,$original_images_dir = null, $resized_images_dir = null/*/resizing_image*/) {
         list($source_file, $width , $height, $set_watermark) = $this->get_resize_params($filename);
         
+        $size = $width.'x'.$height;
+        $image_sizes = array();
+        if ($this->settings->image_sizes) {
+            $image_sizes = explode('|', $this->settings->image_sizes);
+        }
+        if (!in_array($size, $image_sizes)){
+            header("http/1.0 404 not found");
+            exit();
+        }
+        
         // Если вайл удаленный (http://), зальем его себе
         if(substr($source_file, 0, 7) == 'http://') {
             // Имя оригинального файла

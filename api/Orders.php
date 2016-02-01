@@ -63,6 +63,7 @@ class Orders extends Okay {
         $user_filter = '';
         $modified_since_filter = '';
         $id_filter = '';
+        $date_filter = '';
         
         if(isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));
@@ -102,9 +103,24 @@ class Orders extends Okay {
                     OR o.name LIKE "%'.$this->db->escape(trim($keyword)).'%" 
                     OR REPLACE(o.phone, "-", "")  LIKE "%'.$this->db->escape(str_replace('-', '', trim($keyword))).'%" 
                     OR o.address LIKE "%'.$this->db->escape(trim($keyword)).'%" 
-                    OR o.email LIKE "%'.$this->db->escape(trim($keyword)).'%" 
+                    OR o.email LIKE "%'.$this->db->escape(trim($keyword)).'%"
+                    OR o.id in (SELECT order_id FROM __purchases WHERE product_name LIKE "%'.$this->db->escape(trim($keyword)).'%" OR variant_name LIKE "%'.$this->db->escape(trim($keyword)).'%")
                 ) ');
             }
+        }
+
+        if(!empty($filter['from_date']) || !empty($filter['to_date'])){
+                if(!empty($filter['from_date'])){
+                    $from = $filter['from_date'];
+                }else{
+                    $from = '1970-01-01'; /*если стартовой даты нет, берем время с эпохи UNIX*/
+                }
+                if(!empty($filter['to_date'])){
+                    $to = $filter['to_date'];
+                }else{
+                    $to = date('Y-m-d'); /*если конечной даты нет, берем за дату "сегодня"*/
+                }
+                $date_filter = $this->db->placehold("AND (o.date BETWEEN ? AND ?)",$from,$to);
         }
         
         // Выбираем заказы
@@ -141,7 +157,8 @@ class Orders extends Okay {
                 $user_filter 
                 $keyword_filter 
                 $label_filter 
-                $modified_since_filter 
+                $modified_since_filter
+                $date_filter
             GROUP BY o.id 
             ORDER BY status, id DESC 
             $sql_limit
@@ -159,6 +176,7 @@ class Orders extends Okay {
         $label_filter = '';
         $status_filter = '';
         $user_filter = '';
+        $date_filter = '';
         
         if(isset($filter['status'])) {
             $status_filter = $this->db->placehold('AND o.status = ?', intval($filter['status']));
@@ -180,9 +198,24 @@ class Orders extends Okay {
                     OR o.name LIKE "%'.$this->db->escape(trim($keyword)).'%" 
                     OR REPLACE(o.phone, "-", "")  LIKE "%'.$this->db->escape(str_replace('-', '', trim($keyword))).'%" 
                     OR o.address LIKE "%'.$this->db->escape(trim($keyword)).'%" 
-                    OR o.email LIKE "%'.$this->db->escape(trim($keyword)).'%" 
+                    OR o.email LIKE "%'.$this->db->escape(trim($keyword)).'%"
+                    OR o.id in (SELECT order_id FROM __purchases WHERE product_name LIKE "%'.$this->db->escape(trim($keyword)).'%" OR variant_name LIKE "%'.$this->db->escape(trim($keyword)).'%")
                 ) ');
             }
+        }
+
+        if(!empty($filter['from_date']) || !empty($filter['to_date'])){
+            if(!empty($filter['from_date'])){
+                $from = $filter['from_date'];
+            }else{
+                $from = '1970-01-01'; /*если стартовой даты нет, берем время с эпохи UNIX*/
+            }
+            if(!empty($filter['to_date'])){
+                $to = $filter['to_date'];
+            }else{
+                $to = date('Y-m-d'); /*если конечной даты нет, берем за дату "сегодня"*/
+            }
+            $date_filter = $this->db->placehold("AND (o.date BETWEEN ? AND ?)",$from,$to);
         }
         
         // Выбираем заказы
@@ -195,6 +228,7 @@ class Orders extends Okay {
                 $user_filter 
                 $label_filter 
                 $keyword_filter
+                $date_filter
         ");
         $this->db->query($query);
         return $this->db->result('count');

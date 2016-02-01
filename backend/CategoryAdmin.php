@@ -10,6 +10,7 @@ class CategoryAdmin extends Okay {
             $category->id = $this->request->post('id', 'integer');
             $category->parent_id = $this->request->post('parent_id', 'integer');
             $category->name = $this->request->post('name');
+            $category->name_h1 = $this->request->post('name_h1');
             $category->yandex_name = $this->request->post('yandex_name');
             $category->visible = $this->request->post('visible', 'boolean');
             
@@ -33,6 +34,8 @@ class CategoryAdmin extends Okay {
                 $this->design->assign('message_error', 'empty_name');
             } elseif(empty($category->url)) {
                 $this->design->assign('message_error', 'empty_url');
+            } elseif(substr($category->url, -1) == '-' || substr($category->url, 0, 1) == '-') {
+                $this->design->assign('message_error', 'url_wrong');
             } else {
                 if(empty($category->id)) {
                     $category->id = $this->categories->add_category($category);
@@ -67,5 +70,5 @@ class CategoryAdmin extends Okay {
         $this->design->assign('categories', $categories);
         return  $this->design->fetch('category.tpl');
     }
-    
+
 }

@@ -16,7 +16,7 @@ function updateBill($login, $password, $txn, $status)
 	// Работаем в корневой директории
 	chdir ('../../');
 	
-	// Подключаем симплу
+	// Подключаем основной класс
 	require_once('api/Okay.php');
 	$okay = new Okay();
 

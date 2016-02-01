@@ -1,4 +1,5 @@
-@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,500,500italic,700,700italic,900,900italic&subset=latin,cyrillic);
+@import url(https://fonts.googleapis.com/
+    css?family=Roboto:400,300,300italic,400italic,500,500italic,700,700italic,900,900italic&subset=latin,cyrillic);
 
 body, html{
 	width: 100%;
@@ -64,71 +65,89 @@ body{
     margin-left: 10px;
     vertical-align: middle;
 }
-#main_menu i.icon_catalog{
+#main_menu .icon_catalog{
     background-position: 0 -160px;
 }
-#main_menu i.icon_orders{
+#main_menu .icon_orders{
     background-position: 0px -280px;
 }
-#main_menu i.icon_pages{
+#main_menu .icon_pages{
     background-position: 0px -120px;
 }
-#main_menu i.icon_blog{
+#main_menu .icon_blog{
     background-position: 0px -320px;
 }
-#main_menu i.icon_comments{
+#main_menu .icon_comments{
     background-position: 0px -240px;
 }
-#main_menu i.icon_automatic{
+#main_menu .icon_automatic{
     background-position: 0px -360px;
 }
-#main_menu i.icon_statistic{
+#main_menu .icon_statistic{
     background-position: 0px -40px;
 }
-#main_menu i.icon_design{
+#main_menu .icon_design{
     background-position: 0px -200px;
 }
 #main_menu i.icon_settings{
      background-position: 0px -80px;
 }
-#main_menu i.icon_banner{
+#main_menu .icon_banner{
     background-position: 0px -500px;
+}
+#main_menu .icon_topvisor {
+	background-position: 1px -407px;
 }
 #main_menu li:hover, #main_menu li:hover i, #main_menu li.active, #main_menu li.active i {
     background-color: #384956;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_catalog, #main_menu li.active i.icon_catalog {
+#main_menu li:hover .icon_catalog, 
+#main_menu li.active .icon_catalog {
     background-position: -40px -160px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_orders, #main_menu li.active i.icon_orders {
+#main_menu li:hover .icon_orders, 
+#main_menu li.active .icon_orders {
     background-position: -40px -280px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_users, #main_menu li.active i.icon_users {
+#main_menu li:hover .icon_users, 
+#main_menu li.active .icon_users {
     background-position: -40px 0px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_pages, #main_menu li.active i.icon_pages {
+#main_menu li:hover .icon_pages, 
+#main_menu li.active .icon_pages {
     background-position: -40px -120px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_blog, #main_menu li.active i.icon_blog {
+#main_menu li:hover .icon_blog, 
+#main_menu li.active .icon_blog {
     background-position: -40px -320px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_comments, #main_menu li.active i.icon_comments {
+#main_menu li:hover .icon_comments, 
+#main_menu li.active .icon_comments {
     background-position: -40px -240px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_automatic, #main_menu li.active i.icon_automatic {
+#main_menu li:hover .icon_automatic,
+#main_menu li.active .icon_automatic {
     background-position: -40px -360px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_statistic, #main_menu li.active i.icon_statistic {
+#main_menu li:hover .icon_statistic, 
+#main_menu li.active .icon_statistic {
     background-position: -40px -40px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_design, #main_menu li.active i.icon_design {
+#main_menu li:hover .icon_design, 
+#main_menu li.active .icon_design {
     background-position: -40px -200px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_settings, #main_menu li.active i.icon_settings {
+#main_menu li:hover .icon_settings, 
+#main_menu li.active .icon_settings {
     background-position: -40px -80px;
 }
-#main_menu li:hover, #main_menu li:hover i.icon_banner, #main_menu li.active i.icon_banner {
+#main_menu li:hover .icon_banner, 
+#main_menu li.active .icon_banner {
     background-position: -41px -500px;
+}
+#main_menu li:hover .icon_topvisor, 
+#main_menu li.active .icon_topvisor {
+    background-position: -48px -407px;
 }
 #main_menu a {
     display: block;
@@ -184,39 +203,38 @@ body{
     background-image: url(../images/sprite_admin2.png);
 }
 .invisible .icons a.enable{
-    background-position: -21px -422px;
+    background-position: -68px -652px;
 }
 .icons a.enable{
-    background-position: -21px -463px;
+    background-position: -4px -652px;
 }
 .icons a.preview{
-    background-position: -3px -422px;
+    background-position: -68px -693px;
 }
 .icons a.preview:hover{
-    background-position: -3px -462px;
+    background-position: -4px -693px;
 }
 .icons a.featured{
-    background-position: -42px -422px;
-    margin-right: 4px;
+    width: 23px;
+    background-position: -68px -736px;
 }
 .featured .icons a.featured{
-    background-position: -42px -463px;
+    background-position: -4px -736px;
 }
 .icons a.duplicate{
-    background-position: -62px -423px;
+    background-position: -72px -776px;
 }
 .icons a.duplicate:hover{
-    background-position: -62px -463px;
+    background-position: -8px -776px;
 }
-.icons a.delete, .themes a.delete{
-    background-position: -81px -422px;
-}
-.icons a.delete:hover{
-    background-position: -81px -462px;
+.icons a.delete {
+    background-position: -4px -567px;
+    width: 17px;
+    margin-right: 3px;
 }
 .icons a.print {
     background-image: url(../images/print_small.png);
-    width: 7px;
+    width: 22px;
 }
 .feature a.delete{
     background-position: -81px -422px;
@@ -226,24 +244,19 @@ body{
 }
 .icons .in_filter {
     background-image: url(../images/filter.png);
-    background-position: 0 0;
-    display: inline-block;
-    height: 16px;
-    margin: 0;
-    padding: 0;
-    width: 20px;
+    margin: 0 5px;
+    width: 23px;
 }
 .in_filter .icons .in_filter {
-    background-position: 0 -16px;
+    background-position: 0 -22px;
 }
 .icons a.cents {
     background-image: url("../images/money.png");
-    background-size: 100%;
     margin-left: 10px;
+    width: 23px;
 }
 .cents .icons a.cents {
     background-image: url("../images/money_on.png");
-    background-size: 100%;
 }
 .icons a.loading_icon, label.yandex_icon.loading_icon {
     background-image: url(../images/loader.gif);
@@ -253,14 +266,14 @@ body{
 }
 .themes a.delete{
     display: block;
-    width: 16px;
-    height: 16px;
-    background-position: -80px -420px;
+    width: 18px;
+    height: 21px;
+    background-position: -4px -567px;
 }
 a.edit {
     background: url("../images/pen.png");
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
 }
 /*иконки каталога END*/
 /*Табы разделов*/
@@ -407,23 +420,21 @@ a:hover {
 	font-style: normal;
 	color: #243541;
 	text-decoration: none;
-    margin-right: 5px;
     padding: 5px 0px 0;
     display: inline-block;
-    margin-left: 5px;
+}
+
+#add_variant .dash_link {
+    padding: 2px 0 0;
 }
 .dash_link:hover {
     border-color: transparent;
 }
 .move_zone {
-	display: block;
-	float: left;
 	background-image: url(../images/move_zone.png);
-	background-size: 100%;
-	margin: 0px;
 	cursor: move;
-	width: 20px;
-	height:16px;
+	width: 22px;
+	height:22px;
 }
 .button,
 .button_green, 
@@ -479,16 +490,16 @@ a.admin_bookmark {
 
 /* @group Постраничная навигация */
 #pagination {
-    margin-top: 5px;
     font-size: 11px;
-    overflow: visible;
+    float: left;
+    margin-right: 25px;
 }
 #pagination a {
     display: block;
     float: left;
     border-radius: 3px;
     background-color: #fffeff;
-    margin-right: 5px;
+    margin-right: 4px;
     margin-bottom: 12px;
     padding: 7px 7px;
     min-width: 16px;
@@ -518,6 +529,10 @@ a.admin_bookmark {
     border: 1px solid #4eee00;
     color: #ffffff;
 }
+.limit_show {
+    float: left;
+    margin-bottom: 10px;
+}
 input[type="text"],
 input[type="password"],
 select {
@@ -528,6 +543,9 @@ select {
     border: 1px solid #ccc;
     color: #353b3e;
 } 
+select {
+    height: 28px;
+}
 input[type="file"] {
     font-size: 14px;
 }
@@ -535,38 +553,40 @@ input[type="file"] {
     margin-bottom: 15px;
 }
 /*стилизация яндекса*/
-label.yandex_icon:before{
-    cursor: pointer;
-    width: 24px;
-    height: 24px;
-    background: url("../images/ya.png") 24px 24px;
-    display: inline-block;
-    content: "";
-    vertical-align: top;
-	margin-top: 2px;
+#ya_input {
+    display: none;
 }
-label.yandex_icon.active:before {
+label.yandex_icon {
+    display: inline-block;
+    vertical-align: bottom;
+    cursor: pointer;
+    width: 22px;
+    height: 22px;
+    background: url("../images/ya.png") 22px 22px;
+}
+label.yandex_icon.active,
+input:checked + label.yandex_icon{
     background-position: 0 0;
 }
-.variants select {
-    height: 28px;
-    vertical-align: top;
+.variants label.yandex_icon {
+    margin-bottom: 3px;
 }
+
 /*стилизация яндекса END*/
 
 /*стилизация всех чекбоксов в админке*/
 input[name*="check"]{
     display: none;
 }
-input[name*="check"] + label:before{
-    content: "";
+input[name*="check"] + label{
     display: inline-block;
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     background: url("../images/checkbox.png");
+    margin-top: 1px;
 }
-input[name*="check"]:checked + label:before{
-   background-position: 0px 16px;
+input[name*="check"]:checked + label{
+   background-position: 0px 20px;
 }
 /*стилизация всех чекбоксов в админке*/
 .yandex_list label {
@@ -574,9 +594,10 @@ input[name*="check"]:checked + label:before{
 }
 .add_attachment{
     display: block;
-    width: 32px;
-    height: 32px;
-    background: url("../images/download.png") 0 -3px;
+    width: 24px;
+    height: 20px;
+    background: url("../images/download.png") no-repeat 0 0;
+    margin-top: 2px;
 }
 .remove_attachment{
     background-position: -80px -419px;
@@ -614,6 +635,7 @@ input[name*="check"]:checked + label:before{
 .filter_right li a {
     text-decoration: none;
     color: #fff;  
+	padding: 5px;
 }
 .filter_right li{
     background: none;
@@ -621,7 +643,6 @@ input[name*="check"]:checked + label:before{
     border-radius: 3px;
     border-style: solid;
     border-width: 1px;
-    padding: 5px;
     text-align: left;
     margin-bottom: 4px;
 }
@@ -630,4 +651,8 @@ input[name*="check"]:checked + label:before{
 }
 .filter_right li a:hover{
     color: #fff;  
+}
+#yandex_checkbox,
+#in_filter {
+    vertical-align: -5px;
 }

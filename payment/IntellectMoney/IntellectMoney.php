@@ -43,7 +43,17 @@ class IntellectMoney extends Okay
 		$user_email = $order->email;
 
 		$pre_hash = md5(join('::', array($shop_id,$order_id,$order_description,$amount,$currency_code,$payment_settings['im_secret_key'])));
-		
+
+        $res['shop_id'] = $shop_id;
+        $res['order_id'] = $order_id;
+        $res['order_description'] = $order_description;
+        $res['amount'] = $amount;
+        $res['currency_code'] = $currency_code;
+        $res['redirect_url_ok'] = $redirect_url_ok;
+        $res['redirect_url_failed'] = $redirect_url_failed;
+        $res['user_email'] = $user_email;
+        $res['pre_hash'] = $pre_hash;
+
 		$button =	"<form action='https://merchant.intellectmoney.ru' method=POST>".
 					"<input type=hidden name=eshopId value='$shop_id'>".
 					"<input type=hidden name=orderId value='$order_id'>".
@@ -56,7 +66,7 @@ class IntellectMoney extends Okay
 					"<input type=hidden name=hash value='$pre_hash'>".
 					"<input type=submit class=payment_button value='$button_text'>".
 					"</form>";
-		return $button;
+		return $res;
 	}
 	private function checksymbol(){
 	

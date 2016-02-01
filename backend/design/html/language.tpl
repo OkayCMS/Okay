@@ -46,29 +46,9 @@
 <input type=hidden name="session_id" value="{$smarty.session.id}">
 <input name=id type="hidden" value="{$language->id}"/>
 
-{*
-	<div id="name">
-		<input class="name" name=name type="text" value="{$language->name|escape}"/>
-
-	</div>
-
-	<!-- Левая колонка свойств товара -->
-	<div id="column_left">
-		<!-- Параметры страницы -->
-		<div class="block layer">
-			<h2>Свойства</h2>
-			<ul>
-				<li><label class=property>Метка</label><input name="label" class="okay_small_inp" type="text" value="{$language->label}" /></li>
-			</ul>
-		</div>
-		<!-- Параметры страницы (The End)-->
-
-	</div>
-	<!-- Левая колонка свойств товара (The End)-->
-*}
     {if $message_success !== 'added'}
 	<!-- Левая колонка свойств товара -->
-	<div id="column_left">
+	<div>
 		<!-- Параметры страницы -->
 		<div class="block layer">
 			<h2>Выберите из списка</h2>
@@ -80,8 +60,9 @@
                     </SELECT>
                 </li>
 				<li>
-                    <label class=property  for="active_checkbox">Активен</label>
                     <input name=enabled value='1' type="checkbox" id="active_checkbox" {if $lang->enabled}checked{/if}/>
+                    <label class="property visible_icon"  for="active_checkbox">Активен</label>
+                    
                 </li>
 			</ul>
 		</div>
@@ -91,7 +72,7 @@
 	<!-- Левая колонка свойств товара (The End)-->
 
 	<!-- Описание товара (The End)-->
-	<input class="button_green button_save" type="submit" name="" value="Сохранить" />
+	<input class="button" type="submit" name="" value="Сохранить" />
 	{/if}
 </form>
 <!-- Основная форма (The End) -->

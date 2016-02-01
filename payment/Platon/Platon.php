@@ -25,7 +25,13 @@ class Platon extends Okay
 		
 		$sign = md5(strtoupper(strrev($_SERVER["REMOTE_ADDR"]).strrev($settings['platon_key']).strrev($data).strrev($return_url).strrev($settings['platon_password'])));
 					
-		$button =	'<form action="https://secure.platononline.com/webpaygw/pcc.php?a=auth" method="POST"/>'.
+		$res['settings_pay'] = $settings;
+        $res['order'] = $order;
+        $res['data'] = $data;
+        $res['return_url'] = $return_url;
+        $res['sign'] = $sign;
+
+        $button =	'<form action="https://secure.platononline.com/webpaygw/pcc.php?a=auth" method="POST"/>'.
 					'<input type="hidden" name="key" value="'.$settings['platon_key'].'" />'.
 					'<input type="hidden" name="order" value="'.$order->id.'" />'.
 					'<input type="hidden" name="data" value="'.$data.'" />'.
@@ -33,6 +39,6 @@ class Platon extends Okay
 					'<input type="hidden" name="sign" value="'.$sign.'" />'.
 					'<input type=submit class=checkout_button value="'.$button_text.'">'.
 					'</form>';
-		return $button;
+		return $res;
 	}
 }

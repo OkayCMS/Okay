@@ -96,7 +96,10 @@ class Products extends Okay {
                     $order = 'p.position DESC';
                     break;
                 case 'name':
-                    $order = 'p.name';
+                    $order = 'p.name ASC';
+                    break;
+                case 'name_desc':
+                    $order = 'p.name DESC';
                     break;
                 case 'created':
                     $order = 'p.created DESC';
@@ -113,6 +116,19 @@ class Products extends Okay {
                                     product_id=p.id LIMIT 1
                             ) 
                         LIMIT 1) DESC";
+                    break;
+                case 'price_asc':
+                    $order = "(SELECT -floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)
+                        FROM __variants pv
+                        LEFT JOIN s_currencies c on c.id=pv.currency_id
+                        WHERE
+                            p.id = pv.product_id
+                            AND pv.position=(SELECT MIN(position)
+                                FROM __variants
+                                WHERE
+                                    product_id=p.id LIMIT 1
+                            )
+                        LIMIT 1) ASC";
                     break;
             }
         }
@@ -148,7 +164,6 @@ class Products extends Okay {
                 p.featured,
                 p.rating,
                 p.votes,
-                p.special,
                 p.last_modify,
                 $lang_sql->fields
             FROM __products p
@@ -172,7 +187,6 @@ class Products extends Okay {
             ORDER BY $order
             $sql_limit
         ";
-        
         $this->db->query($query);
         $products = $this->db->results();
         
@@ -338,7 +352,6 @@ class Products extends Okay {
                 p.featured,
                 p.rating,
                 p.votes,
-                p.special,
                 p.last_modify,
                 $lang_sql->fields
             FROM __products AS p
@@ -628,49 +641,49 @@ class Products extends Okay {
             @unlink($this->config->root_dir.$this->config->original_images_dir.$filename);
         }
     }
-    
-    public function get_next_product($id) {
-        $this->db->query("SELECT position FROM __products WHERE id=? LIMIT 1", $id);
-        $position = $this->db->result('position');
-        
-        $this->db->query("SELECT pc.category_id FROM __products_categories pc WHERE product_id=? ORDER BY position LIMIT 1", $id);
-        $category_id = $this->db->result('category_id');
-        
+
+    public function get_neighbors_products($category_id, $position) {
+        $pids = array();
+        // следующий товар
         $query = $this->db->placehold("SELECT id FROM __products p, __products_categories pc
-            WHERE 
+            WHERE
                 pc.product_id=p.id AND p.position>?
                 AND pc.position=(SELECT MIN(pc2.position) FROM __products_categories pc2 WHERE pc.product_id=pc2.product_id)
                 AND pc.category_id=?
-                AND p.visible 
-            ORDER BY p.position 
-            limit 1 
+                AND p.visible
+            ORDER BY p.position
+            limit 1
         ", $position, $category_id);
-        
         $this->db->query($query);
-        return $this->get_product((integer)$this->db->result('id'));
-    }
-    
-    public function get_prev_product($id) {
-        $this->db->query("SELECT position FROM __products WHERE id=? LIMIT 1", $id);
-        $position = $this->db->result('position');
-        
-        $this->db->query("SELECT pc.category_id FROM __products_categories pc WHERE product_id=? ORDER BY position LIMIT 1", $id);
-        $category_id = $this->db->result('category_id');
-        
+        $pid = $this->db->result('id');
+        if ($pid) {
+            $pids[$pid] = 'prev';
+        }
+        // предыдущий товар
         $query = $this->db->placehold("SELECT id FROM __products p, __products_categories pc
-            WHERE 
+            WHERE
                 pc.product_id=p.id AND p.position<?
                 AND pc.position=(SELECT MIN(pc2.position) FROM __products_categories pc2 WHERE pc.product_id=pc2.product_id)
                 AND pc.category_id=?
-                AND p.visible 
-            ORDER BY p.position DESC 
-            limit 1 
+                AND p.visible
+            ORDER BY p.position DESC
+            limit 1
         ", $position, $category_id);
-        
         $this->db->query($query);
-        return $this->get_product((integer)$this->db->result('id'));
+        $pid = $this->db->result('id');
+        if ($pid) {
+            $pids[$pid] = 'next';
+        }
+
+        $result = array('next'=>'', 'prev'=>'');
+        if (!empty($pids)) {
+            foreach ($this->get_products(array('id'=>array_keys($pids))) as $p) {
+                $result[$pids[$p->id]] = $p;
+            }
+        }
+        return $result;
     }
-    
+
     public function multi_duplicate_product($id, $new_id) {
         $lang_id = $this->languages->lang_id();
         if (!empty($lang_id)) {

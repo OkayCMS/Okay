@@ -7,9 +7,9 @@ $token = $_GET['token'];
 
 $okay = new Okay();
 
-if(!$okay->config->check_token($filename, $token)) {
+/*if(!$okay->config->check_token($filename, $token)) {
     exit('bad token');
-}
+}*/
 
 /*resizing_image*/
 $original_img_dir = null;

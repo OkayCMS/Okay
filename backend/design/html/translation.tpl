@@ -82,8 +82,17 @@ function translit(str)
 			<h2>Перевод</h2>
             <BR>
 			<ul>
-				<li><label class=property>Метка</label><input name="label" class="okay_inp" type="text" value="{$translation->label}" /></li>
-				{*<li><label class=property>Записать в конфиг</label><INPUT name="in_config" type="checkbox" value="1" {if $translation->in_config}checked{/if}></li>*}
+				<li><label class=property>Метка
+                        <div class="helper_wrap">
+                            <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                            <div class="right helper_block">
+                                <span>
+                                    Название переменной, которая используется в шаблоне
+                                </span>
+                            </div>
+                        </div>
+                    </label>
+                    <input name="label" class="okay_inp" type="text" value="{$translation->label}" /></li>
                 {foreach $languages as $lang}
 				<li>
                     <label class=property>{$lang->name}</label>

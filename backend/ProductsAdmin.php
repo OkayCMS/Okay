@@ -7,8 +7,17 @@ class ProductsAdmin extends Okay {
     public function fetch() {
         $filter = array();
         $filter['page'] = max(1, $this->request->get('page', 'integer'));
-        
-        $filter['limit'] = $this->settings->products_num_admin;
+
+        if ($filter['limit'] = $this->request->get('limit', 'integer')) {
+            $filter['limit'] = max(5, $filter['limit']);
+            $filter['limit'] = min(100, $filter['limit']);
+            $_SESSION['products_num_admin'] = $filter['limit'];
+        } elseif (!empty($_SESSION['products_num_admin'])) {
+            $filter['limit'] = $_SESSION['products_num_admin'];
+        } else {
+            $filter['limit'] = 25;
+        }
+        $this->design->assign('current_limit', $filter['limit']);
         
         // Категории
         $categories = $this->categories->get_categories_tree();
@@ -253,6 +262,15 @@ class ProductsAdmin extends Okay {
             $images = $this->products->get_images(array('product_id'=>$products_ids));
             foreach($images as $image) {
                 $products[$image->product_id]->images[$image->id] = $image;
+            }
+
+            $brands = $this->brands->get_brands(array('product_id'=>$products_ids));
+            $brands_array = array();
+            if(!empty($brands)) {
+                foreach ($brands as $brand) {
+                    $brands_array[$brand->id] = $brand;
+                }
+                $this->design->assign('brands_name',$brands_array);
             }
         }
         

@@ -1,7 +1,5 @@
 <?php
 
-require_once('../../api/Okay.php');
-
 class ImportAjax extends Okay {
     
     // Соответствие полей в базе и имён колонок в файле
@@ -30,7 +28,7 @@ class ImportAjax extends Okay {
     // Соответствие имени колонки и поля в базе
     private $internal_columns_names = array();
     
-    private $import_files_dir      = '../files/import/'; // Временная папка
+    private $import_files_dir      = 'backend/files/import/'; // Временная папка
     private $import_file           = 'import.csv';           // Временный файл
     private $category_delimiter = ',';                       // Разделитель каегорий в файле
     private $subcategory_delimiter = '/';                    // Разделитель подкаегорий в файле
@@ -388,10 +386,12 @@ class ImportAjax extends Okay {
 }
 
 $import_ajax = new ImportAjax();
-header("Content-type: application/json; charset=UTF-8");
-header("Cache-Control: must-revalidate");
-header("Pragma: no-cache");
-header("Expires: -1");
-
-$json = json_encode($import_ajax->import());
-print $json;
+$data = $import_ajax->import();
+if ($data) {
+    header("Content-type: application/json; charset=UTF-8");
+    header("Cache-Control: must-revalidate");
+    header("Pragma: no-cache");
+    header("Expires: -1");
+    $json = json_encode($data);
+    print $json;
+}

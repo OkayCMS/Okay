@@ -290,5 +290,23 @@ class Categories extends Okay {
         $this->categories_tree = $tree->subcategories;
         $this->all_categories = $pointers;
     }
+
+    public function get_market($query = '') {
+        $query = mb_strtolower($query);
+        $market_cats = array();
+        $file = 'files/downloads/market_categories.csv';
+        if (file_exists($file)) {
+            $f = fopen($file, 'r');
+            fgetcsv($f, 0, '^');
+            while (!feof($f)) {
+                $line = fgetcsv($f, 0, '^');
+                if (empty($query) || strpos(mb_strtolower($line[0]), $query) !== false) {
+                    $market_cats[] = $line[0];
+                }
+            }
+            fclose($f);
+        }
+        return $market_cats;
+    }
     
 }

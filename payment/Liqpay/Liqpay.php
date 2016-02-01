@@ -28,7 +28,17 @@ class Liqpay extends Okay
 		$private_key = $settings['liqpay_private_key'];
 		$public_key = $settings['liqpay_public_key'];
 		$sign = base64_encode(sha1($private_key.$price.$payment_currency->code.$public_key.$liqpay_order_id.'buy'.$desc.$result_url.$server_url, 1));
-					
+
+        $res['public_key'] = $public_key;
+        $res['price'] = $price;
+        $res['payment_currency'] = $payment_currency;
+        $res['desc'] = $desc;
+        $res['liqpay_order_id'] = $liqpay_order_id;
+        $res['result_url'] = $result_url;
+        $res['server_url'] = $server_url;
+        $res['sign'] = $sign;
+
+
 		$button =	'<form method="POST" action="https://www.liqpay.com/api/pay">
 						<input type="hidden" name="public_key" value="'.$public_key.'" />
 						<input type="hidden" name="amount" value="'.$price.'" />
@@ -41,6 +51,6 @@ class Liqpay extends Okay
 						<input type="hidden" name="signature" value="'.$sign.'" />
 						<input type=submit class=checkout_button value="'.$button_text.'">
 					</form>';
-		return $button;
+		return $res;
 	}
 }

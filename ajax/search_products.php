@@ -19,7 +19,20 @@
     $lang_sql = $okay->languages->get_query(array('object'=>'product'));
     
     $keyword = $okay->request->get('query', 'string');
-    $kw = $okay->db->escape($keyword);
+    $keyword_filter = '';
+    if (!empty($keyword)) {
+        $keywords = explode(' ', $keyword);
+        foreach ($keywords as $kw) {
+            $kw = $okay->db->escape($kw);
+            if($kw!=='') {
+                $keyword_filter .= $okay->db->placehold("AND (
+                        $px.name LIKE '%$kw%'
+                        OR $px.meta_keywords LIKE '%$kw%'
+                        OR p.id in (SELECT product_id FROM __variants WHERE sku LIKE '%$kw%')
+                    ) ");
+            }
+        }
+    }
 	$okay->db->query("SELECT 
             p.id,
             p.url,
@@ -29,7 +42,8 @@
         $lang_sql->join
         LEFT JOIN __images i ON i.product_id=p.id AND i.position=(SELECT MIN(position) FROM __images WHERE product_id=p.id LIMIT 1)
         WHERE 
-            ($px.name LIKE '%$kw%' OR $px.meta_keywords LIKE '%$kw%' OR p.id in (SELECT product_id FROM __variants WHERE sku LIKE '%$kw%')) 
+            1
+            $keyword_filter
             AND visible=1 
         ORDER BY p.name 
         LIMIT ?

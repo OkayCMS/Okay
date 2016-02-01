@@ -1,7 +1,5 @@
 <?php
 
-require_once('../../api/Okay.php');
-
 class ExportAjax extends Okay {
     
 	private $columns_names = array(
@@ -29,7 +27,7 @@ class ExportAjax extends Okay {
     private $column_delimiter = ';';
     private $subcategory_delimiter = '/';
     private $products_count = 10;
-    private $export_files_dir = '../files/export/';
+    private $export_files_dir = 'backend/files/export/';
     private $filename = 'export.csv';
     
     public function fetch() {

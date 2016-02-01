@@ -1,13 +1,11 @@
 <?php
-    session_start();
-    require_once('../../api/Okay.php');
-    $okay = new Okay();
+
     $limit = 100;
     
     if(!$okay->managers->access('orders')) {
-        return false;
+        exit();
     }
-    
+
     if (!empty($_SESSION['admin_lang_id'])) {
         $okay->languages->set_lang_id($_SESSION['admin_lang_id']);
     }

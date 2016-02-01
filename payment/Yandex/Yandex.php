@@ -25,6 +25,11 @@ class Yandex extends Okay
 
 		// описание заказа
 		$desc = 'Оплата заказа №'.$order->id.' на сайте '.$this->settings->site_name;
+
+        $res['settings_pay'] = $settings;
+        $res['desc'] = $desc;
+        $res['price'] = $price;
+        $res['order'] = $order;
 							
 		$button = '<form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
 					<input name="receiver" type="hidden" value="'.$settings['yandex_id'].'">
@@ -35,6 +40,6 @@ class Yandex extends Okay
 					<input name="label" type="hidden" value="'.$order->id.'">   
 					<input type="submit" name="submit-button" value="'.$button_text.'"  class="checkout_button">
 					</form>';
-		return $button;
+		return $res;
 	}
 }

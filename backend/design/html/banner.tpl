@@ -9,22 +9,6 @@
 {$meta_title = 'Новая группа' scope=parent}
 {/if}
 
-{* On document load *}
-{literal}
-<script src="design/js/jquery/jquery.js"></script>
-
-
-<script>
-$(function() {
-
-	
-});
-</script>
-
-
-{/literal}
-
-
 {if $message_success}
 <!-- Системное сообщение -->
 <div class="message message_success">
@@ -52,8 +36,9 @@ $(function() {
 		<input class="name" name=name type="text" value="{$banner->name|escape}"/> 
 		<input name=id type="hidden" value="{$banner->id|escape}"/> 
 		<div class="checkbox">
-			<input name=visible value='1' type="checkbox" id="active_checkbox" {if $banner->visible}checked{/if}/> <label for="active_checkbox">Активна</label>
-		</div>
+			<input name=visible value='1' type="checkbox" id="active_checkbox" {if $banner->visible}checked{/if}/>
+            <label class="visible_icon" for="active_checkbox">Активен</label>
+        </div>
 	</div>
 
 	<!-- Левая колонка свойств товара -->

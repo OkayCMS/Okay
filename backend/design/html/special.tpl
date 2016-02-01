@@ -8,56 +8,165 @@
 
 {$meta_title = 'Промо-изображения' scope=parent}
 
-<form method="post" id="spec_form" enctype="multipart/form-data"> 
-	<div id="list">
-	{foreach $kartinki as $im}
-		<div class="spec_irow">
-			<div class="checkbox cell">
-			  <input type="checkbox" name="check[]" value="{$im->id}"/>				
+
+<div id="main_list" class="brands">
+
+	<form id="list_form" method="post">
+        <input type="hidden" name="session_id" value="{$smarty.session.id}"/>
+		<div id="list" class="brands">	
+			{foreach $special_images as $special}
+			<div class="row">
+                <input type="hidden" name="positions[{$special->id}]" value="{$special->position}"/>
+                <div class="move cell"><div class="move_zone"></div></div>
+                
+		 		<div class="checkbox cell">
+					<input id="special_{$special->id}" type="checkbox" name="check[]" value="{$special->id}" />
+                    <label for="special_{$special->id}"></label>
+				</div>
+                <div class="image cell">
+                    {if $special->filename}
+                        <img height="35" width="35" src="../{$config->special_images_dir}{$special->filename}" alt="{$special->name}" />
+                    {else}
+                        <img height="35" width="35" src="../design/{$settings->theme|escape}/images/no_image.png"/>
+                    {/if}
+                </div>
+				<div class="cell">
+                    <input type="text" name="special[name][{$special->id}]" value="{$special->name}" /> 	 			
+				</div>
+				<div class="icons cell">
+					<a class="delete"  title="Удалить" href="#"></a>
+				</div>
+				<div class="clear"></div>
 			</div>
-			<div class="spec_img_name">
-				<span>{$im->name}</span>
+			{/foreach}
+            {*<div class="row" style="display: none;" id="new_special">
+				<div class="cell">
+                    <input type="text" name="new_special[name][]" />
+				</div>
+                <div class="cell">
+                    <input class="upload" name="special_files[]" type="file" />
+				</div>
+				<div class="clear"></div>
 			</div>
-			<img src="../files/special/{$im->filename}" title="{$im->name}"/>
+            <a href="javascript:;" class="add_special">Добавить промо-изображение</a>*}
 		</div>
-	{/foreach}
-	</div>
-	<div class="spec_act">
-		<label>Действие:</label>
-		<select name="action">
-			<option></option>
-			<option value="delete">Удалить</option>
-		</select>
-	</div>
-
-	<input type="hidden" name="session_id" value="{$smarty.session.id}"/>
-
-	<div class="form_group">
-		<label>Название:</label>
-		<input class="" name="name" type="text" />
-	</div>
-
-	<div class="form_group">
-		<label>Выбрать изображение:</label><br />
-		<input class="upload" name="spec_img" type="file" />
-	</div>    
+		
+		<div id="action">
+			<label id="check_all" class="dash_link">Выбрать все</label>
 			
-	<input class="button" type="submit" name="submit" value="Сохранить" />
-</form>
-{*literal}
+			<span id="select">
+			<select name="action">
+				<option value="delete">Удалить</option>
+			</select>
+			</span>
+			<input id="apply_action" class="button_green" type="submit" value="Применить"/>
+		</div>
+	</form>
+    
+    <form id="" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="session_id" value="{$smarty.session.id}"/>
+		<div id="list2" class="brands">
+            <div class="row" style="display: none;" id="new_special">
+				<div class="cell">
+                    <input type="text" name="new_special[name][]" />
+				</div>
+                <div class="cell">
+                    <input class="upload" name="special_files[]" type="file" />
+				</div>
+				<div class="clear"></div>
+			</div>
+            <a href="javascript:;" class="add_special">Добавить промо-изображение</a>
+        </div>
+        <input id="apply_action" class="button_green" type="submit" value="Добавить"/>
+    </form>
+</div>
+
+{literal}
 <script>
-    // Удалить товар
-	$(".spec_irow .del").click(function() {
+$(function() {
+    
+    $("#list").sortable({
+		items:             ".row",
+		tolerance:         "pointer",
+		handle:            ".move_zone",
+		scrollSensitivity: 40,
+		opacity:           0.7, 
+		
+		helper: function(event, ui){
+			if($('input[type="checkbox"][name*="check"]:checked').size()<1) return ui;
+			var helper = $('<div/>');
+			$('input[type="checkbox"][name*="check"]:checked').each(function(){
+				var item = $(this).closest('.row');
+				helper.height(helper.height()+item.innerHeight());
+				if(item[0]!=ui[0]) {
+					helper.append(item.clone());
+					$(this).closest('.row').remove();
+				}
+				else {
+					helper.append(ui.clone());
+					item.find('input[type="checkbox"][name*="check"]').attr('checked', false);
+				}
+			});
+			return helper;			
+		},	
+ 		start: function(event, ui) {
+  			if(ui.helper.children('.row').size()>0)
+				$('.ui-sortable-placeholder').height(ui.helper.height());
+		},
+		beforeStop:function(event, ui){
+			if(ui.helper.children('.row').size()>0){
+				ui.helper.children('.row').each(function(){
+					$(this).insertBefore(ui.item);
+				});
+				ui.item.remove();
+			}
+		},
+		update:function(event, ui)
+		{
+			$("#list_form input[name*='check']").attr('checked', false);
+			$("#list_form").ajaxSubmit(function() {
+				colorize();
+			});
+		}
+	});
+    
+    var new_special = $('#new_special').clone(true);
+	$('#new_special').remove();
+    new_special.removeAttr('id');
+    $('.add_special').on('click', function() {
+        new_item = new_special.clone().appendTo('#list2');
+        new_item.show();
+    });
+
+	// Раскраска строк
+	function colorize()
+	{
+		$("#list div.row:even").addClass('even');
+		$("#list div.row:odd").removeClass('even');
+	}
+	// Раскрасить строки сразу
+	colorize();	
+	
+	// Выделить все
+	$("#check_all").click(function() {
+		$('#list input[type="checkbox"][name*="check"]').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:checked)').length>0);
+	});	
+
+	// Удалить
+	$("a.delete").click(function() {
 		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
-		$(this).closest("div.spec_irow").find('input[type="checkbox"][name*="check"]').attr('checked', true);
+		$(this).closest("div.row").find('input[type="checkbox"][name*="check"]').attr('checked', true);
 		$(this).closest("form").find('select[name="action"] option[value=delete]').attr('selected', true);
 		$(this).closest("form").submit();
 	});
-    
-    	// Подтверждение удаления
+	
+	// Подтверждение удаления
 	$("form").submit(function() {
-		if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-            return false;	
+		if($('#list input[type="checkbox"][name*="check"]:checked').length>0)
+			if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
+				return false;	
 	});
+ 	
+});
 </script>
-{/literal*}
+{/literal}

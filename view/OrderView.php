@@ -142,8 +142,19 @@ class OrderView extends View {
             include_once("payment/$module_name/$module_name.php");
             $module = new $module_name();
             $form = $module->checkout_form($params['order_id'], $params['button_text']);
+            $tpl ="design/".$this->settings->theme."/html/payments_form.tpl";
+            if(!empty($form)) {
+                foreach ($form as $var => $val) {
+                    $this->design->assign($var, $val);
+                }
+            }
+            $this->design->assign('payment_module',$module_name);
         }
-        return $form;
+        if(!empty($tpl) && !empty($form)){
+            return $this->design->fetch($tpl);
+        } else{
+            return false;
+        }
     }
     
 }

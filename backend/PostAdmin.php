@@ -28,6 +28,8 @@ class PostAdmin extends Okay {
                 $this->design->assign('message_error', 'empty_name');
             } elseif(empty($post->url)) {
                 $this->design->assign('message_error', 'empty_url');
+            } elseif(substr($post->url, -1) == '-' || substr($post->url, 0, 1) == '-') {
+                $this->design->assign('message_error', 'url_wrong');
             } else {
                 if(empty($post->id)) {
                     $post->id = $this->blog->add_post($post);

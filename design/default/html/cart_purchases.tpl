@@ -1,92 +1,187 @@
-<table id="purchases">
-    {foreach $cart->purchases as $purchase}
-        <tr>
-        	<td class="image">
-        		{$image = $purchase->product->images|first}
-        		{if $image}
-        		<a href="{$lang_link}products/{$purchase->product->url}"><img src="{$image->filename|resize:50:50}" alt="{$product->name|escape}"></a>
-        		{/if}
-        	</td>
-        	
-        	<td class="name">
-        		<a href="{$lang_link}products/{$purchase->product->url}">{$purchase->product->name|escape}</a>
-        		{$purchase->variant->name|escape}			
-        	</td>
-            
-        	<td class="price">
-        		{($purchase->variant->price)|convert} {$currency->sign}
-        	</td>
-            
-        	<td class="amount">
-                <div id="cart_amount">
-        			<span class="minus"> &#8722; </span>
-        			<input class="amounts" name="amounts[{$purchase->variant->id}]" value="{$purchase->amount}" onchange="ajax_change_amount(this, {$purchase->variant->id});" max="{$max_stock}" />
-        			<span class="plus"> + </span>
-                </div> 
-        	</td>
-            
-        	<td class="price">
-        		{($purchase->variant->price*$purchase->amount)|convert}&nbsp;{$currency->sign}
-        	</td>
-        	
-        	<td class="remove">
-        		<a href="{$lang_link}cart/remove/{$purchase->variant->id}" onclick="ajax_remove(this, {$purchase->variant->id});return false;" title="{$lang->udalit_iz_korziny}">
-        			<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
-        				<path fill="currentColor" d="M10 18.125c-4.487 0-8.125-3.637-8.125-8.125s3.638-8.125 8.125-8.125 8.125 3.638 8.125 8.125-3.637 8.125-8.125 8.125zM10 3.75c-3.451 0-6.25 2.799-6.25 6.25s2.799 6.25 6.25 6.25c3.452 0 6.25-2.799 6.25-6.25s-2.798-6.25-6.25-6.25zM12.836 12.209l-0.634 0.634c-0.116 0.116-0.305 0.116-0.422 0l-1.794-1.794-1.794 1.794c-0.117 0.116-0.305 0.116-0.422 0l-0.634-0.634c-0.116-0.116-0.116-0.305 0-0.422l1.794-1.793-1.794-1.794c-0.116-0.117-0.116-0.306 0-0.422l0.634-0.633c0.117-0.117 0.305-0.117 0.422 0l1.794 1.794 1.794-1.794c0.117-0.117 0.306-0.117 0.422 0l0.634 0.633c0.116 0.117 0.116 0.306 0 0.422l-1.794 1.794 1.794 1.793c0.116 0.117 0.116 0.306 0 0.422z"></path>
-        			</svg>
-        		</a>
-        	</td>
-        			
-        </tr>
-    {/foreach}
-    
-    {if $user->discount}
-        <tr class="bonus">
-        	<td colspan="4" class="name">{$lang->skidka}</td>
-        	<td class="price">
-        		{$user->discount}&nbsp;%
-        	</td>
-        	<td class="remove"></td>
-        </tr>
-    {/if}
-    
-    {if $coupon_request}
-        <tr class="coupon">
-        	<td class="name" colspan="4">
-        		{if $coupon_error}
-            		<div class="message_error">
-            			{if $coupon_error == 'invalid'}{$lang->kupon_nedejstvitelen}{/if}
-            		</div>
-        		{/if}
-        		<input type="text" name="coupon_code" value="{$cart->coupon->code|escape}" class="coupon_code" placeholder="{$lang->kod_kupona}"/>
-        		{if $cart->coupon->min_order_price>0}({$lang->kupon} {$cart->coupon->code|escape} {$lang->dejstvuet_dlya_zakazov_ot} {$cart->coupon->min_order_price|convert} {$currency->sign}){/if}
-        		<input class="button" type="button" name="apply_coupon"  value="{$lang->primenit_kupon}" onclick="ajax_coupon();"/>
-        	</td>
-        	<td class="price">
-        		{if $cart->coupon_discount>0}
-        		&minus;{$cart->coupon_discount|convert}&nbsp;{$currency->sign}
-        		{/if}
-        	</td>
-        	<td class="remove"></td>
-        </tr>
-        
-        {literal}
-        <script>
-        $("input[name='coupon_code']").keypress(function(event){
-        	if(event.keyCode == 13){
-        		$("input[name='name']").attr('data-format', '');
-        		$("input[name='email']").attr('data-format', '');
-        		document.cart.submit();
-        	}
-        });
-        </script>
-        {/literal}
-    {/if}
-    
-    <tr class="total">
-    	<td colspan="6">
-		    {$lang->itogo}:
-    		<span>{$cart->total_price|convert}&nbsp;{$currency->sign}</span>
-    	</td>
-    </tr>
-</table>
+<div class="purchase-list">
+	<div class="purchase-row purchase-main bg-info hidden-md-down">
+		{* Изображение *}
+		<div class="purchase-img hidden-md-down text-lg-center">
+			<span data-language="{$translate_id['cart_head_img']}">{$lang->cart_head_img}</span>
+		</div>
+		{* @END Изображение *}
+		{* Название *}
+		<div class="purchase-name">
+			<span data-language="{$translate_id['cart_head_name']}">{$lang->cart_head_name}</span>
+		</div>
+		{* Название *}
+		{* Цена за ед. *}
+		<div class="purchase-price hidden-md-down">
+			<span data-language="{$translate_id['cart_head_price']}">{$lang->cart_head_price}</span>
+		</div>
+		{* @END Цена за ед. *}
+		<div class="purchase-column">
+			<div class="purchase-list">
+				<div class="purchase-row">
+					{* Количество *}
+					<div class="purchase-amount text-lg-center">
+						<span data-language="{$translate_id['cart_head_amoun']}">{$lang->cart_head_amoun}</span>
+					</div>
+					{* @END Количество *}
+					{* Общая цена *}
+					<div class="purchase-full-price">
+						<span data-language="{$translate_id['cart_head_total']}">{$lang->cart_head_total}</span>
+					</div>
+					{* Общая цена *}
+					{* Кнопка удаления *}
+					<div class="purchase-remove"></div>
+					{* Кнопка удаления *}
+				</div>
+			</div>
+		</div>
+	</div>
+	{foreach $cart->purchases as $purchase}
+		<div class="purchase-row purchase-main">
+			{* Изображение *}
+			<div class="purchase-img hidden-md-down">
+				{$image = $purchase->product->images|first}
+				{if $image}
+					<a href="{$lang_link}products/{$purchase->product->url}">
+						<img src="{$image->filename|resize:50:50}" alt="{$product->name|escape}">
+					</a>
+				{/if}
+			</div>
+			{* @END Изображение *}
+			{* Название *}
+			<div class="purchase-name">
+				<a href="{$lang_link}products/{$purchase->product->url}">{$purchase->product->name|escape}</a>
+				{$purchase->variant->name|escape}
+			</div>
+			{* Название *}
+			{* Цена за ед. *}
+			<div class="purchase-price hidden-md-down">
+				{($purchase->variant->price)|convert} {$currency->sign}
+			</div>
+			{* @END Цена за ед. *}
+			<div class="purchase-column">
+				<div class="purchase-list">
+					<div class="purchase-row">
+						{* Количество *}
+						<div class="purchase-amount">
+							<div class="fn-product-amount{if $settings->is_preorder} fn-is_preorder{/if} okaycms text-xs-center text-md-left">
+								{* Кол-во товаров *}
+								<span class="minus">&minus;</span>
+								<input class="form-control" type="text" data-id="{$purchase->variant->id}" name="amounts[{$purchase->variant->id}]" value="{$purchase->amount}" data-max="{$purchase->variant->stock}">
+								<span class="plus">&plus;</span>
+								{* @END Кол-во товаров *}
+							</div>
+						</div>
+						{* @END Количество *}
+						{* Общая цена *}
+						<div class="purchase-full-price">
+							{($purchase->variant->price*$purchase->amount)|convert}&nbsp;{$currency->sign}
+						</div>
+						{* Общая цена *}
+						{* Кнопка удаления *}
+						<div class="purchase-remove">
+							<a href="{$lang_link}cart/remove/{$purchase->variant->id}" onclick="ajax_remove({$purchase->variant->id});return false;" title="{$lang->cart_remove}">
+								<img src="design/{$settings->theme}/images/remove.png" alt="Удалить">
+							</a>
+						</div>
+						{* Кнопка удаления *}
+					</div>
+				</div>
+			</div>
+		</div>
+	{/foreach}
+</div>
+{if $user->discount}
+	<div class="purchase-list p-t-1-md_down border-t-1-info_md-down">
+		<div class="purchase-row purchase-main">
+			<div class="purchase-img hidden-md-down"></div>
+			<div class="purchase-name hidden-md-down"></div>
+			<div class="purchase-price hidden-md-down"></div>
+			<div class="purchase-column">
+				<div class="purchase-list">
+					<div class="purchase-row">
+						<div class="purchase-amount">
+							<span data-language="{$translate_id['cart_discount']}">{$lang->cart_discount}</span>:
+						</div>
+						{* Скидка *}
+						<div class="purchase-full-price">{$user->discount}%</div>
+						{* @END Скидка *}
+						<div class="purchase-remove hidden-md-down"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{/if}
+{if $coupon_request}
+	{* Ошибка купона *}
+	{if $coupon_error}
+		<div class="p-x-1 p-y-05 bg-danger text-white m-t-1">
+			{if $coupon_error == 'invalid'}
+				{$lang->cart_coupon_error}
+			{/if}
+		</div>
+	{/if}
+	{if $cart->coupon->min_order_price > 0}
+		<div class="p-x-1 p-y-05 bg-danger text-white m-t-1">
+			{$lang->cart_coupon} {$cart->coupon->code|escape} {$lang->cart_coupon_min} {$cart->coupon->min_order_price|convert} {$currency->sign}
+		</div>
+	{/if}
+	{* Ошибка купона *}
+	<div class="purchase-list">
+		<div class="purchase-row purchase-main">
+			<div class="purchase-img border-b-1-info_md-down">
+				<span data-language="{$translate_id['cart_coupon']}">{$lang->cart_coupon}</span>
+			</div>
+			<div class="purchase-name border-b-1-info_md-down form-inline">
+				{* Купон *}
+				<div class="form-group">
+					<input type="text" name="coupon_code" value="{$cart->coupon->code|escape}" class="fn-coupon okaycms form-control"/>
+				</div>
+				{* Купон *}
+				<div class="form-group p-l-2">
+					<input class="fn-sub-coupon okaycms btn btn-success" type="button" value="Применить">
+				</div>
+			</div>
+			<div class="purchase-price hidden-md-down"></div>
+			<div class="purchase-column">
+				<div class="purchase-list">
+					<div class="purchase-row">
+						<div class="purchase-amount p-y-1-md_down">
+							{if $cart->coupon_discount > 0}
+								<span data-language="{$translate_id['cart_coupon']}">{$lang->cart_coupon}</span>:
+							{/if}
+						</div>
+						{* Итоговая цена *}
+						<div class="purchase-full-price p-y-1-md_down">
+							{if $cart->coupon_discount > 0}
+								-{$cart->coupon_discount|convert} {$currency->sign}
+							{/if}
+						</div>
+						{* Итоговая цена *}
+						<div class="purchase-remove hidden-md-down"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{/if}
+<div class="purchase-list p-t-1-md_down border-t-1-info_md-down">
+	<div class="purchase-row purchase-main">
+		<div class="purchase-img hidden-md-down"></div>
+		<div class="purchase-name hidden-md-down"></div>
+		<div class="purchase-price hidden-md-down"></div>
+		<div class="purchase-column">
+			<div class="purchase-list">
+				<div class="purchase-row">
+					<div class="purchase-amount font-weight-bold p-y-1-md_down">
+						<span data-language="{$translate_id['cart_total_price']}">{$lang->cart_total_price}</span>:
+					</div>
+					{* Итоговая цена *}
+					<div class="purchase-full-price font-weight-bold p-y-1-md_down">{$cart->total_price|convert} {$currency->sign}</div>
+					{* Итоговая цена *}
+					<div class="purchase-remove hidden-md-down"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -31,3 +31,6 @@ files/categories_resized/*.gif
 files/categories_resized/*.tif
 files/categories_resized/*.bmp
 files/categories_resized/*.ico
+
+.idea/
+tmp/

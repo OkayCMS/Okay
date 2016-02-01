@@ -3,7 +3,7 @@
 require_once('View.php');
 
 class ProductsView extends View {
-    
+
     // ЧПУ
     private $meta_array = array();
     private $set_canonical = false;
@@ -92,7 +92,7 @@ class ProductsView extends View {
                     }
                     case 'options': {
                         foreach($_meta_array as $f_id=>$f_array) {
-                            if(count($f_array) > 1) {
+                            if(count($f_array) > 1 || count($_meta_array) > 2) {
                                 $this->set_canonical = true;
                             }
                             $this->meta['h1']           .= (!empty($this->meta['h1'])           ? $this->meta_delimiter : '') . implode($this->meta_delimiter,$f_array);

@@ -32,10 +32,7 @@
 {if $message_error}
 <div class="message message_error">
 	<span class="text">
-	{if $message_error=='not_writable'}Установите права на запись для файла /backend/.passwd
-    {else}
         {$message_error|escape}
-    {/if}
 	</span>
 	<a class="button" href="">Вернуться</a>
 </div>
@@ -50,11 +47,11 @@
                 {foreach $managers as $m}
                     <div class="row">
                         <div class="checkbox cell">
-                            <input type="checkbox" id="{$m->login}" name="check[]" value="{$m->login|escape}" {if $manager->login == $m->login}disabled{/if}/>
-                            <label  for="{$m->login}">
+                            <input type="checkbox" id="manager_{$m->id}" name="check[]" value="{$m->id}" {if $manager->id == $m->id}disabled{/if}/>
+                            <label  for="manager_{$m->id}">
                         </div>
                         <div class="user_name cell">
-                            <a href="index.php?module=ManagerAdmin&login={$m->login|urlencode}">{$m->login|escape}</a>
+                            <a href="index.php?module=ManagerAdmin&id={$m->id}">{$m->login}</a>
                         </div>
                         <div class="user_email cell">
                             <a href="mailto:{$user->name|escape}<{$user->email|escape}>">{$user->email|escape}</a>
@@ -63,7 +60,7 @@
                             {$groups[$user->group_id]->name}
                         </div>
                         <div class="icons cell">
-                            {if $manager->login != $m->login}
+                            {if $manager->id != $m->id}
                                 <a class="delete" title="Удалить" href="#"></a>
                             {/if}
                         </div>

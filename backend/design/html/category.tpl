@@ -13,26 +13,16 @@
 {$meta_title = 'Новая категория' scope=parent}
 {/if}
 
-{* Подключаем Tiny MCE *}
-{include file='tinymce_init.tpl'}
-
 {* On document load *}
 {literal}
-<script src="design/js/jquery/jquery.js"></script>
-<script src="design/js/jquery/jquery-ui.min.js"></script>
 <script src="design/js/autocomplete/jquery.autocomplete-min.js"></script>
-<style>
-.autocomplete-w1 { background:url(img/shadow.png) no-repeat bottom right; position:absolute; top:0px; left:0px; margin:6px 0 0 6px; /* IE6 fix: */ _background:none; _margin:1px 0 0 0; }
-.autocomplete { border:1px solid #999; background:#FFF; cursor:default; text-align:left; overflow-x:auto; min-width: 300px; overflow-y: auto; margin:-6px 6px 6px -6px; /* IE6 specific: */ _height:350px;  _margin:0; _overflow-x:hidden; }
-.autocomplete .selected { background:#F0F0F0; }
-.autocomplete div { padding:2px 5px; white-space:nowrap; }
-.autocomplete strong { font-weight:normal; color:#3399FF; }
-</style>
-
+    <style>
+        .autocomplete-suggestions{
+            width: auto!important;
+        }
+    </style>
 <script>
-$(function() {
-
-
+    $(window).on("load", function() {
 	// Удаление изображений
 	$(".images a.delete").click( function() {
 		$("input[name='delete_image']").val('1');
@@ -57,7 +47,16 @@ $(function() {
 	$('textarea[name="meta_description"]').change(function() { meta_description_touched = true; });
 	
 	$('input[name="name"]').keyup(function() { set_meta(); });
-	  
+
+        CKEDITOR.instances.description.on('change', function(){
+            var data = CKEDITOR.instances.description.getData();
+            if(data !='')
+                var description = data.replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
+            console.log(description);
+            if(!meta_description_touched) {
+                $('textarea[name="meta_description"]').val(generate_meta_description(description));
+            }
+        });
 });
 
 function set_meta()
@@ -66,8 +65,6 @@ function set_meta()
 		$('input[name="meta_title"]').val(generate_meta_title());
 	if(!meta_keywords_touched)
 		$('input[name="meta_keywords"]').val(generate_meta_keywords());
-	if(!meta_description_touched)
-		$('textarea[name="meta_description"]').val(generate_meta_description());
 	if(!$('#block_translit').is(':checked'))
 		$('input[name="url"]').val(generate_url());
 }
@@ -84,15 +81,9 @@ function generate_meta_keywords()
 	return name;
 }
 
-function generate_meta_description()
+function generate_meta_description(description)
 {
-	if(typeof(tinyMCE.get("description")) =='object')
-	{
-		description = tinyMCE.get("description").getContent().replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
-		return description;
-	}
-	else
-		return $('textarea[name=description]').val().replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
+    return description;
 }
 
 function generate_url()
@@ -149,7 +140,7 @@ function translit(str)
 {if $message_error}
 <!-- Системное сообщение -->
 <div class="message message_error">
-	<span class="text">{if $message_error=='url_exists'}Категория с таким адресом уже существует{elseif $message_error == 'empty_name'}Введите название{elseif $message_error == 'empty_url'}Введите адрес{else}{$message_error}{/if}</span>
+	<span class="text">{if $message_error=='url_exists'}Категория с таким адресом уже существует{elseif $message_error == 'empty_name'}Введите название{elseif $message_error == 'empty_url'}Введите адрес{elseif $message_error == 'url_wrong'}Адресс не должен начинаться или заканчиваться символом '-'{else}{$message_error}{/if}</span>
 	<a class="button" href="">Вернуться</a>
 </div>
 <!-- Системное сообщение (The End)-->
@@ -164,12 +155,13 @@ function translit(str)
 		<input class="name" name=name type="text" value="{$category->name|escape}"/> 
 		<input name=id type="hidden" value="{$category->id|escape}"/> 
 		<div class="checkbox">
-			<input name=visible value='1' type="checkbox" id="active_checkbox" {if $category->visible}checked{/if}/> <label for="active_checkbox">Активна</label>
+			<input name=visible value='1' type="checkbox" id="active_checkbox" {if $category->visible}checked{/if}/>
+            <label class="visible_icon" for="active_checkbox">Активна</label>
 		</div>
         <div class="checkbox">
-			<a class="yandex" data-to_yandex="1" href="javascript:;">В яндекс</a>
+			<a class="yandex" data-to_yandex="1" href="javascript:;">В Я.Маркет</a>
             &nbsp;&nbsp;&nbsp;
-            <a class="yandex" data-to_yandex="0" href="javascript:;">Из яндекса</a>
+            <a class="yandex" data-to_yandex="0" href="javascript:;">Из Я.Маркета</a>
 		</div>
 	</div> 
 
@@ -195,28 +187,74 @@ function translit(str)
 		<div class="block layer">
 			<h2>Параметры страницы</h2>
 			<ul>
-                <li><label class="property" for="block_translit">Заблокировать авто генерацию ссылки</label><input type="checkbox" id="block_translit" {if $category->id}checked=""{/if} /></li>
-                <li><label class="property">Имя для яндекса</label><input name="yandex_name" class="okay_inp" type="text" value="{$category->yandex_name|escape}" /></li>
-				<li><label class=property>Адрес</label><div class="page_url">/catalog/</div><input name="url" class="page_url" type="text" value="{$category->url|escape}" /></li>
-				<li><label class=property>Заголовок</label><input name="meta_title" class="okay_inp" type="text" value="{$category->meta_title|escape}" /></li>
-				<li><label class=property>Ключевые слова</label><input name="meta_keywords" class="okay_inp" type="text" value="{$category->meta_keywords|escape}" /></li>
-				<li><label class=property>Описание</label><textarea name="meta_description" class="okay_inp">{$category->meta_description|escape}</textarea></li>
+                <li><label class="property" for="block_translit">Заблокировать авто генерацию ссылки</label>
+                    <input type="checkbox" id="block_translit" {if $category->id}checked=""{/if} />
+                    <div class="helper_wrap">
+                        <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                        <div class="right helper_block">
+                            <b>Запрещает изменение URL.</b>
+                            <span>Используется для предотвращения случайного изменения URL</span>
+                            <span>Активируется после сохранения товара с заполненным полем адрес.
+                            </span>
+                        </div>
+                    </div>
+                </li>
+				<li><label class="property">H1 заголовок
+                        <div class="helper_wrap">
+                            <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                            <div class="right helper_block">
+                                <span>
+                                  Если поле не заполнено то в H1 подставляется название категории
+                                </span>
+                            </div>
+                        </div>
+                    </label>
+                    <input name="name_h1" class="okay_inp" type="text" value="{$category->name_h1|escape}" /></li>
+                <li><label class="property">Имя для Я.Маркета
+                        <div class="helper_wrap">
+                            <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                            <div class="right helper_block">
+                                <span>Категория Я.Маркета, в которую необходимо размещать товары из данной категории.</span>
+                                <span>Начните вводить название категории и выберите подходящий вариант из выпадающего списка</span>
+                            </div>
+                        </div>
+                    </label>
+                    <input type="text" class="input_autocomplete" name="yandex_name" value="{$category->yandex_name|escape}" placeholder='Выберите категорию'/></li>
+				<li><label class=property>Адрес (URL)</label><div class="page_url">/catalog/</div><input name="url" class="page_url" type="text" value="{$category->url|escape}" /></li>
+				<li><label class=property>Title (<span class="count_title_symbol"></span>/<span class="word_title"></span>)
+                        <div class="helper_wrap">
+                            <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                            <div class="right helper_block">
+                                <b>Название страницы</b>
+                                <span>В скобках указывается количество символов/слов в строке</span>
+                            </div>
+                        </div>
+                    </label>
+                    <input name="meta_title" class="okay_inp" type="text" value="{$category->meta_title|escape}" />
+                </li>
+				<li><label class=property>Keywords (<span class="count_keywords_symbol"></span>/<span class="word_keywords"></span>)
+                        <div class="helper_wrap">
+                            <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                            <div class="right helper_block">
+                                <b>Ключевые слова страницы</b>
+                                <span> В скобках указывается количество символов/слов в строке</span>
+                            </div>
+                        </div>
+                    </label>
+                    <input name="meta_keywords" class="okay_inp" type="text" value="{$category->meta_keywords|escape}" /></li>
+				<li><label class=property>Description (<span class="count_desc_symbol"></span>/<span class="word_desc"></span>)
+                        <div class="helper_wrap">
+                            <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                            <div class="right helper_block">
+                                <b>Текст описания страницы,</b>
+                                <span>который используется поисковыми системами для формирования сниппета.</span><span>В скобках указывается количество символов/слов в строке</span>
+                            </div>
+                        </div>
+                    </label>
+                    <textarea name="meta_description" class="okay_inp">{$category->meta_description|escape}</textarea></li>
 			</ul>
 		</div>
 		<!-- Параметры страницы (The End)-->
-		
- 		{*
-		<!-- Экспорт-->
-		<div class="block">
-			<h2>Экспорт товара</h2>
-			<ul>
-				<li><input id="exp_yad" type="checkbox" /> <label for="exp_yad">Яндекс Маркет</label> Бид <input class="okay_inp" type="" name="" value="12" /> руб.</li>
-				<li><input id="exp_goog" type="checkbox" /> <label for="exp_goog">Google Base</label> </li>
-			</ul>
-		</div>
-		<!-- Свойства товара (The End)-->
-		*}
-			
 	</div>
 	<!-- Левая колонка свойств товара (The End)--> 
 	
@@ -242,14 +280,24 @@ function translit(str)
     
     <div id="column_left">
         <div class="block layer">
-    		<h2>Мета данные карточки товара</h2>
+    		<h2>Мета данные карточки товара
+                <div class="helper_wrap">
+                    <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                    <div class="right helper_block">
+                        <span>С помощью даных полей можно автоматически сгенерировать мета данные для товаров этой категории.</span>
+                        <span>Вставки типа <b style="display: inline;">{ldelim}$brand{rdelim}</b> заменятся на соответствующие значения этого товара.</span>
+                        <span> Возможные варианты вставок перечислены ниже.</span>
+                    </div>
+                </div>
+            </h2>
             <ul>
                 {literal}
-                <li>{$category} - категория</li>
-                <li>{$brand} - бренд</li>
-                <li>{$product} - товар</li>
-                <li>{$price} - цена</li>
-                <li>{$sitename} - название сайта</li>
+                <li>{$category} - Название категории</li>
+				<li>{$category_h1} - Н1 заголовок категории</li>
+                <li>{$brand} - Название бренда</li>
+                <li>{$product} - Название товара</li>
+                <li>{$price} - Цена товара</li>
+                <li>{$sitename} - Название сайта</li>
                 {/literal}
                 {foreach $features as $feature}
                     {if $feature->auto_name_id && $feature->auto_value_id}
@@ -262,26 +310,34 @@ function translit(str)
                 {/foreach}
             </ul>
     		<ul>
-                <li><label class="property">Заголовок</label><textarea name="auto_meta_title" class="okay_inp">{$category->auto_meta_title|escape}</textarea></li>
-                <li><label class="property">Ключевые слова</label><textarea name="auto_meta_keywords" class="okay_inp">{$category->auto_meta_keywords|escape}</textarea></li>
-    			<li><label class="property">Описание</label><textarea name="auto_meta_desc" class="okay_inp">{$category->auto_meta_desc|escape}</textarea></li>
+                <li><label class="property">Title</label><textarea name="auto_meta_title" class="okay_inp">{$category->auto_meta_title|escape}</textarea></li>
+                <li><label class="property">Keywords</label><textarea name="auto_meta_keywords" class="okay_inp">{$category->auto_meta_keywords|escape}</textarea></li>
+    			<li><label class="property">Description</label><textarea name="auto_meta_desc" class="okay_inp">{$category->auto_meta_desc|escape}</textarea></li>
     		</ul>
     	</div>
     </div>
     <div class="block layer">
-		<h2>Шаблон описания товара</h2>
-        <textarea name="auto_body" class="editor_small">{$category->auto_body|escape}</textarea>
+		<h2>Шаблон описания товаров из данной категории
+            <div class="helper_wrap">
+                <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                <div class="right helper_block">
+                    <span> Если у товара не задано полное описание, то в описание будет подставляться текст из данного поля.</span>
+                    <span>Для создание шаблонных описаний можно использовать те же вставки что и для мета данных.</span>
+                </div>
+            </div>
+        </h2>
+        <textarea name="auto_body" class="ckeditor">{$category->auto_body|escape}</textarea>
     </div>
     
     <div class="block layer">
 		<h2>Краткое описание</h2>
-		<textarea name="annotation" class="editor_small">{$category->annotation|escape}</textarea>
+		<textarea name="annotation" class="ckeditor">{$category->annotation|escape}</textarea>
 	</div>
     
 	<!-- Описагние категории -->
 	<div class="block layer">
-		<h2>Описание</h2>
-		<textarea name="description" class="editor_large">{$category->description|escape}</textarea>
+		<h2>Полное описание</h2>
+		<textarea name="description" class="ckeditor">{$category->description|escape}</textarea>
 	</div>
 	<!-- Описание категории (The End)-->
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />
@@ -315,6 +371,16 @@ $(function() {
 		});	
 		return false;	
 	});
+    $('.input_autocomplete').autocomplete({
+        serviceUrl:'ajax/market.php?module=search_market&session_id={/literal}{$smarty.session.id}{literal}',
+        minChars:1,
+        noCache: false,
+        onSelect:
+                function(suggestions) {
+                    $(this).closest('div').find('input[name*="yandex_name"]').val(suggestions.data);
+                }
+    });
+    $(".input_autocomplete").trigger('click');
 });
 </script>
 {/literal}

@@ -7,9 +7,6 @@ class SettingsAdmin extends Okay {
     private $allowed_image_extentions = array('png', 'gif', 'jpg', 'jpeg', 'ico');
     
     public function fetch() {
-        $this->passwd_file = $this->config->root_dir.'/backend/.passwd';
-        $this->htaccess_file = $this->config->root_dir.'/backend/.htaccess';
-        
         $managers = $this->managers->get_managers();
         $this->design->assign('managers', $managers);
         
@@ -18,7 +15,13 @@ class SettingsAdmin extends Okay {
             $this->settings->company_name = $this->request->post('company_name');
             $this->settings->date_format = $this->request->post('date_format');
             $this->settings->admin_email = $this->request->post('admin_email');
-            
+
+            $this->settings->captcha_product = $this->request->post('captcha_product', 'boolean');
+            $this->settings->captcha_post = $this->request->post('captcha_post', 'boolean');
+            $this->settings->captcha_cart = $this->request->post('captcha_cart', 'boolean');
+            $this->settings->captcha_register = $this->request->post('captcha_register', 'boolean');
+            $this->settings->captcha_feedback = $this->request->post('captcha_feedback', 'boolean');
+
             $this->settings->order_email = $this->request->post('order_email');
             $this->settings->comment_email = $this->request->post('comment_email');
             $this->settings->notify_from_email = $this->request->post('notify_from_email');
@@ -27,7 +30,6 @@ class SettingsAdmin extends Okay {
             $this->settings->thousands_separator = $this->request->post('thousands_separator');
             
             $this->settings->products_num = $this->request->post('products_num');
-            $this->settings->products_num_admin = $this->request->post('products_num_admin');
             $this->settings->max_order_amount = $this->request->post('max_order_amount');
             $this->settings->comparison_count = $this->request->post('comparison_count');
             $this->settings->units = $this->request->post('units');
@@ -42,6 +44,10 @@ class SettingsAdmin extends Okay {
             $this->settings->yandex_has_seller_warranty = $this->request->post('yandex_has_seller_warranty', 'boolean');
             $this->settings->yandex_sales_notes = $this->request->post('yandex_sales_notes');
             
+            $this->settings->site_work = $this->request->post('site_work');
+            $this->settings->site_annotation = $this->request->post('site_annotation');
+
+
             // Водяной знак
             $clear_image_cache = false;
             $watermark = $this->request->files('watermark_file', 'tmp_name');

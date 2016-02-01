@@ -48,7 +48,7 @@ class UsersAdmin extends Okay {
         }
         
         // Поиск
-        $keyword = $this->request->get('keyword', 'string');
+        $keyword = $this->request->get('keyword');
         if(!empty($keyword)) {
             $filter['keyword'] = $keyword;
             $this->design->assign('keyword', $keyword);

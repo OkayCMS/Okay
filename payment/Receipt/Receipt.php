@@ -19,7 +19,11 @@ class Receipt extends Okay
 		$bank = $payment_settings['bank'];
 		$bik = $payment_settings['bik'];
 		$correspondent_account = $payment_settings['correspondent_account'];		
-		
+
+        $res['payment_settings'] = $payment_settings;
+        $res['order'] = $order;
+        $res['amount'] = $amount;
+
 		$button = "<FORM class='form' ACTION='payment/Receipt/callback.php' METHOD='POST'>
 					<INPUT TYPE='HIDDEN' NAME='recipient' VALUE='".$payment_settings['recipient']."'>
 					<INPUT TYPE='HIDDEN' NAME='inn' VALUE='".$payment_settings['inn']."'>
@@ -36,6 +40,6 @@ class Receipt extends Okay
 					<INPUT class=checkout_button TYPE='submit' VALUE='Сформировать квитанцию  &#8594;'>
 					</FORM>";
 		
-		return $button;
+		return $res;
 	}
 }

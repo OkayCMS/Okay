@@ -39,39 +39,27 @@ if($c = $okay->request->get('code')) {
     
     // Если запостили пароль
     if($new_password = $okay->request->post('new_password')) {
-        // Файл с паролями
-        $passwd_file = $okay->config->root_dir.'backend/.passwd';
-        
         // Удаляем из сесси код, чтобы больше никто не воспользовался ссылкой
         unset($_SESSION['admin_password_recovery_code']);
         unset($_SESSION['admin_password_recovery_ip']);
         
-        // Если в файлы запрещена запись - предупреждаем об этом
-        if(!is_writable($passwd_file)) {
-            print "
-                <h1>Восстановление пароля администратора</h1>
-                <p class='error'>
-                Файл /backend/.passwd недоступен для записи.
-                </p>
-                <p>Вам нужно зайти по FTP и изменить права доступа к этому файлу, после чего повторить процедуру восстановления пароля.</p>
-            ";
-        } else {
-            // Новый логин и пароль
-            $new_login = $okay->request->post('new_login');
-            $new_password = $okay->request->post('new_password');
-            if(!$okay->managers->update_manager($new_login, array('password'=>$new_password)))
-            	$okay->managers->add_manager(array('login'=>$new_login, 'password'=>$new_password));
-            
-            print "
-                <h1>Восстановление пароля администратора</h1>
-                <p>
-                Новый пароль установлен
-                </p>
-                <p>
-                <a href='".$okay->root_url."/backend/index.php?module=ManagersAdmin'>Перейти в панель управления</a>
-                </p>
-            ";
+        // Новый логин и пароль
+        $new_login = $okay->request->post('new_login');
+        $new_password = $okay->request->post('new_password');
+        $manager = $okay->managers->get_manager($new_login);
+        if (!$okay->managers->update_manager($manager->id, array('password'=>$new_password, 'cnt_try'=>0, 'last_try'=>null))) {
+            $okay->managers->add_manager(array('login'=>$new_login, 'password'=>$new_password));
         }
+
+        print "
+            <h1>Восстановление пароля администратора</h1>
+            <p>
+            Новый пароль установлен
+            </p>
+            <p>
+            <a href='".$okay->root_url."/backend/index.php?module=AuthAdmin'>Перейти в панель управления</a>
+            </p>
+        ";
     } else {
     // Форма указалия нового логина и пароля
         print "
@@ -90,7 +78,7 @@ if($c = $okay->request->get('code')) {
         <h1>Восстановление пароля администратора</h1>
         <p>
             Введите email администратора
-            <form method='post' action='".$okay->root_url."/password.php'>
+            <form method='post' action='".$okay->config->root_url."/password.php'>
             	<input type='text' name='email'>
             	<input type='submit' value='Восстановить пароль'>
             </form>
