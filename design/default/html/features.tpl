@@ -149,8 +149,8 @@
 {* Просмотренные товары *}
 {get_browsed_products var=browsed_products limit=20}
 {if $browsed_products}
-	<div class="h5 bg-info p-x-1 p-y-05">{$lang->features_browsed}</div>
-	<div class="m-b-2 clearfix">
+	<div class="h5 bg-info p-x-1 p-y-05 hidden-md-down">{$lang->features_browsed}</div>
+	<div class="m-b-2 clearfix hidden-md-down">
 		{foreach $browsed_products as $browsed_product}
 			<div class="browsed-item">
 				<a href="products/{$browsed_product->url}">

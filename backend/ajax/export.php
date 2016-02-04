@@ -34,7 +34,10 @@ class ExportAjax extends Okay {
         if(!$this->managers->access('export')) {
             return false;
         }
-        
+        session_abort();
+        unset($_SESSION['lang_id']);
+        unset($_SESSION['admin_lang_id']);
+
         // Ёксель кушает только 1251
         setlocale(LC_ALL, 'ru_RU.1251');
         $this->db->query('SET NAMES cp1251');

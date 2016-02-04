@@ -54,7 +54,7 @@ class Languages extends Okay {
     }
     
     public function get_query($params = array()) {
-        $lang   = $params['lang'] ? $params['lang'] : $this->lang_id();
+        $lang   = (isset($params['lang']) && $params['lang'] ? $params['lang'] : $this->lang_id());
         $object = $params['object'];
         
         if(!empty($params['px'])) {
@@ -69,7 +69,7 @@ class Languages extends Okay {
         if (isset($lang) && $exist && !empty($this->languages)) {
             /*$f = 'l';
             $lang_join = 'LEFT JOIN __lang_'.$this->tables[$object].' l ON l.'.$object.'_id='.$px.'.id AND l.lang_id = '.(int)$lang;*/
-            $f = $params['px_lang'] ? $params['px_lang'] : 'l';
+            $f = (isset($params['px_lang']) && $params['px_lang'] ? $params['px_lang'] : 'l');
             $lang_join = 'LEFT JOIN __lang_'.$this->tables[$object].' '.$f.' ON '.$f.'.'.$object.'_id='.$px.'.id AND '.$f.'.lang_id = '.(int)$lang;
         } else {
             $f = $px;

@@ -3,10 +3,17 @@
 	<div class="card-block fn-transfer">
 		{* Изображение товара *}
 		<a class="fn-zoom okaycms card-image m-b-1" href="{$cp->image->filename|resize:800:600:w}">
-			<img class="fn-img" src="{$cp->image->filename|resize:219:172}" alt="{$cp->name|escape}"/>
-			{if $cp->special}
-				<img class="card-spec" src='files/special/{$cp->special}' alt='{$cp->sp_img}'/>
-			{/if}
+			{if $product->image->filename}
+                <img class="fn-img" src="{$cp->image->filename|resize:219:172}" alt="{$cp->name|escape}"/>
+                {if $cp->special}
+                    <img class="card-spec" src='files/special/{$cp->special}' alt='{$cp->sp_img}'/>
+                {/if}
+            {else}
+                <img class="fn-img" src="design/{$settings->theme}/images/no_image.png" alt="{$product->name|escape}"/>
+                {if $product->special}
+                    <img class="card-spec" src='files/special/{$product->special}' alt='{$product->sp_img}'/>
+                {/if}
+            {/if}
 		</a>
 		{* @END Изображение товара *}
 		{* Название товара *}

@@ -1,10 +1,6 @@
 <?php
 
-session_start();
-chdir('../../');
-require_once('api/Okay.php');
-$okay = new Okay();
-// Ïðîâåðêà ñåññèè äëÿ çàùèòû îò xss
+// ÐŸÑ€Ð¾Ð²ÐµÑ€ÐºÐ° ÑÐµÑÑÐ¸Ð¸ Ð´Ð»Ñ Ð·Ð°Ñ‰Ð¸Ñ‚Ñ‹ Ð¾Ñ‚ xss
 if(!$okay->request->check_session()) {
     trigger_error('Session expired', E_USER_WARNING);
     exit();

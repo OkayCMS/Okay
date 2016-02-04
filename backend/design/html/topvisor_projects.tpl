@@ -6,9 +6,15 @@
 {* Title *}
 {$meta_title='Топвизор проекты' scope=parent}
 
-<div id="topvisor_heading">
-    <span>Апометр</span>
-	<span id="balans_heading">{if $balance !== ''}Баланс: <span>{$balance}р.</span>{else}Введите API Key{/if}</span>
+<div id="topvisor_heading" style="overflow: visible">
+    {if $balance !== ''}<span>Апометр</span> {else}Введите API Key {/if}
+    <div class="helper_wrap">
+        <a class="top_help" id="show_help_search" href="https://www.youtube.com/watch?v=46WgnX9JAxo" target="_blank"></a>
+        <div class="right helper_block topvisor_help">
+            <p>Видеоинструкция по разделу</p>
+        </div>
+    </div>
+	<span id="balans_heading">{if $balance !== ''}Баланс: <span>{$balance}р.</span>{/if}</span>
 </div>
 
 <form id="topvisor_key_form" method="post">

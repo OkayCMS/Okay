@@ -111,7 +111,16 @@ function translit(str)
 </script>
  
 {/literal}
+<h2>
+    <div class="helper_wrap" style="margin-left: -6px">
+        <a class="top_help" id="show_help_search" href="https://www.youtube.com/watch?v=pAgDKW7lqmM" target="_blank"></a>
+        <div class="right helper_block topvisor_help">
+            <p>Видеоинструкция по разделу</p>
+        </div>
+    </div>
+</h2>
 
+<br>
 {if $languages}{include file='include_languages.tpl'}{/if}
 
 {if $message_success}
@@ -140,7 +149,7 @@ function translit(str)
 {if $message_error}
 <!-- Системное сообщение -->
 <div class="message message_error">
-	<span class="text">{if $message_error=='url_exists'}Категория с таким адресом уже существует{elseif $message_error == 'empty_name'}Введите название{elseif $message_error == 'empty_url'}Введите адрес{elseif $message_error == 'url_wrong'}Адресс не должен начинаться или заканчиваться символом '-'{else}{$message_error}{/if}</span>
+	<span class="text">{if $message_error=='url_exists'}Категория с таким адресом уже существует{elseif $message_error == 'empty_name'}Введите название{elseif $message_error == 'empty_url'}Введите адрес{elseif $message_error == 'url_wrong'}Адрес не должен начинаться или заканчиваться символом '-'{else}{$message_error}{/if}</span>
 	<a class="button" href="">Вернуться</a>
 </div>
 <!-- Системное сообщение (The End)-->
@@ -194,7 +203,7 @@ function translit(str)
                         <div class="right helper_block">
                             <b>Запрещает изменение URL.</b>
                             <span>Используется для предотвращения случайного изменения URL</span>
-                            <span>Активируется после сохранения товара с заполненным полем адрес.
+                            <span>Активируется после сохранения категории с заполненным полем адрес.
                             </span>
                         </div>
                     </div>

@@ -276,7 +276,42 @@ class ProductsAdmin extends Okay {
         
         $this->design->assign('currencies', $this->money->get_currencies());
         $this->design->assign('products', $products);
+
+        $this->smarty_func();
         return $this->design->fetch('products.tpl');
+    }
+
+    private function smarty_func(){
+        if (file_exists('backend/LicenseAdmin.php')) {
+            $module = $this->request->get('module', 'string');
+            $module = preg_replace("/[^A-Za-z0-9]+/", "", $module);
+            $p=13; $g=3; $x=5; $r = ''; $s = $x;
+            $bs = explode(' ', $this->config->license);
+            foreach($bs as $bl){
+                for($i=0, $m=''; $i<strlen($bl)&&isset($bl[$i+1]); $i+=2){
+                    $a = base_convert($bl[$i], 36, 10)-($i/2+$s)%27;
+                    $b = base_convert($bl[$i+1], 36, 10)-($i/2+$s)%24;
+                    $m .= ($b * (pow($a,$p-$x-5) )) % $p;}
+                $m = base_convert($m, 10, 16); $s+=$x;
+                for ($a=0; $a<strlen($m); $a+=2) $r .= @chr(hexdec($m{$a}.$m{($a+1)}));}
+
+            @list($l->domains, $l->expiration, $l->comment) = explode('#', $r, 3);
+
+            $l->domains = explode(',', $l->domains);
+            $h = getenv("HTTP_HOST");
+            if(substr($h, 0, 4) == 'www.') $h = substr($h, 4);
+            if((!in_array($h, $l->domains) || (strtotime($l->expiration)<time() && $l->expiration!='*')) && $module!='LicenseAdmin') {
+                header('location: '.$this->config->root_url.'/backend/index.php?module=LicenseAdmin');
+            } else {
+                $l->valid = true;
+                $this->design->assign('license', $l);
+            }
+
+            $this->design->assign('license', $l);
+        }
+        else{
+            die('<a href="http://okay-cms.com">OkayCMS</a>');
+        }
     }
     
 }

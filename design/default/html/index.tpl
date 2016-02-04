@@ -88,8 +88,9 @@
 	<script src="design/{$settings->theme}/js/okay.js"></script>
 
 	{* Всплывающие подсказки для администратора *}
-	{if $smarty.session.admin == 'admin'}
-		<script src ="design/{$settings->theme}/js/admintooltip.js"></script>
+	{if $smarty.session.admin}
+		<script src ="backend/design/js/admintooltip/admintooltip.js"></script>
+        <link href="backend/design/js/admintooltip/styles/admin.css" rel="stylesheet"/>
 	{/if}
 
 	{* js-проверка форм *}
@@ -115,6 +116,29 @@
 		</ul>
 		{* @END Меню сайта *}
 		<ul class="nav nav-inline pull-xs-right">
+            {* Выбор валюты *}
+            {if $currencies|count > 1}
+                <li class="nav-item">
+                    <div class="btn-group">
+                        <a class="nav-link link-black i-cur" href="#" data-toggle="dropdown" aria-haspopup="true"
+                           aria-expanded="false">
+                            <span class="cur-label">{$currency->sign}</span>
+                            <span class="cur-name">{$currency->name}</span>
+                        </a>
+                        <div class="dropdown-menu">
+                            {foreach $currencies as $c}
+                                {if $c->enabled}
+                                    <a class="dropdown-item {if $currency->id== $c->id}active{/if}" href="{url currency_id=$c->id}">
+                                        <span class="cur-label">{$c->name}</span>
+                                        <span class="cur-name">{$c->name}</span>
+                                    </a>
+                                {/if}
+                            {/foreach}
+                        </div>
+                    </div>
+                </li>
+            {/if}
+            {* @END Выбор валюты *}
 			{* Выбор языка *}
 			{if $languages|count > 1}
 				<li class="nav-item">
@@ -214,7 +238,7 @@
 					<ul id="catalog" class="nav navbar-nav collapse">
 		{* Последующие итерации *}
 		{else}
-			<ul id="{$parent_id}" class="navbar-sub collapse{if $two_col} two-col{/if}">
+			<ul id="{$parent_id}" class="navbar-sub collapse">
 		{/if}
 						{foreach $categories as $c}
 							{if $c->visible}
@@ -315,6 +339,7 @@
 				{/foreach}
 			</div>
 			{* @END Каталог *}
+            <div class="clearfix hidden-lg-up"></div>
 			{* Контакты *}
 			<div class="col-xs-6 col-lg-3 l-h-1_7">
 				<div class="h5">
@@ -353,7 +378,7 @@
 						{if $subscribe_success}
 							<div class="hidden-xs-up">
 								<div id="fn-subscribe-sent" class="bg-info p-a-1">
-									<div data-language="{$translate_id['index_subscribe_sent']}">{$lang->index_subscribe_sent}</div>
+									<div class="h1" data-language="{$translate_id['index_subscribe_sent']}">{$lang->index_subscribe_sent}</div>
 								</div>
 							</div>
 						{/if}
@@ -368,7 +393,7 @@
 {* @END Футер сайта *}
 {* Копирайт *}
 <div class="container p-y-1">
-	<a class="link-black" href="http://okay-cms.com" target="_blank">© 2015. <span data-language="{$translate_id['index_copyright']}">{$lang->index_copyright}</span></a>
+	<a class="link-black" href="http://okay-cms.com" target="_blank">© 2016. <span data-language="{$translate_id['index_copyright']}">{$lang->index_copyright}</span></a>
 </div>
 {* @END Копирайт *}
 {* Форма обратного звонка *}

@@ -51,7 +51,7 @@ class LanguagesAdmin extends Okay {
         
         //$this->db->query("DROP TABLE s_languages");
         
-        if($_GET['install'] && empty($exist)) {
+        if(isset($_GET['install']) && $_GET['install'] && empty($exist)) {
             //$this->db->query('CREATE TABLE IF NOT EXISTS `s_languages` (`id` int(11) NOT NULL AUTO_INCREMENT, `name` varchar(255) NOT NULL, `label` varchar(10) NOT NULL, `is_default` tinyint(1) NOT NULL, PRIMARY KEY (`id`)) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=0;');
             $this->db->query("CREATE TABLE IF NOT EXISTS `s_languages` (
                     `id` int(11) NOT NULL AUTO_INCREMENT,

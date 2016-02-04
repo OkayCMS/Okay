@@ -47,7 +47,7 @@ class TopvisorProjectsAdmin extends Okay {
         $projects = array();
         $balance = '';
         $tm = $this->topvisor->get_projects();
-        if ($tm && !$tm->error) {
+        if ($tm && (!isset($tm->error) || !$tm->error)) {
             foreach ($tm as $p) {
                 $projects[$p->id] = $p;
             }
@@ -58,7 +58,7 @@ class TopvisorProjectsAdmin extends Okay {
             }
             $balance = $this->topvisor->get_balance();
         } else {
-            if ($tm->message) {
+            if (isset($tm->message) && $tm->message) {
                 $this->design->assign('message_error', $tm->message);
             } else {
                 $this->design->assign('message_error', 'unknown_error');
@@ -66,7 +66,7 @@ class TopvisorProjectsAdmin extends Okay {
         }
 
         $this->design->assign('projects', $projects);
-        $this->design->assign('balance', $balance[0]);
+        $this->design->assign('balance', (isset($balance[0]) ? $balance[0] : 0));
         return  $this->design->fetch('topvisor_projects.tpl');
     }
     

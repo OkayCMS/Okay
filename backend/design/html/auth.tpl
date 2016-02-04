@@ -1,5 +1,6 @@
 {$wrapper = '' scope=parent}
 <html>
+<link rel="icon" href="design/images/favicon.png" type="image/x-icon">
     <body>
         <style type="text/css" scoped>
             @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700&subset=latin,cyrillic);
@@ -88,7 +89,7 @@
         {if $error_message}
             <div class="message_error">
                 {if $error_message == 'auth_wrong'}
-                    Не верно введены логин или пароль.
+                    Неверно введены логин или пароль.
                     {if $limit_cnt}<br>Осталось {$limit_cnt} попыт{$limit_cnt|plural:'ка':'ок':'ки'}{/if}
                 {elseif $error_message == 'limit_try'}
                     Вы исчерпали количество попыток на сегодня.

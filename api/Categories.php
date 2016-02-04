@@ -93,14 +93,6 @@ class Categories extends Okay {
     }
     
     public function add_category($category) {
-        if ($category->parent_id) {
-            if (isset($this->all_categories[$category->parent_id])) {
-                $category->level_depth = $this->all_categories[$category->parent_id]->level_depth + 1;
-            }
-        } else {
-            $category->level_depth = 1;
-        }
-        
         $category = (array)$category;
         if(empty($category['url'])) {
             $category['url'] = preg_replace("/[\s]+/ui", '_', $category['name']);
@@ -117,6 +109,13 @@ class Categories extends Okay {
         }
         
         $category = (object)$category;
+        if ($category->parent_id) {
+            if (isset($this->all_categories[$category->parent_id])) {
+                $category->level_depth = $this->all_categories[$category->parent_id]->level_depth + 1;
+            }
+        } else {
+            $category->level_depth = 1;
+        }
         
         $result = $this->languages->get_description($category, 'category');
         

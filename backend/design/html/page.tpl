@@ -144,7 +144,7 @@ function translit(str)
 {if $message_error}
 <!-- Системное сообщение -->
 <div class="message message_error">
-	<span class="text">{if $message_error == 'url_exists'}Страница с таким адресом уже существует{elseif $message_error=='empty_header'}Введите заголовок{elseif $message_error == 'url_wrong'}Адресс не должен начинаться или заканчиваться символом '-'{else}{$message_error}{/if}</span>
+	<span class="text">{if $message_error == 'url_exists'}Страница с таким адресом уже существует{elseif $message_error=='empty_header'}Введите заголовок{elseif $message_error == 'url_wrong'}Адрес не должен начинаться или заканчиваться символом '-'{else}{$message_error}{/if}</span>
 	<a class="button" href="">Вернуться</a>
 </div>
 <!-- Системное сообщение (The End)-->
@@ -193,7 +193,7 @@ function translit(str)
                         <div class="right helper_block">
                             <b>Запрещает изменение URL.</b>
                             <span>Используется для предотвращения случайного изменения URL.</span>
-                            <span>Активируется после сохранения товара с заполненным полем адрес.</span>
+                            <span>Активируется после сохранения страницы с заполненным полем адрес.</span>
                         </div>
                     </div>
                 </li>

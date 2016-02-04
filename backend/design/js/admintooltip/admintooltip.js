@@ -8,6 +8,7 @@ $(function() {
     <a title='Включить' href='javascript:void(0);' class='changeTools'><span></span></a>\
     </div>").appendTo('body');
     tooltip = $("<div class='tooltip'></div>").appendTo($('body'));
+    $("<a title='Войти в админ-панель' href='admin/' class='top_admin_bookmark'></a>").appendTo('body');
     $(document).on('mouseleave', '.tooltip', function(){tooltipcanclose=true;setTimeout("close_tooltip();", 300);});
     $(document).on('mouseover', '.tooltip', function(){tooltipcanclose=false;});
     $(document).on('click', '.openTools', function() {
@@ -41,7 +42,7 @@ $(function() {
     } else {
         $('[data-page], [data-category], [data-brand], [data-product], [data-post], [data-feature], [data-language], [data-languages]').on('mouseover', show_tooltip);
     }
-});;
+});
 
 function show_tooltip()
 {

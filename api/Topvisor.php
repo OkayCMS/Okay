@@ -139,7 +139,6 @@ class Topvisor extends Okay {
         if (empty($project_id)) {
             return false;
         }
-        $page = max(1, $page);
         if (empty($date1)) {
             $date1 = date('Y-m-d', time()-2419200);
         }

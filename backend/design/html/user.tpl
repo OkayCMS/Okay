@@ -44,7 +44,7 @@
 		<input class="name" name=name type="text" value="{$user->name|escape}"/> 
 		<input name=id type="hidden" value="{$user->id|escape}"/> 
 		<div class="checkbox">
-			<input name="enabled" value='1' type="checkbox" id="active_checkbox" {if $user->enabled}checked{/if}/> <label for="active_checkbox">Активен</label>
+			<input name="enabled" value='1' type="checkbox" id="active_checkbox" {if $user->enabled}checked{/if}/> <label class="visible_icon" for="active_checkbox">Активен</label>
 		</div>
 	</div> 
 	

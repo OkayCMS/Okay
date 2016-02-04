@@ -13,7 +13,7 @@
 		<div class="row">
 			<div class="col-lg-3 p-a-0">
 				<div class="p-a-0">
-					<div class="fn-product border-b-1-primary show-container">
+					<div class="fn-product fn-resize border-b-1-primary show-container">
 						{* Показать скрыть одинаковые характеристики *}
 						{if $comparison->products|count > 1}
 							<ul class="fn-show okaycms nav nav-tabs">

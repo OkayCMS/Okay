@@ -66,10 +66,17 @@ class CategoryStatsAdmin extends Okay {
             if (isset($v->subcategories)) {
                 $this->cat_tree($v->subcategories,$purchases);
             }
-            $categories[$k]->price = floatval($purchases[$v->id]->price);
-            $categories[$k]->amount = intval($purchases[$v->id]->amount);
-            $this->total_price += floatval($purchases[$v->id]->price);
-            $this->total_amount += intval($purchases[$v->id]->amount);
+            if (isset($purchases[$v->id])) {
+                $price = floatval($purchases[$v->id]->price);
+                $amount = intval($purchases[$v->id]->amount);
+            } else {
+                $price = 0;
+                $amount = 0;
+            }
+            $categories[$k]->price = $price;
+            $categories[$k]->amount = $amount;
+            $this->total_price += $price;
+            $this->total_amount += $amount;
         }
         return $categories;
     }

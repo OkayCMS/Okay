@@ -48,9 +48,13 @@
 </div>	
 
 <div id="main_list">
-	{include file='pagination.tpl'}
-	<div class="limit_show">
-		<span>Показывать по: </span>
+    
+    {if $products}
+
+
+    {include file='pagination.tpl'}
+    <div class="limit_show">
+        <span>Показывать по: </span>
         <select onchange="location = this.value;">
             <option value="{url limit=5}" {if $current_limit == 5}selected{/if}>5</option>
             <option value="{url limit=10}" {if $current_limit == 10}selected{/if}>10</option>
@@ -62,12 +66,10 @@
         <div class="helper_wrap">
             <a href="javascript:;" id="show_help_search" class="helper_link"></a>
             <div class="helper_block right">
-               <span>Количество товаров на одной странице в админ. панели</span>
+                <span>Количество товаров на одной странице в админ. панели</span>
             </div>
         </div>
-	</div>
-    
-    {if $products}
+    </div>
 
 	<div id="expand">
 	<a href="#" class="dash_link" id="expand_all">Развернуть все варианты ↓</a>
@@ -105,7 +107,7 @@
                 <ul>
                     {foreach $product->variants as $variant}
                         <li {if !$variant@first}class="variant" style="display:none;"{/if}>
-                            <i title="{$variant->name|escape}">{$variant->name|escape|truncate:30:'…':true:true}</i>
+                            <i title="{$variant->name|escape}">{$variant->name|truncate:30:'..':true:true}</i>
                             <label data-vid="{$variant->id}" class="yandex_icon {if $variant->yandex}active{/if}"></label>
                             <input class="price {if $variant->compare_price>0}compare_price{/if}" type="text" name="price[{$variant->id}]" value="{$variant->price}"
                             {if $variant->compare_price>0}title="Старая цена &mdash; {$variant->compare_price} {if $variant->currency_id}{$currencies[$variant->currency_id]->sign}{else}{$currency->sign}{/if}"{/if} />
@@ -155,8 +157,8 @@
                 <option value="disable">Сделать невидимыми</option>
                 <option value="set_featured">Сделать рекомендуемым</option>
                 <option value="unset_featured">Отменить рекомендуемый</option>
-                <option value="set_yandex">В яндекс</option>
-                <option value="unset_yandex">Из яндекса</option>
+                <option value="set_yandex">В Я.Маркет</option>
+                <option value="unset_yandex">Из Я.Маркета</option>
                 <option value="duplicate">Создать дубликат</option>
                 {if $pages_count>1}
                     <option value="move_to_page">Переместить на страницу</option>
@@ -202,7 +204,7 @@
 
             <input id="apply_action" class="button_green" type="submit" value="Применить">
         </div>
-		{/if}
+
 	</form>
 
     {*Пагинация*}
@@ -225,6 +227,7 @@
             </div>
         </div>
     </div>
+    {/if}
 </div>
 
 
@@ -586,7 +589,11 @@ $(function() {
             $(this).addClass('open');
         }
         $(this).parent().next().slideToggle(500);
-    })
+    });
+
+    $('.cats_right li.selected').parents().removeClass('sub_menu');
+    $('.cats_right li.selected').parents().prev().find('span').addClass('open');
+
 });
 
 </script>

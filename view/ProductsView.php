@@ -471,6 +471,7 @@ class ProductsView extends View {
             $result = new StdClass;
             $result->products_content = $this->design->fetch('products_content.tpl');
             $result->products_pagination = $this->design->fetch('chpu_pagination.tpl');
+            $result->products_sort = $this->design->fetch('products_sort.tpl');
             print json_encode($result);
             die;
         }

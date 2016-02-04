@@ -239,7 +239,9 @@ class IndexAdmin extends Okay {
         if(empty($module)) {
             $module = 'ProductsAdmin';
         }
-        $this->design->assign('menu_selected', $this->left_menu[$module]);
+        if (isset($this->left_menu[$module])) {
+            $this->design->assign('menu_selected', $this->left_menu[$module]);
+        }
         
         // Подключаем файл с необходимым модулем
         require_once('backend/'.$module.'.php');

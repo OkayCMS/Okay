@@ -143,7 +143,7 @@ function translit(str)
 {if $message_error}
 <!-- Системное сообщение -->
 <div class="message message_error">
-	<span class="text">{if $message_error == 'url_exists'}Запись с таким адресом уже существует{elseif $message_error=='empty_name'}Введите название{elseif $message_error == 'empty_url'}Введите адрес{elseif $message_error == 'url_wrong'}Адресс не должен начинаться или заканчиваться символом '-'{else}{$message_error}{/if}</span>
+	<span class="text">{if $message_error == 'url_exists'}Запись с таким адресом уже существует{elseif $message_error=='empty_name'}Введите название{elseif $message_error == 'empty_url'}Введите адрес{elseif $message_error == 'url_wrong'}Адрес не должен начинаться или заканчиваться символом '-'{else}{$message_error}{/if}</span>
 	{if $smarty.get.return}
 		<a class="button" href="{$smarty.get.return}">Вернуться</a>
 	{/if}
@@ -186,7 +186,7 @@ function translit(str)
                         <div class="right helper_block">
                             <b>Запрещает изменение URL.</b>
                             <span>Используется для предотвращения случайного изменения URL.</span>
-                            <span>>Активируется после сохранения товара с заполненным полем адрес.</span>
+                            <span>Активируется после сохранения записи с заполненным полем адрес.</span>
                         </div>
                     </div>
                 </li>

@@ -40,6 +40,9 @@ class ImportAjax extends Okay {
         if(!$this->managers->access('import')) {
             return false;
         }
+        session_abort();
+        unset($_SESSION['lang_id']);
+        unset($_SESSION['admin_lang_id']);
         
         // Для корректной работы установим локаль UTF-8
         setlocale(LC_ALL, 'ru_RU.UTF-8');

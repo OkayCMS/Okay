@@ -233,7 +233,7 @@
                     <li {if !$category->id}class="selected"{/if}><a href="{url category_id=null brand_id=null}">Все категории</a></li>
                 {/if}
                 {foreach $categories as $c}
-                    <li category_id="{$c->id}" {if $category->id == $c->id}class="selected"{else}class="droppable category"{/if}>
+                    <li category_id="{$c->id}" {if $smarty.get.category_id == $c->id}class="selected"{else}class="droppable category"{/if}>
                         <a href='{url keyword=null brand_id=null page=all category_id={$c->id}}'>{$c->name}</a>
                         {if $c->subcategories}<span class="slide_menu"></span>{/if}
                     </li>
@@ -274,7 +274,9 @@
                     $(this).addClass('open');
                 }
                 $(this).parent().next().slideToggle(500);
-            })
+            });
+            $('.cats_right li.selected').parents().removeClass('sub_menu');
+            $('.cats_right li.selected').parents().prev().find('span').addClass('open');
         });
 
     </script>

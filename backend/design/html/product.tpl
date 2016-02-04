@@ -451,7 +451,7 @@ $(function(){
 
 {if $message_error}
 <div class="message message_error">
-	<span class="text">{if $message_error=='url_exists'}Товар с таким адресом уже существует{elseif $message_error=='empty_name'}Введите название{elseif $message_error == 'empty_url'}Введите адрес{elseif $message_error == 'url_wrong'}Адресс не должен начинаться или заканчиваться символом '-'{else}{$message_error|escape}{/if}</span>
+	<span class="text">{if $message_error=='url_exists'}Товар с таким адресом уже существует{elseif $message_error=='empty_name'}Введите название{elseif $message_error == 'empty_url'}Введите адрес{elseif $message_error == 'url_wrong'}Адрес не должен начинаться или заканчиваться символом '-'{else}{$message_error|escape}{/if}</span>
 	{if $smarty.get.return}
 	<a class="button" href="{$smarty.get.return}">Вернуться</a>
 	{/if}
@@ -706,13 +706,13 @@ $(function(){
                     <li feature_id="{$feature_id}">
                         <label class="property">{$feature->name}</label>
                         <input class="okay_inp option_value" type="text" name="options[{$feature_id}][value]" value="{$options.$feature_id->value|escape}"/>
-                        <input class="okay_inp grey_translit" style="margin-left:170px;margin-top:2px;" type="text" name="options[{$feature_id}][translit]" readonly="" value="{$options.$feature_id->translit|escape}"/>
+                        <input class="okay_inp grey_translit" style="margin-left:175px;margin-top:2px;" type="text" name="options[{$feature_id}][translit]" readonly="" value="{$options.$feature_id->translit|escape}"/>
                     </li>
                 {/foreach}
             </ul>
             <ul class=new_features>
                 <li id=new_feature>
-                    <label class=property><input type=text name=new_features_names[]></label>
+                    <label class=property><input type=text class="okay_inp" name=new_features_names[]></label>
                     <input class="okay_inp" type="text" name=new_features_values[]/>
                 </li>
             </ul>

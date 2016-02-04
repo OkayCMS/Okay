@@ -297,9 +297,11 @@ $(function(){
 					success: function(data) {
 						$( '#fn-products_content' ).html( data.products_content );
 						$( '.shpu_pagination' ).html( data.products_pagination );
+						$('#fn-products_sort').html(data.products_sort);
 					}
 				} )
 			};
+		link = link.replace(/\/sort-([a-zA-Z_]+)/, '');
 
 		$( '#fn-slider-price.okaycms' ).slider( {
 			range: true,
@@ -324,9 +326,9 @@ $(function(){
 
 		/* todo Проверить пагинацию */
 		// Если после фильтрации у нас осталось товаров на несколько страниц, то постраничную навигацию мы тоже проведем с помощью ajax чтоб не сбить фильтр по цене
-		$( document ).on( 'click', '.shpu_pagination .is_ajax a', function(e) {
+		$( document ).on( 'click', '.shpu_pagination .is_ajax a,#fn-products_sort .is_ajax a', function(e) {
 			e.preventDefault();
-			var link = $( this ).attr( 'href' ),
+			var link = $(this).attr( 'href' ),
 				send_min = null,
 				send_max = null;
 			if ($('#fn-slider-max').val() != range_max || $('#fn-slider-min').val() != range_min) {
@@ -340,6 +342,7 @@ $(function(){
 				success: function(data) {
 					$( '#fn-products_content' ).html( data.products_content );
 					$( '.shpu_pagination' ).html( data.products_pagination );
+					$('#fn-products_sort').html(data.products_sort);
 				}
 			} );
 		} );

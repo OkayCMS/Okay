@@ -21,9 +21,15 @@
 {$meta_title='Категории' scope=parent}
 
 {* Заголовок *}
-<div id="header">
+<div id="header" style="overflow: visible;">
 	<h1>Категории товаров</h1>
 	<a class="add" href="{url module=CategoryAdmin return=$smarty.server.REQUEST_URI}">Добавить категорию</a>
+    <div class="helper_wrap">
+        <a class="top_help" id="show_help_search" href="https://www.youtube.com/watch?v=-EIM2YxnV4Q" target="_blank"></a>
+        <div class="right helper_block topvisor_help">
+            <p>Видеоинструкция по разделу</p>
+        </div>
+    </div>
 </div>
 {* Заголовок END *}
 

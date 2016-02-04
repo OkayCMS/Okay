@@ -1059,8 +1059,11 @@ input[type="button"].btn-block {
     background-color: #f5f5f5; }
   .dropdown-item.active, .dropdown-item.active:focus, .dropdown-item.active:hover,
   .dropdown-item.active .lang-label,
+  .dropdown-item.active .cur-label,
   .dropdown-item.active .lang-label:focus,
-  .dropdown-item.active .lang-label:hover {
+  .dropdown-item.active .cur-label:focus,
+  .dropdown-item.active .lang-label:hover,
+  .dropdown-item.active .cur-label:hover{
     color: #fff;
     text-decoration: none;
     background-color: #0095ff;
@@ -1802,12 +1805,6 @@ input[type="button"].btn-block {
       min-width: 100%;
       border: 0.0625rem solid #c9e7fc;
       height: auto !important; }
-      .navbar-sub.two-col {
-        -webkit-column-count: 2;
-        /* Chrome, Safari, Opera */
-        -moz-column-count: 2;
-        /* Firefox */
-        column-count: 2; }
       .navbar-sub:hover {
         display: block; }
       .navbar-sub .nav-item {
@@ -1886,6 +1883,8 @@ input[type="button"].btn-block {
   .card:hover {
     overflow: visible;
     z-index: 1; }
+  .card:hover .fn-variants {
+      display: block; }
     .card:hover .card-title a {
       color: #243541; }
   @media (min-width: 992px) {
@@ -1896,6 +1895,9 @@ input[type="button"].btn-block {
   .card .btn-favorites,
   .card .btn-comparison {
     margin-right: 0.375rem; }
+
+.card .fn-variants {
+    display: none; }
 
 .card-block {
   padding: 1.0625rem; }
@@ -2385,20 +2387,30 @@ button.list-group-item-danger {
     .i-lang {
       border: 0.0625rem solid #0095ff;
       border-radius: 0.1875rem; } }
+.i-cur {
+    vertical-align: top; }
+@media (min-width: 992px) {
+    .i-cur {
+        background: url("../images/icon_val.png") left center no-repeat;
+        padding-left: 1.875rem; } }
+@media (max-width: 991px) {
+    .i-cur {
+        border: 0.0625rem solid #0095ff;
+        border-radius: 0.1875rem; } }
 
-.lang-label {
+.lang-label, .cur-label {
   display: none;
-  width: 2.375rem;
+  min-width: 2.375rem;
   text-align: center;
   font-size: 1.5rem;
   font-weight: bold;
   color: #0095ff; }
   @media (max-width: 991px) {
-    .lang-label {
+    .lang-label, .cur-label {
       display: block; } }
 
 @media (max-width: 991px) {
-  .lang-name {
+  .lang-name, .cur-name {
     display: none; } }
 
 .i-user,
@@ -2729,124 +2741,6 @@ button.list-group-item-danger {
 
 .table-striped .reset-payment {
   padding: 0.1875rem 0 0.25rem; }
-
-.admTools {
-  position: fixed;
-  width: 14.375rem;
-  left: -14.375rem;
-  top: 10.5625rem;
-  background-color: #333;
-  -webkit-transition: left .5s ease 0s;
-  -moz-transition: left .5s ease 0s;
-  -o-transition: left .5s ease 0s;
-  transition: left .5s ease 0s;
-  z-index: 9999;
-  border: 0.0625rem solid rgba(255, 255, 255, 0.2); }
-  .admTools.open {
-    left: -0.0625rem; }
-  .admTools p {
-    margin: 0.625rem;
-    color: #fff; }
-  .admTools .tool-descr {
-    color: #8d8c8c;
-    font-size: 0.6875rem; }
-  .admTools .tool-title {
-    background-color: #484848;
-    margin: 0.625rem 0;
-    padding: 0.4375rem 0;
-    text-align: center;
-    text-transform: uppercase;
-    border-top: 0.0625rem solid #6d6d6d;
-    border-bottom: 0.0625rem solid #6d6d6d; }
-
-.openTools {
-  background: #333 url("../images/adm_tools.png") center no-repeat;
-  display: block;
-  width: 3rem;
-  height: 3rem;
-  position: absolute;
-  top: -0.0625rem;
-  right: -3rem;
-  border: 0.0625rem solid rgba(255, 255, 255, 0.2);
-  border-left: none; }
-
-.admin_bookmark {
-  background: url("../images/adm_enter.png") no-repeat;
-  display: inline-block;
-  width: 1.625rem;
-  height: 1.625rem;
-  margin: 0 0.625rem; }
-
-.changeTools {
-  display: block;
-  width: 4rem;
-  height: 2.375rem;
-  margin: 0 auto 0.625rem;
-  border-radius: 1.25rem;
-  background-color: #900000;
-  position: relative;
-  -webkit-transition: background .5s ease 0s;
-  -moz-transition: background .5s ease 0s;
-  -o-transition: background .5s ease 0s;
-  transition: background .5s ease 0s; }
-  .changeTools.on {
-    background-color: #57d756; }
-    .changeTools.on span {
-      left: 1.625rem; }
-  .changeTools span {
-    position: absolute;
-    left: 0;
-    top: 0;
-    background-color: #fff;
-    display: block;
-    width: 2.125rem;
-    height: 2.125rem;
-    margin: 0.125rem;
-    border-radius: 50%;
-    box-shadow: 0 0 0.3125rem 0 rgba(50, 50, 50, 0.7);
-    -webkit-transition: left 0.5s ease 0s;
-    -moz-transition: left 0.5s ease 0s;
-    -o-transition: left 0.5s ease 0s;
-    transition: left 0.5s ease 0s; }
-
-.tooltip {
-  width: 187px;
-  display: none;
-  position: absolute;
-  opacity: .8;
-  padding: 0.3125rem;
-  font-size: 0.625rem;
-  line-height: 0.875rem;
-  background-color: #fff1f2;
-  border: 0.0625rem solid #b8b8b8;
-  z-index: 9999;
-  border-radius: 0 0.125rem 0.125rem; }
-  .tooltip:before, .tooltip:after {
-    display: block;
-    position: absolute;
-    content: "";
-    border: 0.3125rem solid transparent; }
-  .tooltip:before {
-    top: -0.625rem;
-    left: -0.0625rem;
-    border-left-color: #b8b8b8;
-    border-bottom-color: #b8b8b8; }
-  .tooltip:after {
-    top: -0.4375rem;
-    left: 0;
-    border-left-color: #fff1f2;
-    border-bottom-color: #fff1f2; }
-  .tooltip a {
-    display: block;
-    color: #000;
-    padding: 0.1875rem 0.125rem 0.3125rem 1.5625rem;
-    background: no-repeat 0.3125rem center; }
-    .tooltip a:hover {
-      background-color: #b5b5b5; }
-  .tooltip .admin_tooltip_edit {
-    background-image: url("../images/adm_edit.png"); }
-  .tooltip .admin_tooltip_add {
-    background-image: url("../images/adm_add.png"); }
 
 .fn-comparison_products .slick-prev, .fn-comparison_products .slick-next {
   top: 7.5rem; }
@@ -3404,7 +3298,7 @@ button.list-group-item-danger {
     pointer-events: auto; }
     .slick-dots li button {
       border: 0;
-      background: rgba(255, 255, 255, 0.5);
+      background: #85ccff;
       display: block;
       height: 0.9375rem;
       width: 0.9375rem;
@@ -3412,7 +3306,7 @@ button.list-group-item-danger {
       cursor: pointer;
       border-radius: 50%; }
     .slick-dots li.slick-active button {
-      background: #fff; }
+      background: #0095FF; }
 
 .ui-slider {
   position: relative;

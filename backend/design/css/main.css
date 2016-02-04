@@ -12,6 +12,12 @@ body{
 	font-weight: 300;
 	font-size: 14px;
 }
+textarea{
+    font-family: "Roboto",​sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #353b3e;
+}
 .counters{
     background: #18a5ff none repeat scroll 0 0;
     border-radius: 3px;
@@ -32,6 +38,7 @@ body{
 .autocomplete-suggestions .selected { background:#F0F0F0; }
 .autocomplete-suggestions div { padding:2px 5px; white-space:nowrap; }
 .autocomplete-suggestions strong { font-weight:normal; color:#3399FF;}
+.autocomplete-suggestion:hover{background: #E9E9E9; cursor: pointer}
 .container {
     width: 1230px;
     margin-left: auto;
@@ -655,4 +662,7 @@ input[name*="check"]:checked + label{
 #yandex_checkbox,
 #in_filter {
     vertical-align: -5px;
+}
+.dash_link:hover{
+    border-bottom: none;
 }

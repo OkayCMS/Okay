@@ -1,0 +1,128 @@
+.admTools {
+    position: fixed;
+    width: 14.375rem;
+    left: -14.375rem;
+    top: 10.5625rem;
+    background-color: #333;
+    -webkit-transition: left .5s ease 0s;
+    -moz-transition: left .5s ease 0s;
+    -o-transition: left .5s ease 0s;
+    transition: left .5s ease 0s;
+    z-index: 9999;
+    border: 0.0625rem solid rgba(255, 255, 255, 0.2); }
+.admTools.open {
+    left: -0.0625rem; }
+.admTools p {
+    margin: 0.625rem;
+    color: #fff; }
+.admTools .tool-descr {
+    color: #8d8c8c;
+    font-size: 0.6875rem; }
+.admTools .tool-title {
+    background-color: #484848;
+    margin: 0.625rem 0;
+    padding: 0.4375rem 0;
+    text-align: center;
+    text-transform: uppercase;
+    border-top: 0.0625rem solid #6d6d6d;
+    border-bottom: 0.0625rem solid #6d6d6d; }
+
+.openTools {
+    background: #333 url("adm_tools.png") center no-repeat;
+    display: block;
+    width: 3rem;
+    height: 3rem;
+    position: absolute;
+    top: -0.0625rem;
+    right: -3rem;
+    border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+    border-left: none; }
+
+.admin_bookmark {
+    background: url("adm_ent.png") no-repeat;
+    display: inline-block;
+    width: 1.625rem;
+    height: 1.625rem;
+    margin: 0 0.625rem; }
+
+.changeTools {
+    display: block;
+    width: 4rem;
+    height: 2.375rem;
+    margin: 0 auto 0.625rem;
+    border-radius: 1.25rem;
+    background-color: #900000;
+    position: relative;
+    -webkit-transition: background .5s ease 0s;
+    -moz-transition: background .5s ease 0s;
+    -o-transition: background .5s ease 0s;
+    transition: background .5s ease 0s; }
+.changeTools.on {
+    background-color: #57d756; }
+.changeTools.on span {
+    left: 1.625rem; }
+.changeTools span {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: #fff;
+    display: block;
+    width: 2.125rem;
+    height: 2.125rem;
+    margin: 0.125rem;
+    border-radius: 50%;
+    box-shadow: 0 0 0.3125rem 0 rgba(50, 50, 50, 0.7);
+    -webkit-transition: left 0.5s ease 0s;
+    -moz-transition: left 0.5s ease 0s;
+    -o-transition: left 0.5s ease 0s;
+    transition: left 0.5s ease 0s; }
+
+.tooltip {
+    width: 187px;
+    display: none;
+    position: absolute;
+    opacity: .8;
+    padding: 0.3125rem;
+    font-size: 0.625rem;
+    line-height: 0.875rem;
+    background-color: #fff1f2;
+    border: 0.0625rem solid #b8b8b8;
+    z-index: 9999;
+    border-radius: 0 0.125rem 0.125rem; }
+.tooltip:before, .tooltip:after {
+    display: block;
+    position: absolute;
+    content: "";
+    border: 0.3125rem solid transparent; }
+.tooltip:before {
+    top: -0.625rem;
+    left: -0.0625rem;
+    border-left-color: #b8b8b8;
+    border-bottom-color: #b8b8b8; }
+.tooltip:after {
+    top: -0.4375rem;
+    left: 0;
+    border-left-color: #fff1f2;
+    border-bottom-color: #fff1f2; }
+.tooltip a {
+    display: block;
+    color: #000;
+    padding: 0.1875rem 0.125rem 0.3125rem 1.5625rem;
+    background: no-repeat 0.3125rem center; }
+.tooltip a:hover {
+    background-color: #b5b5b5; }
+.tooltip .admin_tooltip_edit {
+    background-image: url("adm_edit.png"); }
+.tooltip .admin_tooltip_add {
+    background-image: url("adm_add.png"); }
+.top_admin_bookmark{
+    background-image: url("../../../images/admin_enter.png");
+    background-position: center top;
+    background-repeat: no-repeat;
+    display: block;
+    height: 25px;
+    left: 4px;
+    position: absolute;
+    top: 1%;
+    width: 50px;
+}

@@ -233,6 +233,8 @@ $(function() {
         }
         $(this).parent().next().slideToggle(500);
     })
+    $('.cats_right li.selected').parents().removeClass('sub_menu');
+    $('.cats_right li.selected').parents().prev().find('span').addClass('open');
 	
 });
 </script>

@@ -12,9 +12,7 @@ class Translations extends Okay {
     }
     
     public function init_translations() {
-        $vars = array();
-        $lang_label = $_SESSION['lang'] ? $_SESSION['lang'] : $this->settings->lang_label;
-        $language   = $this->languages->languages(array('id'=>$this->languages->lang_id));
+        $language = $this->languages->languages(array('id'=>$this->languages->lang_id()));
         if (!empty($language)) {
             $translations = $this->languages->get_translations(array('lang'=>$language->label));
             if(!empty($translations)) {

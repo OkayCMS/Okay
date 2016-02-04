@@ -40,6 +40,19 @@
 					{/if}
 					{* @END Дополнительные фото продукта *}
 				</div>
+            {else}
+                <div class="col-lg-5">
+                    <a class="fn-zoom okaycms btn-block relative border-a-1-info text-xs-center" href="design/{$settings->theme}/images/no_image.png" rel="group">
+                        {* Промо изображение *}
+                        {if $product->special}
+                            <img class="card-spec" alt='{$product->sp_img}' title='{$product->sp_img}'  src='files/special/{$product->special}'/>
+                        {/if}
+                        {* @END Промо изображение *}
+                        {* Большое фото товара *}
+                        <img class="fn-img" src="design/{$settings->theme}/images/no_image.png" height="300" alt="{$product->product->name|escape}"/>
+                        {* @END Большое фото товара *}
+                    </a>
+                </div>
 			{/if}
 			<div class="col-lg-7 fn-product">
 				<form class="fn-variants okaycms row" action="/{$lang_link}cart">
@@ -95,7 +108,7 @@
 							{* @END Кнопка добавления в корзину *}
 						</div>
 						{* Сравнение *}
-						<div class="form-group m-t-1 text-xs-center text-md-left">
+						<div class="form-group m-t-1 text-xs-center text-md-left hidden-md-down">
 							{if !in_array($product->id,$comparison->ids)}
 								<a class="i-comparison fn-comparison okaycms selected" href="#" data-id="{$product->id}" title="{$lang->product_add_comparison}" data-result-text="{$lang->product_remove_comparison}" data-language="{$translate_id['product_add_comparison']}"></a>
 							{else}
@@ -104,7 +117,7 @@
 						</div>
 						{* @END Сравнение *}
 						{* Избранное *}
-						<div class="form-group text-xs-center text-md-left">
+						<div class="form-group text-xs-center text-md-left m-t-1">
 							{if $product->id|in_array:$wished_products}
 								<a href="#" data-id="{$product->id}" class="i-favorites fn-wishlist okaycms selected" title="{$lang->product_remove_favorite}" data-result-text="{$lang->product_add_favorite}" data-language="{$translate_id['product_remove_favorite']}"></a>
 							{else}

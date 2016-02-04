@@ -13,7 +13,6 @@ class ExportAjax extends Okay {
     );
     
     private $column_delimiter = ';';
-    private $stat_count = 10;
     private $export_files_dir = 'backend/files/export/';
     private $filename = 'export_stat.csv';
     
@@ -73,13 +72,8 @@ class ExportAjax extends Okay {
             }
         }
         
-        $brands_filter = array();
         $categories = $this->categories->get_categories_tree();
-        if (!empty($category)) {
-            $brands_filter['category_id'] = $category->children;
-        }
-        $brands = $this->brands->get_brands($brands_filter);
-        
+
         $purchases = $this->reportstat->get_categorized_stat($filter);
         
         if (!empty($category)) {
@@ -103,12 +97,19 @@ class ExportAjax extends Okay {
             foreach ($v->path as $p) {
                 $path[] = str_replace($this->subcategory_delimiter, '\\'.$this->subcategory_delimiter, $p->name);
             }
+            if (isset($purchases[$v->id])) {
+                $price = floatval($purchases[$v->id]->price);
+                $amount = intval($purchases[$v->id]->amount);
+            } else {
+                $price = 0;
+                $amount = 0;
+            }
             $category['name'] = implode('/', $path);
-            $category['amount'] = intval($purchases[$v->id]->amount);
-            $category['price'] = floatval($purchases[$v->id]->price);
+            $category['price'] = $price;
+            $category['amount'] = $amount;
             $result[] = $category;
-            $this->total_price += floatval($purchases[$v->id]->price);
-            $this->total_amount += intval($purchases[$v->id]->amount);
+            $this->total_price += $price;
+            $this->total_amount += $amount;
             if (isset($v->subcategories)) {
                 array_merge($result,$this->cat_tree($v->subcategories,$purchases,$result));
             }

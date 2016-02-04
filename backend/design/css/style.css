@@ -339,7 +339,7 @@ div.variant_not_in_stock {
     width: 120px;
     margin-right: 5px;
 } 
-#product .block ul.new_features li label input { margin-top: -2px; width: 150px; font-size:13px; height:18px;} 
+#product .block ul.new_features li label input { width: 150px; font-size:13px; height:26px;}
 #product .block li select {width: 275px; font-size: 14px;}
 #product .block li textarea {
     width: 263px;
@@ -503,9 +503,6 @@ div.variant_not_in_stock {
 #right_menu ul ul li{
     padding-left: 10px;
     padding-right: 23px;
-}
-#right_menu ul ul li a {
-    color: #777;
 }
 #right_menu ul ul ul li{
     padding-left: 20px;

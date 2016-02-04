@@ -95,33 +95,35 @@
 						</div>
 						<div class="row">
 							{foreach $last_posts as $post}
-								<div class="col-xs-12 col-md-3">
-									<a class="blog-img" href="{$lang_link}blog/{$post->url}">
-										{* Дата создания поста *}
-										<div class="blog-data">{$post->date|date}</div>
-										{* @END Дата создания поста *}
-										{* Изображение поста *}
-										{if $post->image}
-											<img class="hidden-md-down" src="{$post->image|resize:162:77:false:$config->resized_blog_dir}" alt="{$post->name|escape}"/>
-										{/if}
-										{* @END Изображение поста *}
-									</a>
-								</div>
-								<div class="col-xs-12 col-md-8 m-b-1-md_down">
-									{* Название поста *}
-									<div class="h5 font-weight-bold">
-										<a class="link-black" href="{$lang_link}blog/{$post->url}" data-post="{$post->id}">{$post->name|escape}</a>
-									</div>
-									{* @END Название поста *}
-									{* Краткое описание поста *}
-									{if $post->annotation}
-										<div class="blog-annotation">
-											{$post->annotation}
-											Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam assumenda beatae, corporis cum est et labore maxime modi molestiae nam necessitatibus perferendis perspiciatis quas quo quos repudiandae vero voluptatum. Dicta esse explicabo fugit, ipsa maxime perferendis quasi quidem voluptas voluptates?
-										</div>
-									{/if}
-									{* @END Краткое описание поста *}
-								</div>
+                                <div class="col-md-12 p-y-1">
+                                    <div class="col-xs-12 col-md-3 hidden-md-down">
+                                        <a class="blog-img" href="{$lang_link}blog/{$post->url}">
+                                            {* Дата создания поста *}
+                                            <div class="blog-data">{$post->date|date}</div>
+                                            {* @END Дата создания поста *}
+                                            {* Изображение поста *}
+                                            {if $post->image}
+                                                <img class="hidden-md-down" src="{$post->image|resize:162:77:false:$config->resized_blog_dir}" alt="{$post->name|escape}"/>
+                                            {/if}
+                                            {* @END Изображение поста *}
+                                        </a>
+                                    </div>
+                                    <div class="col-xs-12 col-md-8 m-b-1-md_down">
+                                        {* Название поста *}
+                                        <div class="h5 font-weight-bold">
+                                            <a class="link-black" href="{$lang_link}blog/{$post->url}" data-post="{$post->id}">{$post->name|escape}</a>
+                                        </div>
+                                        {* @END Название поста *}
+                                        {* Краткое описание поста *}
+                                        {if $post->annotation}
+                                            <div class="blog-annotation">
+                                                {$post->annotation}
+                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam assumenda beatae, corporis cum est et labore maxime modi molestiae nam necessitatibus perferendis perspiciatis quas quo quos repudiandae vero voluptatum. Dicta esse explicabo fugit, ipsa maxime perferendis quasi quidem voluptas voluptates?
+                                            </div>
+                                        {/if}
+                                        {* @END Краткое описание поста *}
+                                    </div>
+                                </div>
 							{/foreach}
 						</div>
 						{* Ссылка на все посты для моб. версии *}

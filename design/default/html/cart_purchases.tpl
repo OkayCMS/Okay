@@ -115,14 +115,14 @@
 {if $coupon_request}
 	{* Ошибка купона *}
 	{if $coupon_error}
-		<div class="p-x-1 p-y-05 bg-danger text-white m-t-1">
+		<div class="p-x-1 p-y-05 bg-danger m-t-1">
 			{if $coupon_error == 'invalid'}
 				{$lang->cart_coupon_error}
 			{/if}
 		</div>
 	{/if}
 	{if $cart->coupon->min_order_price > 0}
-		<div class="p-x-1 p-y-05 bg-danger text-white m-t-1">
+		<div class="p-x-1 p-y-05 bg-danger m-t-1">
 			{$lang->cart_coupon} {$cart->coupon->code|escape} {$lang->cart_coupon_min} {$cart->coupon->min_order_price|convert} {$currency->sign}
 		</div>
 	{/if}
