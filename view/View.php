@@ -379,7 +379,7 @@ class View extends Okay {
     public function setHeaderLastModify($lastModify) {
         $lastModify=empty($lastModify)?date("Y-m-d H:i:s"):$lastModify;
         $tmpDate=date_parse($lastModify);
-        $LastModified_unix=mktime( $tmpDate['hour'], $tmpDate['minute'], $tmpDate['second '], $tmpDate['month'],$tmpDate['day'],$tmpDate['year'] );                                              
+        @$LastModified_unix=mktime( $tmpDate['hour'], $tmpDate['minute'], $tmpDate['second '], $tmpDate['month'],$tmpDate['day'],$tmpDate['year'] );
         //Проверка модификации страницы
         $LastModified = gmdate("D, d M Y H:i:s \G\M\T", $LastModified_unix);                
         $IfModifiedSince = false;

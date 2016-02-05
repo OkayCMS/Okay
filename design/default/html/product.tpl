@@ -361,9 +361,10 @@
 		</div>
 		<div class="row">
 			{foreach $related_products as $product}
-				<div class="col-md-4 col-lg-4 col-xl-3{if $product@iteration == 4} hidden-lg{/if}">
+				<div class="col-md-4 col-xl-3{if $product@iteration == 4} hidden-lg{/if}">
 					{include "tiny_products.tpl"}
 				</div>
+				{if $product@iteration % 3 == 0}<div class="col-xs-12 hidden-sm-down hidden-md-up"></div>{/if}
 			{/foreach}
 		</div>
 	</div>

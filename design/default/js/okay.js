@@ -437,7 +437,7 @@ function ajax_change_amount(object, variant_id) {
 				$( '#payment_' + delivery_id + '_' + payment_id ).trigger( 'click' );
 			} else {
 				$( '#cart_informer' ).html( data.cart_informer );
-				$( '#content' ).html( data.content );
+				$( '#fn-content' ).html( data.content );
 			}
 		}
 	} );
@@ -468,8 +468,8 @@ function amount_change(input, action) {
 	}
 	okay.amount = parseInt( input.val() );
 	/* в корзине */
-	if( ( location.pathname == '/cart' || location.pathname == '/cart/' ) && ( (max_val != curr_val && action == 'plus' ) || ( curr_val != 1 && action == 'minus' ) ) ) {
-		ajax_change_amount( input, id );
+	if( $('div').is('#fn-purchases') && ( (max_val != curr_val && action == 'plus' ) || ( curr_val != 1 && action == 'minus' ) ) ) {
+        ajax_change_amount( input, id );
 	}
 }
 

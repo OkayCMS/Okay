@@ -14,9 +14,10 @@
 			{* @END Заголовок блока *}
 			<div class="row">
 				{foreach $featured_products as $product}
-					<div class="col-md-4 col-lg-3">
+					<div class="col-md-4 col-xl-3">
 						{include "tiny_products.tpl"}
 					</div>
+					{if $product@iteration % 3 == 0}<div class="col-xs-12 hidden-sm-down hidden-md-up"></div>{/if}
 				{/foreach}
 			</div>
 		</div>
@@ -35,9 +36,10 @@
 			{* @END Заголовок блока *}
 			<div class="row">
 				{foreach $new_products as $product}
-					<div class="col-md-4 col-lg-3">
+					<div class="col-md-4 col-xl-3">
 						{include "tiny_products.tpl"}
 					</div>
+					{if $product@iteration % 3 == 0}<div class="col-xs-12 hidden-sm-down hidden-xl-up"></div>{/if}
 				{/foreach}
 			</div>
 		</div>
@@ -56,9 +58,10 @@
 			{* @END Заголовок блока *}
 			<div class="row">
 				{foreach $discounted_products as $product}
-					<div class="col-md-4 col-lg-3">
+					<div class="col-md-4 col-xl-3">
 						{include "tiny_products.tpl"}
 					</div>
+					{if $product@iteration % 3 == 0}<div class="col-xs-12 hidden-sm-down hidden-md-up"></div>{/if}
 				{/foreach}
 			</div>
 		</div>

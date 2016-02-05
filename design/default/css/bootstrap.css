@@ -1896,8 +1896,9 @@ input[type="button"].btn-block {
   .card .btn-comparison {
     margin-right: 0.375rem; }
 
-.card .fn-variants {
-    display: none; }
+@media (min-width: 992px) {
+    .card .fn-variants {
+        display: none; } }
 
 .card-block {
   padding: 1.0625rem; }

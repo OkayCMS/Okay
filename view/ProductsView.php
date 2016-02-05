@@ -33,7 +33,7 @@ class ProductsView extends View {
         //определение текущего положения и выставленных параметров
         $uri = @parse_url($_SERVER["REQUEST_URI"]);
         preg_match("~$this->subdir(/?$this->lang_label)?/?(catalog|all-products)/?~",$uri['path'], $this->catalog_type);
-        $this->catalog_type = $this->catalog_type[2];
+        @$this->catalog_type = $this->catalog_type[2];
         //убираем модификатор каталога
         $uri = preg_replace("~$this->subdir(/?$this->lang_label)?/?(catalog|all-products)/?~",'',$uri['path']);
         $uri_array = explode('/',$uri);
@@ -47,7 +47,7 @@ class ProductsView extends View {
             if(!$k && $brand=$this->brands->get_brand((string)$v)) {
                 $_GET['brand'] = $brand->url;
             } else {
-                list($param_name, $param_values) = explode('-',$v);
+                @list($param_name, $param_values) = explode('-',$v);
                 switch($param_name) {
                     case 'brand': {
                         foreach(explode('_',$param_values) as $bv) {
@@ -358,7 +358,7 @@ class ProductsView extends View {
             }
             if(!empty($brand)) {
                 $options_filter['brand_id'] = $brand->id;
-            } elseif($filter['brand_id']) {
+            } elseif(isset($filter['brand_id'])) {
                 $options_filter['brand_id'] = $filter['brand_id'];
             }
             

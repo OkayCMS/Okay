@@ -11,20 +11,20 @@
 	{* Заголовок страницы *}
 	<div class="row">
 		{foreach $posts as $post}
-            <div class="col-md-12 p-y-1">
-                <div class="col-xs-12 col-md-1 m-b-1 m-b-0-md_down">
+            <div class="col-md-12 p-y-1 row">
+                <div class="col-xs-12 col-md-1 m-b-1 hidden-md-down">
                     <a class="blog-img" href="{$lang_link}blog/{$post->url}">
                         {* Дата создания поста *}
-                        <div class="blog-data hidden-md-down">{$post->date|date}</div>
+                        <div class="blog-data">{$post->date|date}</div>
                         {* @END Дата создания поста *}
                         {* Изображение поста *}
                         {if $post->image}
-                            <img class="hidden-md-down img-fluid" src="{$post->image|resize:162:77:false:$config->resized_blog_dir}" />
+                            <img class="img-fluid" src="{$post->image|resize:162:77:false:$config->resized_blog_dir}" />
                         {/if}
                         {* @END Изображение поста *}
                     </a>
                 </div>
-                <div class="col-xs-12 col-md-11 m-b-1">
+                <div class="col-xs-12 col-lg-11 m-b-1">
                     {* Название поста *}
                     <div class="h5 font-weight-bold">
                         <a class="link-black" href="{$lang_link}blog/{$post->url}" data-post="{$post->id}">{$post->name|escape}</a>

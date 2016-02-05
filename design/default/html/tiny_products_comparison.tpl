@@ -1,9 +1,9 @@
 {* Превью товара *}
-<div class="fn-product fn-resize card fixed border-b-1-primary">
+<div class="fn-product fn-resize card m-b-0 border-b-1-primary">
 	<div class="card-block fn-transfer">
 		{* Изображение товара *}
 		<a class="fn-zoom okaycms card-image m-b-1" href="{$cp->image->filename|resize:800:600:w}">
-			{if $product->image->filename}
+			{if $cp->image->filename}
                 <img class="fn-img" src="{$cp->image->filename|resize:219:172}" alt="{$cp->name|escape}"/>
                 {if $cp->special}
                     <img class="card-spec" src='files/special/{$cp->special}' alt='{$cp->sp_img}'/>

@@ -345,7 +345,7 @@
 				<div class="h5">
 					<span data-language="{$translate_id['index_contacts']}">{$lang->index_contacts}</span>
 				</div>
-				<div class="p-l-1" data-language="{$translate_id['index_contacts_body']}">{$lang->index_contacts_body}</div>
+				<div class="p-l-1 text-nowrap" data-language="{$translate_id['index_contacts_body']}">{$lang->index_contacts_body}</div>
 			</div>
 			{* @END Контакты *}
 			{* Соц. сети *}

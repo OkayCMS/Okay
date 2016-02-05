@@ -47,7 +47,12 @@ class Comparison extends Okay {
                     foreach ($this->features->get_features(array('id' => $features_ids)) as $f) {
                         $features[$f->id] = $f;
                         foreach ($products as $p) {
-                            $features[$f->id]->products[$p->id] = $options[$f->id][$p->id];
+                            if(isset($options[$f->id][$p->id])){
+                                $features[$f->id]->products[$p->id] = $options[$f->id][$p->id];
+                            }
+                            else{
+                                $features[$f->id]->products[$p->id] = null;
+                            }
                         }
                         $features[$f->id]->not_unique = (count(array_unique($features[$f->id]->products)) == 1) ? true : false;
                     }
@@ -64,7 +69,12 @@ class Comparison extends Okay {
                         $product->image = $product->images[0];
                     }
                     foreach($features as $id=>$f) {
-                        $product->features[$id] = $options[$id][$product->id];
+                        if(isset($options[$id][$product->id])){
+                            $product->features[$id] = $options[$id][$product->id];
+                        }
+                        else{
+                            $product->features[$id] = null;
+                        }
                     }
                 }
                 $comparison->products = $products;

@@ -48,7 +48,7 @@ class IndexView extends View {
         $this->design->assign('cart',		$this->cart->get_cart());
         
         // Избранное
-        $wished = (array)explode(',', $_COOKIE['wished_products']);
+        @$wished = (array)explode(',', $_COOKIE['wished_products']);
         $this->design->assign('wished_products', ($wished[0] > 0) ? $wished : array());
         
         // Сравнение

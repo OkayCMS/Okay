@@ -182,12 +182,10 @@ class ProductView extends View {
             $auto_meta_title = ($category->auto_meta_title ? $category->auto_meta_title : $product->meta_title);
             $auto_meta_keywords = ($category->auto_meta_keywords ? $category->auto_meta_keywords : $product->meta_keywords);
             $auto_meta_description = ($category->auto_meta_desc ? $category->auto_meta_desc : $product->meta_description);
-            //$auto_h1 = ($category->auto_meta_h1_title ? $category->auto_meta_h1_title : $product->name);
-            
+
             $auto_meta_title = strtr($auto_meta_title, $parts);
             $auto_meta_keywords = strtr($auto_meta_keywords, $parts);
             $auto_meta_description = strtr($auto_meta_description, $parts);
-            $auto_h1 = strtr($auto_h1, $parts);
             if (!empty($category->auto_body) && empty($product->body)) {
                 $product->body = strtr($category->auto_body, $parts);
                 $product->body = preg_replace('/\{\$[^\$]*\}/', '', $product->body);
@@ -195,12 +193,10 @@ class ProductView extends View {
             $auto_meta_title = preg_replace('/\{\$[^\$]*\}/', '', $auto_meta_title);
             $auto_meta_keywords = preg_replace('/\{\$[^\$]*\}/', '', $auto_meta_keywords);
             $auto_meta_description = preg_replace('/\{\$[^\$]*\}/', '', $auto_meta_description);
-            $auto_h1 = preg_replace('/\{\$[^\$]*\}/', '', $auto_h1);
-            
+
             $this->design->assign('meta_title', $auto_meta_title);
             $this->design->assign('meta_keywords', $auto_meta_keywords);
             $this->design->assign('meta_description', $auto_meta_description);
-            //$this->design->assign('h1_title', $auto_h1);
         } else {
             $this->design->assign('meta_title', $product->meta_title);
             $this->design->assign('meta_keywords', $product->meta_keywords);
