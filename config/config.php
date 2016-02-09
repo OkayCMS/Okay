@@ -5,13 +5,13 @@ license = y7cfgr9qvv idwptlsxfs qikmoyrnpt putxvrtpx1 vovyvpddnv w9uqox9hwk fzmn
 [database]
 
 ;Сервер базы данных
-db_server = "localhost:3308"
+db_server = "localhost"
 
 ;Пользователь базы данных
 db_user = "root"
 
 ;Пароль к базе
-db_password = "929859"
+db_password = ""
 
 ;Имя базы
 db_name = "okaycms-git"

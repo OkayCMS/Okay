@@ -22,7 +22,8 @@
 {$meta_title = 'Новый товар' scope=parent}
 {/if}
 
-
+{* Подключаем Tiny MCE *}
+{include file='tinymce_init.tpl'}
 {* On document load *}
 {literal}
 <script src="design/js/autocomplete/jquery.autocomplete-min.js"></script>
@@ -338,19 +339,6 @@
 	$('select[name="categories[]"]').change(function() { set_meta(); });
         $('textarea[name="annotation"]').change(function() { set_meta();  });
 
-        CKEDITOR.instances.annotation.on('change', function(){
-            var data = CKEDITOR.instances.annotation.getData();
-            if(data !='')
-                var description = data.replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
-            console.log(description);
-            if(!meta_description_touched) {
-                $('textarea[name="meta_description"]').val(generate_meta_description(description));
-            }
-        });
-
-        $("#show_translit").on('click',function(){
-           $(".grey_translit").slideToggle(500);
-        });
 });
 
 function set_meta()
@@ -359,6 +347,8 @@ function set_meta()
 		$('input[name="meta_title"]').val(generate_meta_title());
 	if(!meta_keywords_touched)
 		$('input[name="meta_keywords"]').val(generate_meta_keywords());
+    if(!meta_description_touched)
+        $('textarea[name="meta_description"]').val(generate_meta_description());
 	if(!$('#block_translit').is(':checked'))
 		$('input[name="url"]').val(generate_url());
 }
@@ -383,9 +373,15 @@ function generate_meta_keywords()
 	}); 
 	return result;
 }
-function generate_meta_description(description)
+function generate_meta_description()
 {
-    return description;
+    if(typeof(tinyMCE.get("annotation")) =='object')
+    {
+        description = tinyMCE.get("annotation").getContent().replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
+        return description;
+    }
+    else
+        return $('textarea[name=annotation]').val().replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
 }
 
 function generate_url()
@@ -813,11 +809,11 @@ $(function(){
 
     <div class="block layer">
         <h2>Краткое описание</h2>
-        <textarea name="annotation" id="annotation" class="ckeditor">{$product->annotation|escape}</textarea>
+        <textarea name="annotation" id="annotation" class="editor_small">{$product->annotation|escape}</textarea>
     </div>
     <div class="block">
         <h2>Полное описание</h2>
-        <textarea name="body" class="ckeditor">{$product->body|escape}</textarea>
+        <textarea name="body" class="editor_large">{$product->body|escape}</textarea>
     </div>
     <input class="button_green button_save" type="submit" name="" value="Сохранить"/>
 

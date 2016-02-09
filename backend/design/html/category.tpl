@@ -12,7 +12,8 @@
 {else}
 {$meta_title = 'Новая категория' scope=parent}
 {/if}
-
+{* Подключаем Tiny MCE *}
+{include file='tinymce_init.tpl'}
 {* On document load *}
 {literal}
 <script src="design/js/autocomplete/jquery.autocomplete-min.js"></script>
@@ -48,15 +49,6 @@
 	
 	$('input[name="name"]').keyup(function() { set_meta(); });
 
-        CKEDITOR.instances.description.on('change', function(){
-            var data = CKEDITOR.instances.description.getData();
-            if(data !='')
-                var description = data.replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
-            console.log(description);
-            if(!meta_description_touched) {
-                $('textarea[name="meta_description"]').val(generate_meta_description(description));
-            }
-        });
 });
 
 function set_meta()
@@ -65,6 +57,8 @@ function set_meta()
 		$('input[name="meta_title"]').val(generate_meta_title());
 	if(!meta_keywords_touched)
 		$('input[name="meta_keywords"]').val(generate_meta_keywords());
+    if(!meta_description_touched)
+        $('textarea[name="meta_description"]').val(generate_meta_description());
 	if(!$('#block_translit').is(':checked'))
 		$('input[name="url"]').val(generate_url());
 }
@@ -81,9 +75,15 @@ function generate_meta_keywords()
 	return name;
 }
 
-function generate_meta_description(description)
+function generate_meta_description()
 {
-    return description;
+    if(typeof(tinyMCE.get("description")) =='object')
+    {
+        description = tinyMCE.get("description").getContent().replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
+        return description;
+    }
+    else
+        return $('textarea[name=description]').val().replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
 }
 
 function generate_url()
@@ -335,18 +335,18 @@ function translit(str)
                 </div>
             </div>
         </h2>
-        <textarea name="auto_body" class="ckeditor">{$category->auto_body|escape}</textarea>
+        <textarea name="auto_body" class="editor_small">{$category->auto_body|escape}</textarea>
     </div>
     
     <div class="block layer">
 		<h2>Краткое описание</h2>
-		<textarea name="annotation" class="ckeditor">{$category->annotation|escape}</textarea>
+		<textarea name="annotation" class="editor_small">{$category->annotation|escape}</textarea>
 	</div>
     
 	<!-- Описагние категории -->
 	<div class="block layer">
 		<h2>Полное описание</h2>
-		<textarea name="description" class="ckeditor">{$category->description|escape}</textarea>
+		<textarea name="description" class="editor_large">{$category->description|escape}</textarea>
 	</div>
 	<!-- Описание категории (The End)-->
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />

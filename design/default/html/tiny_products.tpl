@@ -41,16 +41,19 @@
 	            {/foreach}
 	        </select>
 			{* @END Варианты товара *}
-			{* Нет на складе *}
-			<div class="fn-not_preorder form-group{if $product->variant->stock > 0 || $product->variant->stock == 0 && $settings->is_preorder} hidden-xs-up{/if}">
-				<button class="btn btn-danger-outline btn-block disabled h5" type="button" data-language="{$translate_id['tiny_products_out_of_stock']}">{$lang->tiny_products_out_of_stock}</button>
-			</div>
-			{* @END Нет на складе *}
-			{* Предзаказ *}
-			<div class="fn-is_preorder form-group{if $product->variant->stock > 0 || $product->variant->stock == 0 && !$settings->is_preorder} hidden-xs-up{/if}">
-				<button class="btn btn-warning-outline btn-block i-preorder" type="submit" data-language="{$translate_id['tiny_products_pre_order']}">{$lang->tiny_products_pre_order}</button>
-			</div>
-			{* @END Предзаказ *}
+            {if $product->variant->stock == 0 && !$settings->is_preorder}
+                {* Нет на складе *}
+                <div class="fn-not_preorder form-group">
+                    <button class="btn btn-danger-outline btn-block disabled h5" type="button" data-language="{$translate_id['tiny_products_out_of_stock']}">{$lang->tiny_products_out_of_stock}</button>
+                </div>
+                {* @END Нет на складе *}
+            {elseif $product->variant->stock == 0 && $settings->is_preorder}
+                {* Предзаказ *}
+                <div class="fn-is_preorder form-group">
+                    <button class="btn btn-warning-outline btn-block i-preorder" type="submit" data-language="{$translate_id['tiny_products_pre_order']}">{$lang->tiny_products_pre_order}</button>
+                </div>
+                {* @END Предзаказ *}
+            {/if}
 			<div class="input-group">
 				{* Сравнение *}
 				<div class="input-group-btn text-xs-right">

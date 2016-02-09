@@ -84,6 +84,37 @@
 	</div>
 {/if}
 {* @END Аяксовый фильт по цене *}
+{* Фильтр по брендам *}
+{if $category->brands}
+    {* Заголовок блока *}
+    <div class="h5 bg-info p-x-1 p-y-05">
+        <span data-language="{$translate_id['features_manufacturer']}">{$lang->features_manufacturer}</span>
+    </div>
+    {* @END Заголовок блока *}
+    <div class="m-b-2 p-x-05">
+        {* Сброс всех брендов *}
+        <div>
+            <label class="c-input c-checkbox">
+                <input onchange="window.location.href='{furl params=[brand=>null, page=>null]}'" type="checkbox"{if !$brand->id && !$smarty.get.b} checked{/if}/>
+                <span class="c-indicator"></span>
+                <span data-language="{$translate_id['features_all']}">{$lang->features_all}</span>
+            </label>
+        </div>
+        {* @END Сброс всех брендов *}
+        {* Список брендов *}
+        {foreach $category->brands as $b}
+            <div>
+                <label class="c-input c-checkbox" data-brand="{$b->id}">
+                    <input onchange="window.location.href='{furl params=[brand=>$b->url, page=>null]}'" type="checkbox"{if $brand->id == $b->id || $smarty.get.b && in_array($b->id,$smarty.get.b)} checked{/if}/>
+                    <span class="c-indicator"></span>
+                    {$b->name|escape}
+                </label>
+            </div>
+        {/foreach}
+        {* @END Список брендов *}
+    </div>
+{/if}
+{* @END Фильтр по брендам *}
 {* Фильтр по свойствам *}
 {if $features}
     {foreach $features as $key=>$f}
@@ -115,37 +146,6 @@
     {/foreach}
 {/if}
 {* @END Фильтр по свойствам *}
-{* Фильтр по брендам *}
-{if $category->brands}
-	{* Заголовок блока *}
-	<div class="h5 bg-info p-x-1 p-y-05">
-		<span data-language="{$translate_id['features_manufacturer']}">{$lang->features_manufacturer}</span>
-	</div>
-	{* @END Заголовок блока *}
-	<div class="m-b-2 p-x-05">
-		{* Сброс всех брендов *}
-		<div>
-			<label class="c-input c-checkbox">
-				<input onchange="window.location.href='{furl params=[brand=>null, page=>null]}'" type="checkbox"{if !$brand->id && !$smarty.get.b} checked{/if}/>
-				<span class="c-indicator"></span>
-				<span data-language="{$translate_id['features_all']}">{$lang->features_all}</span>
-			</label>
-		</div>
-		{* @END Сброс всех брендов *}
-		{* Список брендов *}
-		{foreach $category->brands as $b}
-			<div>
-				<label class="c-input c-checkbox" data-brand="{$b->id}">
-					<input onchange="window.location.href='{furl params=[brand=>$b->url, page=>null]}'" type="checkbox"{if $brand->id == $b->id || $smarty.get.b && in_array($b->id,$smarty.get.b)} checked{/if}/>
-					<span class="c-indicator"></span>
-					{$b->name|escape}
-				</label>
-			</div>
-		{/foreach}
-		{* @END Список брендов *}
-	</div>
-{/if}
-{* @END Фильтр по брендам *}
 {* Просмотренные товары *}
 {get_browsed_products var=browsed_products limit=20}
 {if $browsed_products}

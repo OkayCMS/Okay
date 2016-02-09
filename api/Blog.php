@@ -45,6 +45,8 @@ class Blog extends Okay {
     	$visible_filter = '';
     	$keyword_filter = '';
     	$posts = array();
+        $lang_id  = $this->languages->lang_id();
+        $px = ($lang_id ? 'l' : 'b');
         
         if(isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));
@@ -60,11 +62,10 @@ class Blog extends Okay {
         if(isset($filter['visible'])) {
             $visible_filter = $this->db->placehold('AND b.visible = ?', intval($filter['visible']));
         }
-        
         if(isset($filter['keyword'])) {
     		$keywords = explode(' ', $filter['keyword']);
             foreach($keywords as $keyword) {
-                $keyword_filter .= $this->db->placehold('AND (b.name LIKE "%'.$this->db->escape(trim($keyword)).'%" OR b.meta_keywords LIKE "%'.$this->db->escape(trim($keyword)).'%") ');
+                $keyword_filter .= $this->db->placehold('AND ('.$px.'.name LIKE "%'.$this->db->escape(trim($keyword)).'%" OR '.$px.'.meta_keywords LIKE "%'.$this->db->escape(trim($keyword)).'%") ');
             }
     	}
         

@@ -52,6 +52,9 @@ $(document).on('change', '.fn-variant.okaycms', function() {
 	} else if ( okay.amount > camoun ) {
 		amount.val( okay.amount );
 	}
+    else if(isNaN(camoun)){
+        amount.val( okay.amount );
+    }
 	/* Цены */
 	if( selected.data( 'cprice' ) ) {
 		cprice.html( selected.data( 'cprice' ) );
@@ -77,15 +80,12 @@ $(document).on('change', '.fn-variant.okaycms', function() {
 	}
 	/* Предзаказ */
 	if (stock == 0 && okay.is_preorder) {
-		console.log(1);
 		parent.find('.fn-is_preorder').removeClass('hidden-xs-up');
 		parent.find('.fn-is_stock, .fn-not_preorder').addClass('hidden-xs-up');
 	} else if (stock == 0 && !okay.is_preorder) {
-		console.log(2);
 		parent.find('.fn-not_preorder').removeClass('hidden-xs-up');
 		parent.find('.fn-is_stock, .fn-is_preorder').addClass('hidden-xs-up');
 	} else {
-		console.log(3);
 		parent.find('.fn-is_stock').removeClass('hidden-xs-up');
 		parent.find('.fn-is_preorder, .fn-not_preorder').addClass('hidden-xs-up');
 	}
@@ -449,6 +449,10 @@ function amount_change(input, action) {
 		curr_val = parseFloat( input.val() ),
 		step = 1,
 		id = input.data('id');
+        if(isNaN(curr_val)){
+            curr_val = okay.amount;
+        }
+
 	/* Если включен предзаказ макс. кол-во товаров ставим 50 */
 	if ( input.parent().hasClass('fn-is_preorder')) {
 		max_val = 50;

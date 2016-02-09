@@ -22,7 +22,7 @@
 						{/if}
 						{* @END Промо изображение *}
 						{* Большое фото товара *}
-						<img class="fn-img" src="{$product->image->filename|resize:300:300}" alt="{$product->product->name|escape}"/>
+						<img class="fn-img" src="{$product->image->filename|resize:300:300}" alt="{$product->name|escape}"/>
 						{* @END Большое фото товара *}
 					</a>
 					{* Дополнительные фото продукта *}
@@ -49,7 +49,7 @@
                         {/if}
                         {* @END Промо изображение *}
                         {* Большое фото товара *}
-                        <img class="fn-img" src="design/{$settings->theme}/images/no_image.png" height="300" alt="{$product->product->name|escape}"/>
+                        <img class="fn-img" src="design/{$settings->theme}/images/no_image.png" height="300" alt="{$product->name|escape}"/>
                         {* @END Большое фото товара *}
                     </a>
                 </div>

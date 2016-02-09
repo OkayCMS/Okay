@@ -14,7 +14,8 @@
 {/if}
 
 
-
+{* Подключаем Tiny MCE *}
+{include file='tinymce_init.tpl'}
 {* On document load *}
 {literal}
 <script>
@@ -45,15 +46,6 @@
 	
 	$('input[name="name"]').keyup(function() { set_meta(); });
 
-        CKEDITOR.instances.annotation.on('change', function(){
-            var data = CKEDITOR.instances.annotation.getData();
-            if(data !='')
-                var description = data.replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
-            console.log(description);
-            if(!meta_description_touched) {
-                $('textarea[name="meta_description"]').val(generate_meta_description(description));
-            }
-        });
 	
 	function set_meta()
 	{
@@ -61,6 +53,8 @@
 			$('input[name="meta_title"]').val(generate_meta_title());
 		if(!meta_keywords_touched)
 			$('input[name="meta_keywords"]').val(generate_meta_keywords());
+        if(!meta_description_touched)
+            $('textarea[name="meta_description"]').val(generate_meta_description());
 		if(!$('#block_translit').is(':checked'))
 			$('input[name="url"]').val(generate_url());
 	}
@@ -77,10 +71,11 @@
 		return name;
 	}
 
-    function generate_meta_description(description)
-    {
-        return description;
-    }
+        function generate_meta_description()
+        {
+            name = $('input[name="name"]').val();
+            return name;
+        }
 		
 	function generate_url()
 	{
@@ -239,13 +234,13 @@
 	
     <div class="block layer">
 		<h2>Краткое описание</h2>
-		<textarea name="annotation" class="ckeditor">{$brand->annotation|escape}</textarea>
+		<textarea name="annotation" class="editor_small">{$brand->annotation|escape}</textarea>
 	</div>
     
 	<!-- Описагние бренда -->
 	<div class="block layer">
 		<h2>Описание</h2>
-		<textarea name="description" class="ckeditor">{$brand->description|escape}</textarea>
+		<textarea name="description" class="editor_large">{$brand->description|escape}</textarea>
 	</div>
 	<!-- Описание бренда (The End)-->
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />

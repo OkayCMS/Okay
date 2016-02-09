@@ -59,6 +59,9 @@
 				<div class="purchase-name">
 					<a href="{$lang_link}products/{$purchase->product->url}">{$purchase->product->name|escape}</a>
 					{$purchase->variant->name|escape}
+                    {if $order->paid && $purchase->variant->attachment}
+                        <a class="download_attachment" href="{$lang_link}order/{$order->url}/{$purchase->variant->attachment}">скачать файл</a>
+                    {/if}
 				</div>
 				{* Название *}
 				{* Цена за ед. *}
@@ -152,6 +155,27 @@
 			</div>
 		</div>
 	{/if}
+    {if $order->separate_delivery}
+        <div class="purchase-list p-t-1-md_down border-t-1-info_md-down">
+            <div class="purchase-row purchase-main">
+                <div class="purchase-img hidden-md-down"></div>
+                <div class="purchase-name hidden-md-down"></div>
+                <div class="purchase-price hidden-md-down"></div>
+                <div class="purchase-column">
+                    <div class="purchase-list">
+                        <div class="purchase-row">
+                            <div class="purchase-amount text-xs-center">
+                                <span data-language="{$translate_id['order_delivery']}">{$lang->order_delivery}</span>:
+                            </div>
+                            {* Стоимость доставки *}
+                            <div class="purchase-full-price">{$order->delivery_price|convert} {$currency->sign}</div>
+                            {* @END Стоимость доставки *}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {/if}
 	<div class="purchase-list p-t-1-md_down border-t-1-info_md-down m-b-1">
 		<div class="purchase-row purchase-main">
 			<div class="purchase-img hidden-md-down"></div>

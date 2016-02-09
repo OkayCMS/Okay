@@ -43,7 +43,7 @@
 	        </select>
 			{* @END Варианты товара *}
 			{* Избранное *}
-			<a class="btn-comparison-remove fn-wishlist okaycms selected" href="#" data-id="{$cp->id}" title="{$lang->tiny_products_remove_favorite}">&times;</a>
+			<a class="btn-comparison-remove fn-wishlist okaycms selected" href="#" data-id="{$product->id}" title="{$lang->tiny_products_remove_favorite}">&times;</a>
 			{* @END Избранное *}
 			<div class="input-group">
 				{* Сравнение *}
@@ -58,16 +58,19 @@
 				{* Кнопка добавления в корзину *}
 				<button class="fn-is_stock btn btn-warning btn-block i-add-cart{if $product->variant->stock < 1} hidden-xs-up{/if}" type="submit">{$lang->tiny_products_add_cart}</button>
 				{* @END Кнопка добавления в корзину *}
+                {if $product->variant->stock == 0 && !$settings->is_preorder}
 				{* Нет на складе *}
-				<span class="fn-not_preorder{if $product->variant->stock > 0 || $product->variant->stock == 0 && $settings->is_preorder} hidden-xs-up{/if}">
+				<span class="fn-not_preorder">
 					<button class="btn btn-danger-outline btn-block disabled h5 m-y-0" type="button">{$lang->tiny_products_out_of_stock}</button>
 				</span>
 				{* @END Нет на складе *}
-				{* Предзаказ *}
-				<span class="fn-is_preorder{if $product->variant->stock > 0 || $product->variant->stock == 0 && !$settings->is_preorder} hidden-xs-up{/if}">
-					<button class="btn btn-warning-outline btn-block i-preorder" type="submit">{$lang->tiny_products_pre_order}</button>
-				</span>
-				{* @END Предзаказ *}
+                {elseif $product->variant->stock == 0 && $settings->is_preorder}
+                {* Предзаказ *}
+                <span class="fn-is_preorder">
+                    <button class="btn btn-warning-outline btn-block i-preorder" type="submit">{$lang->tiny_products_pre_order}</button>
+                </span>
+                {* @END Предзаказ *}
+                {/if}
 			</div>
 		</form>
     </div>

@@ -101,8 +101,10 @@ class IndexView extends View {
             $wrapper = 'index.tpl';
         }
 
-        if($this->settings->site_work == "off"){
-            return $this->design->fetch('tech.tpl');
+        if(empty($_SESSION['admin'])) {
+            if ($this->settings->site_work == "off") {
+                return $this->design->fetch('tech.tpl');
+            }
         }
         
         if(!empty($wrapper)) {

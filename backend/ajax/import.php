@@ -40,7 +40,7 @@ class ImportAjax extends Okay {
         if(!$this->managers->access('import')) {
             return false;
         }
-        session_abort();
+        session_write_close();
         unset($_SESSION['lang_id']);
         unset($_SESSION['admin_lang_id']);
         

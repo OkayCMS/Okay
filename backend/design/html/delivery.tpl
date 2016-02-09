@@ -14,7 +14,8 @@
 {else}
 {$meta_title = 'Новый способ доставки' scope=parent}
 {/if}
-
+{* Подключаем Tiny MCE *}
+{include file='tinymce_init.tpl'}
 {if $languages}{include file='include_languages.tpl'}{/if}
 
 {if $message_success}
@@ -85,7 +86,7 @@
 	<!-- Описагние товара -->
 	<div class="block layer">
 		<h2>Описание</h2>
-		<textarea name="description" class="ckeditor">{$delivery->description|escape}</textarea>
+		<textarea name="description" class="editor_small">{$delivery->description|escape}</textarea>
 	</div>
 	<!-- Описание товара (The End)-->
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />

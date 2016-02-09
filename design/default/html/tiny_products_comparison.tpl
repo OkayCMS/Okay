@@ -57,16 +57,19 @@
 				{* Кнопка добавления в корзину *}
 				<button class="fn-is_stock btn btn-warning btn-block i-add-cart{if $cp->variant->stock < 1} hidden-xs-up{/if}" type="submit">{$lang->tiny_products_add_cart}</button>
 				{* @END Кнопка добавления в корзину *}
+                {if $cp->variant->stock == 0 && !$settings->is_preorder}
 				{* Нет на складе *}
-				<span class="fn-not_preorder{if $cp->variant->stock > 0 || $cp->variant->stock == 0 && $settings->is_preorder} hidden-xs-up{/if}">
+				<span class="fn-not_preorder">
 					<button class="btn btn-danger-outline btn-block disabled h5 m-y-0" type="button">{$lang->tiny_products_out_of_stock}</button>
 				</span>
 				{* @END Нет на складе *}
-				{* Предзаказ *}
-				<span class="fn-is_preorder{if $cp->variant->stock > 0 || $cp->variant->stock == 0 && !$settings->is_preorder} hidden-xs-up{/if}">
-					<button class="btn btn-warning-outline btn-block i-preorder" type="submit">{$lang->tiny_products_pre_order}</button>
-				</span>
-				{* @END Предзаказ *}
+                {elseif $cp->variant->stock == 0 && $settings->is_preorder}
+                {* Предзаказ *}
+                <span class="fn-is_preorder">
+                    <button class="btn btn-warning-outline btn-block i-preorder" type="submit">{$lang->tiny_products_pre_order}</button>
+                </span>
+                {* @END Предзаказ *}
+                {/if}
 			</div>
 		</form>
     </div>

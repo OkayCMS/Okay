@@ -12,7 +12,8 @@
 {$meta_title = 'Новая страница' scope=parent}
 {/if}
 
-
+{* Подключаем Tiny MCE *}
+{include file='tinymce_init.tpl'}
 {* On document load *}
 {literal}
 <script>
@@ -39,18 +40,6 @@
 	$('textarea[name="meta_description"]').change(function() { meta_description_touched = true; });
 	
 	$('input[name="header"]').keyup(function() { set_meta(); });
-
-    CKEDITOR.instances.body.on('change', function(){
-        var data = CKEDITOR.instances.body.getData();
-        if(data !='')
-            var description = data.replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
-        if(!meta_description_touched)
-        {
-            descr = $('textarea[name="meta_description"]');
-            descr.val(generate_meta_description(description));
-            descr.scrollTop(descr.outerHeight());
-        }
-    });
 });
 
 function set_meta()
@@ -61,6 +50,12 @@ function set_meta()
 		$('input[name="meta_title"]').val(generate_meta_title());
 	if(!meta_keywords_touched)
 		$('input[name="meta_keywords"]').val(generate_meta_keywords());
+    if(!meta_description_touched)
+    {
+        descr = $('textarea[name="meta_description"]');
+        descr.val(generate_meta_description());
+        descr.scrollTop(descr.outerHeight());
+    }
 	if(!$('#block_translit').is(':checked'))
 		$('input[name="url"]').val(generate_url());
 }
@@ -83,9 +78,15 @@ function generate_meta_keywords()
 	return name;
 }
 
-function generate_meta_description(description)
+function generate_meta_description()
 {
-    return description;
+    if(typeof(tinyMCE.get("body")) =='object')
+    {
+        description = tinyMCE.get("body").getContent().replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
+        return description;
+    }
+    else
+        return $('textarea[name=body]').val().replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
 }
 
 function generate_url()
@@ -239,7 +240,7 @@ function translit(str)
 	<!-- Описагние товара -->
 	<div class="block layer">
 		<h2>Текст страницы</h2>
-		<textarea name="body"  class="ckeditor">{$page->body|escape}</textarea>
+		<textarea name="body"  class="editor_large">{$page->body|escape}</textarea>
 	</div>
 	<!-- Описание товара (The End)-->
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />

@@ -8,7 +8,8 @@
 {$meta_title = 'Новая запись в блоге' scope=parent}
 {/if}
 
-
+{* Подключаем Tiny MCE *}
+{include file='tinymce_init.tpl'}
 {* On document load *}
 {literal}
 <script src="design/js/jquery/datepicker/jquery.ui.datepicker-ru.js"></script>
@@ -47,19 +48,6 @@
 	$('select[name="brand_id"]').change(function() { set_meta(); });
 	$('select[name="categories[]"]').change(function() { set_meta(); });
 
-        CKEDITOR.instances.annotation.on('change', function(){
-            var data = CKEDITOR.instances.annotation.getData();
-            if(data !='')
-                var description = data.replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
-            console.log(description);
-            if(!meta_description_touched)
-            {
-                descr = $('textarea[name="meta_description"]');
-                descr.val(generate_meta_description(description));
-                descr.scrollTop(descr.outerHeight());
-            }
-        });
-	
 });
 
 function set_meta()
@@ -68,6 +56,12 @@ function set_meta()
 		$('input[name="meta_title"]').val(generate_meta_title());
 	if(!meta_keywords_touched)
 		$('input[name="meta_keywords"]').val(generate_meta_keywords());
+    if(!meta_description_touched)
+    {
+        descr = $('textarea[name="meta_description"]');
+        descr.val(generate_meta_description());
+        descr.scrollTop(descr.outerHeight());
+    }
 	if(!$('#block_translit').is(':checked'))
 		$('input[name="url"]').val(generate_url());
 }
@@ -84,9 +78,15 @@ function generate_meta_keywords()
 	return name;
 }
 
-function generate_meta_description(description)
+function generate_meta_description()
 {
-    return description;
+    if(typeof(tinyMCE.get("annotation")) =='object')
+    {
+        description = tinyMCE.get("annotation").getContent().replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
+        return description;
+    }
+    else
+        return $('textarea[name=annotation]').val().replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
 }
 
 function generate_url()
@@ -218,7 +218,7 @@ function translit(str)
                                 <span>В скобках указывается количество символов/слов в строке</span>
                             </div>
                         </div>
-                    </label><textarea name="meta_description" />{$post->meta_description|escape}</textarea></li>
+                    </label><textarea name="meta_description">{$post->meta_description|escape}</textarea></li>
 			</ul>
 		</div>
 		<!-- Параметры страницы (The End)-->
@@ -250,12 +250,12 @@ function translit(str)
 	<!-- Описагние товара -->
 	<div class="block layer">
 		<h2>Краткое описание</h2>
-		<textarea name="annotation" class='ckeditor'>{$post->annotation|escape}</textarea>
+		<textarea name="annotation" class='editor_large'>{$post->annotation|escape}</textarea>
 	</div>
 		
 	<div class="block">
 		<h2>Полное  описание</h2>
-		<textarea name="body"  class='ckeditor'>{$post->text|escape}</textarea>
+		<textarea name="body"  class='editor_large'>{$post->text|escape}</textarea>
 	</div>
 	<!-- Описание товара (The End)-->
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />

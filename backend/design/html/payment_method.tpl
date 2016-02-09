@@ -15,7 +15,8 @@
 {$meta_title = 'Новый способ оплаты' scope=parent}
 {/if}
 
-
+{* Подключаем Tiny MCE *}
+{include file='tinymce_init.tpl'}
 {* On document load *}
 {literal}
 
@@ -144,7 +145,7 @@ $(function() {
 	<!-- Описагние товара -->
 	<div class="block layer">
 		<h2>Описание</h2>
-		<textarea name="description" class="ckeditor">{$payment_method->description|escape}</textarea>
+		<textarea name="description" class="editor_small">{$payment_method->description|escape}</textarea>
 	</div>
 	<!-- Описание товара (The End)-->
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />
