@@ -260,7 +260,7 @@ $(function() {
 	});
 
     $("#from_date, #to_date").datepicker({
-        dateFormat: 'yy-mm-dd'
+        dateFormat: 'dd-mm-yy'
     });
 
     $('.show_purchases').on('click',function(){

@@ -87,16 +87,19 @@
 						{* @END Варианты товара *}
 					</div>
 					<div class="col-lg-6">
-						{* Нет на складе *}
-						<div class="fn-not_preorder form-group{if $product->variant->stock > 0 || $product->variant->stock == 0 && $settings->is_preorder} hidden-xs-up{/if}">
-							<button class="btn btn-danger-outline btn-block disabled h5" type="button" data-language="{$translate_id['product_out_of_stock']}">{$lang->product_out_of_stock}</button>
-						</div>
-						{* @END Нет на складе *}
-						{* Предзаказ *}
-						<div class="fn-is_preorder form-group{if $product->variant->stock > 0 || $product->variant->stock == 0 && !$settings->is_preorder} hidden-xs-up{/if}">
-							<button class="btn btn-warning-outline btn-block i-preorder" type="submit" data-language="{$translate_id['product_pre_order']}">{$lang->product_pre_order}</button>
-						</div>
-						{* @END Предзаказ *}
+						{if !$settings->is_preorder}
+							{* Нет на складе *}
+							<div class="fn-not_preorder form-group{if $product->variant->stock > 0} hidden-xs-up{/if}">
+								<button class="btn btn-danger-outline btn-block disabled h5" type="button" data-language="{$translate_id['product_out_of_stock']}">{$lang->product_out_of_stock}</button>
+							</div>
+							{* @END Нет на складе *}
+						{else}
+							{* Предзаказ *}
+							<div class="fn-is_preorder form-group{if $product->variant->stock > 0} hidden-xs-up{/if}">
+								<button class="btn btn-warning-outline btn-block i-preorder" type="submit" data-language="{$translate_id['product_pre_order']}">{$lang->product_pre_order}</button>
+							</div>
+							{* @END Предзаказ *}
+						{/if}
 						<div class="fn-product-amount fn-is_stock okaycms text-xs-center text-md-left{if $product->variant->stock < 1} hidden-xs-up{/if}">
 							{* Кол-во товаров *}
 							<span class="minus">&minus;</span>
@@ -104,7 +107,7 @@
 							<span class="plus">&plus;</span>
 							{* @END Кол-во товаров *}
 							{* Кнопка добавления в корзину *}
-							<button class="btn btn-warning i-add-cart{if $product->variant->stock < 1} hidden-xs-up{/if}" type="submit" data-language="{$translate_id['product_add_cart']}">{$lang->product_add_cart}</button>
+							<button class="fn-is_stock btn btn-warning i-add-cart{if $product->variant->stock < 1} hidden-xs-up{/if}" type="submit" data-language="{$translate_id['product_add_cart']}">{$lang->product_add_cart}</button>
 							{* @END Кнопка добавления в корзину *}
 						</div>
 						{* Сравнение *}
@@ -360,11 +363,11 @@
 			<span data-language="{$translate_id['product_recommended_products']}">{$lang->product_recommended_products}</span>
 		</div>
 		<div class="row">
-			{foreach $related_products as $product}
-				<div class="col-md-4 col-xl-3{if $product@iteration == 4} hidden-lg{/if}">
-					{include "tiny_products.tpl"}
+			{foreach $related_products as $p}
+				<div class="col-md-4 col-xl-3{if $p@iteration == 4} hidden-lg{/if}">
+					{include "tiny_products.tpl" product = $p}
 				</div>
-				{if $product@iteration % 3 == 0}<div class="col-xs-12 hidden-sm-down hidden-md-up"></div>{/if}
+				{if $p@iteration % 3 == 0}<div class="col-xs-12 hidden-sm-down hidden-md-up"></div>{/if}
 			{/foreach}
 		</div>
 	</div>

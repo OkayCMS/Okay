@@ -156,13 +156,15 @@
         <h4>Категории</h4>
         {function name=categories_tree}
             {if $categories}
-                <ul {if $level > 1}class="sub_menu"{/if}>
+                <ul class="cats_right{if $level > 1} sub_menu{/if}" >
                     {if $categories[0]->parent_id == 0}
-                        <li {if !$category->id}class="selected"{/if}><a href="{url category=null brand=null}">Все категории</a></li>
+                        <li {if !$category->id}class="selected"{/if}>
+                            <a href="{url category=null brand=null}">Все категории</a>
+                        </li>
                     {/if}
                     {foreach $categories as $c}
-                        <li category_id="{$c->id}" {if $category->id == $c->id}class="selected"{else}class="droppable category"{/if}>
-                            <a href='{url brand=null supplier=null category={$c->id}}'>{$c->name}</a>
+                        <li {if $category->id == $c->id}class="selected"{/if}>
+                            <a href="{url brand=null supplier=null category={$c->id}}">{$c->name}</a>
                             {if $c->subcategories}<span class="slide_menu"></span>{/if}
                         </li>
                         {categories_tree categories=$c->subcategories level=$level+1}
@@ -185,7 +187,6 @@
         {/if}
     </div>
     <!-- Меню  (The End) -->
-</div>
 <script>
     $(function(){
         $('.slide_menu').on('click',function(){

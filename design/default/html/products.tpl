@@ -33,7 +33,7 @@
 					<span data-page="{$page->id}">{$page->name|escape}</span>
 				</h1>
 			{else}
-				<h1><span data-category="{$category->id}">{$category->name|escape}</span> {$brand->name|escape} {$filter_meta->h1|escape}</h1>
+				<h1><span data-category="{$category->id}">{if $category->name_h1|escape}{$category->name_h1|escape}{else}{$category->name|escape}{/if}</span> {$brand->name|escape} {$filter_meta->h1|escape}</h1>
 			{/if}
 			{* @END Заголовок страницы *}
 			{if $current_page_num == 1}

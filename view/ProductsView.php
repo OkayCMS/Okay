@@ -492,7 +492,11 @@ class ProductsView extends View {
         } elseif(isset($keyword)) {
             $this->design->assign('meta_title', $keyword);
         }
-        
+
+        $rel_prev_next = $this->design->fetch('products_rel_prev_next.tpl');
+        $this->design->assign('rel_prev_next', $rel_prev_next);
+        $this->design->assign('sort_canonical', $this->filter_chpu_url(array('sort'=>null)));
+
         $this->body = $this->design->fetch('products.tpl');
         return $this->body;
     }

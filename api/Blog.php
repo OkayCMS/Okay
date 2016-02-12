@@ -97,7 +97,9 @@ class Blog extends Okay {
     	$post_id_filter = '';
     	$visible_filter = '';
     	$keyword_filter = '';
-        
+        $lang_id  = $this->languages->lang_id();
+        $px = ($lang_id ? 'l' : 'b');
+
         if(!empty($filter['id'])) {
             $post_id_filter = $this->db->placehold('AND b.id in(?@)', (array)$filter['id']);
         }
@@ -109,12 +111,13 @@ class Blog extends Okay {
         if(isset($filter['keyword'])) {
     		$keywords = explode(' ', $filter['keyword']);
             foreach($keywords as $keyword) {
-                $keyword_filter .= $this->db->placehold('AND (b.name LIKE "%'.$this->db->escape(trim($keyword)).'%" OR b.meta_keywords LIKE "%'.$this->db->escape(trim($keyword)).'%") ');
+                $keyword_filter .= $this->db->placehold('AND ('.$px.'.name LIKE "%'.$this->db->escape(trim($keyword)).'%" OR '.$px.'.meta_keywords LIKE "%'.$this->db->escape(trim($keyword)).'%") ');
             }
     	}
-        
+        $lang_sql = $this->languages->get_query(array('object'=>'blog'));
     	$query = "SELECT COUNT(distinct b.id) as count
-            FROM __blog b 
+            FROM __blog b
+            $lang_sql->join
             WHERE 1 
                 $post_id_filter 
                 $visible_filter 

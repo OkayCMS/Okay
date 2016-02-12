@@ -2584,8 +2584,12 @@ button.list-group-item-danger {
         margin-left: 2.8125rem; } }
     @media (max-width: 991px) {
       .sort a {
-        float: right;
-        clear: right; } }
+          margin-left: 2.8125rem;} }
+    @media (max-width: 480px) {
+        .sort a {
+            float: right;
+            clear: right;
+            } }
 
 .product-images {
   height: 4.625rem; }

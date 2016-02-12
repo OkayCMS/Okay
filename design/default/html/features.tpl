@@ -154,7 +154,11 @@
 		{foreach $browsed_products as $browsed_product}
 			<div class="browsed-item">
 				<a href="products/{$browsed_product->url}">
-					<img src="{$browsed_product->image->filename|resize:50:50}" alt="{$browsed_product->name|escape}" title="{$browsed_product->name|escape}">
+					{if $browsed_product->image->filename}
+						<img src="{$browsed_product->image->filename|resize:50:50}" alt="{$browsed_product->name|escape}" title="{$browsed_product->name|escape}">
+					{else}
+						<img width="50" height="50" class="fn-img" src="design/{$settings->theme}/images/no_image.png" alt="{$product->name|escape}"/>
+					{/if}
 				</a>
 			</div>
 		{/foreach}

@@ -25,7 +25,7 @@
 						{* @END Заголовок формы *}
 						{* Вывод ошибок формы *}
 						{if $error}
-							<div class="p-x-1 p-y-05 bg-danger text-white m-b-1">
+							<div class="p-x-1 p-y-05 bg-danger text-red m-b-1">
 								{if $error == 'empty_name'}
 									<span data-language="{$translate_id['form_enter_name']}">{$lang->form_enter_name}</span>
 								{/if}

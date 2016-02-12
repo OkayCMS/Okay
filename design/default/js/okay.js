@@ -7,10 +7,12 @@ $(document).on('submit', '.fn-variants.okaycms', function(e) {
 	var variant,
 		amount;
 	/* Вариант */
-	if( $( this ).find( 'input[name=variant]' ).size() > 0 ) {
-		variant = $( this ).find( 'input[name=variant]' ).val();
-	} else if( $( this ).find( 'select[name=variant]' ).size() > 0 ) {
-		variant = $( this ).find( 'select' ).val();
+	if($(this).find('input[name=variant]:checked').size() > 0 ) {
+		variant = $(this).find('input[name=variant]:checked').val();
+	} else if($(this ).find('input[name=variant]').size() > 0 ) {
+		variant = $(this).find('input[name=variant]').val();
+	} else if($(this).find('select[name=variant]').size() > 0 ) {
+		variant = $(this).find('select[name=variant]').val();
 	}
 	/* Кол-во */
 	if($(this).find('input[name=amount]').size()>0) {
@@ -537,8 +539,7 @@ function change_payment_method($id) {
 }
 
 /* Аяксовое удаление товаров в корзине */
-function ajax_remove(variant_id, e) {
-	e.preventDefault();
+function ajax_remove(variant_id) {
 	var coupon_code = $('input[name="coupon_code"]').val(),
 		delivery_id = $('input[name="delivery_id"]:checked').val(),
 		payment_id = $('input[name="payment_method_id"]:checked').val();

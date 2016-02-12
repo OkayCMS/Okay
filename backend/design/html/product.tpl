@@ -339,6 +339,9 @@
 	$('select[name="categories[]"]').change(function() { set_meta(); });
         $('textarea[name="annotation"]').change(function() { set_meta();  });
 
+	$("#show_translit").on('click',function(){
+		$(".grey_translit").slideToggle(500);
+	});
 });
 
 function set_meta()

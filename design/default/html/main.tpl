@@ -121,7 +121,6 @@
                                         {if $post->annotation}
                                             <div class="blog-annotation">
                                                 {$post->annotation}
-                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam assumenda beatae, corporis cum est et labore maxime modi molestiae nam necessitatibus perferendis perspiciatis quas quo quos repudiandae vero voluptatum. Dicta esse explicabo fugit, ipsa maxime perferendis quasi quidem voluptas voluptates?
                                             </div>
                                         {/if}
                                         {* @END Краткое описание поста *}

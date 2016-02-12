@@ -111,12 +111,12 @@ class Orders extends Okay {
 
         if(!empty($filter['from_date']) || !empty($filter['to_date'])){
                 if(!empty($filter['from_date'])){
-                    $from = $filter['from_date'];
+                    $from = date('Y-m-d',strtotime($filter['from_date']));
                 }else{
                     $from = '1970-01-01'; /*если стартовой даты нет, берем время с эпохи UNIX*/
                 }
                 if(!empty($filter['to_date'])){
-                    $to = $filter['to_date'];
+                    $to = date('Y-m-d',strtotime($filter['to_date']));
                 }else{
                     $to = date('Y-m-d'); /*если конечной даты нет, берем за дату "сегодня"*/
                 }

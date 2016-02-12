@@ -50,15 +50,15 @@
 					{$image = $purchase->product->images|first}
 					{if $image}
 						<a href="{$lang_link}products/{$purchase->product->url}">
-							<img src="{$image->filename|resize:50:50}" alt="{$product->name|escape}">
+							<img src="{$image->filename|resize:50:50}" alt="{$purchase->product_name|escape}">
 						</a>
 					{/if}
 				</div>
 				{* @END Изображение *}
 				{* Название *}
 				<div class="purchase-name">
-					<a href="{$lang_link}products/{$purchase->product->url}">{$purchase->product->name|escape}</a>
-					{$purchase->variant->name|escape}
+					<a href="{$lang_link}products/{$purchase->product->url}">{$purchase->product_name|escape}</a>
+					{$purchase->variant_name|escape}
                     {if $order->paid && $purchase->variant->attachment}
                         <a class="download_attachment" href="{$lang_link}order/{$order->url}/{$purchase->variant->attachment}">скачать файл</a>
                     {/if}
@@ -76,14 +76,14 @@
 							<div class="purchase-amount">
 								<div class="fn-product-amount fn-is_stock okaycms text-xs-center">
 									{* Кол-во товаров *}
-									<input disabled class="form-control" type="text" data-id="{$purchase->variant->id}" name="amounts[{$purchase->variant->id}]" value="1" data-max="{$purchase->variant->stock}">
+									<input disabled class="form-control" type="text" data-id="{$purchase->variant_id}" name="amounts[{$purchase->variant_id}]" value="{$purchase->amount}">
 									{* @END Кол-во товаров *}
 								</div>
 							</div>
 							{* @END Количество *}
 							{* Общая цена *}
 							<div class="purchase-full-price">
-								{($purchase->variant->price*$purchase->amount)|convert}&nbsp;{$currency->sign}
+								{($purchase->price*$purchase->amount)|convert}&nbsp;{$currency->sign}
 							</div>
 							{* Общая цена *}
 						</div>

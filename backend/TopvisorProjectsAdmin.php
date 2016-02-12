@@ -60,7 +60,7 @@ class TopvisorProjectsAdmin extends Okay {
         } else {
             if (isset($tm->message) && $tm->message) {
                 $this->design->assign('message_error', $tm->message);
-            } else {
+            } elseif(!is_array($tm)) {
                 $this->design->assign('message_error', 'unknown_error');
             }
         }

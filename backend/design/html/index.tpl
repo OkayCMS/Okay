@@ -11,7 +11,6 @@
     <script src="design/js/jquery/jquery.form.js"></script>
     <script src="design/js/jquery/jquery-ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="design/js/jquery/jquery-ui.css" media="screen" />
-    <script src="design/js/ckeditor/ckeditor.js"></script>
     <meta name="viewport" content="width=1024">
 
 </head>

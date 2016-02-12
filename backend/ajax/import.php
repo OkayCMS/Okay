@@ -133,14 +133,20 @@ class ImportAjax extends Okay {
         
         if(isset($item['meta_title'])) {
             $product['meta_title'] = trim($item['meta_title']);
+        } else {
+            $product['meta_title'] = $product['name'];
         }
         
         if(isset($item['meta_keywords'])) {
             $product['meta_keywords'] = trim($item['meta_keywords']);
+        } else {
+            $product['meta_keywords'] = $product['name'];
         }
         
         if(isset($item['meta_description'])) {
             $product['meta_description'] = trim($item['meta_description']);
+        } else {
+            $product['meta_description'] = $product['name'];
         }
         
         if(isset($item['annotation'])) {

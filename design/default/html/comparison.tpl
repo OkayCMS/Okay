@@ -44,19 +44,19 @@
 				</div>
 			</div>
 			<div class="col-lg-9 row fn-comparison_products okaycms" data-products="3">
-				{foreach $comparison->products as $id=>$cp}
+				{foreach $comparison->products as $id=>$product}
 					<div class="col-lg-4 p-a-0">
 						{include file="tiny_products_comparison.tpl"}
 						{* Рейтинг товара *}
-						<div id="product_{$cp->id}" class="p-y-05 p-x-05 text-xs-left cprs_rating">
+						<div id="product_{$product->id}" class="p-y-05 p-x-05 text-xs-left cprs_rating">
 							<span class="rating_starOff">
-								<span class="rating_starOn" style="width:{$cp->rating*90/5|string_format:'%.0f'}px;"></span>
+								<span class="rating_starOn" style="width:{$product->rating*90/5|string_format:'%.0f'}px;"></span>
 							</span>
 						</div>
 						{* @END Рейтинг товара *}
 						{* Характеристики *}
-						{if $cp->features}
-							{foreach $cp->features as $id=>$value}
+						{if $product->features}
+							{foreach $product->features as $id=>$value}
 								<div class="p-y-05 p-x-05 {if $value@index % 2 == 0 }bg-info {/if}cprs_feature_{$id} cell{if $comparison->features.{$id}->not_unique} not_unique{/if}">
 									{$value|default:"&mdash;"}
 								</div>

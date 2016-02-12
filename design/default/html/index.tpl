@@ -19,6 +19,8 @@
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
     <meta name="generator" content="OkayCMS {$config->version}"/>
 
+	{$rel_prev_next}
+
 	{* Изображения товара и поста для соц. сетей *}
 	{if $module == 'ProductView'}
 		<meta property="og:url" content="{$config->root_url}{if $lang_link}/{str_replace('/', '', $lang_link)}{/if}{$canonical}"/>
@@ -39,6 +41,8 @@
 	{* Канонический адрес страницы *}
 	{if isset($canonical)}
         <link rel="canonical" href="{$config->root_url}{if $lang_link}/{str_replace('/', '', $lang_link)}{/if}{$canonical}"/>
+	{elseif $smarty.get.sort}
+		<link rel="canonical" href="{$sort_canonical}"/>
     {/if}
 
 	{* Языковый атрибут *}

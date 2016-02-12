@@ -66,7 +66,7 @@
 							<div class="fn-product-amount{if $settings->is_preorder} fn-is_preorder{/if} okaycms text-xs-center text-md-left">
 								{* Кол-во товаров *}
 								<span class="minus">&minus;</span>
-								<input class="form-control" type="text" data-id="{$purchase->variant->id}" name="amounts[{$purchase->variant->id}]" value="{$purchase->amount}" data-max="{$purchase->variant->stock}">
+								<input class="form-control" type="text" data-id="{$purchase->variant->id}" name="amounts[{$purchase->variant->id}]" value="{$purchase->amount}" onblur="ajax_change_amount(this, {$purchase->variant->id});" data-max="{$purchase->variant->stock}">
 								<span class="plus">&plus;</span>
 								{* @END Кол-во товаров *}
 							</div>
