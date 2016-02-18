@@ -1,5 +1,4 @@
 User-agent: *
-
 Disallow: /404
 Disallow: /backend
 Disallow: /order/
@@ -19,7 +18,6 @@ Disallow: /*?utm
 Disallow: /*&utm
 
 User-agent: Yandex
-
 Allow: *.css
 Allow: *.js
 Disallow: /404
@@ -41,7 +39,6 @@ Disallow: /*?utm
 Disallow: /*&utm
 
 User-agent: Googlebot
-
 Allow: *.css
 Allow: *.js
 Disallow: /404

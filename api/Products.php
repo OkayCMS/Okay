@@ -154,7 +154,7 @@ class Products extends Okay {
         }
         
         $lang_sql = $this->languages->get_query(array('object'=>'product'));
-        $query = "SELECT
+        $query = "SELECT DISTINCT
                 p.id,
                 p.url,
                 p.brand_id,

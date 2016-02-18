@@ -2362,6 +2362,9 @@ button.list-group-item-danger {
   .btn-comparison-remove.fn-wishlist {
     right: 0.3125rem;
     top: 0.3125rem; }
+  .btn-comparison-remove.fn-comparison {
+    right: 0.3125rem;
+    top: 0.3125rem; }
 
 .btn-favorites,
 .btn-comparison {

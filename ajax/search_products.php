@@ -1,6 +1,7 @@
 <?php
     session_start();
     require_once('../api/Okay.php');
+    define('IS_CLIENT', true);
     $okay = new Okay();
     $limit = 30;
     
@@ -56,15 +57,23 @@
         $ids[] = $p->id;
     }
     $variants = array();
-    foreach ($okay->variants->get_variants(array('product_id'=>$ids)) as $v){
+    foreach ($okay->variants->get_variants(array('product_id'=>$ids)) as $v) {
         $variants[$v->product_id][] = $v;
     }
+
+    $currencies = $okay->money->get_currencies(array('enabled'=>1));
+    if(isset($_SESSION['currency_id'])) {
+        $currency = $okay->money->get_currency($_SESSION['currency_id']);
+    } else {
+        $currency = reset($currencies);
+    }
+
     foreach($products as $product) {
         $suggestion = new stdClass();
         if(!empty($product->image)) {
             $product->image = $okay->design->resize_modifier($product->image, 35, 35);
         }
-        $suggestion->price = $variants[$product->id][0]->price;
+        $suggestion->price = $okay->money->convert($variants[$product->id][0]->price, $currency->id);
         $suggestion->value = $product->name;
         $suggestion->data = $product;
         $suggestion->lang = $lang_link;

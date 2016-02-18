@@ -3,22 +3,30 @@
     Заявка на обратный звонок от {$callback->name|escape}
 </h1>
 <table cellpadding=6 cellspacing=0 style='border-collapse: collapse;border: 2px solid #2c6f95;'>
-   <tr style="border-bottom: 2px solid #2c6f95;">
-    <td style='padding:6px; width:170px; background-color:#41ade2; border:1px solid #e0e0e0;font-family:arial;'>
-      Имя
-    </td>
-    <td style='padding:6px; width:330px; background-color:#ffffff; border:1px solid #e0e0e0;font-family:arial;'>
-      {$callback->name|escape}
-    </td>
-  </tr>
-   <tr style="border-bottom: 2px solid #2c6f95;">
-    <td style='padding:6px; width:170px; background-color:#41ade2; border:1px solid #e0e0e0;font-family:arial;'>
-      Телефон
-    </td>
-    <td style='padding:6px; width:330px; background-color:#ffffff; border:1px solid #e0e0e0;font-family:arial;'>
-     {$callback->phone|escape}
-    </td>
-  </tr>
+    <tr style="border-bottom: 2px solid #2c6f95;">
+        <td style='padding:6px; width:170px; background-color:#41ade2; border:1px solid #e0e0e0;font-family:arial;'>
+            Имя
+        </td>
+        <td style='padding:6px; width:330px; background-color:#ffffff; border:1px solid #e0e0e0;font-family:arial;'>
+            {$callback->name|escape}
+        </td>
+    </tr>
+    <tr style="border-bottom: 2px solid #2c6f95;">
+        <td style='padding:6px; width:170px; background-color:#41ade2; border:1px solid #e0e0e0;font-family:arial;'>
+            Телефон
+        </td>
+        <td style='padding:6px; width:330px; background-color:#ffffff; border:1px solid #e0e0e0;font-family:arial;'>
+            {$callback->phone|escape}
+        </td>
+    </tr>
+    <tr style="border-bottom: 2px solid #2c6f95;">
+        <td style='padding:6px; width:170px; background-color:#41ade2; border:1px solid #e0e0e0;font-family:arial;'>
+            Страница обращения
+        </td>
+        <td style='padding:6px; width:330px; background-color:#ffffff; border:1px solid #e0e0e0;font-family:arial;'>
+            <a href="{$callback->url}" target="_blank">{$callback->url}</a>
+        </td>
+    </tr>
 </table>
 
 <div style="float: left;width: 800px; border: 2px dashed #41ade2; text-align: center;margin-top: 10px;padding: 5px">

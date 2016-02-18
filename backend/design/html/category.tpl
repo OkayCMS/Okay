@@ -109,8 +109,8 @@ function translit(str)
     return res;  
 }
 </script>
- 
 {/literal}
+
 <h2>
     <div class="helper_wrap" style="margin-left: -6px">
         <a class="top_help" id="show_help_search" href="https://www.youtube.com/watch?v=pAgDKW7lqmM" target="_blank"></a>
@@ -119,8 +119,8 @@ function translit(str)
         </div>
     </div>
 </h2>
-
 <br>
+
 {if $languages}{include file='include_languages.tpl'}{/if}
 
 {if $message_success}
@@ -296,6 +296,12 @@ function translit(str)
                         <span>С помощью даных полей можно автоматически сгенерировать мета данные для товаров этой категории.</span>
                         <span>Вставки типа <b style="display: inline;">{ldelim}$brand{rdelim}</b> заменятся на соответствующие значения этого товара.</span>
                         <span> Возможные варианты вставок перечислены ниже.</span>
+                    </div>
+                </div>
+                <div class="helper_wrap" style="margin-left: 5px; margin-top: -8px;">
+                    <a class="top_help" id="show_help_search" href="https://www.youtube.com/watch?v=HM3ONkDbu0o" target="_blank"></a>
+                    <div class="right helper_block topvisor_help">
+                        <p>Видеоинструкция по данному функционалу</p>
                     </div>
                 </div>
             </h2>

@@ -32,12 +32,12 @@ class ProductsView extends View {
         
         //определение текущего положения и выставленных параметров
         $uri = @parse_url($_SERVER["REQUEST_URI"]);
-        preg_match("~$this->subdir(/?$this->lang_label)?/?(catalog|all-products)/?~",$uri['path'], $this->catalog_type);
-        @$this->catalog_type = $this->catalog_type[2];
+        preg_match("~$this->subdir(/?$this->lang_label)?/?(catalog|all-products|brands)/?~",$uri['path'], $this->catalog_type);
+        $this->catalog_type = $this->catalog_type[2];
         //убираем модификатор каталога
-        $uri = preg_replace("~$this->subdir(/?$this->lang_label)?/?(catalog|all-products)/?~",'',$uri['path']);
-        $uri_array = explode('/',$uri);
-        if ($this->catalog_type == 'catalog') {
+        $uri = preg_replace("~$this->subdir(/?$this->lang_label)?/?(catalog|all-products|brands)/?~",'',$uri['path']);
+        $uri_array = (empty($uri) ? array() : explode('/',$uri));
+        if ($this->catalog_type == 'catalog' || $this->catalog_type == 'brands') {
             array_shift($uri_array);
         }
         foreach($uri_array as $k=>$v) {
@@ -136,9 +136,9 @@ class ProductsView extends View {
         $result_array = array('brand'=>array(),'features'=>array(),'sort'=>null,'page'=>null);
         //Определяем, что у нас уже есть в строке
         $uri = @parse_url($_SERVER["REQUEST_URI"]);
-        $uri = preg_replace("~$this->subdir(/?$this->lang_label)?/?(catalog|all-products)/?~",'',$uri['path']);
-        $uri_array = explode('/',$uri);
-        if ($this->catalog_type == 'catalog') {
+        $uri = preg_replace("~$this->subdir(/?$this->lang_label)?/?(catalog|all-products|brands)/?~",'',$uri['path']);
+        $uri_array = (empty($uri) ? array() : explode('/',$uri));
+        if ($this->catalog_type == 'catalog' || $this->catalog_type == 'brands') {
             array_shift($uri_array);
         }
         foreach($uri_array as $k=>$v) {

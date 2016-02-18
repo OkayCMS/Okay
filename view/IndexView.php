@@ -11,11 +11,12 @@ class IndexView extends View {
     }
     
     public function fetch() {
-        
+
         if($this->request->method('post') && $this->request->post('callback')) {
             $callback = new stdClass();
             $callback->phone        = $this->request->post('phone');
             $callback->name         = $this->request->post('name');
+            $callback->url          = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
             //$callback->message      = $this->request->post('message');
             $callback->message      = "___";
             //$callback->name         = "no_name";

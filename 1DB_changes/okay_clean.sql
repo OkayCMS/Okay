@@ -3,7 +3,7 @@
 # Server version:               5.5.39
 # Server OS:                    Win64
 # HeidiSQL version:             6.0.0.3603
-# Date/time:                    2016-02-03 15:27:47
+# Date/time:                    2016-02-18 12:18:11
 # --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -139,14 +139,15 @@ CREATE TABLE IF NOT EXISTS `s_callbacks` (
   `phone` varchar(255) NOT NULL,
   `message` text NOT NULL,
   `processed` tinyint(1) NOT NULL DEFAULT '0',
+  `url` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 # Dumping data for table okaycms-git.s_callbacks: 1 rows
 DELETE FROM `s_callbacks`;
 /*!40000 ALTER TABLE `s_callbacks` DISABLE KEYS */;
-INSERT INTO `s_callbacks` (`id`, `date`, `name`, `phone`, `message`, `processed`) VALUES
-	(1, '2015-11-19 11:18:53', 'Shut', '+30591234567', 'Don\'t worry be happy', 0);
+INSERT INTO `s_callbacks` (`id`, `date`, `name`, `phone`, `message`, `processed`, `url`) VALUES
+	(1, '2015-11-19 11:18:53', 'Shut', '+30591234567', 'Don\'t worry be happy', 0, 'http://localhost/okay-git/en/products/opticheskij-nivelir-bosch-gol-20-d-professional');
 /*!40000 ALTER TABLE `s_callbacks` ENABLE KEYS */;
 
 
@@ -2672,7 +2673,7 @@ INSERT INTO `s_settings` (`setting_id`, `name`, `value`) VALUES
 	(130, 'yandex_has_seller_warranty', ''),
 	(131, 'yandex_sales_notes', ''),
 	(132, 'posts_num', '10'),
-	(133, 'image_sizes', '200x200|60x60|50x50|219x172|162x77|183x183|35x35|400x300|100x100|1000x1000'),
+	(133, 'image_sizes', '200x200|60x60|50x50|219x172|162x77|183x183|35x35|400x300|100x100|1000x1000|800x600|300x300|87x72|330x300'),
 	(134, 'captcha_product', '1'),
 	(135, 'captcha_post', '1'),
 	(136, 'captcha_cart', '1'),
@@ -2900,7 +2901,7 @@ INSERT INTO `s_translations` (`id`, `template`, `in_config`, `label`, `lang_ru`,
 	(153, '', 0, 'index_about_store', 'О магазине', 'About store', '', '', ''),
 	(154, '', 0, 'index_catalog', 'Каталог', 'Catalog', '', '', ''),
 	(155, '', 0, 'index_contacts', 'Контакты', 'Contacts', '', '', ''),
-	(156, '', 0, 'index_contacts_body', '0 800 567-43-21, 0 800 567-43-21<br/>\r\nПн–Сб 09:00–20:00,<br/>\r\nВс 09:00–17:00<br/>\r\ninfo@okay-cms.com<br/>\r\nOkayCMS<br/>\r\nул. Космонавта Волкова 14', '0 800 567-43-21, 0 800 567-43-21<br/>\r\nПн–Сб 09:00–20:00,<br/>\r\nВс 09:00–17:00<br/>\r\ninfo@okay-cms.com<br/>\r\nOkayCMS<br/>\r\nул. Космонавта Волкова 14', '', '', ''),
+	(156, '', 0, 'index_contacts_body', '0 800 567-43-21,<br/>0 800 567-43-21<br/>\r\nПн–Сб 09:00–20:00,<br/>\r\nВс 09:00–17:00<br/>\r\ninfo@okay-cms.com<br/>\r\nOkayCMS<br/>\r\nул. Космонавта Волкова 14', '0 800 567-43-21,<br/>0 800 567-43-21<br/>\r\nПн–Сб 09:00–20:00,<br/>\r\nВс 09:00–17:00<br/>\r\ninfo@okay-cms.com<br/>\r\nOkayCMS<br/>\r\nул. Космонавта Волкова 14', '', '', ''),
 	(157, '', 0, 'index_copyright', 'Интернет-магазин OKAYMarket. Все права защищены.', 'Online Store OKAYMarket. All rights reserved.', '', '', ''),
 	(158, '', 0, 'index_in_networks', 'Мы в соцсетях', 'We are in social networks', '', '', ''),
 	(159, '', 0, 'features_categories', 'Категории', 'Categories', '', '', ''),

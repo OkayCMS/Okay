@@ -17,6 +17,11 @@
 			</div>
 			{* @END Список покупок *}
 			<div class="row">
+				{* Доставка *}
+				<div class="col-lg-7 m-b-2">
+					{include file='cart_deliveries.tpl'}
+				</div>
+				{* @END Доставка *}
 				{* Форма *}
 				<div class="col-lg-5 m-b-2">
 					<div class="bg-info p-a-1">
@@ -62,22 +67,24 @@
 							<textarea class="form-control" name="comment" data-language="{$translate_id['cart_order_comment']}" placeholder="{$lang->cart_order_comment}">{$comment|escape}</textarea>
 						</div>
 						<div class="row">
-							<div class="col-xs-12 form-inline m-b-1-md_down">
+							<div class="col-xs-12 form-inline m-b-1-md_down text-xs-center">
 								{if $settings->captcha_cart}
-									{* Изображение капчи *}
-									<div class="form-group">
-										<img class="brad-3" src="captcha/image.php?{math equation='rand(10,10000)'}" alt="captcha"/>
-									</div>
-									{* @END Изображение капчи *}
-									{* Поле ввода капчи *}
-									<div class="form-group">
-										<input class="form-control" type="text" name="captcha_code" value="" data-format="\d\d\d\d\d" data-notice="{$lang->form_enter_captcha}" data-language="{$translate_id['form_enter_captcha']}" placeholder="{$lang->form_enter_captcha}*"/>
-									</div>
-									{* @END Поле ввода капчи *}
+									<div class="col-md-6 col-xs-12 m-b-1-md_down">
+										{* Изображение капчи *}
+										<div class="form-group">
+											<img class="brad-3" src="captcha/image.php?{math equation='rand(10,10000)'}" alt="captcha"/>
+										</div>
+										{* @END Изображение капчи *}
+										{* Поле ввода капчи *}
+										<div class="form-group">
+											<input class="form-control" type="text" name="captcha_code" value="" data-format="\d\d\d\d\d" data-notice="{$lang->form_enter_captcha}" data-language="{$translate_id['form_enter_captcha']}" placeholder="{$lang->form_enter_captcha}*"/>
+										</div>
+										{* @END Поле ввода капчи *}
+									</div
 								{/if}
 								{* Кнопка отправки формы *}
 								<div class="form-group">
-									<input class="btn btn-warning m-l-1" type="submit" name="checkout" data-language="{$translate_id['cart_checkout']}" value="{$lang->cart_checkout}"/>
+									<input class="btn btn-warning" type="submit" name="checkout" data-language="{$translate_id['cart_checkout']}" value="{$lang->cart_checkout}"/>
 								</div>
 								{* @END Кнопка отправки формы *}
 							</div>
@@ -85,11 +92,6 @@
 					</div>
 				</div>
 				{* Форма *}
-				{* Доставка *}
-				<div class="col-lg-7 m-b-2">
-					{include file='cart_deliveries.tpl'}
-				</div>
-				{* @END Доставка *}
 			</div>
 		</form>
 	{else}

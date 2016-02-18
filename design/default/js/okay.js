@@ -233,7 +233,8 @@ $(function(){
 		dots: true,
 		arrows: false,
 		adaptiveHeight: true,
-		autoplaySpeed: 8000
+		autoplaySpeed: 8000,
+		autoplay: true
 	});
 
 	/* Инициализация доп. фото в карточке */

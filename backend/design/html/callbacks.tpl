@@ -43,6 +43,9 @@
                             <div class='comment_text'>
                                 Сообщение: {$callback->message|escape|nl2br}
                             </div>
+                            <div class='comment_text'>
+                                <a href="{$callback->url|escape}" target="_blank">Страница с которой было отправлено</a>
+                            </div>
                             <div class='comment_info'>
                                 Заявка отправлена {$callback->date|date} в {$callback->date|time}
                             </div>
