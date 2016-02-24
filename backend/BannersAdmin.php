@@ -22,7 +22,9 @@ class BannersAdmin extends Okay {
                         break;
                     }
                     case 'delete': {
-                        $this->banners->delete_banner($ids);
+                        foreach ($ids as $id) {
+                            $this->banners->delete_banner($id);
+                        }
                         break;
                     }
                 }

@@ -18,9 +18,15 @@
 {* Title *}
 {$meta_title='Свойства' scope=parent}
 
-<div id="header">
+<div id="header" style="overflow: visible;">
 	<h1>Свойства</h1> 
 	<a class="add" href="{url module=FeatureAdmin return=$smarty.server.REQUEST_URI}">Добавить свойство</a>
+	<div class="helper_wrap">
+		<a class="top_help" id="show_help_search" href="https://www.youtube.com/watch?v=eATslZw5RxI" target="_blank"></a>
+		<div class="right helper_block topvisor_help">
+			<p>Видеоинструкция по разделу</p>
+		</div>
+	</div>
 </div>
 
 {if $features}

@@ -139,7 +139,7 @@
 			<div class="icons cell products">
 				<a class="preview"   title="Предпросмотр в новом окне" href="../{$lang_link}products/{$product->url}" target="_blank"></a>
 				<a class="enable"    title="Активен"                 href="#"></a>
-				<a class="featured"  title="Рекомендуемый"           href="#"></a>
+				<a class="featured"  title="Хит продаж"           href="#"></a>
 				<a class="duplicate" title="Дублировать"             href="#"></a>
 				<a class="delete"    title="Удалить"                 href="#"></a>
 			</div>
@@ -155,8 +155,8 @@
 			<select name="action">
                 <option value="enable">Сделать видимыми</option>
                 <option value="disable">Сделать невидимыми</option>
-                <option value="set_featured">Сделать рекомендуемым</option>
-                <option value="unset_featured">Отменить рекомендуемый</option>
+                <option value="set_featured">Сделать хитом продаж</option>
+                <option value="unset_featured">Отменить хит продаж</option>
                 <option value="set_yandex">В Я.Маркет</option>
                 <option value="unset_yandex">Из Я.Маркета</option>
                 <option value="duplicate">Создать дубликат</option>
@@ -238,7 +238,7 @@
         <li {if !$filter}class="selected"{/if}>
             <a href="{url brand_id=null category_id=null keyword=null page=null limit=null filter=null}">Все товары</a></li>
         <li {if $filter=='featured'}class="selected"{/if}>
-            <a href="{url keyword=null brand_id=null category_id=null page=null limit=null filter='featured'}">Рекомендуемые</a>
+            <a href="{url keyword=null brand_id=null category_id=null page=null limit=null filter='featured'}">Хиты продаж</a>
         </li>
         <li {if $filter=='discounted'}class="selected"{/if}>
             <a href="{url keyword=null brand_id=null category_id=null page=null limit=null filter='discounted'}">Со скидкой</a>

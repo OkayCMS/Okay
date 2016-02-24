@@ -11,7 +11,7 @@
     {if $smarty.get.module == "ProductsView"}
         {if $category && !$keyword}
             {foreach from=$category->path item=cat}
-	            {if !$cat@last || $brand}
+	            {if !$cat@last}
 		            <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
 			            <a itemprop="url" href="{$lang_link}catalog/{$cat->url}">
 				            <span itemprop="title">{$cat->name|escape}</span>
@@ -21,9 +21,6 @@
 		            <li>{$cat->name|escape}</li>
 	            {/if}
             {/foreach}
-            {if $brand}
-	            <li>{$brand->name|escape}</li>
-            {/if}
         {elseif $brand}
 	        <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
 		        <a itemprop="url" href="{$lang_link}brands" data-language="{$translate_id['breadcrumb_brands']}">
@@ -50,13 +47,6 @@
 		        </a>
 	        </li>
         {/foreach}
-        {if $brand}
-	        <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
-		        <a itemprop="url" href="{$lang_link}catalog/{$cat->url}/{$brand->url}">
-			        <span itemprop="title">{$brand->name|escape}</span>
-		        </a>
-	        </li>
-        {/if}
 	    <li>{$product->name|escape}</li>
     {* @END Карточка товара *}
     {* Контакты и статьи *}

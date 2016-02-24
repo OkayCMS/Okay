@@ -469,7 +469,7 @@ $(function(){
         </div>
         <div class="checkbox">
             <input name=featured value="1" type="checkbox" id="featured_checkbox" {if $product->featured}checked{/if}/>
-            <label class="featured_icon" for="featured_checkbox">Рекомендуемый</label>
+            <label class="featured_icon" for="featured_checkbox">Хит продаж</label>
         </div>
     </div>
     <div id="product_brand" {if !$brands}style='display:none;'{/if}>

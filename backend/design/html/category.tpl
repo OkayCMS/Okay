@@ -340,6 +340,12 @@ function translit(str)
                     <span>Для создание шаблонных описаний можно использовать те же вставки что и для мета данных.</span>
                 </div>
             </div>
+            <div class="helper_wrap" style="margin-left: 5px; margin-top: -8px;">
+                <a class="top_help" id="show_help_search" href="https://www.youtube.com/watch?v=gtvt8JlVGCE" target="_blank"></a>
+                <div class="right helper_block topvisor_help">
+                    <p>Видеоинструкция по данному функционалу</p>
+                </div>
+            </div>
         </h2>
         <textarea name="auto_body" class="editor_small">{$category->auto_body|escape}</textarea>
     </div>

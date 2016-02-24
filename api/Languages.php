@@ -220,6 +220,12 @@ class Languages extends Okay {
         if(!$this->db->query($query)) {
             return false;
         }
+
+        // если нету поля в переводах добавим его
+        $this->db->query("SHOW FIELDS FROM __translations WHERE field=?", 'lang_'.$data->label);
+        if (!$this->db->result()) {
+            $this->db->query("ALTER TABLE __translations ADD COLUMN `lang_$data->label` VARCHAR(255) NOT NULL DEFAULT ''");
+        }
         
         $last_id = $this->db->insert_id();
         

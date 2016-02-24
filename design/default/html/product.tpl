@@ -341,12 +341,12 @@
 				<ol class="pager">
 					<li>
 						{if $prev_product}
-							<a href="products/{$prev_product->url}">← {$prev_product->name|escape}</a>
+							<a href="{$lang_link}products/{$prev_product->url}">← {$prev_product->name|escape}</a>
 						{/if}
 					</li>
 					<li>
 						{if $next_product}
-							<a href="products/{$next_product->url}">{$next_product->name|escape} →</a>
+							<a href="{$lang_link}products/{$next_product->url}">{$next_product->name|escape} →</a>
 						{/if}
 					</li>
 				</ol>

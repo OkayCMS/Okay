@@ -5,10 +5,12 @@ require_once('api/Okay.php');
 class SettingsAdmin extends Okay {
     
     private $allowed_image_extentions = array('png', 'gif', 'jpg', 'jpeg', 'ico');
-    
+    public $passwd_file_1c = "backend/cml/.passwd";
+
     public function fetch() {
         $managers = $this->managers->get_managers();
         $this->design->assign('managers', $managers);
+        $user_1c = $this->get_user_1c();
         
         if($this->request->method('POST')) {
             $this->settings->site_name = $this->request->post('site_name');
@@ -85,7 +87,16 @@ class SettingsAdmin extends Okay {
                 $this->clear_resized_dirs($this->config->resized_categories_dir);
             }
             $this->design->assign('message_success', 'saved');
+
+            $pass_1c = $this->request->post('pass_1c');
+            if (!empty($pass_1c)) {
+                $login_1c = $this->request->post('login_1c');
+                if (!empty($login_1c)) {
+                    $user_1c = $this->update_user_1c($login_1c, $pass_1c);
+                }
+            }
         }
+        $this->design->assign('login_1c', isset($user_1c[0]) ? $user_1c[0] : '');
         return $this->design->fetch('settings.tpl');
     }
     
@@ -101,6 +112,52 @@ class SettingsAdmin extends Okay {
             }
             closedir($handle);
         }
+    }
+
+    private function get_user_1c() {
+        //echo dirname(dirname(__FILE__)).'/'.$this->passwd_file_1c;
+        $line = explode("\n", @file_get_contents($this->passwd_file_1c));
+        $line = reset($line);
+        $line = explode(':', $line);
+        return $line;
+    }
+
+    private function update_user_1c($login, $pass) {
+        $pass = $this->crypt_apr1_md5($pass);
+        $line = $login.':'.$pass;
+        file_put_contents($this->passwd_file_1c, $line);
+        return explode(':', $line);
+    }
+
+    private function crypt_apr1_md5($plainpasswd, $salt = '') {
+        if (empty($salt)) {
+            $salt = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz0123456789"), 0, 8);
+        }
+        $len = strlen($plainpasswd);
+        $text = $plainpasswd.'$apr1$'.$salt;
+        $bin = pack("H32", md5($plainpasswd.$salt.$plainpasswd));
+        for($i = $len; $i > 0; $i -= 16) { $text .= substr($bin, 0, min(16, $i)); }
+        for($i = $len; $i > 0; $i >>= 1) { $text .= ($i & 1) ? chr(0) : $plainpasswd{0}; }
+        $bin = pack("H32", md5($text));
+        for($i = 0; $i < 1000; $i++) {
+            $new = ($i & 1) ? $plainpasswd : $bin;
+            if ($i % 3) $new .= $salt;
+            if ($i % 7) $new .= $plainpasswd;
+            $new .= ($i & 1) ? $bin : $plainpasswd;
+            $bin = pack("H32", md5($new));
+        }
+        $tmp = '';
+        for ($i = 0; $i < 5; $i++) {
+            $k = $i + 6;
+            $j = $i + 12;
+            if ($j == 16) $j = 5;
+            $tmp = $bin[$i].$bin[$k].$bin[$j].$tmp;
+        }
+        $tmp = chr(0).chr(0).$bin[11].$tmp;
+        $tmp = strtr(strrev(substr(base64_encode($tmp), 2)),
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
+            "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+        return "$"."apr1"."$".$salt."$".$tmp;
     }
     
 }

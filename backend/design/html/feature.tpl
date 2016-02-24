@@ -59,6 +59,16 @@ function translit(str) {
 </script>
 {/literal}
 
+<h2>
+    <div class="helper_wrap" style="margin-left: -6px">
+        <a class="top_help" id="show_help_search" href="https://www.youtube.com/watch?v=eATslZw5RxI" target="_blank"></a>
+        <div class="right helper_block topvisor_help">
+            <p>Видеоинструкция по разделу</p>
+        </div>
+    </div>
+</h2>
+<br>
+
 {if $languages}{include file='include_languages.tpl'}{/if}
 
 {if $message_success}
@@ -84,7 +94,7 @@ function translit(str) {
         <input name=id type="hidden" value="{$feature->id|escape}"/>
         <div class="checkbox">
             <input name="yandex" value="1" type="checkbox" id="yandex_checkbox" {if $feature->yandex}checked=""{/if}/>
-            <label for="yandex_checkbox">В яндексе</label>
+            <label for="yandex_checkbox">В Я.Маркет</label>
         </div>
     </div>
 

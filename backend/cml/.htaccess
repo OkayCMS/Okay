@@ -1,4 +1,5 @@
-RewriteEngine on
-
-RewriteRule ^([^/]+)\.php$	index.php?file=$1 [L,QSA]
-RewriteRule ^(.+)$	index.php?file= [L,QSA]
+AddType application/octet-stream csv
+AuthName "OkayCMS 1C"
+AuthType Basic
+AuthUserFile D:\program\server\home\localhost\www\okay-git/backend/cml/.passwd
+require valid-user

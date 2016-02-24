@@ -14,7 +14,7 @@ class TranslationAdmin extends Okay {
             $translation->label = trim($this->request->post('label'));
             $translation->label = str_replace(" ", '_', $translation->label);
             
-            $translation->in_config = $this->request->post('in_config', 'boolean');
+            //$translation->in_config = $this->request->post('in_config', 'boolean');
             
             if($languages){
                 foreach($languages as $lang) {

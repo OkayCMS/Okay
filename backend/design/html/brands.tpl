@@ -57,8 +57,8 @@
                             <a class="delete" title="Удалить" href="#"></a>
                         </div>
                         <div class="icons cell">
-                            <a class="yandex" data-to_yandex="1" href="javascript:;">В яндекс</a>
-                            <a class="yandex" data-to_yandex="0" href="javascript:;">Из яндекса</a>
+                            <a class="yandex" data-to_yandex="1" href="javascript:;">В Я.Маркет</a>
+                            <a class="yandex" data-to_yandex="0" href="javascript:;">Из Я.Маркета</a>
                         </div>
                         <div class="clear"></div>
                     </div>

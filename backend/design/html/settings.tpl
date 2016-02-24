@@ -125,6 +125,15 @@
             </li>
         </ul>
     </div>
+
+    <div class="block layer">
+        <h2>Настройки 1C</h2>
+        <ul>
+            <li><label class=property>Логин</label><input name="login_1c" class="okay_inp" type="text" value="{$login_1c|escape}" /></li>
+            <li><label class=property>Пароль</label><input name="pass_1c" class="okay_inp" type="text" value="" /></li>
+        </ul>
+    </div>
+
     <div class="block layer">
         <h2>Изображения товаров</h2>
         <ul>
@@ -141,7 +150,15 @@
     </div>
 
     <div class="block layer">
-        <h2>Настройки экспорта в яндекс</h2>
+        <h2>
+            Настройки экспорта в яндекс
+            <div class="helper_wrap" style="margin-left: 5px; margin-top: -8px;">
+                <a class="top_help" id="show_help_search" href="https://www.youtube.com/watch?v=9eO8CsSvfqg" target="_blank"></a>
+                <div class="right helper_block topvisor_help">
+                    <p>Видеоинструкция по данному функционалу</p>
+                </div>
+            </div>
+        </h2>
         <ul class="yandex_list">
             <li>
                 <label class="property" for="yandex_export_not_in_stock">Экспортировать со статусом "под заказ" товары, отсутствующие на складе</label>

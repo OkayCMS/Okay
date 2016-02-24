@@ -12,6 +12,7 @@ class ProductsView extends View {
     private $subdir = '';
     private $lang_label = '';
     private $catalog_type = '';
+    private $is_wrong_params = 0;
         
     public function __construct() {
         parent::__construct();
@@ -45,35 +46,60 @@ class ProductsView extends View {
                 continue;
             }
             if(!$k && $brand=$this->brands->get_brand((string)$v)) {
-                $_GET['brand'] = $brand->url;
+                //$_GET['brand'] = $brand->url;
+                $this->is_wrong_params = 1;
             } else {
                 @list($param_name, $param_values) = explode('-',$v);
                 switch($param_name) {
                     case 'brand': {
+                        $_GET['b'] = array();
                         foreach(explode('_',$param_values) as $bv) {
-                            if($brand = $this->brands->get_brand((string)$bv)) {
+                            if(($brand = $this->brands->get_brand((string)$bv)) && !in_array($brand->id, $_GET['b'])) {
                                 $_GET['b'][] = $brand->id;
                                 $this->meta_array['brand'][] = 'Бренд '. $brand->name;
+                            } else {
+                                $this->is_wrong_params = 1;
                             }
                         }
                         break;
                     }
                     case 'page': {
                         $_GET['page'] = $param_values;
+                        if ($param_values != 'all' && (!preg_match('~^[0-9]+$~', $param_values) || strpos($param_values, '0') === 0)) {
+                            $this->is_wrong_params = 1;
+                        }
                         break;
                     }
                     case 'sort': {
                         $_GET['sort'] = strval($param_values);
+                        if (!in_array($_GET['sort'], array('position', 'price', 'price_asc', 'name', 'name_desc'))) {
+                            $this->is_wrong_params = 1;
+                        }
                         break;
                     }
                     default: {
-                        if($feature = $this->features->get_feature($param_name)) {
+                        if(($feature = $this->features->get_feature($param_name)) && !isset($_GET[$feature->id])) {
                             $_GET[$feature->id] = explode('_',$param_values);
-                            foreach($this->features->get_options(array('feature_id'=>$feature->id)) as $fo) {
-                                if(in_array($fo->translit,$_GET[$feature->id])) {
-                                    $this->meta_array['options'][$feature->id][] = $feature->name . ' '. $fo->value;
+                            // если нет повторяющихся значений свойства - ок, иначе 404
+                            if (count($_GET[$feature->id]) == count(array_unique($_GET[$feature->id]))) {
+                                $option_translits = array();
+                                foreach ($this->features->get_options(array('feature_id' => $feature->id)) as $fo) {
+                                    $option_translits[] = $fo->translit;
+                                    if (in_array($fo->translit, $_GET[$feature->id])) {
+                                        $this->meta_array['options'][$feature->id][] = $feature->name . ' ' . $fo->value;
+                                    }
                                 }
+                                foreach ($_GET[$feature->id] as $param_value) {
+                                    if (!in_array($param_value, $option_translits)) {
+                                        $this->is_wrong_params = 1;
+                                        break;
+                                    }
+                                }
+                            } else {
+                                $this->is_wrong_params = 1;
                             }
+                        } else {
+                            $this->is_wrong_params = 1;
                         }
                     }
                 }
@@ -254,6 +280,9 @@ class ProductsView extends View {
     // ЧПУ END
 
     public function fetch() {
+        if ($this->is_wrong_params) {
+            return false;
+        }
         // GET-Параметры
         $category_url = $this->request->get('category', 'string');
         $brand_url    = $this->request->get('brand', 'string');
@@ -269,7 +298,7 @@ class ProductsView extends View {
         } else {
             unset($prices['current']);
         }
-        
+
         if ($val = $this->request->get('b')) {
             $filter['brand_id'] = $val;
         } elseif (!empty($brand_url)) {
@@ -403,13 +432,7 @@ class ProductsView extends View {
         ///////////////////////////////////////////////
         // Постраничная навигация END
         ///////////////////////////////////////////////
-        
-        
-        $discount = 0;
-        if(isset($_SESSION['user_id']) && $user = $this->users->get_user(intval($_SESSION['user_id']))) {
-            $discount = $user->discount;
-        }
-        
+
         // Товары
         $products = array();
         foreach($this->products->get_products($filter) as $p) {
@@ -432,7 +455,6 @@ class ProductsView extends View {
             $variants = $this->variants->get_variants(array('product_id'=>$products_ids));
 
             foreach($variants as $variant) {
-                //$variant->price *= (100-$discount)/100;
                 $products[$variant->product_id]->variants[] = $variant;
             }
 

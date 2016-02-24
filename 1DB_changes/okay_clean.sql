@@ -3,7 +3,7 @@
 # Server version:               5.5.39
 # Server OS:                    Win64
 # HeidiSQL version:             6.0.0.3603
-# Date/time:                    2016-02-18 12:18:11
+# Date/time:                    2016-02-23 14:07:07
 # --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -2725,14 +2725,14 @@ DELETE FROM `s_subscribe_mailing`;
 DROP TABLE IF EXISTS `s_translations`;
 CREATE TABLE IF NOT EXISTS `s_translations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `template` varchar(255) NOT NULL,
-  `in_config` tinyint(1) NOT NULL,
+  `template` varchar(255) NOT NULL DEFAULT '',
+  `in_config` tinyint(1) NOT NULL DEFAULT '0',
   `label` varchar(255) NOT NULL,
-  `lang_ru` varchar(255) NOT NULL,
-  `lang_en` varchar(255) NOT NULL,
-  `lang_uk` varchar(255) NOT NULL,
-  `lang_ch` varchar(255) NOT NULL,
-  `lang_by` varchar(255) NOT NULL,
+  `lang_ru` varchar(255) NOT NULL DEFAULT '',
+  `lang_en` varchar(255) NOT NULL DEFAULT '',
+  `lang_uk` varchar(255) NOT NULL DEFAULT '',
+  `lang_ch` varchar(255) NOT NULL DEFAULT '',
+  `lang_by` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=268 DEFAULT CHARSET=utf8;
 
@@ -2873,7 +2873,7 @@ INSERT INTO `s_translations` (`id`, `template`, `in_config`, `label`, `lang_ru`,
 	(187, '', 0, 'callback_sent_text', 'Мы свяжемся с вами в ближайшее время', 'We will contact you shortly', 'Мы свяжемся с вами в ближайшее время', '', ''),
 	(9, '', 0, 'main_action_goods', 'Акционные товары', 'Action goods', 'Акційні товари', '', ''),
 	(8, '', 0, 'main_new_products', 'Новинки', 'New products', 'Новинки', '', ''),
-	(7, '', 0, 'main_recommended_products', 'Рекомендуемые товары', 'Recommended products', 'Рекомендовані товари', '', ''),
+	(7, '', 0, 'main_recommended_products', 'Хиты продаж', 'Bestsellers', 'Хіти продажу', '', ''),
 	(253, '', 0, 'comparison_empty', 'Папка сравнения пуста', 'Folder comparison is empty', 'Папка сравнения пуста', '', ''),
 	(209, '', 0, 'cart_total_price', 'Итого', 'In total', 'Итого', '', ''),
 	(2, '', 0, 'features_manufacturer', 'Производитель', 'Manufacturer', 'Все бренды', '', ''),

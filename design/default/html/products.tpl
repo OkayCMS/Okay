@@ -1,9 +1,7 @@
 {* Каталог товаров *}
 {* Канонический адрес страницы *}
 {if $set_canonical}
-	{if $category && $brand}
-		{$canonical="/catalog/{$category->url}/{$brand->url}" scope=parent}
-	{elseif $category}
+	{if $category}
 		{$canonical="/catalog/{$category->url}" scope=parent}
 	{elseif $brand}
 		{$canonical="/brands/{$brand->url}" scope=parent}
@@ -50,23 +48,23 @@
 					{include file="products_sort.tpl"}
 				</div>
 				{* @END Сортировка товаров *}
+			{/if}
 				{* Список товаров *}
 				<div id="fn-products_content" class="row">
 					{include file="products_content.tpl"}
 				</div>
 				{* @END Список товаров *}
+			{if $products}
 				{* ЧПУ пагинация *}
 				<div class="shpu_pagination">
 					{include file='chpu_pagination.tpl'}
 				</div>
 				{* ЧПУ пагинация *}
-			{else}
-				<span data-language="{$translate_id['products_not_found']}">{$lang->products_not_found}</span>
 			{/if}
 			{* Описание страницы (если задана) *}
 			{$page->body}
 			{* @END Описание страницы (если задана) *}
-			{if $current_page_num == 1}
+			{if $current_page_num == 1 && (!$category || !$brand)}
 				{* Описание категории *}
 				{$category->description}
 				{* @END Описание категории *}
