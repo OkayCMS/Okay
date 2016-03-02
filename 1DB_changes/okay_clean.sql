@@ -1,17 +1,16 @@
-# --------------------------------------------------------
-# Host:                         127.0.0.1
-# Server version:               5.5.39
-# Server OS:                    Win64
-# HeidiSQL version:             6.0.0.3603
-# Date/time:                    2016-02-23 14:07:07
-# --------------------------------------------------------
+-- --------------------------------------------------------
+-- Хост:                         127.0.0.1
+-- Версия сервера:               5.5.45 - MySQL Community Server (GPL)
+-- ОС Сервера:                   Win32
+-- HeidiSQL Версия:              9.3.0.4984
+-- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
-# Dumping structure for table okaycms-git.s_banners
+-- Дамп структуры для таблица okay.s_banners
 DROP TABLE IF EXISTS `s_banners`;
 CREATE TABLE IF NOT EXISTS `s_banners` (
   `id` int(4) NOT NULL AUTO_INCREMENT,
@@ -33,15 +32,14 @@ CREATE TABLE IF NOT EXISTS `s_banners` (
   KEY `brands` (`brands`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_banners: 1 rows
-DELETE FROM `s_banners`;
+-- Дамп данных таблицы okay.s_banners: 1 rows
 /*!40000 ALTER TABLE `s_banners` DISABLE KEYS */;
 INSERT INTO `s_banners` (`id`, `name`, `description`, `position`, `visible`, `show_all_pages`, `categories`, `pages`, `brands`, `products`) VALUES
 	(1, 'Главный баннер', '', 1, 1, 0, '0', '1', '0', '0');
 /*!40000 ALTER TABLE `s_banners` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_banners_images
+-- Дамп структуры для таблица okay.s_banners_images
 DROP TABLE IF EXISTS `s_banners_images`;
 CREATE TABLE IF NOT EXISTS `s_banners_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -59,8 +57,7 @@ CREATE TABLE IF NOT EXISTS `s_banners_images` (
   KEY `visible` (`visible`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_banners_images: 2 rows
-DELETE FROM `s_banners_images`;
+-- Дамп данных таблицы okay.s_banners_images: 2 rows
 /*!40000 ALTER TABLE `s_banners_images` DISABLE KEYS */;
 INSERT INTO `s_banners_images` (`id`, `banner_id`, `name`, `alt`, `title`, `description`, `url`, `image`, `position`, `visible`) VALUES
 	(1, 1, 'Лучшая телефония', '', '', 'Только в нашем магазине', '/catalog/telephony', '1.png', 3, 1),
@@ -68,7 +65,7 @@ INSERT INTO `s_banners_images` (`id`, `banner_id`, `name`, `alt`, `title`, `desc
 /*!40000 ALTER TABLE `s_banners_images` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_blog
+-- Дамп структуры для таблица okay.s_blog
 DROP TABLE IF EXISTS `s_blog`;
 CREATE TABLE IF NOT EXISTS `s_blog` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -88,8 +85,7 @@ CREATE TABLE IF NOT EXISTS `s_blog` (
   KEY `url` (`url`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_blog: 2 rows
-DELETE FROM `s_blog`;
+-- Дамп данных таблицы okay.s_blog: 2 rows
 /*!40000 ALTER TABLE `s_blog` DISABLE KEYS */;
 INSERT INTO `s_blog` (`id`, `name`, `url`, `meta_title`, `meta_keywords`, `meta_description`, `annotation`, `text`, `visible`, `date`, `image`, `last_modify`) VALUES
 	(1, 'Преимущества OkayCMS', 'preimuschestva-okaycms', 'Преимущества OkayCMS', 'Преимущества OkayCMS', '', '', '<h2>Удобная панель управления</h2><p>- Удобный функционал для работы с категориями и товарами, возможность добавления изображений к товару перетягиванием мыши, разработана форма для легкого и быстрого добавления новых товаров.</p><p>- Быстрый экспорт товаров в ЯндексМаркет с возможностью гибкой настройки выгрузки.</p><p>- Мультиязычность. Возможность создать сайт сразу на нескольких языках с удобной системой перевода.</p><p>- Удобная работа с заказами, возможность присваивать различные статусы, метки и комментарии к заказам.</p><p>- Импорт/экспорт товаров в CSV формате</p><p>- Мультивалютность сайта. Задавать стоимость товара можно в разных валютах, а на сайте выводить в одной валюте</p><p>- Опционно для товаров, которых нет в наличии выводится надпись &laquo;Под заказ&raquo; или &laquo;Нет в наличии&raquo;</p><h2>SEO-оптимизация</h2><p>- Практичная, с точки зрения юзабилити, структура клиентского шаблона с учетом всех необходимых элементов для лучшего взаимодействия пользователей с сайтом.</p><p>- ЧПУ. Понятный для человека URL, формирующийся автоматически из названия, с возможностью ручного редактирования.</p><p>- Автоматическая генерация метатегов (title, description и keywords) для каждой страницы сайта с возможностью дальнейшего редактирования.</p><p>- Автоматическая генерация карты сайта (Sitemap.XML) со всеми необходимыми настройками (LastMod, Priority, Frequency). Обновляется автоматически.</p><p>- Микроразметка хлебных крошек для формирования расширенных сниппетов в поисковой выдаче.</p><p>- Оптимизированный SEO-фильтр для автоматического формирования уникальных страниц для низкочастотных запросов категорий и свойств или брендов товаров.</p><p>- Возможность автоматической генерации мета-тегов и описаний для товаров из определенной категории</p><p>- Автоматические генерируемые метатеги &nbsp;Alt и Title для изображений товаров</p><h2>Маркетинговые инструменты</h2><p>- Генерация акционных промо-кодов с возможностью задать различные условия</p><p>- Добавление и редактирование триггеров на фото товаров для привлечения внимания клиентов (Хиты продаж, Новинки, Акция итд)</p><p>- Встроенный функционал заказ обратного звонка с отображением всех заявок в админ. панели</p><p>- Сравнение товаров</p><p>- Добавление и просмотр избранных товаров для пользователя</p><p>- Практичная система управления баннерами, позволяющая задавать вывод определенных баннеров для разных страниц сайта.</p><p>- &nbsp;Форма подписки на e-mail рассылку для сбора email клиентской базы сайта.</p><p>- Рейтинг товаров</p><h2>Лёгкое изменение дизайна</h2><p>- Использование шаблонизатора Smarty</p><p>- Простая структура шаблонов</p><p>- Редактор шаблонов с подсветкой синтаксиса прямо в панели управления</p><p>- Полностью открытый исходный код</p>', 1, '2015-11-19 22:00:00', '3.png', '2015-11-19 12:14:31'),
@@ -97,7 +93,7 @@ INSERT INTO `s_blog` (`id`, `name`, `url`, `meta_title`, `meta_keywords`, `meta_
 /*!40000 ALTER TABLE `s_blog` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_brands
+-- Дамп структуры для таблица okay.s_brands
 DROP TABLE IF EXISTS `s_brands`;
 CREATE TABLE IF NOT EXISTS `s_brands` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -115,8 +111,7 @@ CREATE TABLE IF NOT EXISTS `s_brands` (
   KEY `url` (`url`)
 ) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_brands: 8 rows
-DELETE FROM `s_brands`;
+-- Дамп данных таблицы okay.s_brands: 8 rows
 /*!40000 ALTER TABLE `s_brands` DISABLE KEYS */;
 INSERT INTO `s_brands` (`id`, `name`, `url`, `meta_title`, `meta_keywords`, `meta_description`, `annotation`, `description`, `image`, `last_modify`) VALUES
 	(1, 'Bosch', 'bosch', 'Bosch', 'Bosch', 'Bosch', '', '', 'bosch_new.jpg', '2015-11-24 11:15:15'),
@@ -130,7 +125,7 @@ INSERT INTO `s_brands` (`id`, `name`, `url`, `meta_title`, `meta_keywords`, `met
 /*!40000 ALTER TABLE `s_brands` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_callbacks
+-- Дамп структуры для таблица okay.s_callbacks
 DROP TABLE IF EXISTS `s_callbacks`;
 CREATE TABLE IF NOT EXISTS `s_callbacks` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -143,15 +138,14 @@ CREATE TABLE IF NOT EXISTS `s_callbacks` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_callbacks: 1 rows
-DELETE FROM `s_callbacks`;
+-- Дамп данных таблицы okay.s_callbacks: 1 rows
 /*!40000 ALTER TABLE `s_callbacks` DISABLE KEYS */;
 INSERT INTO `s_callbacks` (`id`, `date`, `name`, `phone`, `message`, `processed`, `url`) VALUES
 	(1, '2015-11-19 11:18:53', 'Shut', '+30591234567', 'Don\'t worry be happy', 0, 'http://localhost/okay-git/en/products/opticheskij-nivelir-bosch-gol-20-d-professional');
 /*!40000 ALTER TABLE `s_callbacks` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_categories
+-- Дамп структуры для таблица okay.s_categories
 DROP TABLE IF EXISTS `s_categories`;
 CREATE TABLE IF NOT EXISTS `s_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -183,8 +177,7 @@ CREATE TABLE IF NOT EXISTS `s_categories` (
   KEY `external_id` (`external_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_categories: 13 rows
-DELETE FROM `s_categories`;
+-- Дамп данных таблицы okay.s_categories: 13 rows
 /*!40000 ALTER TABLE `s_categories` DISABLE KEYS */;
 INSERT INTO `s_categories` (`id`, `parent_id`, `name`, `name_h1`, `yandex_name`, `meta_title`, `meta_keywords`, `meta_description`, `annotation`, `description`, `url`, `image`, `position`, `visible`, `external_id`, `level_depth`, `auto_meta_title`, `auto_meta_keywords`, `auto_meta_desc`, `auto_body`, `last_modify`) VALUES
 	(2, 7, 'Мебель и интерьер', '', '', 'Мебель и интерьер', 'Мебель и интерьер', 'Мебель и интерьер', '', '', 'furniture-and-interior', '', 3, 1, '', 2, '', '', '', '', '2015-12-25 12:01:06'),
@@ -203,7 +196,7 @@ INSERT INTO `s_categories` (`id`, `parent_id`, `name`, `name_h1`, `yandex_name`,
 /*!40000 ALTER TABLE `s_categories` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_categories_features
+-- Дамп структуры для таблица okay.s_categories_features
 DROP TABLE IF EXISTS `s_categories_features`;
 CREATE TABLE IF NOT EXISTS `s_categories_features` (
   `category_id` int(11) NOT NULL,
@@ -211,8 +204,7 @@ CREATE TABLE IF NOT EXISTS `s_categories_features` (
   PRIMARY KEY (`category_id`,`feature_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_categories_features: 3 rows
-DELETE FROM `s_categories_features`;
+-- Дамп данных таблицы okay.s_categories_features: 3 rows
 /*!40000 ALTER TABLE `s_categories_features` DISABLE KEYS */;
 INSERT INTO `s_categories_features` (`category_id`, `feature_id`) VALUES
 	(24, 1),
@@ -221,7 +213,7 @@ INSERT INTO `s_categories_features` (`category_id`, `feature_id`) VALUES
 /*!40000 ALTER TABLE `s_categories_features` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_comments
+-- Дамп структуры для таблица okay.s_comments
 DROP TABLE IF EXISTS `s_comments`;
 CREATE TABLE IF NOT EXISTS `s_comments` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -237,15 +229,14 @@ CREATE TABLE IF NOT EXISTS `s_comments` (
   KEY `type` (`type`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_comments: 1 rows
-DELETE FROM `s_comments`;
+-- Дамп данных таблицы okay.s_comments: 1 rows
 /*!40000 ALTER TABLE `s_comments` DISABLE KEYS */;
 INSERT INTO `s_comments` (`id`, `date`, `ip`, `object_id`, `name`, `text`, `type`, `approved`) VALUES
 	(1, '2015-11-16 16:29:00', '178.215.175.49', 1, 'Сергей', 'Пользуюсь уже два года. Никаких замечаний.', 'product', 0);
 /*!40000 ALTER TABLE `s_comments` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_coupons
+-- Дамп структуры для таблица okay.s_coupons
 DROP TABLE IF EXISTS `s_coupons`;
 CREATE TABLE IF NOT EXISTS `s_coupons` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -259,15 +250,14 @@ CREATE TABLE IF NOT EXISTS `s_coupons` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_coupons: 1 rows
-DELETE FROM `s_coupons`;
+-- Дамп данных таблицы okay.s_coupons: 1 rows
 /*!40000 ALTER TABLE `s_coupons` DISABLE KEYS */;
 INSERT INTO `s_coupons` (`id`, `code`, `expire`, `type`, `value`, `min_order_price`, `single`, `usages`) VALUES
 	(1, 'OKAYCMS', NULL, 'percentage', 10.00, 0.00, 0, 0);
 /*!40000 ALTER TABLE `s_coupons` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_currencies
+-- Дамп структуры для таблица okay.s_currencies
 DROP TABLE IF EXISTS `s_currencies`;
 CREATE TABLE IF NOT EXISTS `s_currencies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -283,8 +273,7 @@ CREATE TABLE IF NOT EXISTS `s_currencies` (
   KEY `position` (`position`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_currencies: 3 rows
-DELETE FROM `s_currencies`;
+-- Дамп данных таблицы okay.s_currencies: 3 rows
 /*!40000 ALTER TABLE `s_currencies` DISABLE KEYS */;
 INSERT INTO `s_currencies` (`id`, `name`, `sign`, `code`, `rate_from`, `rate_to`, `cents`, `position`, `enabled`) VALUES
 	(2, 'рубли', 'руб', 'RUR', 8.13, 8.13, 0, 1, 1),
@@ -293,7 +282,7 @@ INSERT INTO `s_currencies` (`id`, `name`, `sign`, `code`, `rate_from`, `rate_to`
 /*!40000 ALTER TABLE `s_currencies` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_delivery
+-- Дамп структуры для таблица okay.s_delivery
 DROP TABLE IF EXISTS `s_delivery`;
 CREATE TABLE IF NOT EXISTS `s_delivery` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -308,8 +297,7 @@ CREATE TABLE IF NOT EXISTS `s_delivery` (
   KEY `position` (`position`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_delivery: 2 rows
-DELETE FROM `s_delivery`;
+-- Дамп данных таблицы okay.s_delivery: 2 rows
 /*!40000 ALTER TABLE `s_delivery` DISABLE KEYS */;
 INSERT INTO `s_delivery` (`id`, `name`, `description`, `free_from`, `price`, `enabled`, `position`, `separate_payment`) VALUES
 	(1, 'Курьерская доставка по Москве ru', '<p><span>Курьерская доставка осуществляется на следующий день после оформления заказа, если товар есть в наличии. Курьерская доставка осуществляется в пределах Томска и Северска ежедневно с 10.00 до 21.00. Заказ на сумму свыше 300 рублей доставляется бесплатно.&nbsp;<br /><br />Стоимость бесплатной доставки раcсчитывается от суммы заказа с учтенной скидкой. В случае если сумма заказа после применения скидки менее 300р, осуществляется платная доставка.&nbsp;<br /><br />При сумме заказа менее 300 рублей стоимость доставки составляет от 50 рублей.</span></p>', 10833.55, 260.00, 1, 2, NULL),
@@ -317,7 +305,7 @@ INSERT INTO `s_delivery` (`id`, `name`, `description`, `free_from`, `price`, `en
 /*!40000 ALTER TABLE `s_delivery` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_delivery_payment
+-- Дамп структуры для таблица okay.s_delivery_payment
 DROP TABLE IF EXISTS `s_delivery_payment`;
 CREATE TABLE IF NOT EXISTS `s_delivery_payment` (
   `delivery_id` int(11) NOT NULL,
@@ -325,8 +313,7 @@ CREATE TABLE IF NOT EXISTS `s_delivery_payment` (
   PRIMARY KEY (`delivery_id`,`payment_method_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Связка способом оплаты и способов доставки';
 
-# Dumping data for table okaycms-git.s_delivery_payment: 16 rows
-DELETE FROM `s_delivery_payment`;
+-- Дамп данных таблицы okay.s_delivery_payment: 16 rows
 /*!40000 ALTER TABLE `s_delivery_payment` DISABLE KEYS */;
 INSERT INTO `s_delivery_payment` (`delivery_id`, `payment_method_id`) VALUES
 	(1, 1),
@@ -348,7 +335,7 @@ INSERT INTO `s_delivery_payment` (`delivery_id`, `payment_method_id`) VALUES
 /*!40000 ALTER TABLE `s_delivery_payment` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_features
+-- Дамп структуры для таблица okay.s_features
 DROP TABLE IF EXISTS `s_features`;
 CREATE TABLE IF NOT EXISTS `s_features` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -365,8 +352,7 @@ CREATE TABLE IF NOT EXISTS `s_features` (
   KEY `yandex` (`yandex`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_features: 3 rows
-DELETE FROM `s_features`;
+-- Дамп данных таблицы okay.s_features: 3 rows
 /*!40000 ALTER TABLE `s_features` DISABLE KEYS */;
 INSERT INTO `s_features` (`id`, `name`, `position`, `in_filter`, `yandex`, `auto_name_id`, `auto_value_id`, `url`) VALUES
 	(1, 'Возраст', 1, 1, 1, '', '', 'age'),
@@ -375,7 +361,7 @@ INSERT INTO `s_features` (`id`, `name`, `position`, `in_filter`, `yandex`, `auto
 /*!40000 ALTER TABLE `s_features` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_feedbacks
+-- Дамп структуры для таблица okay.s_feedbacks
 DROP TABLE IF EXISTS `s_feedbacks`;
 CREATE TABLE IF NOT EXISTS `s_feedbacks` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -387,13 +373,12 @@ CREATE TABLE IF NOT EXISTS `s_feedbacks` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_feedbacks: 0 rows
-DELETE FROM `s_feedbacks`;
+-- Дамп данных таблицы okay.s_feedbacks: 0 rows
 /*!40000 ALTER TABLE `s_feedbacks` DISABLE KEYS */;
 /*!40000 ALTER TABLE `s_feedbacks` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_groups
+-- Дамп структуры для таблица okay.s_groups
 DROP TABLE IF EXISTS `s_groups`;
 CREATE TABLE IF NOT EXISTS `s_groups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -402,15 +387,14 @@ CREATE TABLE IF NOT EXISTS `s_groups` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_groups: 1 rows
-DELETE FROM `s_groups`;
+-- Дамп данных таблицы okay.s_groups: 1 rows
 /*!40000 ALTER TABLE `s_groups` DISABLE KEYS */;
 INSERT INTO `s_groups` (`id`, `name`, `discount`) VALUES
 	(1, 'Постоянный покупатель', 2.00);
 /*!40000 ALTER TABLE `s_groups` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_images
+-- Дамп структуры для таблица okay.s_images
 DROP TABLE IF EXISTS `s_images`;
 CREATE TABLE IF NOT EXISTS `s_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -424,8 +408,7 @@ CREATE TABLE IF NOT EXISTS `s_images` (
   KEY `position` (`position`)
 ) ENGINE=MyISAM AUTO_INCREMENT=267 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_images: 266 rows
-DELETE FROM `s_images`;
+-- Дамп данных таблицы okay.s_images: 266 rows
 /*!40000 ALTER TABLE `s_images` DISABLE KEYS */;
 INSERT INTO `s_images` (`id`, `name`, `product_id`, `filename`, `position`) VALUES
 	(1, '', 1, '92-162.jpg', 1),
@@ -697,7 +680,7 @@ INSERT INTO `s_images` (`id`, `name`, `product_id`, `filename`, `position`) VALU
 /*!40000 ALTER TABLE `s_images` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_labels
+-- Дамп структуры для таблица okay.s_labels
 DROP TABLE IF EXISTS `s_labels`;
 CREATE TABLE IF NOT EXISTS `s_labels` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -707,8 +690,7 @@ CREATE TABLE IF NOT EXISTS `s_labels` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_labels: 2 rows
-DELETE FROM `s_labels`;
+-- Дамп данных таблицы okay.s_labels: 2 rows
 /*!40000 ALTER TABLE `s_labels` DISABLE KEYS */;
 INSERT INTO `s_labels` (`id`, `name`, `color`, `position`) VALUES
 	(1, 'перезвонить', 'ff00ff', 4),
@@ -716,7 +698,7 @@ INSERT INTO `s_labels` (`id`, `name`, `color`, `position`) VALUES
 /*!40000 ALTER TABLE `s_labels` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_languages
+-- Дамп структуры для таблица okay.s_languages
 DROP TABLE IF EXISTS `s_languages`;
 CREATE TABLE IF NOT EXISTS `s_languages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -728,8 +710,7 @@ CREATE TABLE IF NOT EXISTS `s_languages` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_languages: 3 rows
-DELETE FROM `s_languages`;
+-- Дамп данных таблицы okay.s_languages: 3 rows
 /*!40000 ALTER TABLE `s_languages` DISABLE KEYS */;
 INSERT INTO `s_languages` (`id`, `name`, `label`, `is_default`, `enabled`, `position`) VALUES
 	(1, 'Русский', 'ru', 0, 1, 1),
@@ -738,7 +719,7 @@ INSERT INTO `s_languages` (`id`, `name`, `label`, `is_default`, `enabled`, `posi
 /*!40000 ALTER TABLE `s_languages` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_lang_banners_images
+-- Дамп структуры для таблица okay.s_lang_banners_images
 DROP TABLE IF EXISTS `s_lang_banners_images`;
 CREATE TABLE IF NOT EXISTS `s_lang_banners_images` (
   `lang_id` int(11) NOT NULL,
@@ -752,8 +733,7 @@ CREATE TABLE IF NOT EXISTS `s_lang_banners_images` (
   PRIMARY KEY (`lang_id`,`banner_image_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_lang_banners_images: 6 rows
-DELETE FROM `s_lang_banners_images`;
+-- Дамп данных таблицы okay.s_lang_banners_images: 6 rows
 /*!40000 ALTER TABLE `s_lang_banners_images` DISABLE KEYS */;
 INSERT INTO `s_lang_banners_images` (`lang_id`, `lang_label`, `banner_image_id`, `name`, `alt`, `title`, `description`, `url`) VALUES
 	(1, '', 1, '1', '', '', '', ''),
@@ -765,7 +745,7 @@ INSERT INTO `s_lang_banners_images` (`lang_id`, `lang_label`, `banner_image_id`,
 /*!40000 ALTER TABLE `s_lang_banners_images` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_lang_blog
+-- Дамп структуры для таблица okay.s_lang_blog
 DROP TABLE IF EXISTS `s_lang_blog`;
 CREATE TABLE IF NOT EXISTS `s_lang_blog` (
   `lang_id` int(11) NOT NULL,
@@ -780,8 +760,7 @@ CREATE TABLE IF NOT EXISTS `s_lang_blog` (
   UNIQUE KEY `lang_id` (`lang_id`,`blog_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_lang_blog: 6 rows
-DELETE FROM `s_lang_blog`;
+-- Дамп данных таблицы okay.s_lang_blog: 6 rows
 /*!40000 ALTER TABLE `s_lang_blog` DISABLE KEYS */;
 INSERT INTO `s_lang_blog` (`lang_id`, `lang_label`, `blog_id`, `name`, `meta_title`, `meta_keywords`, `meta_description`, `annotation`, `text`) VALUES
 	(1, 'ru', 1, 'Преимущества OkayCMS', 'Преимущества OkayCMS', 'Преимущества OkayCMS', '', '', '<h2>Удобная панель управления</h2><p>- Удобный функционал для работы с категориями и товарами, возможность добавления изображений к товару перетягиванием мыши, разработана форма для легкого и быстрого добавления новых товаров.</p><p>- Быстрый экспорт товаров в ЯндексМаркет с возможностью гибкой настройки выгрузки.</p><p>- Мультиязычность. Возможность создать сайт сразу на нескольких языках с удобной системой перевода.</p><p>- Удобная работа с заказами, возможность присваивать различные статусы, метки и комментарии к заказам.</p><p>- Импорт/экспорт товаров в CSV формате</p><p>- Мультивалютность сайта. Задавать стоимость товара можно в разных валютах, а на сайте выводить в одной валюте</p><p>- Опционно для товаров, которых нет в наличии выводится надпись &laquo;Под заказ&raquo; или &laquo;Нет в наличии&raquo;</p><h2>SEO-оптимизация</h2><p>- Практичная, с точки зрения юзабилити, структура клиентского шаблона с учетом всех необходимых элементов для лучшего взаимодействия пользователей с сайтом.</p><p>- ЧПУ. Понятный для человека URL, формирующийся автоматически из названия, с возможностью ручного редактирования.</p><p>- Автоматическая генерация метатегов (title, description и keywords) для каждой страницы сайта с возможностью дальнейшего редактирования.</p><p>- Автоматическая генерация карты сайта (Sitemap.XML) со всеми необходимыми настройками (LastMod, Priority, Frequency). Обновляется автоматически.</p><p>- Микроразметка хлебных крошек для формирования расширенных сниппетов в поисковой выдаче.</p><p>- Оптимизированный SEO-фильтр для автоматического формирования уникальных страниц для низкочастотных запросов категорий и свойств или брендов товаров.</p><p>- Возможность автоматической генерации мета-тегов и описаний для товаров из определенной категории</p><p>- Автоматические генерируемые метатеги &nbsp;Alt и Title для изображений товаров</p><h2>Маркетинговые инструменты</h2><p>- Генерация акционных промо-кодов с возможностью задать различные условия</p><p>- Добавление и редактирование триггеров на фото товаров для привлечения внимания клиентов (Хиты продаж, Новинки, Акция итд)</p><p>- Встроенный функционал заказ обратного звонка с отображением всех заявок в админ. панели</p><p>- Сравнение товаров</p><p>- Добавление и просмотр избранных товаров для пользователя</p><p>- Практичная система управления баннерами, позволяющая задавать вывод определенных баннеров для разных страниц сайта.</p><p>- &nbsp;Форма подписки на e-mail рассылку для сбора email клиентской базы сайта.</p><p>- Рейтинг товаров</p><h2>Лёгкое изменение дизайна</h2><p>- Использование шаблонизатора Smarty</p><p>- Простая структура шаблонов</p><p>- Редактор шаблонов с подсветкой синтаксиса прямо в панели управления</p><p>- Полностью открытый исходный код</p>'),
@@ -793,7 +772,7 @@ INSERT INTO `s_lang_blog` (`lang_id`, `lang_label`, `blog_id`, `name`, `meta_tit
 /*!40000 ALTER TABLE `s_lang_blog` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_lang_brands
+-- Дамп структуры для таблица okay.s_lang_brands
 DROP TABLE IF EXISTS `s_lang_brands`;
 CREATE TABLE IF NOT EXISTS `s_lang_brands` (
   `lang_id` int(11) NOT NULL,
@@ -808,8 +787,7 @@ CREATE TABLE IF NOT EXISTS `s_lang_brands` (
   UNIQUE KEY `lang_id` (`lang_id`,`brand_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_lang_brands: 24 rows
-DELETE FROM `s_lang_brands`;
+-- Дамп данных таблицы okay.s_lang_brands: 24 rows
 /*!40000 ALTER TABLE `s_lang_brands` DISABLE KEYS */;
 INSERT INTO `s_lang_brands` (`lang_id`, `lang_label`, `brand_id`, `name`, `meta_title`, `meta_keywords`, `meta_description`, `annotation`, `description`) VALUES
 	(1, '', 8, 'Siemens', 'Siemens', 'Siemens', 'Siemens', '', ''),
@@ -839,7 +817,7 @@ INSERT INTO `s_lang_brands` (`lang_id`, `lang_label`, `brand_id`, `name`, `meta_
 /*!40000 ALTER TABLE `s_lang_brands` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_lang_categories
+-- Дамп структуры для таблица okay.s_lang_categories
 DROP TABLE IF EXISTS `s_lang_categories`;
 CREATE TABLE IF NOT EXISTS `s_lang_categories` (
   `lang_id` int(11) NOT NULL,
@@ -859,8 +837,7 @@ CREATE TABLE IF NOT EXISTS `s_lang_categories` (
   UNIQUE KEY `lang_id` (`lang_id`,`category_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_lang_categories: 39 rows
-DELETE FROM `s_lang_categories`;
+-- Дамп данных таблицы okay.s_lang_categories: 39 rows
 /*!40000 ALTER TABLE `s_lang_categories` DISABLE KEYS */;
 INSERT INTO `s_lang_categories` (`lang_id`, `lang_label`, `category_id`, `name`, `name_h1`, `meta_title`, `meta_keywords`, `meta_description`, `annotation`, `description`, `auto_meta_title`, `auto_meta_keywords`, `auto_meta_desc`, `auto_body`) VALUES
 	(1, '', 3, 'Строительные инструменты', '', 'Строительные инструменты', 'Строительные инструменты', 'Строительные инструменты', '', '', '', '', '', ''),
@@ -905,7 +882,7 @@ INSERT INTO `s_lang_categories` (`lang_id`, `lang_label`, `category_id`, `name`,
 /*!40000 ALTER TABLE `s_lang_categories` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_lang_currencies
+-- Дамп структуры для таблица okay.s_lang_currencies
 DROP TABLE IF EXISTS `s_lang_currencies`;
 CREATE TABLE IF NOT EXISTS `s_lang_currencies` (
   `lang_id` int(11) NOT NULL,
@@ -916,8 +893,7 @@ CREATE TABLE IF NOT EXISTS `s_lang_currencies` (
   UNIQUE KEY `lang_id` (`lang_id`,`currency_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_lang_currencies: 9 rows
-DELETE FROM `s_lang_currencies`;
+-- Дамп данных таблицы okay.s_lang_currencies: 9 rows
 /*!40000 ALTER TABLE `s_lang_currencies` DISABLE KEYS */;
 INSERT INTO `s_lang_currencies` (`lang_id`, `lang_label`, `currency_id`, `name`, `sign`) VALUES
 	(1, 'ru', 2, 'рубли', 'руб'),
@@ -932,7 +908,7 @@ INSERT INTO `s_lang_currencies` (`lang_id`, `lang_label`, `currency_id`, `name`,
 /*!40000 ALTER TABLE `s_lang_currencies` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_lang_delivery
+-- Дамп структуры для таблица okay.s_lang_delivery
 DROP TABLE IF EXISTS `s_lang_delivery`;
 CREATE TABLE IF NOT EXISTS `s_lang_delivery` (
   `lang_id` int(11) NOT NULL,
@@ -943,8 +919,7 @@ CREATE TABLE IF NOT EXISTS `s_lang_delivery` (
   UNIQUE KEY `lang_id` (`lang_id`,`delivery_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_lang_delivery: 6 rows
-DELETE FROM `s_lang_delivery`;
+-- Дамп данных таблицы okay.s_lang_delivery: 6 rows
 /*!40000 ALTER TABLE `s_lang_delivery` DISABLE KEYS */;
 INSERT INTO `s_lang_delivery` (`lang_id`, `lang_label`, `delivery_id`, `name`, `description`) VALUES
 	(1, 'ru', 1, 'Курьерская доставка по Москве ru', '<p><span>Курьерская доставка осуществляется на следующий день после оформления заказа, если товар есть в наличии. Курьерская доставка осуществляется в пределах Томска и Северска ежедневно с 10.00 до 21.00. Заказ на сумму свыше 300 рублей доставляется бесплатно.&nbsp;<br /><br />Стоимость бесплатной доставки раcсчитывается от суммы заказа с учтенной скидкой. В случае если сумма заказа после применения скидки менее 300р, осуществляется платная доставка.&nbsp;<br /><br />При сумме заказа менее 300 рублей стоимость доставки составляет от 50 рублей.</span></p>'),
@@ -956,7 +931,7 @@ INSERT INTO `s_lang_delivery` (`lang_id`, `lang_label`, `delivery_id`, `name`, `
 /*!40000 ALTER TABLE `s_lang_delivery` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_lang_features
+-- Дамп структуры для таблица okay.s_lang_features
 DROP TABLE IF EXISTS `s_lang_features`;
 CREATE TABLE IF NOT EXISTS `s_lang_features` (
   `lang_id` int(11) NOT NULL,
@@ -966,8 +941,7 @@ CREATE TABLE IF NOT EXISTS `s_lang_features` (
   UNIQUE KEY `lang_id` (`lang_id`,`feature_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_lang_features: 9 rows
-DELETE FROM `s_lang_features`;
+-- Дамп данных таблицы okay.s_lang_features: 9 rows
 /*!40000 ALTER TABLE `s_lang_features` DISABLE KEYS */;
 INSERT INTO `s_lang_features` (`lang_id`, `lang_label`, `feature_id`, `name`) VALUES
 	(3, '', 1, 'Возраст'),
@@ -982,7 +956,7 @@ INSERT INTO `s_lang_features` (`lang_id`, `lang_label`, `feature_id`, `name`) VA
 /*!40000 ALTER TABLE `s_lang_features` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_lang_pages
+-- Дамп структуры для таблица okay.s_lang_pages
 DROP TABLE IF EXISTS `s_lang_pages`;
 CREATE TABLE IF NOT EXISTS `s_lang_pages` (
   `lang_id` int(11) NOT NULL,
@@ -997,8 +971,7 @@ CREATE TABLE IF NOT EXISTS `s_lang_pages` (
   UNIQUE KEY `lang_id` (`lang_id`,`page_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_lang_pages: 24 rows
-DELETE FROM `s_lang_pages`;
+-- Дамп данных таблицы okay.s_lang_pages: 24 rows
 /*!40000 ALTER TABLE `s_lang_pages` DISABLE KEYS */;
 INSERT INTO `s_lang_pages` (`lang_id`, `lang_label`, `page_id`, `name`, `meta_title`, `meta_description`, `meta_keywords`, `body`, `header`) VALUES
 	(1, 'ru', 3, 'Доставка', 'Доставка', 'Доставка', 'Доставка', '<h2>Курьерская доставка по&nbsp;Москве</h2><p>Курьерская доставка осуществляется на следующий день после оформления заказа<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>если товар есть в&nbsp;наличии. Курьерская доставка осуществляется в&nbsp;пределах Томска и&nbsp;Северска ежедневно с&nbsp;10.00 до&nbsp;21.00. Заказ на&nbsp;сумму свыше 300 рублей доставляется бесплатно. <br /><br />Стоимость бесплатной доставки раcсчитывается от&nbsp;суммы заказа с&nbsp;учтенной скидкой. В&nbsp;случае если сумма заказа после применения скидки менее 300р<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>осуществляется платная доставка. <br /><br />При сумме заказа менее 300 рублей стоимость доставки составляет от 50 рублей.</p><h2>Самовывоз</h2><p>Удобный<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>бесплатный и быстрый способ получения заказа.<br />Адрес офиса: Москва<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>ул. Арбат<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>1/3<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>офис 419.</p><h2>Доставка с&nbsp;помощью предприятия<span style="margin-right: 0.44em;"> </span><span style="margin-left: -0.44em;">&laquo;</span>Автотрейдинг&raquo;</h2><p>Удобный и быстрый способ доставки в крупные города России. Посылка доставляется в офис<span style="margin-right: 0.44em;"> </span><span style="margin-left: -0.44em;">&laquo;</span>Автотрейдинг&raquo; в&nbsp;Вашем городе. Для получения необходимо предъявить паспорт и&nbsp;номер грузовой декларации<span style="margin-right: 0.3em;"> </span><span style="margin-left: -0.3em;">(</span>сообщит наш менеджер после отправки). Посылку желательно получить в&nbsp;течение 24 часов с&nbsp;момента прихода груза<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>иначе компания<span style="margin-right: 0.44em;"> </span><span style="margin-left: -0.44em;">&laquo;</span>Автотрейдинг&raquo; может взыскать с Вас дополнительную оплату за хранение. Срок доставки и стоимость Вы можете рассчитать на сайте компании.</p><h2>Наложенным платежом</h2><p>При доставке заказа наложенным платежом с помощью<span style="margin-right: 0.44em;"> </span><span style="margin-left: -0.44em;">&laquo;</span>Почты России&raquo;, вы&nbsp;сможете оплатить заказ непосредственно в&nbsp;момент получения товаров.</p>', 'Способы доставки'),
@@ -1028,7 +1001,7 @@ INSERT INTO `s_lang_pages` (`lang_id`, `lang_label`, `page_id`, `name`, `meta_ti
 /*!40000 ALTER TABLE `s_lang_pages` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_lang_payment_methods
+-- Дамп структуры для таблица okay.s_lang_payment_methods
 DROP TABLE IF EXISTS `s_lang_payment_methods`;
 CREATE TABLE IF NOT EXISTS `s_lang_payment_methods` (
   `lang_id` int(11) NOT NULL,
@@ -1039,8 +1012,7 @@ CREATE TABLE IF NOT EXISTS `s_lang_payment_methods` (
   UNIQUE KEY `lang_id` (`lang_id`,`payment_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_lang_payment_methods: 36 rows
-DELETE FROM `s_lang_payment_methods`;
+-- Дамп данных таблицы okay.s_lang_payment_methods: 36 rows
 /*!40000 ALTER TABLE `s_lang_payment_methods` DISABLE KEYS */;
 INSERT INTO `s_lang_payment_methods` (`lang_id`, `lang_label`, `payment_id`, `name`, `description`) VALUES
 	(1, 'ru', 1, 'Квитанция', '<p>Вы можете распечатать квитанцию и оплатить её в любом отделении банка.</p>'),
@@ -1082,7 +1054,7 @@ INSERT INTO `s_lang_payment_methods` (`lang_id`, `lang_label`, `payment_id`, `na
 /*!40000 ALTER TABLE `s_lang_payment_methods` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_lang_products
+-- Дамп структуры для таблица okay.s_lang_products
 DROP TABLE IF EXISTS `s_lang_products`;
 CREATE TABLE IF NOT EXISTS `s_lang_products` (
   `lang_id` int(11) NOT NULL,
@@ -1098,8 +1070,7 @@ CREATE TABLE IF NOT EXISTS `s_lang_products` (
   UNIQUE KEY `lang_id` (`lang_id`,`product_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_lang_products: 441 rows
-DELETE FROM `s_lang_products`;
+-- Дамп данных таблицы okay.s_lang_products: 441 rows
 /*!40000 ALTER TABLE `s_lang_products` DISABLE KEYS */;
 INSERT INTO `s_lang_products` (`lang_id`, `lang_label`, `product_id`, `name`, `annotation`, `body`, `meta_title`, `meta_keywords`, `meta_description`, `special`) VALUES
 	(3, '', 73, 'Автокресло Maxi-Cosi Priori SPS', '<p>Модель детского автокресла первой возрастной группы. Оно разработано для малышей, только начинающих ходить, и дошкольников (возраст от 9 месяцев до 4-х лет, вес 9-18 кг).</p>', '<p>Модель детского автокресла первой возрастной группы. Оно разработано для малышей, только начинающих ходить, и дошкольников (возраст от 9 месяцев до 4-х лет, вес 9-18 кг). Автокресло Priori легко устанавливается и закрепляется ремнями безопасности с креплением в 2-х или 3-х точках на любом пассажирском месте во всех типах автомобилей. Съемные чехлы можно стирать. Цвета: Bjorn, Enzo, Indigo, Prado, Solar, Stratos, Florian, Horizon, Roseline.</p>', 'Автокресло Maxi-Cosi Priori SPS', '', '', NULL),
@@ -1546,7 +1517,7 @@ INSERT INTO `s_lang_products` (`lang_id`, `lang_label`, `product_id`, `name`, `a
 /*!40000 ALTER TABLE `s_lang_products` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_lang_variants
+-- Дамп структуры для таблица okay.s_lang_variants
 DROP TABLE IF EXISTS `s_lang_variants`;
 CREATE TABLE IF NOT EXISTS `s_lang_variants` (
   `lang_id` int(11) NOT NULL,
@@ -1556,8 +1527,7 @@ CREATE TABLE IF NOT EXISTS `s_lang_variants` (
   UNIQUE KEY `lang_id` (`lang_id`,`variant_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_lang_variants: 453 rows
-DELETE FROM `s_lang_variants`;
+-- Дамп данных таблицы okay.s_lang_variants: 453 rows
 /*!40000 ALTER TABLE `s_lang_variants` DISABLE KEYS */;
 INSERT INTO `s_lang_variants` (`lang_id`, `lang_label`, `variant_id`, `name`) VALUES
 	(1, '', 49, ''),
@@ -2016,7 +1986,7 @@ INSERT INTO `s_lang_variants` (`lang_id`, `lang_label`, `variant_id`, `name`) VA
 /*!40000 ALTER TABLE `s_lang_variants` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_managers
+-- Дамп структуры для таблица okay.s_managers
 DROP TABLE IF EXISTS `s_managers`;
 CREATE TABLE IF NOT EXISTS `s_managers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2029,15 +1999,14 @@ CREATE TABLE IF NOT EXISTS `s_managers` (
   KEY `login` (`login`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_managers: 1 rows
-DELETE FROM `s_managers`;
+-- Дамп данных таблицы okay.s_managers: 1 rows
 /*!40000 ALTER TABLE `s_managers` DISABLE KEYS */;
 INSERT INTO `s_managers` (`id`, `login`, `password`, `permissions`, `cnt_try`, `last_try`) VALUES
 	(1, 'admin', '$apr1$t13co40k$3r2S6/MpFwliaixrvvR5N.', NULL, 0, NULL);
 /*!40000 ALTER TABLE `s_managers` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_menu
+-- Дамп структуры для таблица okay.s_menu
 DROP TABLE IF EXISTS `s_menu`;
 CREATE TABLE IF NOT EXISTS `s_menu` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2046,8 +2015,7 @@ CREATE TABLE IF NOT EXISTS `s_menu` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_menu: 2 rows
-DELETE FROM `s_menu`;
+-- Дамп данных таблицы okay.s_menu: 2 rows
 /*!40000 ALTER TABLE `s_menu` DISABLE KEYS */;
 INSERT INTO `s_menu` (`id`, `name`, `position`) VALUES
 	(1, 'Основное меню', 1),
@@ -2055,7 +2023,7 @@ INSERT INTO `s_menu` (`id`, `name`, `position`) VALUES
 /*!40000 ALTER TABLE `s_menu` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_options
+-- Дамп структуры для таблица okay.s_options
 DROP TABLE IF EXISTS `s_options`;
 CREATE TABLE IF NOT EXISTS `s_options` (
   `product_id` int(11) NOT NULL,
@@ -2070,8 +2038,7 @@ CREATE TABLE IF NOT EXISTS `s_options` (
   KEY `lang_id` (`lang_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_options: 27 rows
-DELETE FROM `s_options`;
+-- Дамп данных таблицы okay.s_options: 27 rows
 /*!40000 ALTER TABLE `s_options` DISABLE KEYS */;
 INSERT INTO `s_options` (`product_id`, `feature_id`, `lang_id`, `value`, `translit`) VALUES
 	(143, 3, 1, '12 Мп', '12mp'),
@@ -2104,7 +2071,7 @@ INSERT INTO `s_options` (`product_id`, `feature_id`, `lang_id`, `value`, `transl
 /*!40000 ALTER TABLE `s_options` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_orders
+-- Дамп структуры для таблица okay.s_orders
 DROP TABLE IF EXISTS `s_orders`;
 CREATE TABLE IF NOT EXISTS `s_orders` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -2140,19 +2107,19 @@ CREATE TABLE IF NOT EXISTS `s_orders` (
   KEY `status` (`status`),
   KEY `code` (`url`),
   KEY `payment_status` (`paid`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_orders: 3 rows
-DELETE FROM `s_orders`;
+-- Дамп данных таблицы okay.s_orders: 3 rows
 /*!40000 ALTER TABLE `s_orders` DISABLE KEYS */;
 INSERT INTO `s_orders` (`id`, `delivery_id`, `delivery_price`, `payment_method_id`, `paid`, `payment_date`, `closed`, `date`, `user_id`, `name`, `address`, `phone`, `email`, `comment`, `status`, `url`, `payment_details`, `ip`, `total_price`, `note`, `discount`, `coupon_discount`, `coupon_code`, `separate_delivery`, `modified`, `lang_id`) VALUES
 	(1, 1, 260.00, 2, 0, '0000-00-00 00:00:00', 0, '2015-11-16 16:27:51', 0, 'Виталий Иванов', 'Москва, ул. Космонавта Волкова, 14', '+7(911)111-22-33', 'ivanov@okay-cms.com', 'Доставка на вечер', 0, '444075c1dbaa86a4fb526b3f056cdfeb', '', '178.215.175.49', 1258.40, '', 0.00, 111.15, 'OKAYCMS', 0, '2015-11-16 12:27:59', 1),
 	(2, 2, 0.00, NULL, 0, '0000-00-00 00:00:00', 0, '2015-11-19 12:58:08', 0, 'Shut', '', '', 'shut.dp.ua@online.ua', '', 3, 'a4865512f0eb146677c0ada96704a6d4', '', '178.215.175.49', 498.55, '', 0.00, 0.00, '', 0, '2015-11-19 14:47:11', 2),
-	(3, 2, 0.00, NULL, 0, '0000-00-00 00:00:00', 0, '2015-11-19 16:46:56', 0, 'Shut', '', '', 'shut.dp.ua@online.ua', '', 0, '91b97b8fe3a8ece6346632035258bcc9', '', '178.215.175.49', 482.95, '', 0.00, 0.00, '', 0, '2015-11-19 14:46:56', 1);
+	(3, 2, 0.00, NULL, 0, '0000-00-00 00:00:00', 0, '2015-11-19 16:46:56', 0, 'Shut', '', '', 'shut.dp.ua@online.ua', '', 0, '91b97b8fe3a8ece6346632035258bcc9', '', '178.215.175.49', 482.95, '', 0.00, 0.00, '', 0, '2015-11-19 14:46:56', 1),
+	(4, 1, 260.00, 2, 0, '0000-00-00 00:00:00', 0, '2016-03-01 17:19:20', 0, 'test', '', '+7', 'mihaskep@gmail.com', '', 0, '878ddb6edc53d6a6a80d3694337c5528', '', '127.0.0.1', 417.95, '', 0.00, 0.00, '', 0, '2016-03-01 17:19:20', 1);
 /*!40000 ALTER TABLE `s_orders` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_orders_labels
+-- Дамп структуры для таблица okay.s_orders_labels
 DROP TABLE IF EXISTS `s_orders_labels`;
 CREATE TABLE IF NOT EXISTS `s_orders_labels` (
   `order_id` int(11) NOT NULL,
@@ -2160,13 +2127,12 @@ CREATE TABLE IF NOT EXISTS `s_orders_labels` (
   PRIMARY KEY (`order_id`,`label_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_orders_labels: 0 rows
-DELETE FROM `s_orders_labels`;
+-- Дамп данных таблицы okay.s_orders_labels: 0 rows
 /*!40000 ALTER TABLE `s_orders_labels` DISABLE KEYS */;
 /*!40000 ALTER TABLE `s_orders_labels` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_pages
+-- Дамп структуры для таблица okay.s_pages
 DROP TABLE IF EXISTS `s_pages`;
 CREATE TABLE IF NOT EXISTS `s_pages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2186,8 +2152,7 @@ CREATE TABLE IF NOT EXISTS `s_pages` (
   KEY `url` (`url`)
 ) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_pages: 8 rows
-DELETE FROM `s_pages`;
+-- Дамп данных таблицы okay.s_pages: 8 rows
 /*!40000 ALTER TABLE `s_pages` DISABLE KEYS */;
 INSERT INTO `s_pages` (`id`, `url`, `name`, `meta_title`, `meta_description`, `meta_keywords`, `body`, `menu_id`, `position`, `visible`, `header`, `last_modify`) VALUES
 	(3, 'dostavka', 'Доставка', 'Доставка', 'Доставка', 'Доставка', '<h2>Курьерская доставка по&nbsp;Москве</h2><p>Курьерская доставка осуществляется на следующий день после оформления заказа<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>если товар есть в&nbsp;наличии. Курьерская доставка осуществляется в&nbsp;пределах Томска и&nbsp;Северска ежедневно с&nbsp;10.00 до&nbsp;21.00. Заказ на&nbsp;сумму свыше 300 рублей доставляется бесплатно. <br /><br />Стоимость бесплатной доставки раcсчитывается от&nbsp;суммы заказа с&nbsp;учтенной скидкой. В&nbsp;случае если сумма заказа после применения скидки менее 300р<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>осуществляется платная доставка. <br /><br />При сумме заказа менее 300 рублей стоимость доставки составляет от 50 рублей.</p><h2>Самовывоз</h2><p>Удобный<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>бесплатный и быстрый способ получения заказа.<br />Адрес офиса: Москва<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>ул. Арбат<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>1/3<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>офис 419.</p><h2>Доставка с&nbsp;помощью предприятия<span style="margin-right: 0.44em;"> </span><span style="margin-left: -0.44em;">&laquo;</span>Автотрейдинг&raquo;</h2><p>Удобный и быстрый способ доставки в крупные города России. Посылка доставляется в офис<span style="margin-right: 0.44em;"> </span><span style="margin-left: -0.44em;">&laquo;</span>Автотрейдинг&raquo; в&nbsp;Вашем городе. Для получения необходимо предъявить паспорт и&nbsp;номер грузовой декларации<span style="margin-right: 0.3em;"> </span><span style="margin-left: -0.3em;">(</span>сообщит наш менеджер после отправки). Посылку желательно получить в&nbsp;течение 24 часов с&nbsp;момента прихода груза<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>иначе компания<span style="margin-right: 0.44em;"> </span><span style="margin-left: -0.44em;">&laquo;</span>Автотрейдинг&raquo; может взыскать с Вас дополнительную оплату за хранение. Срок доставки и стоимость Вы можете рассчитать на сайте компании.</p><h2>Наложенным платежом</h2><p>При доставке заказа наложенным платежом с помощью<span style="margin-right: 0.44em;"> </span><span style="margin-left: -0.44em;">&laquo;</span>Почты России&raquo;, вы&nbsp;сможете оплатить заказ непосредственно в&nbsp;момент получения товаров.</p>', 1, 3, 1, 'Способы доставки', '2015-11-26 15:54:54'),
@@ -2201,7 +2166,7 @@ INSERT INTO `s_pages` (`id`, `url`, `name`, `meta_title`, `meta_description`, `m
 /*!40000 ALTER TABLE `s_pages` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_payment_methods
+-- Дамп структуры для таблица okay.s_payment_methods
 DROP TABLE IF EXISTS `s_payment_methods`;
 CREATE TABLE IF NOT EXISTS `s_payment_methods` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2216,8 +2181,7 @@ CREATE TABLE IF NOT EXISTS `s_payment_methods` (
   KEY `position` (`position`)
 ) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_payment_methods: 12 rows
-DELETE FROM `s_payment_methods`;
+-- Дамп данных таблицы okay.s_payment_methods: 12 rows
 /*!40000 ALTER TABLE `s_payment_methods` DISABLE KEYS */;
 INSERT INTO `s_payment_methods` (`id`, `module`, `name`, `description`, `currency_id`, `settings`, `enabled`, `position`) VALUES
 	(1, 'Receipt', 'Квитанция', '<p>Вы можете распечатать квитанцию и оплатить её в любом отделении банка.</p>', 2, 'a:10:{s:9:"recipient";s:65:"ООО "Великолепный интернет-магазин"";s:3:"inn";s:5:"12345";s:7:"account";s:6:"223456";s:4:"bank";s:18:"Альфабанк";s:3:"bik";s:6:"556677";s:21:"correspondent_account";s:11:"77777755555";s:8:"banknote";s:7:"руб.";s:5:"pense";s:7:"коп.";s:5:"purse";s:2:"ru";s:10:"secret_key";s:0:"";}', 1, 6),
@@ -2235,7 +2199,7 @@ INSERT INTO `s_payment_methods` (`id`, `module`, `name`, `description`, `currenc
 /*!40000 ALTER TABLE `s_payment_methods` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_products
+-- Дамп структуры для таблица okay.s_products
 DROP TABLE IF EXISTS `s_products`;
 CREATE TABLE IF NOT EXISTS `s_products` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2266,8 +2230,7 @@ CREATE TABLE IF NOT EXISTS `s_products` (
   KEY `name` (`name`(333))
 ) ENGINE=MyISAM AUTO_INCREMENT=148 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_products: 147 rows
-DELETE FROM `s_products`;
+-- Дамп данных таблицы okay.s_products: 147 rows
 /*!40000 ALTER TABLE `s_products` DISABLE KEYS */;
 INSERT INTO `s_products` (`id`, `url`, `brand_id`, `name`, `annotation`, `body`, `visible`, `position`, `meta_title`, `meta_keywords`, `meta_description`, `created`, `featured`, `external_id`, `rating`, `votes`, `special`, `last_modify`) VALUES
 	(1, 'blinnitsa-ariete-baby-181', NULL, 'Блинница Ariete Baby 181', '<p>Мощность 900 Вт. Индикатор температуры. Контейнер для теста. Готовым блинчикам можно придать форму Микки Мауса специальной формочкой.</p>', '<p>Мощность 900 Вт. Индикатор температуры. Контейнер для теста. Готовым блинчикам можно придать форму Микки Мауса специальной формочкой.</p>', 1, 1, 'Блинница Ariete Baby 181', '', '', '2015-11-16 09:17:40', 0, '', 0.0, 0, NULL, '2015-12-25 11:59:34'),
@@ -2392,35 +2355,35 @@ INSERT INTO `s_products` (`id`, `url`, `brand_id`, `name`, `annotation`, `body`,
 	(120, 'tsifrovaya-fotokamera-olympus-pen-e-p3', NULL, 'Цифровая фотокамера Olympus PEN E-P3', '<p>Компактная камера в металлическом корпусе. Сенсорный OLED-дисплей с диагональю 3 дюйма.</p>', '<p>Компактная камера в металлическом корпусе. Сенсорный OLED-дисплей с диагональю 3 дюйма. Live MOS сенсор с разрешением 12.3 Мегапикселей. FAST автофокус (Frequency Acceleration Sensor Technology). Full HD-видео со стерео звуком, регулируемой глубиной резкости и художественными фильтрами. Графический процессор TruePic VI. Цвета: черный, белый, серебристый.</p>', 1, 120, 'Цифровая фотокамера Olympus PEN E-P3', '', '', '2015-11-16 09:17:43', 0, '', 0.0, 0, NULL, '2015-11-16 09:17:43'),
 	(121, 'tsifrovoj-fotoapparat-nikon-coolpix-s1100pj', NULL, 'Цифровой фотоаппарат Nikon Coolpix S1100pj', '<p>Цифровая тонкая фотокамера с разрешением 14,1 мегапикселей. Широкоугольный объектив NIKKOR с 5-кратным увеличением обеспечивает потрясающе точную передачу деталей и высокое разрешение.</p>', '<p>Цифровая тонкая фотокамера с разрешением 14,1 мегапикселей. Широкоугольный объектив NIKKOR с 5-кратным увеличением обеспечивает потрясающе точную передачу деталей и высокое разрешение. (Эквивалент формата 35 мм для пленочных фотокамер: 28 – 140 мм). Встроенный проектор позволяет проецировать избранные фотографии или видеоклипы. Поддержка ярких (до 14 люмен) проекций качества VGA на экране размером от 26 до 240 см (от 5 до 47 дюймов). Проецирование изображений с ПК или карты памяти. Гибридное VR (смещение объектива и электронное подавление вибраций). Сенсорный ЖК экран с диагональю 7,6 см (3 дюйма), разрешением 460 тыс. точек. Яркие видеоклипы высокой четкости в формате 720р HD. 17 сюжетных режимов. Варианты расцветок - желтый, сиреневый, черный, серый.</p>', 1, 121, 'Цифровой фотоаппарат Nikon Coolpix S1100pj', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2015-11-16 09:17:44'),
 	(122, 'shtativ-hama-traveller-mini-h-4048', NULL, 'Штатив Hama Traveller Mini H-4048', '<p>Компактный штатив-треножник для фото/видеокамер и микрофонов. Шаровая головка. Вес 215 г.</p>', '<p>Компактный штатив-треножник для фото/видеокамер и микрофонов. Шаровая головка. Вес 215 г.</p>', 1, 122, 'Штатив Hama Traveller Mini H-4048', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, 'stim12561.gif', '2015-11-16 15:02:42'),
-	(123, 'shtativ-rekam-rt-l38', 0, 'Штатив Rekam RT-L38', '<p>Напольный штатив для фото- и видеокамер.</p>\r\n', '<p>Напольный штатив для фото- и видеокамер. Корпус выполнен из металла серебристого цвета, ручка для переноса, механический подъемник, крюк для сумки, панорамная 3-D головка.</p>\r\n', 1, 123, 'Штатив Rekam RT-L38', '', '', '2015-11-16 09:17:44', 1, '', 0.0, 0, NULL, '2016-02-01 16:33:14'),
-	(124, 'obektiv-canon-ef-s-18-55mm-f35-56-is', NULL, 'Объектив Canon EF-S 18-55mm f3.5-5.6 IS', '<p>Стандартный объектив общего назначения с 4-ступенчатым стабилизатором изображения, который помогает добиться значительно лучших результатов в условиях слабой освещенности.</p>', '<p>Стандартный объектив общего назначения с 4-ступенчатым стабилизатором изображения, который помогает добиться значительно лучших результатов в условиях слабой освещенности. Изготовлен на основе профессиональной оптики, с использованием асферического элемента. Подходит для съёмки без штатива при различном освещении. Минимальное расстояние фокусировки объектива составляет всего 25 см при любом увеличении, обеспечивая возможность макросъёмки.</p>', 1, 124, 'Объектив Canon EF-S 18-55mm f3.5-5.6 IS', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2015-11-16 09:17:44'),
-	(125, 'obektiv-canon-ef-50-mm-f18-ii', NULL, 'Объектив Canon EF 50 mm f1.8 II', '<p>Стандартный объектив с постоянным фокусным расстоянием.</p>', '<p>Стандартный объектив с постоянным фокусным расстоянием. Компактный и легкий, обеспечивает отличное качество изображения при светосиле, превосходящей возможности любого объектива с переменным фокусным расстоянием. Классическая оптическая схема. Система автофокусировки базируется на встроенном микромоторе.</p>', 1, 125, 'Объектив Canon EF 50 mm f1.8 II', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2015-11-16 09:17:44'),
-	(126, 'obektiv-canon-ef-70-200-f-4l-usm', NULL, 'Объектив Canon EF 70-200 f 4L USM', '<p>Телеобъектив с постоянной светосилой. Модель выполнена в прочном, пыле- и влагозащитном корпусе.</p>', '<p>Телеобъектив с постоянной светосилой. Модель выполнена в прочном, пыле- и влагозащитном корпусе. Диафрагма объектива с круглым отверстием позволяет получать привлекательный эффект размытого фона. Оптическая схема объектива включает 13 линз в 16 группах. В числе элементов имеются две линзы из низкодисперсионного стекла UD и одна флюоритовая. Такая конструкция обеспечивает превосходное качество изображения с минимальным уровнем аберраций при любом значении фокусного расстояния. Многослойное просветление Super Spectra. Фокусировка осуществляется при помощи кольцевого ультразвукового мотора USM.</p>', 1, 126, 'Объектив Canon EF 70-200 f 4L USM', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2015-11-16 09:17:44'),
-	(127, 'vspyshka-canon-speedlite-580ex-ii', NULL, 'Вспышка Canon Speedlite 580EX II', '<p>Вспышка для любых погодных условий.</p>', '<p>Вспышка для любых погодных условий. Управление с помощью меню фотокамеры. Надёжная конструкция защищает детали вспышки от попадания пыли и влаги при съёмке с выносной колодкой. Бесшумный и быстрый перезаряд.</p>', 1, 127, 'Вспышка Canon Speedlite 580EX II', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2015-11-16 09:17:44'),
-	(128, 'vspyshka-nikon-speedlight-sb-900', NULL, 'Вспышка Nikon Speedlight SB-900', '<p>Профессиональная вспышка i-TTL, совместимая с зеркальными фотокамерами.</p>', '<p>Профессиональная вспышка i-TTL, совместимая с зеркальными фотокамерами. Три шаблона освещения: центрально-взвешенный, равномерный и стандартный. Набор усовершенствованных функций. Система термальной защиты, автоматическое определение фильтра.</p>', 1, 128, 'Вспышка Nikon Speedlight SB-900', '', '', '2015-11-16 09:17:44', 1, '', 0.0, 0, NULL, '2016-02-01 16:31:43'),
-	(129, 'tsifrovaya-fotoramka-sony-dpf-a710', NULL, 'Цифровая фоторамка Sony DPF-A710', '<p>Цифровая фоторамка с 7-дюймовым широкоформатным ЖК-экраном со светодиодной подсветкой обеспечивает четкое и детализированное отображение фотографий.</p>', '<p>Цифровая фоторамка с 7-дюймовым широкоформатным ЖК-экраном со светодиодной подсветкой обеспечивает четкое и детализированное отображение фотографий. Встроенная память 128 МБ позволяет хранить до 200 фотографий. Большой выбор настроек слайд-шоу, разные варианты оформления часов и календаря, функции поиска фотографий по папкам, событиям и тегам пользователя. Интеллектуальный сенсор поворачивает изображение при изменении положения рамки. Оснащена пультом дистанционного управления.</p>', 1, 129, 'Цифровая фоторамка Sony DPF-A710', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2015-11-27 09:15:17'),
-	(130, 'tsifrovaya-fotoramka-transcend-pf705', NULL, 'Цифровая фоторамка Transcend PF705', '<p>Широкоэкранная цветная TFT LCD панель с диагональю 7 дюймов и отношением сторон 16:9.</p>', '<p>Широкоэкранная цветная TFT LCD панель с диагональю 7 дюймов и отношением сторон 16:9. Поддержка USB флэш-накопителей и карт памяти SD/SDHC/MMC/MS Полная совместимость с интерфейсом Hi-Speed USB 2.0 и обратная совместимость с USB 1.1. Прямое подключение к ПК с помощью USB для простого обмена файлами. Выбор различных фотографий для создания слайдшоу. Возможность просмотра изображений в режиме слайд-шоу, в режиме пиктограмм, в обычномрежиме, а также возможность увеличения изображения. Функция напоминаний о важных датах/событиях. Функции календаря и часов. Автоматическое выключение и таймер для перехода в неактивный режим. Возможность выбора цветовых режимов. Цвета: белый, черный.</p>', 1, 130, 'Цифровая фоторамка Transcend PF705', '', '', '2015-11-16 09:17:44', 1, '', 0.0, 0, NULL, '2015-11-27 09:15:17'),
-	(131, 'koktejlnoe-plate-tulpan', NULL, 'Коктейльное платье Tulpan', '<p>97% полиэстер, 5% эластан</p>', '<p>97% полиэстер, 5% эластан</p>', 1, 131, 'Коктейльное платье Tulpan', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2015-11-27 09:15:17'),
-	(132, 'koktejlnoe-plate-strass-buck', NULL, 'Коктейльное платье Strass Buck', '<p>95% полиэстер, 5% спандекс</p>', '<p>95% полиэстер, 5% спандекс</p>', 1, 132, 'Коктейльное платье Strass Buck', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2015-11-27 09:15:17'),
-	(133, 'plate-zebra-s-originalnym-remnem', NULL, 'Платье Зебра с оригинальным ремнем', '<p>Красивое платье для работы и отдыха из плотного стрейч-трикотажа.</p><p>Высококачественный плотный трикотаж с добавлением эластана делает платье комфортным и удобным в носке.</p>', '<p>Красивое платье для работы и отдыха из плотного стрейч-трикотажа.</p><p>Высококачественный плотный трикотаж с добавлением эластана делает платье комфортным и удобным в носке.</p><p>Оригинальный ремень и необычная расцветка покажут Вашу индивидуальность и стиль.</p><p>Параметры модели: рост 176см, ОГ - 88см, ОТ -65 см, ОБ-94 см.</p>', 1, 133, 'Платье Зебра с оригинальным ремнем', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2015-11-27 09:15:17'),
-	(134, 'vyazanoe-plate-s-naryadnym-vorotnichkom', NULL, 'Вязаное платье с нарядным воротничком', '<p>Это отличное вязаное платье с шикарным воротником</p>', '<p>Это отличное вязаное платье с шикарным воротником</p><p>А сборка в области талии подчеркнёт все прелести вашей фигуры.</p>', 1, 134, 'Вязаное платье с нарядным воротничком', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2015-11-27 09:15:17'),
-	(135, 'kombinezon-redial-pod-dzhins-2', NULL, 'Комбинезон Redial под джинс 2', '<p>Комбинезон Redial под джинс 2 – откровенный и элегантный. Глубокое декольте открывает соблазнительную грудь. Привлекает внимание красиво оголенная спина. Очень интригующе смотрятся пуговички и отложной воротничок. Комбинезон плотно и сексуально облегает фигуру, подчеркивая все ее достоинства</p>', '<p>60% хлопок, 35% полиэстер, 5% спандекс</p><p>Комбинезон Redial под джинс 2 – откровенный и элегантный. Глубокое декольте открывает соблазнительную грудь. Привлекает внимание красиво оголенная спина. Очень интригующе смотрятся пуговички и отложной воротничок. Комбинезон плотно и сексуально облегает фигуру, подчеркивая все ее достоинства</p>', 1, 135, 'Комбинезон Redial под джинс 2', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2015-11-27 09:15:17'),
-	(136, 'velyurovyj-sportivnyj-kostyum-s-yubkoj', NULL, 'Велюровый спортивный костюм с юбкой', '<p>Спортивный костюм с юбкой. Разнообразие цветов поможет выбрать именно тот, который подойдёт именно вам!</p>', '<p>Спортивный костюм с юбкой. Разнообразие цветов поможет выбрать именно тот, который подойдёт именно вам!</p>', 1, 136, 'Велюровый спортивный костюм с юбкой', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2015-11-27 09:15:17'),
-	(137, 'sportivnyj-kostyum-hood', NULL, 'Спортивный костюм HOOD', '<p>100% хлопок</p>', '<p>100% хлопок</p>', 1, 137, 'Спортивный костюм HOOD', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2015-11-27 09:15:17'),
-	(138, 'byustgalter-velmont-3404', 0, 'Бюстгальтер Velmont 3404', '<p>Бюстгальтер Velmont 3404 &ndash; эффектный бюстгальтер. Тонкие, регулируемые лямки,</p>', '<p>Бюстгальтер Velmont 3404 &ndash; эффектный бюстгальтер. Тонкие, регулируемые лямки, удобная чашка, кружевная отделка, Ваша грудь будет сексуально выглядеть в этом бюстгальтере. Удобен в носке и подходит как на каждый день, так и под вечернее платье.</p>', 1, 138, 'Бюстгальтер Velmont 3404', 'Бюстгальтер Velmont 3404, Нижнее бельё', 'Бюстгальтер Velmont 3404 &ndash; эффектный бюстгальтер. Тонкие, регулируемые лямки,', '2015-11-16 09:17:44', NULL, '', 0.0, 0, NULL, '2015-11-27 09:15:17'),
-	(139, 'byustgalter-velmont-4702', NULL, 'Бюстгальтер Velmont 4702', '<p>Бюстгальтер Velmont 4702 – комфортный бюстгальтер на регулируемых тонких лямках.</p>', '<p>Бюстгальтер Velmont 4702 – комфортный бюстгальтер на регулируемых тонких лямках. Черный атлас, удобная чашка, бюстгальтер привлекает внимание эффектной простотой. Идеально поддержит Вашу грудь, удобен в носке на каждый день.</p>', 1, 139, 'Бюстгальтер Velmont 4702', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2015-11-27 09:15:17'),
-	(140, 'byustgalter-velmont-5104', NULL, 'Бюстгальтер Velmont 5104', '<p>Бюстгальтер Velmont 5104 привлекает внимание оригинальностью расцветки и отделки.</p>', '<p>Бюстгальтер Velmont 5104 привлекает внимание оригинальностью расцветки и отделки. Бюстгальтер на регулируемых тонких лямках, глубокая удобная чашка, идеально поддерживающая грудь. Удобен в носке на каждый день, идеально подходит для открытых сарафанов и прозрачных топов.</p>', 1, 140, 'Бюстгальтер Velmont 5104', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2015-11-27 09:15:17'),
-	(141, 'byustgalter-velmont-3804', 0, 'Бюстгальтер Velmont 3804', '<p>Бюстгальтер Velmont 3804 &ndash; удобный бюстгальтер на регулируемых тонких лямках.</p>', '<p>Бюстгальтер Velmont 3804 &ndash; удобный бюстгальтер на регулируемых тонких лямках. Легкая отделка кружевом, четный цвет, он привлекает внимание классической простотой. Удобная, мягкая чашечка идеально поддержит Вашу грудь. Бюстгальтер подходит к носке на каждый день.</p>', 1, 141, 'Бюстгальтер Velmont 3804', 'Бюстгальтер Velmont 3804, Нижнее бельё', 'Бюстгальтер Velmont 3804 &ndash; удобный бюстгальтер на регулируемых тонких лямках.', '2015-11-16 09:17:44', NULL, '', 0.0, 0, NULL, '2015-11-27 09:15:17'),
-	(142, 'stulchik-dlya-kormleniya-peg-perego-prima-pappa-best', NULL, 'Стульчик для кормления Peg-Perego Prima Pappa Best', '<p>Стульчик раcсчитан на малыша до трех лет.</p>', '<p>Стульчик раcсчитан на малыша до трех лет. Моющееся сидение изготовлено из кожа заменителя, корпус пластмассовый, регулируемая подножка, стопора на колесах, большая устойчивость. Пятиточечные ремни безопасности и анатомическая вставка для разделения ног удерживают ребенка в надежном и безопасном положении.</p>', 1, 142, 'Стульчик для кормления Peg-Perego Prima Pappa Best', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2015-11-27 09:15:17'),
-	(143, 'tsifrovoj-videomonitor-philips-avent-scd60000', NULL, 'Цифровой видеомонитор Philips AVENT SCD60000', '<p>Автоматический выбор канала для конфиденциального соединения.</p>', '<p>Автоматический выбор канала для конфиденциального соединения. Система инфракрасного ночного видения для круглосуточного наблюдения. Успокаивающие колыбельные и ночник. Высокое разрешение, цветной экран 61 мм. Беспроводной портативный родительский блок. Цифровое подтверждение сигнала и световая индикация уровня звука. Автоматическое включение экрана с регуляторами яркости и звука. Родительский блок на аккумуляторах. Диапазон действия: 150 м. Клипса для крепления к поясу.</p>', 1, 143, 'Цифровой видеомонитор Philips AVENT SCD60000', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2015-11-27 09:15:17'),
-	(144, 'detskie-kacheli-graco-sweetpeace', NULL, 'Детские качели GRACO Sweetpeace', '<p>Детские качели для детей с рождения.</p>', '<p>Детские качели для детей с рождения. Качели копируют движение при укачивании ребёнка на руках (в трёх разных направлениях), три положения спинки, 6 скоростей, съёмное сидение, набор различных мелодий и возможность подключения МР3 плеера, две скорости вибрации, ремни безопасности, регулируемый капор.</p>', 1, 144, 'Детские качели GRACO Sweetpeace', '', '', '2015-11-16 09:17:44', 1, '', 0.0, 0, 'hit67.png', '2015-11-27 09:15:17'),
-	(145, 'detskie-kacheli-graco-swingnbounce', 0, 'Детские качели GRACO Swing\'n\'bounce', '<p>Уникальная модель 2-в-1: качели + кресло качалка.</p>', '<p>Уникальная модель 2-в-1: качели + кресло качалка. 6 скоростей для использования в качестве качелей. 2 скорости для спокойного покачивания в кресле качалке. 3 положения наклона кресла. Снимаемый подголовник. Движущаяся карусель с 3 плюшевыми игрушками. Электронный блок с музыкой, звуками природы, таймер для автоматического отключения. Цвета: deimos, venus, greta.</p>', 1, 145, 'Детские качели GRACO Swing\'n\'bounce', '', '', '2015-11-16 09:17:44', 1, '', 0.0, 0, 'hit67.png', '2015-11-27 09:15:17'),
-	(146, 'pelenalnyj-stolik-cam-nuvola', 0, 'Пеленальный столик Cam Nuvola', '<p>Пеленальный столик с ванночкой для купания. Система безопасности предотвращающая произвольное складывание. Две полочки для детских вещей. Изделие предназначено для детей от 0 до 12 месяцев. Различная цветовая гамма.</p>', '<p>Пеленальный столик с ванночкой для купания. Система безопасности предотвращающая произвольное складывание. Две полочки для детских вещей. Изделие предназначено для детей от 0 до 12 месяцев. Различная цветовая гамма.</p>', 1, 146, 'Пеленальный столик Cam Nuvola', '', '', '2015-11-16 09:17:44', NULL, '', 0.0, 0, NULL, '2015-11-27 09:15:17'),
-	(147, 'avtokreslo-bebe-confort-opal', 0, 'Автокресло Bebe Confort Opal', '<p>Автокресло с поворотным сиденьем для более продолжительного использования.</p>', '<p>Автокресло с поворотным сиденьем для более продолжительного использования. Переустановка положений происходит одним движением руки, вращением автокресла на своем основании. Сиденье подходит для двух групп: 0+ - спиной к дороге и 1 - лицом к дороге. Боковая защита Safe Side предохраняет голову малыша при боковых столкновениях. Внутренние 5-точечные ремни безопасности быстро и удобно регулируются по росту ребенка. Размеры: ширина регулируется от 40 до 50 см. Высота регулируется от 60 до 76 см. Варианты цвета: Total Black, Intense Red, Deep Blue, Brown Earth, Steel Gray, Marble Pink, Dark Olive.</p>', 1, 147, 'Автокресло Bebe Confort Opal', '', '', '2015-11-16 09:17:45', NULL, '', 0.0, 0, 'stim12561.gif', '2015-11-27 09:15:17');
+	(123, 'shtativ-rekam-rt-l38', 0, 'Штатив Rekam RT-L38', '<p>Напольный штатив для фото- и видеокамер.</p>\r\n', '<p>Напольный штатив для фото- и видеокамер. Корпус выполнен из металла серебристого цвета, ручка для переноса, механический подъемник, крюк для сумки, панорамная 3-D головка.</p>\r\n', 1, 123, 'Штатив Rekam RT-L38', '', '', '2015-11-16 09:17:44', 1, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(124, 'obektiv-canon-ef-s-18-55mm-f35-56-is', NULL, 'Объектив Canon EF-S 18-55mm f3.5-5.6 IS', '<p>Стандартный объектив общего назначения с 4-ступенчатым стабилизатором изображения, который помогает добиться значительно лучших результатов в условиях слабой освещенности.</p>', '<p>Стандартный объектив общего назначения с 4-ступенчатым стабилизатором изображения, который помогает добиться значительно лучших результатов в условиях слабой освещенности. Изготовлен на основе профессиональной оптики, с использованием асферического элемента. Подходит для съёмки без штатива при различном освещении. Минимальное расстояние фокусировки объектива составляет всего 25 см при любом увеличении, обеспечивая возможность макросъёмки.</p>', 1, 124, 'Объектив Canon EF-S 18-55mm f3.5-5.6 IS', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(125, 'obektiv-canon-ef-50-mm-f18-ii', NULL, 'Объектив Canon EF 50 mm f1.8 II', '<p>Стандартный объектив с постоянным фокусным расстоянием.</p>', '<p>Стандартный объектив с постоянным фокусным расстоянием. Компактный и легкий, обеспечивает отличное качество изображения при светосиле, превосходящей возможности любого объектива с переменным фокусным расстоянием. Классическая оптическая схема. Система автофокусировки базируется на встроенном микромоторе.</p>', 1, 125, 'Объектив Canon EF 50 mm f1.8 II', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(126, 'obektiv-canon-ef-70-200-f-4l-usm', NULL, 'Объектив Canon EF 70-200 f 4L USM', '<p>Телеобъектив с постоянной светосилой. Модель выполнена в прочном, пыле- и влагозащитном корпусе.</p>', '<p>Телеобъектив с постоянной светосилой. Модель выполнена в прочном, пыле- и влагозащитном корпусе. Диафрагма объектива с круглым отверстием позволяет получать привлекательный эффект размытого фона. Оптическая схема объектива включает 13 линз в 16 группах. В числе элементов имеются две линзы из низкодисперсионного стекла UD и одна флюоритовая. Такая конструкция обеспечивает превосходное качество изображения с минимальным уровнем аберраций при любом значении фокусного расстояния. Многослойное просветление Super Spectra. Фокусировка осуществляется при помощи кольцевого ультразвукового мотора USM.</p>', 1, 126, 'Объектив Canon EF 70-200 f 4L USM', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(127, 'vspyshka-canon-speedlite-580ex-ii', NULL, 'Вспышка Canon Speedlite 580EX II', '<p>Вспышка для любых погодных условий.</p>', '<p>Вспышка для любых погодных условий. Управление с помощью меню фотокамеры. Надёжная конструкция защищает детали вспышки от попадания пыли и влаги при съёмке с выносной колодкой. Бесшумный и быстрый перезаряд.</p>', 1, 127, 'Вспышка Canon Speedlite 580EX II', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(128, 'vspyshka-nikon-speedlight-sb-900', NULL, 'Вспышка Nikon Speedlight SB-900', '<p>Профессиональная вспышка i-TTL, совместимая с зеркальными фотокамерами.</p>', '<p>Профессиональная вспышка i-TTL, совместимая с зеркальными фотокамерами. Три шаблона освещения: центрально-взвешенный, равномерный и стандартный. Набор усовершенствованных функций. Система термальной защиты, автоматическое определение фильтра.</p>', 1, 128, 'Вспышка Nikon Speedlight SB-900', '', '', '2015-11-16 09:17:44', 1, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(129, 'tsifrovaya-fotoramka-sony-dpf-a710', NULL, 'Цифровая фоторамка Sony DPF-A710', '<p>Цифровая фоторамка с 7-дюймовым широкоформатным ЖК-экраном со светодиодной подсветкой обеспечивает четкое и детализированное отображение фотографий.</p>', '<p>Цифровая фоторамка с 7-дюймовым широкоформатным ЖК-экраном со светодиодной подсветкой обеспечивает четкое и детализированное отображение фотографий. Встроенная память 128 МБ позволяет хранить до 200 фотографий. Большой выбор настроек слайд-шоу, разные варианты оформления часов и календаря, функции поиска фотографий по папкам, событиям и тегам пользователя. Интеллектуальный сенсор поворачивает изображение при изменении положения рамки. Оснащена пультом дистанционного управления.</p>', 1, 129, 'Цифровая фоторамка Sony DPF-A710', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(130, 'tsifrovaya-fotoramka-transcend-pf705', NULL, 'Цифровая фоторамка Transcend PF705', '<p>Широкоэкранная цветная TFT LCD панель с диагональю 7 дюймов и отношением сторон 16:9.</p>', '<p>Широкоэкранная цветная TFT LCD панель с диагональю 7 дюймов и отношением сторон 16:9. Поддержка USB флэш-накопителей и карт памяти SD/SDHC/MMC/MS Полная совместимость с интерфейсом Hi-Speed USB 2.0 и обратная совместимость с USB 1.1. Прямое подключение к ПК с помощью USB для простого обмена файлами. Выбор различных фотографий для создания слайдшоу. Возможность просмотра изображений в режиме слайд-шоу, в режиме пиктограмм, в обычномрежиме, а также возможность увеличения изображения. Функция напоминаний о важных датах/событиях. Функции календаря и часов. Автоматическое выключение и таймер для перехода в неактивный режим. Возможность выбора цветовых режимов. Цвета: белый, черный.</p>', 1, 130, 'Цифровая фоторамка Transcend PF705', '', '', '2015-11-16 09:17:44', 1, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(131, 'koktejlnoe-plate-tulpan', NULL, 'Коктейльное платье Tulpan', '<p>97% полиэстер, 5% эластан</p>', '<p>97% полиэстер, 5% эластан</p>', 1, 131, 'Коктейльное платье Tulpan', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(132, 'koktejlnoe-plate-strass-buck', NULL, 'Коктейльное платье Strass Buck', '<p>95% полиэстер, 5% спандекс</p>', '<p>95% полиэстер, 5% спандекс</p>', 1, 132, 'Коктейльное платье Strass Buck', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(133, 'plate-zebra-s-originalnym-remnem', NULL, 'Платье Зебра с оригинальным ремнем', '<p>Красивое платье для работы и отдыха из плотного стрейч-трикотажа.</p><p>Высококачественный плотный трикотаж с добавлением эластана делает платье комфортным и удобным в носке.</p>', '<p>Красивое платье для работы и отдыха из плотного стрейч-трикотажа.</p><p>Высококачественный плотный трикотаж с добавлением эластана делает платье комфортным и удобным в носке.</p><p>Оригинальный ремень и необычная расцветка покажут Вашу индивидуальность и стиль.</p><p>Параметры модели: рост 176см, ОГ - 88см, ОТ -65 см, ОБ-94 см.</p>', 1, 133, 'Платье Зебра с оригинальным ремнем', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(134, 'vyazanoe-plate-s-naryadnym-vorotnichkom', NULL, 'Вязаное платье с нарядным воротничком', '<p>Это отличное вязаное платье с шикарным воротником</p>', '<p>Это отличное вязаное платье с шикарным воротником</p><p>А сборка в области талии подчеркнёт все прелести вашей фигуры.</p>', 1, 134, 'Вязаное платье с нарядным воротничком', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(135, 'kombinezon-redial-pod-dzhins-2', NULL, 'Комбинезон Redial под джинс 2', '<p>Комбинезон Redial под джинс 2 – откровенный и элегантный. Глубокое декольте открывает соблазнительную грудь. Привлекает внимание красиво оголенная спина. Очень интригующе смотрятся пуговички и отложной воротничок. Комбинезон плотно и сексуально облегает фигуру, подчеркивая все ее достоинства</p>', '<p>60% хлопок, 35% полиэстер, 5% спандекс</p><p>Комбинезон Redial под джинс 2 – откровенный и элегантный. Глубокое декольте открывает соблазнительную грудь. Привлекает внимание красиво оголенная спина. Очень интригующе смотрятся пуговички и отложной воротничок. Комбинезон плотно и сексуально облегает фигуру, подчеркивая все ее достоинства</p>', 1, 135, 'Комбинезон Redial под джинс 2', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(136, 'velyurovyj-sportivnyj-kostyum-s-yubkoj', NULL, 'Велюровый спортивный костюм с юбкой', '<p>Спортивный костюм с юбкой. Разнообразие цветов поможет выбрать именно тот, который подойдёт именно вам!</p>', '<p>Спортивный костюм с юбкой. Разнообразие цветов поможет выбрать именно тот, который подойдёт именно вам!</p>', 1, 136, 'Велюровый спортивный костюм с юбкой', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(137, 'sportivnyj-kostyum-hood', NULL, 'Спортивный костюм HOOD', '<p>100% хлопок</p>', '<p>100% хлопок</p>', 1, 137, 'Спортивный костюм HOOD', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(138, 'byustgalter-velmont-3404', 0, 'Бюстгальтер Velmont 3404', '<p>Бюстгальтер Velmont 3404 &ndash; эффектный бюстгальтер. Тонкие, регулируемые лямки,</p>', '<p>Бюстгальтер Velmont 3404 &ndash; эффектный бюстгальтер. Тонкие, регулируемые лямки, удобная чашка, кружевная отделка, Ваша грудь будет сексуально выглядеть в этом бюстгальтере. Удобен в носке и подходит как на каждый день, так и под вечернее платье.</p>', 1, 138, 'Бюстгальтер Velmont 3404', 'Бюстгальтер Velmont 3404, Нижнее бельё', 'Бюстгальтер Velmont 3404 &ndash; эффектный бюстгальтер. Тонкие, регулируемые лямки,', '2015-11-16 09:17:44', NULL, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(139, 'byustgalter-velmont-4702', NULL, 'Бюстгальтер Velmont 4702', '<p>Бюстгальтер Velmont 4702 – комфортный бюстгальтер на регулируемых тонких лямках.</p>', '<p>Бюстгальтер Velmont 4702 – комфортный бюстгальтер на регулируемых тонких лямках. Черный атлас, удобная чашка, бюстгальтер привлекает внимание эффектной простотой. Идеально поддержит Вашу грудь, удобен в носке на каждый день.</p>', 1, 139, 'Бюстгальтер Velmont 4702', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(140, 'byustgalter-velmont-5104', NULL, 'Бюстгальтер Velmont 5104', '<p>Бюстгальтер Velmont 5104 привлекает внимание оригинальностью расцветки и отделки.</p>', '<p>Бюстгальтер Velmont 5104 привлекает внимание оригинальностью расцветки и отделки. Бюстгальтер на регулируемых тонких лямках, глубокая удобная чашка, идеально поддерживающая грудь. Удобен в носке на каждый день, идеально подходит для открытых сарафанов и прозрачных топов.</p>', 1, 140, 'Бюстгальтер Velmont 5104', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(141, 'byustgalter-velmont-3804', 0, 'Бюстгальтер Velmont 3804', '<p>Бюстгальтер Velmont 3804 &ndash; удобный бюстгальтер на регулируемых тонких лямках.</p>', '<p>Бюстгальтер Velmont 3804 &ndash; удобный бюстгальтер на регулируемых тонких лямках. Легкая отделка кружевом, четный цвет, он привлекает внимание классической простотой. Удобная, мягкая чашечка идеально поддержит Вашу грудь. Бюстгальтер подходит к носке на каждый день.</p>', 1, 141, 'Бюстгальтер Velmont 3804', 'Бюстгальтер Velmont 3804, Нижнее бельё', 'Бюстгальтер Velmont 3804 &ndash; удобный бюстгальтер на регулируемых тонких лямках.', '2015-11-16 09:17:44', NULL, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(142, 'stulchik-dlya-kormleniya-peg-perego-prima-pappa-best', NULL, 'Стульчик для кормления Peg-Perego Prima Pappa Best', '<p>Стульчик раcсчитан на малыша до трех лет.</p>', '<p>Стульчик раcсчитан на малыша до трех лет. Моющееся сидение изготовлено из кожа заменителя, корпус пластмассовый, регулируемая подножка, стопора на колесах, большая устойчивость. Пятиточечные ремни безопасности и анатомическая вставка для разделения ног удерживают ребенка в надежном и безопасном положении.</p>', 1, 142, 'Стульчик для кормления Peg-Perego Prima Pappa Best', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(143, 'tsifrovoj-videomonitor-philips-avent-scd60000', NULL, 'Цифровой видеомонитор Philips AVENT SCD60000', '<p>Автоматический выбор канала для конфиденциального соединения.</p>', '<p>Автоматический выбор канала для конфиденциального соединения. Система инфракрасного ночного видения для круглосуточного наблюдения. Успокаивающие колыбельные и ночник. Высокое разрешение, цветной экран 61 мм. Беспроводной портативный родительский блок. Цифровое подтверждение сигнала и световая индикация уровня звука. Автоматическое включение экрана с регуляторами яркости и звука. Родительский блок на аккумуляторах. Диапазон действия: 150 м. Клипса для крепления к поясу.</p>', 1, 143, 'Цифровой видеомонитор Philips AVENT SCD60000', '', '', '2015-11-16 09:17:44', 0, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(144, 'detskie-kacheli-graco-sweetpeace', NULL, 'Детские качели GRACO Sweetpeace', '<p>Детские качели для детей с рождения.</p>', '<p>Детские качели для детей с рождения. Качели копируют движение при укачивании ребёнка на руках (в трёх разных направлениях), три положения спинки, 6 скоростей, съёмное сидение, набор различных мелодий и возможность подключения МР3 плеера, две скорости вибрации, ремни безопасности, регулируемый капор.</p>', 1, 144, 'Детские качели GRACO Sweetpeace', '', '', '2015-11-16 09:17:44', 1, '', 0.0, 0, 'hit67.png', '2016-03-01 18:30:06'),
+	(145, 'detskie-kacheli-graco-swingnbounce', 0, 'Детские качели GRACO Swing\'n\'bounce', '<p>Уникальная модель 2-в-1: качели + кресло качалка.</p>', '<p>Уникальная модель 2-в-1: качели + кресло качалка. 6 скоростей для использования в качестве качелей. 2 скорости для спокойного покачивания в кресле качалке. 3 положения наклона кресла. Снимаемый подголовник. Движущаяся карусель с 3 плюшевыми игрушками. Электронный блок с музыкой, звуками природы, таймер для автоматического отключения. Цвета: deimos, venus, greta.</p>', 1, 145, 'Детские качели GRACO Swing\'n\'bounce', '', '', '2015-11-16 09:17:44', 1, '', 0.0, 0, 'hit67.png', '2016-03-01 18:30:06'),
+	(146, 'pelenalnyj-stolik-cam-nuvola', 0, 'Пеленальный столик Cam Nuvola', '<p>Пеленальный столик с ванночкой для купания. Система безопасности предотвращающая произвольное складывание. Две полочки для детских вещей. Изделие предназначено для детей от 0 до 12 месяцев. Различная цветовая гамма.</p>', '<p>Пеленальный столик с ванночкой для купания. Система безопасности предотвращающая произвольное складывание. Две полочки для детских вещей. Изделие предназначено для детей от 0 до 12 месяцев. Различная цветовая гамма.</p>', 1, 146, 'Пеленальный столик Cam Nuvola', '', '', '2015-11-16 09:17:44', NULL, '', 0.0, 0, NULL, '2016-03-01 18:30:06'),
+	(147, 'avtokreslo-bebe-confort-opal', 0, 'Автокресло Bebe Confort Opal', '<p>Автокресло с поворотным сиденьем для более продолжительного использования.</p>', '<p>Автокресло с поворотным сиденьем для более продолжительного использования. Переустановка положений происходит одним движением руки, вращением автокресла на своем основании. Сиденье подходит для двух групп: 0+ - спиной к дороге и 1 - лицом к дороге. Боковая защита Safe Side предохраняет голову малыша при боковых столкновениях. Внутренние 5-точечные ремни безопасности быстро и удобно регулируются по росту ребенка. Размеры: ширина регулируется от 40 до 50 см. Высота регулируется от 60 до 76 см. Варианты цвета: Total Black, Intense Red, Deep Blue, Brown Earth, Steel Gray, Marble Pink, Dark Olive.</p>', 1, 147, 'Автокресло Bebe Confort Opal', '', '', '2015-11-16 09:17:45', NULL, '', 0.0, 0, 'stim12561.gif', '2016-03-01 18:30:06');
 /*!40000 ALTER TABLE `s_products` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_products_categories
+-- Дамп структуры для таблица okay.s_products_categories
 DROP TABLE IF EXISTS `s_products_categories`;
 CREATE TABLE IF NOT EXISTS `s_products_categories` (
   `product_id` int(11) NOT NULL,
@@ -2432,8 +2395,7 @@ CREATE TABLE IF NOT EXISTS `s_products_categories` (
   KEY `category_id` (`category_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_products_categories: 147 rows
-DELETE FROM `s_products_categories`;
+-- Дамп данных таблицы okay.s_products_categories: 147 rows
 /*!40000 ALTER TABLE `s_products_categories` DISABLE KEYS */;
 INSERT INTO `s_products_categories` (`product_id`, `category_id`, `position`) VALUES
 	(40, 7, 0),
@@ -2586,7 +2548,7 @@ INSERT INTO `s_products_categories` (`product_id`, `category_id`, `position`) VA
 /*!40000 ALTER TABLE `s_products_categories` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_purchases
+-- Дамп структуры для таблица okay.s_purchases
 DROP TABLE IF EXISTS `s_purchases`;
 CREATE TABLE IF NOT EXISTS `s_purchases` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2602,20 +2564,20 @@ CREATE TABLE IF NOT EXISTS `s_purchases` (
   KEY `order_id` (`order_id`),
   KEY `product_id` (`product_id`),
   KEY `variant_id` (`variant_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_purchases: 4 rows
-DELETE FROM `s_purchases`;
+-- Дамп данных таблицы okay.s_purchases: 4 rows
 /*!40000 ALTER TABLE `s_purchases` DISABLE KEYS */;
 INSERT INTO `s_purchases` (`id`, `order_id`, `product_id`, `variant_id`, `product_name`, `variant_name`, `price`, `amount`, `sku`) VALUES
 	(1, 1, 147, 151, 'Автокресло Bebe Confort Opal', '', 1046.50, 1, '1318211023'),
 	(2, 1, 138, 139, 'Бюстгальтер Velmont 3404', 'Черный', 63.05, 1, '665098649'),
 	(3, 2, 145, 149, 'Детские качели GRACO Swing\'n\'bounce', '', 498.55, 1, '1309142305'),
-	(4, 3, 147, 151, 'Автокресло Bebe Confort Opal', '', 482.95, 1, '1318211023');
+	(4, 3, 147, 151, 'Автокресло Bebe Confort Opal', '', 482.95, 1, '1318211023'),
+	(5, 4, 130, 130, 'Цифровая фоторамка Transcend PF705', '', 157.95, 1, '578454477');
 /*!40000 ALTER TABLE `s_purchases` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_related_products
+-- Дамп структуры для таблица okay.s_related_products
 DROP TABLE IF EXISTS `s_related_products`;
 CREATE TABLE IF NOT EXISTS `s_related_products` (
   `product_id` int(11) NOT NULL,
@@ -2625,13 +2587,12 @@ CREATE TABLE IF NOT EXISTS `s_related_products` (
   KEY `position` (`position`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_related_products: 0 rows
-DELETE FROM `s_related_products`;
+-- Дамп данных таблицы okay.s_related_products: 0 rows
 /*!40000 ALTER TABLE `s_related_products` DISABLE KEYS */;
 /*!40000 ALTER TABLE `s_related_products` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_settings
+-- Дамп структуры для таблица okay.s_settings
 DROP TABLE IF EXISTS `s_settings`;
 CREATE TABLE IF NOT EXISTS `s_settings` (
   `setting_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2640,8 +2601,7 @@ CREATE TABLE IF NOT EXISTS `s_settings` (
   PRIMARY KEY (`setting_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=143 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_settings: 38 rows
-DELETE FROM `s_settings`;
+-- Дамп данных таблицы okay.s_settings: 38 rows
 /*!40000 ALTER TABLE `s_settings` DISABLE KEYS */;
 INSERT INTO `s_settings` (`setting_id`, `name`, `value`) VALUES
 	(8, 'site_name', 'Интернет-магазин на OkayCMS'),
@@ -2685,7 +2645,7 @@ INSERT INTO `s_settings` (`setting_id`, `name`, `value`) VALUES
 /*!40000 ALTER TABLE `s_settings` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_spec_img
+-- Дамп структуры для таблица okay.s_spec_img
 DROP TABLE IF EXISTS `s_spec_img`;
 CREATE TABLE IF NOT EXISTS `s_spec_img` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2695,8 +2655,7 @@ CREATE TABLE IF NOT EXISTS `s_spec_img` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_spec_img: 4 rows
-DELETE FROM `s_spec_img`;
+-- Дамп данных таблицы okay.s_spec_img: 4 rows
 /*!40000 ALTER TABLE `s_spec_img` DISABLE KEYS */;
 INSERT INTO `s_spec_img` (`id`, `name`, `filename`, `position`) VALUES
 	(1, 'Новинка', 'stim12561.gif', 1),
@@ -2706,22 +2665,23 @@ INSERT INTO `s_spec_img` (`id`, `name`, `filename`, `position`) VALUES
 /*!40000 ALTER TABLE `s_spec_img` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_subscribe_mailing
+-- Дамп структуры для таблица okay.s_subscribe_mailing
 DROP TABLE IF EXISTS `s_subscribe_mailing`;
 CREATE TABLE IF NOT EXISTS `s_subscribe_mailing` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `email` varchar(128) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `email` (`email`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_subscribe_mailing: 0 rows
-DELETE FROM `s_subscribe_mailing`;
+-- Дамп данных таблицы okay.s_subscribe_mailing: 0 rows
 /*!40000 ALTER TABLE `s_subscribe_mailing` DISABLE KEYS */;
+INSERT INTO `s_subscribe_mailing` (`id`, `email`) VALUES
+	(1, 'test@okay.com');
 /*!40000 ALTER TABLE `s_subscribe_mailing` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_translations
+-- Дамп структуры для таблица okay.s_translations
 DROP TABLE IF EXISTS `s_translations`;
 CREATE TABLE IF NOT EXISTS `s_translations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2736,8 +2696,7 @@ CREATE TABLE IF NOT EXISTS `s_translations` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=268 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_translations: 190 rows
-DELETE FROM `s_translations`;
+-- Дамп данных таблицы okay.s_translations: 190 rows
 /*!40000 ALTER TABLE `s_translations` DISABLE KEYS */;
 INSERT INTO `s_translations` (`id`, `template`, `in_config`, `label`, `lang_ru`, `lang_en`, `lang_uk`, `lang_ch`, `lang_by`) VALUES
 	(133, '', 0, 'products_by_default', 'умолчанию', 'default', 'умолчанию', '', ''),
@@ -2902,7 +2861,7 @@ INSERT INTO `s_translations` (`id`, `template`, `in_config`, `label`, `lang_ru`,
 	(154, '', 0, 'index_catalog', 'Каталог', 'Catalog', '', '', ''),
 	(155, '', 0, 'index_contacts', 'Контакты', 'Contacts', '', '', ''),
 	(156, '', 0, 'index_contacts_body', '0 800 567-43-21,<br/>0 800 567-43-21<br/>\r\nПн–Сб 09:00–20:00,<br/>\r\nВс 09:00–17:00<br/>\r\ninfo@okay-cms.com<br/>\r\nOkayCMS<br/>\r\nул. Космонавта Волкова 14', '0 800 567-43-21,<br/>0 800 567-43-21<br/>\r\nПн–Сб 09:00–20:00,<br/>\r\nВс 09:00–17:00<br/>\r\ninfo@okay-cms.com<br/>\r\nOkayCMS<br/>\r\nул. Космонавта Волкова 14', '', '', ''),
-	(157, '', 0, 'index_copyright', 'Интернет-магазин OKAYMarket. Все права защищены.', 'Online Store OKAYMarket. All rights reserved.', '', '', ''),
+	(157, '', 0, 'index_copyright', 'Интернет-магазин на OkayCMS', 'Online Store with OkayCMS', '', '', ''),
 	(158, '', 0, 'index_in_networks', 'Мы в соцсетях', 'We are in social networks', '', '', ''),
 	(159, '', 0, 'features_categories', 'Категории', 'Categories', '', '', ''),
 	(160, '', 0, 'breadcrumb_brands', 'Бренды', 'Brands', 'Бренды', '', ''),
@@ -2933,7 +2892,7 @@ INSERT INTO `s_translations` (`id`, `template`, `in_config`, `label`, `lang_ru`,
 /*!40000 ALTER TABLE `s_translations` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_users
+-- Дамп структуры для таблица okay.s_users
 DROP TABLE IF EXISTS `s_users`;
 CREATE TABLE IF NOT EXISTS `s_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2948,13 +2907,12 @@ CREATE TABLE IF NOT EXISTS `s_users` (
   KEY `email` (`email`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_users: 0 rows
-DELETE FROM `s_users`;
+-- Дамп данных таблицы okay.s_users: 0 rows
 /*!40000 ALTER TABLE `s_users` DISABLE KEYS */;
 /*!40000 ALTER TABLE `s_users` ENABLE KEYS */;
 
 
-# Dumping structure for table okaycms-git.s_variants
+-- Дамп структуры для таблица okay.s_variants
 DROP TABLE IF EXISTS `s_variants`;
 CREATE TABLE IF NOT EXISTS `s_variants` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -2979,8 +2937,7 @@ CREATE TABLE IF NOT EXISTS `s_variants` (
   KEY `yandex` (`yandex`)
 ) ENGINE=MyISAM AUTO_INCREMENT=152 DEFAULT CHARSET=utf8;
 
-# Dumping data for table okaycms-git.s_variants: 151 rows
-DELETE FROM `s_variants`;
+-- Дамп данных таблицы okay.s_variants: 151 rows
 /*!40000 ALTER TABLE `s_variants` DISABLE KEYS */;
 INSERT INTO `s_variants` (`id`, `product_id`, `sku`, `name`, `price`, `compare_price`, `stock`, `position`, `attachment`, `external_id`, `currency_id`, `yandex`) VALUES
 	(1, 1, '1301139965', '', 130.00, 0.00, 10, 1, '', '', 2, 0),
@@ -3106,10 +3063,10 @@ INSERT INTO `s_variants` (`id`, `product_id`, `sku`, `name`, `price`, `compare_p
 	(121, 121, '1036617146', '', 888.55, 0.00, 10, 1, '', '', 0, 0),
 	(122, 122, '1455664353', '', 130.00, 0.00, 10, 1, '', '', 0, 0),
 	(123, 123, '633126586', '', 175.50, 0.00, 10, 123, '', '', 2, 0),
-	(124, 124, '952091862', '', 260.00, 0.00, 10, 1, '', '', 0, 0),
-	(125, 125, '1385069830', '', 287.95, 0.00, 10, 1, '', '', 0, 0),
-	(126, 126, '968172589', '', 1678.95, 0.00, 10, 1, '', '', 0, 0),
-	(127, 127, '2085598530', '', 1343.55, 0.00, 10, 1, '', '', 0, 0),
+	(124, 124, '952091862', '', 260.00, 0.00, 10, 1, '', '', 2, 0),
+	(125, 125, '1385069830', '', 287.95, 0.00, 10, 1, '', '', 2, 0),
+	(126, 126, '968172589', '', 1678.95, 0.00, 10, 1, '', '', 2, 0),
+	(127, 127, '2085598530', '', 1343.55, 0.00, 10, 1, '', '', 2, 0),
 	(128, 128, '957835494', '', 1148.55, 0.00, 10, 1, '', '', 2, 0),
 	(129, 129, '647001831', '', 238.55, 0.00, 10, 1, '', '', 2, 0),
 	(130, 130, '578454477', '', 157.95, 0.00, 10, 1, '', '', 2, 0),
@@ -3133,8 +3090,8 @@ INSERT INTO `s_variants` (`id`, `product_id`, `sku`, `name`, `price`, `compare_p
 	(148, 144, '613154813', '', 754.00, 0.00, 10, 1, '', '', 2, 0),
 	(149, 145, '1309142305', '', 498.55, 0.00, 10, 149, '', '', 2, 0),
 	(150, 146, '2075759371', '', 349.05, 0.00, 10, 150, '', '', 2, 0),
-	(151, 147, '1318211023', '', 483.00, 500.00, 0, 151, '', '', 2, 1);
+	(151, 147, '1318211023', '', 0.00, 500.00, 0, 151, '', '', 2, 1);
 /*!40000 ALTER TABLE `s_variants` ENABLE KEYS */;
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

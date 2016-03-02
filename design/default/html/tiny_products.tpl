@@ -58,9 +58,9 @@
 				{* Сравнение *}
 				<div class="input-group-btn text-xs-right">
 					{if !in_array($product->id,$comparison->ids)}
-						<a class="btn-comparison fn-comparison okaycms hidden-md-down selected" href="#" data-id="{$product->id}" title="{$lang->tiny_products_add_comparison}" data-result-text="{$lang->tiny_products_remove_comparison}" data-language="{$translate_id['tiny_products_add_comparison']}"></a>
+						<a class="btn-comparison fn-comparison okaycms hidden-md-down" href="#" data-id="{$product->id}" title="{$lang->tiny_products_add_comparison}" data-result-text="{$lang->tiny_products_remove_comparison}" data-language="{$translate_id['tiny_products_add_comparison']}"></a>
 					{else}
-						<a class="btn-comparison fn-comparison okaycms hidden-md-down" href="#" data-id="{$product->id}" title="{$lang->tiny_products_remove_comparison}" data-result-text="{$lang->tiny_products_add_comparison}" data-language="{$translate_id['tiny_products_remove_comparison']}"></a>
+						<a class="btn-comparison fn-comparison okaycms hidden-md-down selected" href="#" data-id="{$product->id}" title="{$lang->tiny_products_remove_comparison}" data-result-text="{$lang->tiny_products_add_comparison}" data-language="{$translate_id['tiny_products_remove_comparison']}"></a>
 					{/if}
 				</div>
 				{* @END Сравнение *}

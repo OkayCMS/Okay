@@ -76,10 +76,10 @@ class Products extends Okay {
             $coef = $currency->rate_from / $currency->rate_to;
         }
         if(isset($filter['price'])) {
-            if(!empty($filter['price']['min'])) {
+            if(isset($filter['price']['min'])) {
                 $price_filter .= $this->db->placehold(" AND floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)>= ? ", $this->db->escape(trim($filter['price']['min'])));
             }
-            if(!empty($filter['price']['max'])) {
+            if(isset($filter['price']['max'])) {
                 $price_filter .= $this->db->placehold(" AND floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)<= ? ", $this->db->escape(trim($filter['price']['max'])));
             }
             $variant_join = 'LEFT JOIN __variants pv ON pv.product_id = p.id';
@@ -279,10 +279,10 @@ class Products extends Okay {
                 floor(max(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)) as max
             ";
         } elseif(isset($filter['price'])) {
-            if(!empty($filter['price']['min'])) {
+            if(isset($filter['price']['min'])) {
                 $price_filter .= $this->db->placehold(" AND floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)>= ? ", $this->db->escape(trim($filter['price']['min'])));
             }
-            if(!empty($filter['price']['max'])) {
+            if(isset($filter['price']['max'])) {
                 $price_filter .= $this->db->placehold(" AND floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)<= ? ", $this->db->escape(trim($filter['price']['max'])));
             }
             $variant_join = 'LEFT JOIN __variants pv ON pv.product_id = p.id';

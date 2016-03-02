@@ -42,7 +42,7 @@
 	        </select>
 			{* @END Варианты товара *}
 			{* Сравнение *}
-			<a class="btn-comparison-remove fn-comparison okaycms hidden-md-down" href="#" data-id="{$product->id}" title="{$lang->tiny_products_remove_comparison}" data-result-text="{$lang->tiny_products_add_comparison}">&times;</a>
+			<a class="btn-comparison-remove fn-comparison okaycms hidden-md-down selected" href="#" data-id="{$product->id}" title="{$lang->tiny_products_remove_comparison}" data-result-text="{$lang->tiny_products_add_comparison}">&times;</a>
 			{* @END Сравнение *}
 			<div class="input-group">
 				{* Избранное *}

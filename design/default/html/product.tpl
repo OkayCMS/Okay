@@ -113,9 +113,9 @@
 						{* Сравнение *}
 						<div class="form-group m-t-1 text-xs-center text-md-left hidden-md-down">
 							{if !in_array($product->id,$comparison->ids)}
-								<a class="i-comparison fn-comparison okaycms selected" href="#" data-id="{$product->id}" title="{$lang->product_add_comparison}" data-result-text="{$lang->product_remove_comparison}" data-language="{$translate_id['product_add_comparison']}"></a>
+								<a class="i-comparison fn-comparison okaycms" href="#" data-id="{$product->id}" title="{$lang->product_add_comparison}" data-result-text="{$lang->product_remove_comparison}" data-language="{$translate_id['product_add_comparison']}"></a>
 							{else}
-								<a class="i-comparison fn-comparison okaycms" href="#" data-id="{$product->id}" title="{$lang->product_remove_comparison}" data-result-text="{$lang->product_add_comparison}" data-language="{$translate_id['product_remove_comparison']}"></a>
+								<a class="i-comparison fn-comparison okaycms selected" href="#" data-id="{$product->id}" title="{$lang->product_remove_comparison}" data-result-text="{$lang->product_add_comparison}" data-language="{$translate_id['product_remove_comparison']}"></a>
 							{/if}
 						</div>
 						{* @END Сравнение *}

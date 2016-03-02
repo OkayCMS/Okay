@@ -776,8 +776,12 @@ $(function(){
                         <div class="image cell">
                             <input type=hidden name=related_products[] value='{$related_product->id}'>
                             <a href="{url id=$related_product->id}">
+								{if $related_product->images[0]}
                                 <img class=product_icon src='{$related_product->images[0]->filename|resize:35:35}'>
-                            </a>
+								{else}
+								<img class=product_icon src="../design/{$settings->theme|escape}/images/no_image.png" width="22">
+								{/if}
+							</a>
                         </div>
                         <div class="name cell">
                             <a href="{url id=$related_product->id}">{$related_product->name}</a>

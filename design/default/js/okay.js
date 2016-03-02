@@ -109,7 +109,7 @@ $( document ).on( 'click', '.fn-product-amount.okaycms span', function() {
 $(document).on('click', '.fn-comparison.okaycms', function(e){
 	e.preventDefault();
 	var button = $( this ),
-		action = $( this ).hasClass( 'selected' ) ? 'add' : 'delete',
+		action = $( this ).hasClass( 'selected' ) ? 'delete' : 'add',
 		product = parseInt( $( this ).data( 'id' ) );
 	/* ajax запрос */
 	$.ajax( {
@@ -120,9 +120,9 @@ $(document).on('click', '.fn-comparison.okaycms', function(e){
 			$( '#comparison' ).html( data );
 			/* Смена класса кнопки */
 			if( action == 'add' ) {
-				button.removeClass( 'selected' );
+                button.addClass( 'selected' );
 			} else if( action == 'delete' ) {
-				button.addClass( 'selected' );
+                button.removeClass( 'selected' );
 			}
 			/* Смена тайтла */
 			if( button.attr( 'title' ) ) {
@@ -138,7 +138,7 @@ $(document).on('click', '.fn-comparison.okaycms', function(e){
 		}
 	} );
 	/* Улеталка */
-	if( button.hasClass( 'selected' ) ) {
+	if( !button.hasClass( 'selected' ) ) {
 		transfer( $( '#comparison' ), $( this ) );
 	}
 });
@@ -652,7 +652,7 @@ $.fn.rater.rate = function ($this, opts, rating) {
 					else
 					if (opts.rating == -1) {
 						$off.fadeTo(200, 0.6, function () {
-							$this.find('.rating_text').text('Вы уже голосовали!');
+							$this.find('.rating_text').text('Ошибка');
 						});
 					}
 					else {

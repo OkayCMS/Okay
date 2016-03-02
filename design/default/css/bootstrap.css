@@ -2336,9 +2336,11 @@ button.list-group-item-danger {
     background: #0095ff url("../images/i-favorites-selected.png") center no-repeat; }
 
 .btn-comparison {
-  background: #0095ff url("../images/i-comparison.png") center no-repeat; }
+    background: url("../images/i-comparison-selected.png") center no-repeat;
+   }
   .btn-comparison.selected {
-    background: url("../images/i-comparison-selected.png") center no-repeat; }
+    background: #0095ff url("../images/i-comparison.png") center no-repeat;
+     }
 
 .btn-comparison-remove {
   position: absolute;

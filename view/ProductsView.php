@@ -293,7 +293,7 @@ class ProductsView extends View {
         // Если задан бренд, выберем его из базы
         $prices = array();
         $prices['current'] = $this->request->get('p');
-        if (!empty($prices['current']['min']) && !empty($prices['current']['max'])) {
+        if (isset($prices['current']['min']) && isset($prices['current']['max'])) {
             $filter['price'] = $prices['current'];
         } else {
             unset($prices['current']);

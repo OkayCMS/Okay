@@ -19,6 +19,13 @@
 	{* Тело поста *}
 	{$post->text}
 	{* @END Тело поста *}
+
+    {* Поделиться в соц. сетях *}
+    <div class="p-y-05 text-xs-center text-md-left">
+        <span data-language="{$translate_id['product_share']}">{$lang->product_share}</span>:
+    </div>
+    <div class="ya-share2 m-b-2 text-xs-center text-md-left" data-services="vkontakte,facebook,twitter"></div>
+    {* @END Поделиться в соц. сетях *}
 	{* Соседние посты *}
 	{if $prev_post || $next_post}
 		<nav>

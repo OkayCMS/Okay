@@ -106,7 +106,7 @@
                                             {* @END Дата создания поста *}
                                             {* Изображение поста *}
                                             {if $post->image}
-                                                <img class="hidden-md-down" src="{$post->image|resize:162:77:false:$config->resized_blog_dir}" alt="{$post->name|escape}"/>
+                                                <img class="hidden-md-down" src="{$post->image|resize:77:77:false:$config->resized_blog_dir}" alt="{$post->name|escape}"/>
                                             {/if}
                                             {* @END Изображение поста *}
                                         </a>

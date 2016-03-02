@@ -77,6 +77,9 @@ function ValidateForms() {
 
 		document.forms[i].onsubmit = function(e) {
 			var form = e ? e.target : window.event.srcElement;
+			if (form.checkout) {
+				form.checkout.setAttribute('disabled', true);
+			}
 
 			for(var i=0; i<form.elements.length; i++) {
 				var value = form.elements[i].value;
@@ -217,6 +220,13 @@ function isPattern(pattern, str) {
 
 function ValidateNotice(input) {
 	ShowBaloon(input);
+	var form = input.parentElement;
+	while (form && form.tagName != 'FORM') {
+		form = form.parentElement;
+	}
+	if (form.checkout) {
+		form.checkout.removeAttribute('disabled');
+	}
 	return false;
 }
 

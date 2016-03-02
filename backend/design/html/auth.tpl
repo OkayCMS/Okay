@@ -1,5 +1,6 @@
 {$wrapper = '' scope=parent}
 <html>
+<title>Административная панель</title>
 <link rel="icon" href="design/images/favicon.png" type="image/x-icon">
     <body>
         <style type="text/css" scoped>
@@ -29,6 +30,7 @@
                 padding: 22px 25px;
                 border: 1px solid #56b9ff;
                 margin-bottom: 15px;
+                width: 250px;
             }
             .form_group {
                 text-align: left;
@@ -100,15 +102,15 @@
             <input type=hidden name="session_id" value="{$smarty.session.id}">
             <div class="form_group">
                 <label>Логин:</label>
-                <input type="text" name="login" value="{$login}">
+                <input type="text" name="login" value="{$login}" autofocus="" tabindex="1">
             </div>
             <div class="form_group">
                 <label>Пароль:</label>
-                <input type="password" name="password" value="">
+                <input type="password" name="password" value="" tabindex="2">
             </div>
             <div>
                 <a class="recovery" href="{$config->root_url}/password.php">Напомнить пароль</a>
-                <input class="button" type="submit" value="Войти">
+                <input class="button" type="submit" value="Войти" tabindex="3">
             </div>
             
         </form>

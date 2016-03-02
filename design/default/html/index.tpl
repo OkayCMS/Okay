@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html prefix="og: http://ogp.me/ns#">
 <head>
 	{* Полный базовый адрес *}
 	<base href="{$config->root_url}/"/>
@@ -78,7 +78,7 @@
 	{/if}
 
 	{* Карточка товаров, поделиться в соц. сетях *}
-	{if $smarty.get.module == 'ProductView'}
+	{if $smarty.get.module == 'ProductView' || $smarty.get.module == "BlogView"}
 		<script type="text/javascript" src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js"></script>
 		<script type="text/javascript" src="//yastatic.net/share2/share.js"></script>
 	{/if}
@@ -397,7 +397,7 @@
 {* @END Футер сайта *}
 {* Копирайт *}
 <div class="container p-y-1">
-	<a class="link-black" href="http://okay-cms.com" target="_blank">© 2016. <span data-language="{$translate_id['index_copyright']}">{$lang->index_copyright}</span></a>
+	© 2016. <a class="link-black" href="http://okay-cms.com" target="_blank"><span data-language="{$translate_id['index_copyright']}">{$lang->index_copyright}</span></a>
 </div>
 {* @END Копирайт *}
 {* Форма обратного звонка *}
