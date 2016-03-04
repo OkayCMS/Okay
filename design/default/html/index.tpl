@@ -337,9 +337,11 @@
 					<span data-language="{$translate_id['login_enter']}">{$lang->index_catalog}</span>
 				</div>
 				{foreach $categories as $c}
-					<div class="p-l-1">
-						<a class="link-white" href="{$lang_link}catalog/{$c->url}">{$c->name|escape}</a>
-					</div>
+                    {if $c->visible}
+                        <div class="p-l-1">
+                            <a class="link-white" href="{$lang_link}catalog/{$c->url}">{$c->name|escape}</a>
+                        </div>
+                    {/if}
 				{/foreach}
 			</div>
 			{* @END Каталог *}

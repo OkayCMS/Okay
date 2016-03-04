@@ -77,8 +77,8 @@ function ValidateForms() {
 
 		document.forms[i].onsubmit = function(e) {
 			var form = e ? e.target : window.event.srcElement;
-			if (form.checkout) {
-				form.checkout.setAttribute('disabled', true);
+			if (form.checkout_fake) {
+				form.checkout_fake.setAttribute('disabled', true);
 			}
 
 			for(var i=0; i<form.elements.length; i++) {
@@ -224,8 +224,8 @@ function ValidateNotice(input) {
 	while (form && form.tagName != 'FORM') {
 		form = form.parentElement;
 	}
-	if (form.checkout) {
-		form.checkout.removeAttribute('disabled');
+	if (form.checkout_fake) {
+		form.checkout_fake.removeAttribute('disabled');
 	}
 	return false;
 }

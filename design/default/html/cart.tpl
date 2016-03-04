@@ -11,6 +11,7 @@
 	{* @END Заголовок страницы *}
 	{if $cart->purchases}
 		<form method="post" name="cart">
+            <input name="checkout" value="1" type="hidden">
 			{* Список покупок *}
 			<div id="fn-purchases" class="h6 m-b-2">
 				{include file='cart_purchases.tpl'}
@@ -84,7 +85,7 @@
 								{/if}
 								{* Кнопка отправки формы *}
 								<div class="form-group">
-									<input class="btn btn-warning" type="submit" name="checkout" data-language="{$translate_id['cart_checkout']}" value="{$lang->cart_checkout}"/>
+									<input class="btn btn-warning" type="submit" name="checkout_fake" data-language="{$translate_id['cart_checkout']}" value="{$lang->cart_checkout}"/>
 								</div>
 								{* @END Кнопка отправки формы *}
 							</div>
