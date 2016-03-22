@@ -19,7 +19,7 @@
             </div>
         {/foreach}
     </div>
-	{* @END Способ доставки *}
+
 	{* Способ оплаты *}
 	{foreach $deliveries as $delivery}
 		{if $delivery->payment_methods}
@@ -33,7 +33,7 @@
 							{if !$delivery->separate_payment && $cart->total_price < $delivery->free_from}
 								{$total_price_with_delivery = $cart->total_price + $delivery->price}
 							{/if}
-							{$payment_method->name}, к оплате {$total_price_with_delivery|convert:$payment_method->currency_id}&nbsp;{$all_currencies[$payment_method->currency_id]->sign}
+							{$payment_method->name} {$lang->cart_deliveries_to_pay} {$total_price_with_delivery|convert:$payment_method->currency_id}&nbsp;{$all_currencies[$payment_method->currency_id]->sign}
 						</label>
 						<div class="m-l-2 payment-description">
 							{$payment_method->description}
@@ -43,5 +43,4 @@
 			</div>
 		{/if}
 	{/foreach}
-	{* @END Способ оплаты *}
 {/if}

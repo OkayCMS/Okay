@@ -20,14 +20,14 @@
 			<li class="page-item">
 				<a class="page-link" href="{if $current_page_num == 2}{url page=null}{else}{url page=$current_page_num - 1}{/if}" aria-label="{$lang->pagination_prev}">
 					<span aria-hidden="true">&laquo;</span>
-					<span class="sr-only">{$lang->pagination_prev}</span>
+					<span>{$lang->pagination_prev}</span>
 				</a>
 			</li>
 		{else}
 			<li class="page-item disabled">
 				<span class="page-link" aria-label="{$lang->pagination_prev}">
 					<span aria-hidden="true">&laquo;</span>
-					<span class="sr-only">{$lang->pagination_prev}</span>
+					<span>{$lang->pagination_prev}</span>
 				</span>
 			</li>
 		{/if}
@@ -35,11 +35,11 @@
 		{* Ссылка на 1 страницу *}
 		{if $current_page_num == 1}
 			<li class="page-item active">
-				<span class="page-link">1 <span class="sr-only">(current)</span></span>
+				<span class="page-link">1</span>
 			</li>
 		{else}
 			<li class="page-item">
-				<a class="page-link" href="{url page=null}">1 <span class="sr-only">(current)</span></a>
+				<a class="page-link" href="{url page=null}">1</a>
 			</li>
 		{/if}
 		{* @END Ссылка на 1 страницу *}
@@ -84,14 +84,14 @@
 			<li class="page-item">
 				<a class="page-link" href="{url page=$current_page_num+1}" aria-label="{$lang->pagination_next}">
 					<span aria-hidden="true">&raquo;</span>
-					<span class="sr-only">{$lang->pagination_next}</span>
+					<span>{$lang->pagination_next}</span>
 				</a>
 			</li>
 		{else}
 			<li class="page-item disabled">
 				<span class="page-link" aria-label="{$lang->pagination_next}">
 					<span aria-hidden="true">&raquo;</span>
-					<span class="sr-only">{$lang->pagination_next}</span>
+					<span>{$lang->pagination_next}</span>
 				</span>
 			</li>
 		{/if}

@@ -1,31 +1,30 @@
 {* Страница заказа *}
 {* Тайтл страницы *}
 {$meta_title = "`$lang->order_title` `$order->id`" scope=parent}
-{* @END Тайтл страницы *}
+
 <div class="container">
 	{* Хлебные крошки *}
 	{include file='breadcrumb.tpl'}
-	{* @END Хлебные крошки *}
+
 	{* Заголовок страницы *}
 	<div class="h1 m-b-1"><span data-language="{$translate_id['cart_header']}">{$lang->order_header}</span> {$order->id}</div>
-	{* @END Заголовок страницы *}
 	<div class="purchase-list h6">
 		<div class="purchase-row purchase-main bg-info hidden-md-down">
 			{* Изображение *}
 			<div class="purchase-img hidden-md-down text-lg-center">
 				<span data-language="{$translate_id['cart_head_img']}">{$lang->cart_head_img}</span>
 			</div>
-			{* @END Изображение *}
+
 			{* Название *}
 			<div class="purchase-name">
 				<span data-language="{$translate_id['cart_head_name']}">{$lang->cart_head_name}</span>
 			</div>
-			{* Название *}
+
 			{* Цена за ед. *}
 			<div class="purchase-price hidden-md-down">
 				<span data-language="{$translate_id['cart_head_price']}">{$lang->cart_head_price}</span>
 			</div>
-			{* @END Цена за ед. *}
+
 			<div class="purchase-column">
 				<div class="purchase-list">
 					<div class="purchase-row">
@@ -33,12 +32,11 @@
 						<div class="purchase-amount text-lg-center">
 							<span data-language="{$translate_id['cart_head_amoun']}">{$lang->cart_head_amoun}</span>
 						</div>
-						{* @END Количество *}
+
 						{* Общая цена *}
 						<div class="purchase-full-price">
 							<span data-language="{$translate_id['cart_head_total']}">{$lang->cart_head_total}</span>
 						</div>
-						{* Общая цена *}
 					</div>
 				</div>
 			</div>
@@ -50,11 +48,11 @@
 					{$image = $purchase->product->images|first}
 					{if $image}
 						<a href="{$lang_link}products/{$purchase->product->url}">
-							<img src="{$image->filename|resize:50:50}" alt="{$purchase->product_name|escape}">
+							<img src="{$image->filename|resize:50:50}" alt="{$purchase->product_name|escape}" title="{$purchase->product_name|escape}">
 						</a>
 					{/if}
 				</div>
-				{* @END Изображение *}
+
 				{* Название *}
 				<div class="purchase-name">
 					<a href="{$lang_link}products/{$purchase->product->url}">{$purchase->product_name|escape}</a>
@@ -63,12 +61,12 @@
                         <a class="download_attachment" href="{$lang_link}order/{$order->url}/{$purchase->variant->attachment}">скачать файл</a>
                     {/if}
 				</div>
-				{* Название *}
+
 				{* Цена за ед. *}
 				<div class="purchase-price hidden-md-down">
 					{($purchase->variant->price)|convert} {$currency->sign}
 				</div>
-				{* @END Цена за ед. *}
+
 				<div class="purchase-column">
 					<div class="purchase-list">
 						<div class="purchase-row">
@@ -77,15 +75,13 @@
 								<div class="fn-product-amount fn-is_stock okaycms text-xs-center">
 									{* Кол-во товаров *}
 									<input disabled class="form-control" type="text" data-id="{$purchase->variant_id}" name="amounts[{$purchase->variant_id}]" value="{$purchase->amount}">
-									{* @END Кол-во товаров *}
 								</div>
 							</div>
-							{* @END Количество *}
+
 							{* Общая цена *}
 							<div class="purchase-full-price">
 								{($purchase->price*$purchase->amount)|convert}&nbsp;{$currency->sign}
 							</div>
-							{* Общая цена *}
 						</div>
 					</div>
 				</div>
@@ -106,7 +102,6 @@
 							</div>
 							{* Скидка *}
 							<div class="purchase-full-price">{$order->discount}%</div>
-							{* @END Скидка *}
 						</div>
 					</div>
 				</div>
@@ -127,7 +122,6 @@
 							</div>
 							{* Купон *}
 							<div class="purchase-full-price">-{$order->coupon_discount|convert} {$currency->sign}</div>
-							{* @END Купон *}
 						</div>
 					</div>
 				</div>
@@ -148,7 +142,6 @@
 							</div>
 							{* Стоимость доставки *}
 							<div class="purchase-full-price">{$order->delivery_price|convert} {$currency->sign}</div>
-							{* @END Стоимость доставки *}
 						</div>
 					</div>
 				</div>
@@ -169,7 +162,6 @@
                             </div>
                             {* Стоимость доставки *}
                             <div class="purchase-full-price">{$order->delivery_price|convert} {$currency->sign}</div>
-                            {* @END Стоимость доставки *}
                         </div>
                     </div>
                 </div>
@@ -189,7 +181,6 @@
 						</div>
 						{* Стоимость доставки *}
 						<div class="purchase-full-price">{$order->total_price|convert} {$currency->sign}</div>
-						{* @END Стоимость доставки *}
 					</div>
 				</div>
 			</div>
@@ -255,7 +246,6 @@
 					</tr>
 				{/if}
 			</table>
-			{* Детали заказа *}
 		</div>
 		{if !$order->paid}
 			<div class="col-lg-6">
@@ -273,7 +263,7 @@
 									{if !$delivery->separate_payment && $cart->total_price < $delivery->free_from}
 										{$total_price_with_delivery = $cart->total_price + $delivery->price}
 									{/if}
-									{$payment_method->name}, к оплате {$order->total_price|convert:$payment_method->currency_id}&nbsp;{$all_currencies[$payment_method->currency_id]->sign}
+									{$payment_method->name} {$lang->cart_deliveries_to_pay} {$order->total_price|convert:$payment_method->currency_id}&nbsp;{$all_currencies[$payment_method->currency_id]->sign}
 								</label>
 								<div class="m-l-2 payment-description">
 									{$payment_method->description}

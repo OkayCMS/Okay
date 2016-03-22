@@ -13,8 +13,8 @@
 {$meta_title='Заказ обратного звонка' scope=parent}
 
 <div id="header">
-	{if $callbacks_count}
-	<h1>{$callbacks_count} {$callbacks_count|plural:'заказ':'заказа':'заказов'}</h1> 
+	{if $callbacks|count>0}
+	<h1>{$callbacks|count} {$callbacks|count|plural:'заказ':'заказов':'заказа'}</h1>
 	{else}
 	<h1>Нет заказов</h1> 
 	{/if}

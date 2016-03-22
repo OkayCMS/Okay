@@ -193,29 +193,6 @@ $( document ).on( 'click', '.fn-sub-coupon.okaycms', function(e) {
 	ajax_coupon();
 } );
 
-/* Yandex карта в контактах */
-if ( location.pathname.substring(location.pathname.length - 8) === '/contact') {
-	function init () {
-		/* Создание экземпляра карты и его привязка к контейнеру с заданным id ("fn-map"). */
-		var contactMap = new ymaps.Map( 'fn-map', {
-			/* При инициализации карты обязательно нужно указать её центр и коэффициент масштабирования. */
-			center: [55.81576629485111, 37.52222407672119],
-			zoom: 17
-		} );
-		/* Создание метки */
-		contactMap.geoObjects.add( new ymaps.GeoObject( {
-			/* Описание геометрии. */
-			geometry: {
-				type: "Point",
-				coordinates: [55.81576629485111, 37.52223480555724]
-			}
-		} ) );
-	}
-
-	/* Дождёмся загрузки API и готовности DOM */
-	ymaps.ready( init );
-}
-
 /* Document ready */
 $(function(){
 
@@ -327,17 +304,12 @@ $(function(){
 			ajax_slider();
 		} );
 
-		/* todo Проверить пагинацию */
 		// Если после фильтрации у нас осталось товаров на несколько страниц, то постраничную навигацию мы тоже проведем с помощью ajax чтоб не сбить фильтр по цене
 		$( document ).on( 'click', '.shpu_pagination .is_ajax a,#fn-products_sort .is_ajax a', function(e) {
 			e.preventDefault();
 			var link = $(this).attr( 'href' ),
-				send_min = null,
-				send_max = null;
-			if ($('#fn-slider-max').val() != range_max || $('#fn-slider-min').val() != range_min) {
 				send_min = $("#fn-slider-min").val();
 				send_max = $("#fn-slider-max").val();
-			}
 			$.ajax( {
 				url: link,
 				data: { ajax: 1, 'p[min]': send_min, 'p[max]': send_max },

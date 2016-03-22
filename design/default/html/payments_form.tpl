@@ -22,7 +22,6 @@
 		    <input type="submit" class="btn btn-warning btn-block" value="{$lang->form_to_pay}"/>
 	    </form>
     </div>
-	{* @END Способ оплаты Acquiropay *}
 {elseif $payment_module == "Best2Pay"}
     {* Способ оплаты Best2Pay *}
     <div class="row">
@@ -33,7 +32,6 @@
 		    <input type="submit" class="btn btn-warning btn-block" value="{$lang->form_to_pay}">
 	    </form>
     </div>
-	{* @END Способ оплаты Best2Pay *}
 {elseif $payment_module == "DeltaKey" }
     {* Способ оплаты DeltaKey *}
     <div class="row">
@@ -48,7 +46,6 @@
 		    <input type="submit" name="submit-button" value="{$lang->form_to_pay}" class="btn btn-warning btn-block">
 	    </form>
     </div>
-	{* @END Способ оплаты DeltaKey *}
 {elseif $payment_module == "IntellectMoney"}
     {* Способ оплаты IntellectMoney *}
     <div class="row">
@@ -65,7 +62,6 @@
 		    <input type="submit" class="btn btn-warning btn-block" value="{$lang->form_to_pay}">
 	    </form>
     </div>
-	{* @END Способ оплаты IntellectMoney *}
 {elseif $payment_module == "Interkassa"}
     {* Способ оплаты Interkassa *}
     <div class="row">
@@ -77,7 +73,6 @@
 		    <input type="submit" name="process"           value="{$lang->form_to_pay}"  class="btn btn-warning btn-block">
 	    </form>
     </div>
-	{* @END Способ оплаты Interkassa *}
 {elseif $payment_module == "Interkassa2"}
     {* Способ оплаты Interkassa2 *}
     <div class="row">
@@ -92,7 +87,6 @@
 		    <input type="submit" name="process"  value="{$lang->form_to_pay}" class="btn btn-warning btn-block">
 	    </form>
     </div>
-	{* @END Способ оплаты Interkassa2 *}
 {elseif $payment_module == "InvoiceBox"}
     {* Способ оплаты InvoiceBox *}
     <div class="row">
@@ -116,7 +110,6 @@
 		    <input type="submit" class="btn btn-warning btn-block" value="{$lang->form_to_pay}"/>
 	    </form>
     </div>
-	{* @END Способ оплаты InvoiceBox *}
 {elseif $payment_module == "Liqpay"}
     {* Способ оплаты Liqpay *}
     <div class="row">
@@ -133,7 +126,6 @@
 		    <input type="submit" class="btn btn-warning btn-block" value="{$lang->form_to_pay}">
 	    </form>
     </div>
-	{* @END Способ оплаты Liqpay *}
 {elseif $payment_module == "OKPay"}
     {* Способ оплаты OKPay *}
     <div class="row">
@@ -148,7 +140,6 @@
 		    <input type="submit" class="btn btn-warning btn-block" value="{$lang->form_to_pay}">
 	    </form>
     </div>
-	{* @END Способ оплаты OKPay *}
 {elseif $payment_module == "Pay2Pay"}
     {* Способ оплаты Pay2Pay *}
     <div class="row">
@@ -158,7 +149,6 @@
 		    <input type="submit" class="btn btn-warning btn-block" value="{$lang->form_to_pay}">
 	    </form>
     </div>
-	{* @END Способ оплаты Pay2Pay *}
 {elseif $payment_module == "Payanyway"}
 	{* Способ оплаты Payanyway *}
     <div class="row">
@@ -174,7 +164,6 @@
 		    <input type="submit" class="btn btn-warning btn-block" value="{$lang->form_to_pay}">
 	    </form>
     </div>
-	{* @END Способ оплаты Payanyway *}
 {elseif $payment_module == "Paypal"}
     {* Способ оплаты Paypal *}
     <form class="m-b-2" method="post" action="{$paypal_url}">
@@ -210,7 +199,6 @@
     {/if}
         <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_xpressCheckout.gif" value="{$lang->form_to_pay}">
     </form>
-	{* Способ оплаты Paypal *}
 {elseif $payment_module == "Paysto"}
     {* Способ оплаты Paysto *}
     <div class="row">
@@ -223,7 +211,6 @@
 		    <input type="submit" class="btn btn-warning btn-block" value="{$lang->form_to_pay}"/>
 	    </form>
     </div>
-	{* @END Способ оплаты Paysto *}
 {elseif $payment_module == "Platon"}
     {* Способ оплаты Platon *}
     <div class="row">
@@ -236,7 +223,6 @@
 		    <input type="submit" class="btn btn-warning btn-block" value="{$lang->form_to_pay}">
 	    </form>
     </div>
-	{* @END Способ оплаты Platon *}
 {elseif $payment_module == "Qiwi"}
     {* Способ оплаты Qiwi *}
     <form class="p-t-1 bg-info m-b-2 clearfix" action='https://w.qiwi.com/order/external/create.action'>
@@ -254,7 +240,6 @@
 		    <input type="submit" class="btn btn-warning btn-block" value="{$lang->form_to_pay}">
 	    </div>
     </form>
-	{* @END Способ оплаты Qiwi *}
 {elseif $payment_module == "RBKMoney"}
     {* Способ оплаты RBKMoney *}
     <div class="row">
@@ -270,7 +255,6 @@
 		    <input type="submit" class="btn btn-warning btn-block" value="{$lang->form_to_pay}">
 	    </form>
     </div>
-	{* @END Способ оплаты RBKMoney *}
 {elseif $payment_module == "Receipt"}
     {* Способ оплаты Квитанция *}
     <form class="bg-info col-lg-7 p-y-1 m-b-2" action="payment/Receipt/callback.php" method="post">
@@ -292,7 +276,6 @@
 	    </div>
         <input class="btn btn-warning btn-block" type="submit" value="{$lang->form_generate_receipt}">
     </form>
-	{* @END Способ оплаты Квитанция *}
 {elseif $payment_module == "Robokassa"}
     {* Способ оплаты Robokassa *}
     <div class="row">
@@ -307,7 +290,6 @@
 		    <input type="submit" value="{$lang->form_to_pay}" class="btn btn-warning btn-block">
 	    </form>
     </div>
-	{* @END Способ оплаты Robokassa *}
 {elseif $payment_module == "Webmoney"}
     {* Способ оплаты Webmoney *}
     <div class="row m-b-2">
@@ -322,7 +304,6 @@
 		    <input type="submit" value="{$lang->form_to_pay}" class="btn btn-warning btn-block"/>
 	    </form>
     </div>
-	{* @END Способ оплаты Webmoney *}
 {elseif $payment_module == "Yandex"}
     {* Способ оплаты Yandex *}
     <div class="row">
@@ -336,7 +317,6 @@
 		    <input type="submit" name="submit-button" value="{$lang->form_to_pay}" class="btn btn-warning btn-block">
 	    </form>
     </div>
-	{* @END Способ оплаты Yandex *}
 {elseif $payment_module == "YandexMoney"}
     {* Способ оплаты YandexMoney *}
     <div class="row">
@@ -353,5 +333,4 @@
 		    <input type="submit" name="submit-button"  value="{$lang->form_to_pay}" class="btn btn-warning btn-block">
 	    </form>
     </div>
-	{* @END Способ оплаты YandexMoney *}
 {/if}

@@ -78,19 +78,24 @@ class ReportStatsAdmin extends Okay {
         
         $this->design->assign('pages_count', ceil($stat_count/$filter['limit']));
         $this->design->assign('current_page', $filter['page']);
-        
+
         $report_stat_purchases = $this->reportstat->get_report_purchases($filter);
+
+        $cat = $this->categories->get_category($cat_filter);
         foreach ($report_stat_purchases as $id=>$r) {
             if (!empty($r->product_id)) {
                 $tmp_cat = $this->categories->get_categories(array('product_id' => $r->product_id));
                 $tmp_cat = reset($tmp_cat);
-                if (!empty($cat_filter) && $tmp_cat->id != $cat_filter) {
+
+                if (!empty($cat_filter) && !in_array($cat_filter,(array)$tmp_cat->path[$cat->level_depth-1]->children)) {
                     unset($report_stat_purchases[$id]);
                 } else {
                     $report_stat_purchases[$id]->category = $tmp_cat;
                 }
+
             }
         }
+
         
         $this->design->assign('report_stat_purchases', $report_stat_purchases);
         $this->design->assign('categories', $this->categories->get_categories_tree());

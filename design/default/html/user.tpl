@@ -1,22 +1,22 @@
 {* Страница личного кабинета *}
 {* Тайтл страницы *}
 {$meta_title = $lang->user_title scope=parent}
-{* @END Тайтл страницы *}
+
 <div class="container">
 	{* Хлебные крошки *}
 	{include file='breadcrumb.tpl'}
-	{* @END Хлебные крошки *}
+
 	{* Заголовок страницы *}
 	<h1 class="m-b-1">
 		<span data-language="{$translate_id['user_header']}">{$lang->user_header}</span>
 	</h1>
-	{* @END Заголовок страницы *}
+
 	<div class="row m-b-2">
 		<div class="col-lg-5">
 			<form class="p-a-1 bg-info" method="post">
 				{* Вывод ошибок *}
 				{if $error}
-					<div class="p-x-1 p-y-05 bg-danger text-white m-b-1">
+					<div class="p-x-1 p-y-05 text-red m-b-1">
 						{if $error == 'empty_name'}
 							<span data-language="{$translate_id['form_enter_name']}">{$lang->form_enter_name}</span>
 						{elseif $error == 'empty_email'}
@@ -30,17 +30,17 @@
 						{/if}
 					</div>
 				{/if}
-				{* @END Вывод ошибок *}
+
 				{* Имя пользователя *}
 				<div class="form-group">
 					<input class="form-control" data-format=".+" data-notice="{$lang->form_enter_name}" value="{$name|escape}" name="name" type="text" data-language="{$translate_id['form_name']}" placeholder="{$lang->form_name}*"/>
 				</div>
-				{* @END Имя пользователя *}
+
 				{* Почта пользователя *}
 				<div class="form-group">
 					<input class="form-control" data-format="email" data-notice="{$lang->form_enter_email}" value="{$email|escape}" name="email" type="text" data-language="{$translate_id['form_email']}" placeholder="{$lang->form_email}*"/>
 				</div>
-				{* @END Почта пользователя *}
+
 				{* Пароль пользователя *}
 				<div class="input-group m-b-1">
 				<span class="input-group-btn">
@@ -48,13 +48,12 @@
 				</span>
 					<input class="form-control" id="password" value="" name="password" type="password" style="display:none;"/>
 				</div>
-				{* @END Пароль пользователя *}
+
 				{* Кнопка отправки формы *}
 				<div class="clearfix">
 					<input type="submit" class="btn btn-warning" data-language="{$translate_id['form_save']}" value="{$lang->form_save}">
 					<a href="{$lang_link}user/logout" class="btn btn-danger pull-xs-right" data-language="{$translate_id['user_logout']}">{$lang->user_logout}</a>
 				</div>
-				{* @END Кнопка отправки формы *}
 			</form>
 		</div>
 		{* История заказов *}
@@ -80,10 +79,10 @@
 							<td>
 								<a href='{$language->label}/order/{$order->url}'><span data-language="{$translate_id['user_order_number']}">{$lang->user_order_number}</span>{$order->id}</a>
 							</td>
-							{* @END Номер заказа *}
+
 							{* Дата заказа *}
 							<td>{$order->date|date}</td>
-							{* @END Дата заказа *}
+
 							{* Статус заказа *}
 							<td>
 								{if $order->paid == 1}
@@ -97,12 +96,10 @@
 									<span data-language="{$translate_id['status_made']}">{$lang->status_made}</span>
 								{/if}
 							</td>
-							{* @END Статус заказа *}
 						</tr>
 					{/foreach}
 				</table>
 			</div>
 		{/if}
-		{* История заказов *}
 	</div>
 </div>

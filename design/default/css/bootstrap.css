@@ -3342,7 +3342,6 @@ button.list-group-item-danger {
   height: 100%; }
 
 /*! fancyBox v2.1.5 fancyapps.com | fancyapps.com/fancybox/#license */
-/* todo Убрать лишний код */
 .fancybox-wrap,
 .fancybox-skin,
 .fancybox-outer,
@@ -3614,7 +3613,7 @@ button.list-group-item-danger {
 
 #fn-map {
   width: 100%;
-  height: 25rem;
+  height: auto;
   border: 0.0625rem solid #c9e7fc; }
 
 #baloon {
@@ -3726,24 +3725,6 @@ button.list-group-item-danger {
   .pull-xl-none {
     float: none !important; } }
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0; }
-
-.sr-only-focusable:active, .sr-only-focusable:focus {
-  position: static;
-  width: auto;
-  height: auto;
-  margin: 0;
-  overflow: visible;
-  clip: auto; }
-
 .invisible {
   visibility: hidden !important; }
 
@@ -3764,7 +3745,9 @@ button.list-group-item-danger {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap; }
-
+.text-center{
+    text-align: center;
+}
 .text-xs-left {
   text-align: left !important; }
 

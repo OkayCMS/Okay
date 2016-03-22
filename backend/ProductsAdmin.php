@@ -30,7 +30,7 @@ class ProductsAdmin extends Okay {
         }
         
         // Бренды категории
-        $brands = $this->brands->get_brands(array('category_id'=>$category_id));
+        $brands = $this->brands->get_brands(array('category_id'=>$category->children));
         $this->design->assign('brands', $brands);
         
         // Все бренды

@@ -72,11 +72,6 @@
 	{* slick slider *}
 	<script src="design/{$settings->theme}/js/slick.min.js"></script>
 
-	{* Контакты, подключение библиотеки для Yandex карт *}
-	{if $smarty.get.module == 'FeedbackView'}
-		<script src="//api-maps.yandex.ru/2.1/?lang={$language->label}_{if $language->label == "ru"}RU{elseif $language->label == "en"}US{elseif $language->label == "uk"}UA{/if}"></script>
-	{/if}
-
 	{* Карточка товаров, поделиться в соц. сетях *}
 	{if $smarty.get.module == 'ProductView' || $smarty.get.module == "BlogView"}
 		<script type="text/javascript" src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js"></script>
@@ -107,7 +102,7 @@
 		<button class="i-mob-menu" data-target="#mob-menu" data-toggle="collapse" type="button" aria-expanded="false">
 			&#9776;
 		</button>
-		{* @END Кнопка меню для моб. *}
+
 		{* Меню сайта *}
 		<ul id="mob-menu" class="nav nav-inline pull-xs-left nav-mob collapse">
 			{foreach $pages as $p}
@@ -118,7 +113,7 @@
 				{/if}
 			{/foreach}
 		</ul>
-		{* @END Меню сайта *}
+
 		<ul class="nav nav-inline pull-xs-right">
             {* Выбор валюты *}
             {if $currencies|count > 1}
@@ -142,49 +137,55 @@
                     </div>
                 </li>
             {/if}
-            {* @END Выбор валюты *}
+
 			{* Выбор языка *}
 			{if $languages|count > 1}
-				<li class="nav-item">
-					<div class="btn-group">
-						<a data-languages="true" class="nav-link link-black i-lang" href="#" data-toggle="dropdown" aria-haspopup="true"
-						   aria-expanded="false"><span class="lang-label">{$language->label}</span><span
-									class="lang-name">{$language->name}</span></a>
-						<div class="dropdown-menu">
-							{foreach $languages as $l}
-								{if $l->enabled}
-									<a class="dropdown-item{if $language->id == $l->id} active{/if}"
-									   href="{$l->url}"><span class="lang-label">{$l->label}</span><span
-												class="lang-name">{$l->name}</span></a>
-								{/if}
-							{/foreach}
-						</div>
-					</div>
-				</li>
+                {$cnt = 0}
+                {foreach $languages as $ln}
+                    {if $ln->enabled}
+                        {$cnt = $cnt+1}
+                    {/if}
+                {/foreach}
+                {if $cnt>1}
+                    <li class="nav-item">
+                        <div class="btn-group">
+                            <a data-languages="true" class="nav-link link-black i-lang" href="#" data-toggle="dropdown" aria-haspopup="true"
+                               aria-expanded="false"><span class="lang-label">{$language->label}</span><span
+                                        class="lang-name">{$language->name}</span></a>
+                            <div class="dropdown-menu">
+                                {foreach $languages as $l}
+                                    {if $l->enabled}
+                                        <a class="dropdown-item{if $language->id == $l->id} active{/if}"
+                                           href="{$l->url}"><span class="lang-label">{$l->label}</span><span
+                                                    class="lang-name">{$l->name}</span></a>
+                                    {/if}
+                                {/foreach}
+                            </div>
+                        </div>
+                    </li>
+                {/if}
 			{/if}
-			{* @END Выбор языка *}
+
 			{* Информер сравнения *}
 			<li id="comparison" class="nav-item hidden-md-down">
 				{include "comparison_informer.tpl"}
 			</li>
-			{* Информер сравнения *}
+
 			{* Информер избранного *}
 			<li id="wishlist" class="nav-item">
 				{include file="wishlist_informer.tpl"}
 			</li>
-			{* Информер избранного *}
+
 			{if $user}
 				{* Личный кабинет *}
 				<li class="nav-item">
 					<a class="nav-link link-black i-user" href="{$lang_link}user">{$user->name}</a>
 				</li>
-				{* @END Личный кабинет *}
 			{else}
 				{* Вход *}
 				<li class="nav-item">
-					<a class="nav-link link-black i-user" href="{$lang_link}user/login"><span data-language="{$translate_id['index_login']}">{$lang->index_login}</span></a>
+					<a class="nav-link link-black i-user" href="{$lang_link}user/login" title="{$lang->index_login}"><span data-language="{$translate_id['index_login']}">{$lang->index_login}</span></a>
 				</li>
-				{* @END Вход *}
 			{/if}
 		</ul>
 	</div>
@@ -198,12 +199,12 @@
 				<img class="img-fluid" src="design/{$settings->theme|escape}/images/logo{if $language->label}_{$language->label}{/if}.png" alt="{$settings->site_name|escape}"/>
 			</a>
 		</div>
-		{* @END Логотип сайта *}
+
 		{* Информер корзины *}
 		<div id="cart_informer" class="col-xs-6 col-lg-2 pull-lg-right">
 			{include file='cart_informer.tpl'}
 		</div>
-		{* @END Информер корзины *}
+
 		{* Форма поиска *}
 		<div class="col-xs-12 col-lg-3 m-y-1-md_down">
 			<form id="fn-search" class="input-group" action="{$lang_link}all-products">
@@ -213,20 +214,19 @@
 				</span>
 			</form>
 		</div>
-		{* @END Форма поиска *}
+
 		{* Телефоны *}
 		<div class="col-xs-8 col-lg-2 p-l-0 p-l-1-md_down">
 			<div class="i-phone h5 font-weight-bold">
-				<div><a class="link-black" href="tel:08003215476">0 800 321-54-76</a></div>
-				<div><a class="link-black" href="tel:08003215476">0 800 321-54-76</a></div>
+				<div><a class="link-black" href="tel:{$lang->index_phone_1}">{$lang->index_phone_1}</a></div>
+				<div><a class="link-black" href="tel:{$lang->index_phone_2}">{$lang->index_phone_2}</a></div>
 			</div>
 		</div>
-		{* @END Телефоны *}
+
 		{* Обратный звонок *}
 		<div class="col-xs-4 col-lg-2 p-l-0-md_down">
 			<a class="btn btn-sm btn-block btn-warning font-weight-bold i-callback fn-callback okaycms" href="#fn-callback" data-language="{$translate_id['index_back_call']}">{$lang->index_back_call}</a>
 		</div>
-		{* @END Обратный звонок *}
 	</div>
 </div>
 {* Категории товаров *}
@@ -244,25 +244,25 @@
 		{else}
 			<ul id="{$parent_id}" class="navbar-sub collapse">
 		{/if}
-						{foreach $categories as $c}
-							{if $c->visible}
-								{if $c->subcategories && $level == 1}
-									<li class="nav-item">
-									<button class="btn-category-collapse collapsed" type="button" data-toggle="collapse" data-target="#{$c->id}" aria-expanded="false" aria-controls="{$c->id}"></button>
-										<a class="nav-link" href="{$lang_link}catalog/{$c->url}" data-category="{$c->id}">{$c->name|escape}</a>
-										{if $c->subcategories|count > 1}
-											{categories_tree categories=$c->subcategories level=$level + 1 parent_id=$c->id two_col=true}
-										{else}
-											{categories_tree categories=$c->subcategories level=$level + 1 parent_id=$c->id}
-										{/if}
-									</li>
-								{else}
-									<li class="nav-item">
-										<a class="nav-link" href="{$lang_link}catalog/{$c->url}" data-category="{$c->id}">{$c->name|escape}</a>
-									</li>
-								{/if}
-							{/if}
-						{/foreach}
+            {foreach $categories as $c}
+                {if $c->visible}
+                    {if $c->subcategories && $level == 1}
+                        <li class="nav-item">
+                        <button class="btn-category-collapse collapsed" type="button" data-toggle="collapse" data-target="#{$c->id}" aria-expanded="false" aria-controls="{$c->id}"></button>
+                            <a class="nav-link" href="{$lang_link}catalog/{$c->url}" data-category="{$c->id}">{$c->name|escape}</a>
+                            {if $c->subcategories|count > 1}
+                                {categories_tree categories=$c->subcategories level=$level + 1 parent_id=$c->id two_col=true}
+                            {else}
+                                {categories_tree categories=$c->subcategories level=$level + 1 parent_id=$c->id}
+                            {/if}
+                        </li>
+                    {else}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{$lang_link}catalog/{$c->url}" data-category="{$c->id}">{$c->name|escape}</a>
+                        </li>
+                    {/if}
+                {/if}
+            {/foreach}
 		{* Первая итерация *}
 		{if $level == 1}
 					</ul>
@@ -276,7 +276,7 @@
 	{/if}
 {/function}
 {categories_tree categories=$categories level=1}
-{* @END Категории товаров *}
+
 {* Баннер *}
 {get_banner var=banner1 group=1}
 {if $banner1->items}
@@ -311,7 +311,7 @@
 <div id="fn-content">
 	{$content}
 </div>
-{* @END Тело сайта *}
+
 {* Футер сайта *}
 <div class="bg-blue p-y-1">
 	<div class="container">
@@ -330,7 +330,7 @@
 					{/if}
 				{/foreach}
 			</div>
-			{* @END Меню сайта *}
+
 			{* Каталог *}
 			<div class="col-xs-6 col-lg-3 l-h-1_7 m-b-1-md_down">
 				<div class="h5">
@@ -344,7 +344,6 @@
                     {/if}
 				{/foreach}
 			</div>
-			{* @END Каталог *}
             <div class="clearfix hidden-lg-up"></div>
 			{* Контакты *}
 			<div class="col-xs-6 col-lg-3 l-h-1_7">
@@ -353,7 +352,6 @@
 				</div>
 				<div class="p-l-1 text-nowrap" data-language="{$translate_id['index_contacts_body']}">{$lang->index_contacts_body}</div>
 			</div>
-			{* @END Контакты *}
 			{* Соц. сети *}
 			<div class="col-xs-6 col-lg-3">
 				<div class="h5">
@@ -372,7 +370,7 @@
 						<input class="form-control subscribe-control form-control-sm" type="text" name="subscribe_email" value="" data-format="email" data-notice="{$lang->form_enter_email}" placeholder="{$lang->form_email}"/>
 						<input class="btn btn-warning btn-block" type="submit" value="{$lang->index_to_subscribe}"/>
 						{if $subscribe_error}
-							<div id="subscribe_error" class="p-x-1 p-y-05 bg-danger text-white m-t-1">
+							<div id="subscribe_error" class="p-x-1 p-y-05 text-white font-weight-bold border-b-1-white m-t-1">
 								{if $subscribe_error == 'email_exist'}
 									<span data-language="{$translate_id['index_subscribe_sent']}">{$lang->index_subscribe_already}</span>
 								{/if}
@@ -384,26 +382,31 @@
 						{if $subscribe_success}
 							<div class="hidden-xs-up">
 								<div id="fn-subscribe-sent" class="bg-info p-a-1">
-									<div class="h1" data-language="{$translate_id['index_subscribe_sent']}">{$lang->index_subscribe_sent}</div>
+
+									<div class="h1" data-language="{$translate_id['index_subscribe_sent']}">
+                                        <div class="col-xs-12 col-lg-12 text-center p-r-0-md_down">
+                                            <a href="{$lang_link}">
+                                                <img class="img-fluid center-block" src="design/{$settings->theme|escape}/images/logo{if $language->label}_{$language->label}{/if}.png" alt="{$settings->site_name|escape}"/>
+                                            </a>
+                                        </div>
+                                      <div class="text-center">
+                                          {$lang->index_subscribe_sent}
+                                      </div>
+                                    </div>
 								</div>
 							</div>
 						{/if}
 					</form>
 				</div>
-				{* @END Подписка на емейл рассылку *}
 			</div>
-			{* Соц. сети *}
 		</div>
 	</div>
 </div>
-{* @END Футер сайта *}
 {* Копирайт *}
 <div class="container p-y-1">
-	© 2016. <a class="link-black" href="http://okay-cms.com" target="_blank"><span data-language="{$translate_id['index_copyright']}">{$lang->index_copyright}</span></a>
+	© {$smarty.now|date_format:"%Y"}. <a class="link-black" href="http://okay-cms.com" target="_blank"><span data-language="{$translate_id['index_copyright']}">{$lang->index_copyright}</span></a>
 </div>
-{* @END Копирайт *}
 {* Форма обратного звонка *}
 {include file='callback.tpl'}
-{* Форма обратного звонка *}
 </body>
 </html>

@@ -17,7 +17,7 @@ if(($res = $view->fetch()) !== false) {
     print $res;
     
     // Сохраняем последнюю просмотренную страницу в переменной $_SESSION['last_visited_page']
-    if(empty($_SESSION['last_visited_page']) || empty($_SESSION['current_page']) || $_SERVER['REQUEST_URI'] !== $_SESSION['current_page']) {
+    if (empty($_SESSION['last_visited_page']) || empty($_SESSION['current_page']) || $_SERVER['REQUEST_URI'] !== $_SESSION['current_page']) {
         if(!empty($_SESSION['current_page']) && $_SESSION['last_visited_page'] !== $_SESSION['current_page']) {
             $_SESSION['last_visited_page'] = $_SESSION['current_page'];
         }

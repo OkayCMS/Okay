@@ -1,21 +1,21 @@
 {* Страница входа пользователя *}
 {* Канонический адрес страницы *}
 {$canonical="/user/login" scope=parent}
-{* @END Канонический адрес страницы *}
+
 {* Тайтл страницы *}
 {$meta_title = $lang->login_title scope=parent}
-{* @END Тайтл страницы *}
+
 <div class="container">
 	{* Хлебные крошки *}
 	{include file='breadcrumb.tpl'}
-	{* @END Хлебные крошки *}
+
 	{* Заголовок страницы *}
 	<h1 class="m-b-1"><span data-language="{$translate_id['login_enter']}">{$lang->login_enter}</span></h1>
-	{* @END Заголовок страницы *}
+
 	<div class="col-lg-4 p-y-1 bg-info m-b-2">
 		{* Вывод ошибок *}
 		{if $error}
-			<div class="p-x-1 p-y-05 bg-danger text-white m-b-1">
+			<div class="p-x-1 p-y-05 text-red m-b-1">
 				{if $error == 'login_incorrect'}
 					<span data-language="{$translate_id['login_error_pass']}">{$lang->login_error_pass}</span>
 				{elseif $error == 'user_disabled'}
@@ -31,23 +31,21 @@
 			<div class="form-group">
 				<input class="form-control" type="text" name="email" data-format="email" data-notice="{$lang->form_enter_email}" value="{$email|escape}" data-language="{$translate_id['form_email']}" placeholder="{$lang->form_email}*"/>
 			</div>
-			{* @END Почта пользователя *}
+
 			<div class="form-group input-group">
 				{* Пароль пользователя *}
 				<input class="form-control" type="password" name="password" data-format=".+" data-notice="{$lang->form_enter_password}" value="" data-language="{$translate_id['form_password']}" placeholder="{$lang->form_password}*"/>
-				{* @END Пароль пользователя *}
+
 				{* Ссылка на восстановление пароля *}
 				<div class="input-group-btn">
 					<a class="btn btn-primary" href="{$lang_link}user/password_remind" data-language="{$translate_id['login_remind']}">{$lang->login_remind}</a>
 				</div>
-				{* @END Ссылка на восстановление пароля *}
 			</div>
 			{* Кнопка отправки формы *}
 			<div class="clearfix">
 				<a href="{$lang_link}user/register" class="btn btn-success" data-language="{$translate_id['login_registration']}">{$lang->login_registration}</a>
 				<input type="submit" class="btn btn-warning pull-xs-right" name="login" data-language="{$translate_id['login_sign_in']}" value="{$lang->login_sign_in}">
 			</div>
-			{* @END Кнопка отправки формы *}
 		</form>
 	</div>
 </div>

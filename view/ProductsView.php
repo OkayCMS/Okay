@@ -72,7 +72,7 @@ class ProductsView extends View {
                     }
                     case 'sort': {
                         $_GET['sort'] = strval($param_values);
-                        if (!in_array($_GET['sort'], array('position', 'price', 'price_asc', 'name', 'name_desc'))) {
+                        if (!in_array($_GET['sort'], array('position', 'price', 'price_desc', 'name', 'name_desc'))) {
                             $this->is_wrong_params = 1;
                         }
                         break;
@@ -293,7 +293,7 @@ class ProductsView extends View {
         // Если задан бренд, выберем его из базы
         $prices = array();
         $prices['current'] = $this->request->get('p');
-        if (isset($prices['current']['min']) && isset($prices['current']['max'])) {
+        if (isset($prices['current']['min']) && isset($prices['current']['max']) && !empty($prices['current']['max']) && !empty($prices['current']['min'])) {
             $filter['price'] = $prices['current'];
         } else {
             unset($prices['current']);

@@ -8,7 +8,6 @@
 			<div class="h5 bg-info p-x-1 p-y-05">
 				<span data-language="{$translate_id['features_categories']}">{$lang->features_categories}</span>
 			</div>
-			{* @END Заголовок блока *}
 			<div class="nav-catalog p-x-05 m-b-2">
 		{* Последующие итерации *}
 		{else}
@@ -21,10 +20,10 @@
 					<div class="nav-item">
 						{* Кнопка раскрывающая категорию *}
 						<button class="btn-catalog-collapse {if $category->id != $c->id} collapsed{/if}" type="button" data-toggle="collapse" data-target="#cat_{$c->id}" aria-expanded="{if $category->id != $c->id}true{else}false{/if}" aria-controls="cat_{$c->id}"></button>
-						{* @END Кнопка раскрывающая категорию *}
+
 						{* Название категории *}
 						<a class="nav-link{if $category->id == $c->id} link-red fn-collapsed{/if}" href="{$lang_link}catalog/{$c->url}" data-category="{$c->id}">{$c->name|escape}</a>
-						{* @END Название категории *}
+
 						{* Если подкатегорий больше одной, для деления блока на 2 колонки *}
 						{if $category->id == $c->id}
 							{assign var='collapse' value=true}
@@ -43,7 +42,6 @@
 					<div class="nav-item">
 						<a class="nav-link{if $category->id == $c->id} link-red fn-collapsed{/if}" href="{$lang_link}catalog/{$c->url}" data-category="{$c->id}">{$c->name|escape}</a>
 					</div>
-					{* @END Название категории *}
 				{/if}
 			{/if}
 		{/foreach}
@@ -57,40 +55,36 @@
 	{/if}
 {/function}
 {catalog_tree categories=$categories level=1}
-{* @END Вывод дерева категорий *}
+
 {* Аяксовый фильт по цене *}
 {if $prices && $products|count > 0}
 	{* Заголовок блока *}
 	<div class="h5 bg-info p-x-1 p-y-05">
 		<span data-language="{$translate_id['features_price']}">{$lang->features_price}</span>
 	</div>
-	{* @END Заголовок блока *}
 	<div class="m-b-2">
 		<div class="row m-y-1 p-x-05">
 			{* Минимальная цена товаров *}
 			<div class="col-xs-6">
-				<input id="fn-slider-min" name="p[min]" value="{$prices->current->min|default:$prices->range->min}" data-price="{$prices->range->min}" type="text" class="form-control" title="">
+				<input id="fn-slider-min" name="p[min]" value="{$prices->current->min|default:$prices->range->min}" data-price="{$prices->range->min}" type="text" class="form-control">
 			</div>
-			{* @END Минимальная цена товаров *}
+
 			{* Максимальная цена товаров *}
 			<div class="col-xs-6">
-				<input id="fn-slider-max" name="p[max]" value="{$prices->current->max|default:$prices->range->max}" data-price="{$prices->range->max}" type="text" class="form-control" title="">
+				<input id="fn-slider-max" name="p[max]" value="{$prices->current->max|default:$prices->range->max}" data-price="{$prices->range->max}" type="text" class="form-control">
 			</div>
-			{* @END Максимальная цена товаров *}
 		</div>
 		{* Слайдер цен *}
 		<div id="fn-slider-price" class="okaycms"></div>
-		{* @END Слайдер цен *}
 	</div>
 {/if}
-{* @END Аяксовый фильт по цене *}
+
 {* Фильтр по брендам *}
 {if $category->brands}
     {* Заголовок блока *}
     <div class="h5 bg-info p-x-1 p-y-05">
         <span data-language="{$translate_id['features_manufacturer']}">{$lang->features_manufacturer}</span>
     </div>
-    {* @END Заголовок блока *}
     <div class="m-b-2 p-x-05">
         {* Сброс всех брендов *}
         <div>
@@ -100,7 +94,6 @@
                 <span data-language="{$translate_id['features_all']}">{$lang->features_all}</span>
             </label>
         </div>
-        {* @END Сброс всех брендов *}
         {* Список брендов *}
         {foreach $category->brands as $b}
             <div>
@@ -111,16 +104,13 @@
                 </label>
             </div>
         {/foreach}
-        {* @END Список брендов *}
     </div>
 {/if}
-{* @END Фильтр по брендам *}
 {* Фильтр по свойствам *}
 {if $features}
     {foreach $features as $key=>$f}
 	    {* Название свойства *}
 	    <div class="h5 bg-info p-x-1 p-y-05" data-feature="{$f->id}">{$f->name}</div>
-	    {* @END Название свойства *}
         <div class="m-b-2 p-x-05">
 	        {* Сброс всех свойств *}
 	        <div>
@@ -130,7 +120,6 @@
 			        <span data-language="{$translate_id['features_all']}">{$lang->features_all}</span>
 		        </label>
 	        </div>
-	        {* @END Сброс всех свойств *}
 	        {* Значения свойств *}
             {foreach $f->options as $o}
 	            <div>
@@ -141,7 +130,6 @@
 		            </label>
 	            </div>
             {/foreach}
-	        {* @END Значения свойств *}
         </div>
     {/foreach}
 {/if}
@@ -164,4 +152,3 @@
 		{/foreach}
 	</div>
 {/if}
-{* @END Просмотренные товары *}

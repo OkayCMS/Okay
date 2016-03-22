@@ -552,8 +552,8 @@ $(function(){
                         <input name="variants[stock][]" type="text" value="{if $variant->infinity || $variant->stock == ''}∞{else}{$variant->stock|escape}{/if}"/>{$settings->units}
                     </li>
                     <li class="variant_yandex">
-                        <input id="ya_input" name="yandex[{$variant->id|escape}]" value="1" type="checkbox" {if $variant->yandex}checked=""{/if}/>
-                        <label class="yandex_icon" for="ya_input"></label>
+                        <input id="ya_input_{$variant->id}" name="yandex[{$variant->id|escape}]" value="1" type="checkbox" {if $variant->yandex}checked=""{/if}/>
+                        <label class="yandex_icon" for="ya_input_{$variant->id}"></label>
                     </li>
                     <li class="variant_download">
                         {if $variant->attachment}

@@ -117,7 +117,7 @@ class Products extends Okay {
                             ) 
                         LIMIT 1) DESC";
                     break;
-                case 'price_asc':
+                case 'price_desc':
                     $order = "(SELECT -floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)
                         FROM __variants pv
                         LEFT JOIN s_currencies c on c.id=pv.currency_id

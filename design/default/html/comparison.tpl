@@ -1,14 +1,14 @@
 {* Сравнение товаров *}
 {* Тайтл страницы *}
 {$meta_title = $lang->comparison_title scope=parent}
-{* @END Тайтл страницы *}
+
 <div class="container m-b-2">
 	{* Хлебные крошки *}
 	{include file='breadcrumb.tpl'}
-	{* @END Хлебные крошки *}
+
 	{* Заголовок страницы *}
 	<h1 class="m-b-1"><span data-language="{$translate_id['comparison_header']}">{$lang->comparison_header}</span></h1>
-	{* @END Заголовок страницы *}
+
 	{if $comparison->products}
 		<div class="row">
 			<div class="col-lg-3 p-a-0">
@@ -25,13 +25,11 @@
 								</li>
 							</ul>
 						{/if}
-						{* @END Показать скрыть одинаковые характеристики *}
 					</div>
 					{* Рейтинг товара *}
 					<div class="cprs_rating p-y-05 p-x-05" data-use="cprs_rating">
 						<span data-language="{$translate_id['product_rating']}">{$lang->product_rating}</span>
 					</div>
-					{* @END Рейтинг товара *}
 					{* Названия характеристик *}
 					{if $comparison->features}
 						{foreach $comparison->features as $id=>$cf}
@@ -40,20 +38,18 @@
 							</div>
 						{/foreach}
 					{/if}
-					{* @END Названия характеристик *}
 				</div>
 			</div>
 			<div class="col-lg-9 row fn-comparison_products okaycms" data-products="3">
 				{foreach $comparison->products as $id=>$product}
 					<div class="col-lg-4 p-a-0">
-						{include file="tiny_products_comparison.tpl"}
+						{include file="tiny_products.tpl"}
 						{* Рейтинг товара *}
 						<div id="product_{$product->id}" class="p-y-05 p-x-05 text-xs-left cprs_rating">
 							<span class="rating_starOff">
 								<span class="rating_starOn" style="width:{$product->rating*90/5|string_format:'%.0f'}px;"></span>
 							</span>
 						</div>
-						{* @END Рейтинг товара *}
 						{* Характеристики *}
 						{if $product->features}
 							{foreach $product->features as $id=>$value}
@@ -62,7 +58,6 @@
 								</div>
 							{/foreach}
 						{/if}
-						{* @END Характеристики *}
 					</div>
 				{/foreach}
 			</div>

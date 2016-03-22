@@ -18,7 +18,7 @@
 			{* Список избранных товаров *}
 			{foreach $wished_products as $product}
 				<div class="col-md-4 col-lg-3">
-					{include "tiny_products_wishlist.tpl"}
+					{include "tiny_products.tpl"}
 				</div>
 			{/foreach}
 			{* @END Список избранных товаров *}

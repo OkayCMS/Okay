@@ -1,5 +1,5 @@
 <script>
-	/* Г Л О Б А Л Ь Н Ы Й   О Б Ъ Е К Т */
+	/* Глобальный обьект */
 	/* все глобальные переменные добавляем в оъект и работаем с ним!!! */
 	var okay = {literal}{}{/literal};
 	{* Предзаказ *}
@@ -31,7 +31,7 @@
 	{* Карточка товара, отправка комментария *}
 	{elseif $smarty.get.module == 'ProductView'}
 		$( window ).load( function() {
-			if( location.hash ) {
+			if( location.hash.search('comment') !=-1 ) {
 				$( 'a[href="#comments"]' ).tab( 'show' );
 			}
 		} );
@@ -41,7 +41,8 @@
 			$.fancybox( {
 				href: '#fn-subscribe-sent',
 				padding: 0,
-				minHeight: 0
+				minHeight: 0,
+                closeBtn: false
 			} );
 		} );
 	{elseif $subscribe_error}

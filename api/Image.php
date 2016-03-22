@@ -120,9 +120,10 @@ class Image extends Okay {
         if(!$this->db->result()) {
             return false;
         }
-        
+
         // Имя оригинального файла
-        $basename = explode('&', pathinfo($filename, PATHINFO_BASENAME));
+        $basename = preg_replace('~(.+)\.([0-9]*)x([0-9]*)(w)?\.([^\.\?]+)(\?.*)?$~', '${1}.${5}', $filename);
+        $basename = explode('&', pathinfo($basename, PATHINFO_BASENAME));
         $uploaded_file = array_shift($basename);
         $base = urldecode(pathinfo($uploaded_file, PATHINFO_FILENAME));
         $ext = pathinfo($uploaded_file, PATHINFO_EXTENSION);
@@ -148,6 +149,7 @@ class Image extends Okay {
     
     public function upload_image($filename, $name/*resizing_image*/, $original_dir = null/*/resizing_image*/) {
         // Имя оригинального файла
+        $name = preg_replace('~(.+)\.([0-9]*)x([0-9]*)(w)?\.([^\.\?]+)$~', '${1}.${5}', $name);
         $name = $this->correct_filename($name);
         $uploaded_file = $new_name = pathinfo($name, PATHINFO_BASENAME);
         $base = pathinfo($uploaded_file, PATHINFO_FILENAME);

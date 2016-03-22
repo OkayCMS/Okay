@@ -1,17 +1,17 @@
 {* Страница товара *}
 {* Канонический адрес страницы *}
 {$canonical="/products/{$product->url}" scope=parent}
-{* @END Канонический адрес страницы *}
+
 <div class="border-b-1-info">
 	<div class="container">
 		{* Хлебные крошки *}
 		{include file='breadcrumb.tpl'}
-		{* @END Хлебные крошки *}
+
 		{* Заголовок страницы *}
 		<h1 class="m-b-1">
 			<span data-product="{$product->id}">{$product->name|escape}</span>
 		</h1>
-		{* @END Заголовок страницы *}
+
 		<div class="row fn-transfer">
 			{if $product->image}
 				<div class="col-lg-5">
@@ -20,10 +20,9 @@
 						{if $product->special}
 							<img class="card-spec" alt='{$product->sp_img}' title='{$product->sp_img}'  src='files/special/{$product->special}'/>
 						{/if}
-						{* @END Промо изображение *}
+
 						{* Большое фото товара *}
-						<img class="fn-img" src="{$product->image->filename|resize:300:300}" alt="{$product->name|escape}"/>
-						{* @END Большое фото товара *}
+						<img class="fn-img" src="{$product->image->filename|resize:300:300}" alt="{$product->name|escape}" title="{$product->name|escape}"/>
 					</a>
 					{* Дополнительные фото продукта *}
 					{if $product->images|count > 1}
@@ -38,7 +37,6 @@
 							{/foreach}
 						</div>
 					{/if}
-					{* @END Дополнительные фото продукта *}
 				</div>
             {else}
                 <div class="col-lg-5">
@@ -47,10 +45,8 @@
                         {if $product->special}
                             <img class="card-spec" alt='{$product->sp_img}' title='{$product->sp_img}'  src='files/special/{$product->special}'/>
                         {/if}
-                        {* @END Промо изображение *}
                         {* Большое фото товара *}
                         <img class="fn-img" src="design/{$settings->theme}/images/no_image.png" height="300" alt="{$product->name|escape}"/>
-                        {* @END Большое фото товара *}
                     </a>
                 </div>
 			{/if}
@@ -61,12 +57,12 @@
 						<div class="h4 font-weight-bold">
 							<span class="fn-price">{$product->variant->price|convert}</span> {$currency->sign|escape}
 						</div>
-						{* @END Цена *}
+
 						{* Старая цена *}
 						<div class="text-line-through text-red{if !$product->variant->compare_price} hidden-xs-up{/if}">
 							<span class="fn-old_price">{$product->variant->compare_price|convert}</span> {$currency->sign|escape}
 						</div>
-						{* @END Старая цена *}
+
 						{* Рейтинг товара *}
 						<div id="product_{$product->id}" class="product_rating">
 							<span data-language="{$translate_id['product_rating']}">{$lang->product_rating}</span>:
@@ -74,17 +70,16 @@
 								<span class="rating_starOn" style="width:{$product->rating*90/5|string_format:'%.0f'}px;"></span>
 							</span>
 						</div>
-						{* @END Рейтинг товара *}
+
 						{* Артикул товара *}
 						<div{if !$product->variant->sku} class="hidden-xs-up"{/if}><span data-language="{$translate_id['product_sku']}">{$lang->product_sku}</span>: <span class="fn-sku">{$product->variant->sku}</span></div>
-						{* @END Артикул товара *}
+
 						{* Варианты товара *}
 						<select name="variant" class="fn-variant okaycms form-control c-select m-t-1 m-b-1-md_down{if $product->variants|count < 2} hidden-xs-up{/if}">
 							{foreach $product->variants as $v}
 								<option value="{$v->id}" data-price="{$v->price|convert}" data-stock="{$v->stock}"{if $v->compare_price > 0} data-cprice="{$v->compare_price|convert}"{/if}{if $v->sku} data-sku="{$v->sku}"{/if}{if $v@first} selected{/if}>{if $v->name}{$v->name}{else}{$product->name|escape}{/if}</option>
 							{/foreach}
 						</select>
-						{* @END Варианты товара *}
 					</div>
 					<div class="col-lg-6">
 						{if !$settings->is_preorder}
@@ -92,23 +87,20 @@
 							<div class="fn-not_preorder form-group{if $product->variant->stock > 0} hidden-xs-up{/if}">
 								<button class="btn btn-danger-outline btn-block disabled h5" type="button" data-language="{$translate_id['product_out_of_stock']}">{$lang->product_out_of_stock}</button>
 							</div>
-							{* @END Нет на складе *}
 						{else}
 							{* Предзаказ *}
 							<div class="fn-is_preorder form-group{if $product->variant->stock > 0} hidden-xs-up{/if}">
 								<button class="btn btn-warning-outline btn-block i-preorder" type="submit" data-language="{$translate_id['product_pre_order']}">{$lang->product_pre_order}</button>
 							</div>
-							{* @END Предзаказ *}
 						{/if}
 						<div class="fn-product-amount fn-is_stock okaycms text-xs-center text-md-left{if $product->variant->stock < 1} hidden-xs-up{/if}">
 							{* Кол-во товаров *}
 							<span class="minus">&minus;</span>
 							<input class="form-control" type="text" name="amount" value="1" data-max="{$product->variant->stock}">
 							<span class="plus">&plus;</span>
-							{* @END Кол-во товаров *}
+
 							{* Кнопка добавления в корзину *}
 							<button class="fn-is_stock btn btn-warning i-add-cart{if $product->variant->stock < 1} hidden-xs-up{/if}" type="submit" data-language="{$translate_id['product_add_cart']}">{$lang->product_add_cart}</button>
-							{* @END Кнопка добавления в корзину *}
 						</div>
 						{* Сравнение *}
 						<div class="form-group m-t-1 text-xs-center text-md-left hidden-md-down">
@@ -118,7 +110,6 @@
 								<a class="i-comparison fn-comparison okaycms selected" href="#" data-id="{$product->id}" title="{$lang->product_remove_comparison}" data-result-text="{$lang->product_add_comparison}" data-language="{$translate_id['product_remove_comparison']}"></a>
 							{/if}
 						</div>
-						{* @END Сравнение *}
 						{* Избранное *}
 						<div class="form-group text-xs-center text-md-left m-t-1">
 							{if $product->id|in_array:$wished_products}
@@ -127,7 +118,6 @@
 								<a href="#" data-id="{$product->id}" class="i-favorites fn-wishlist okaycms" title="{$lang->product_add_favorite}" data-result-text="{$lang->product_remove_favorite}" data-language="{$translate_id['product_add_favorite']}"></a>
 							{/if}
 						</div>
-						{* @END Избранное *}
 					</div>
 				</form>
 				<div class="row">
@@ -153,7 +143,7 @@
 							</ul>
 						</div>
 					</div>
-					{* @END Способ доставки *}
+
 					{* Способ оплаты *}
 					<div class="col-lg-6">
 						<div class="bg-pink p-a-1 m-y-1">
@@ -176,14 +166,12 @@
 							</ul>
 						</div>
 					</div>
-					{* @END Способ оплаты *}
 				</div>
 				{* Поделиться в соц. сетях *}
 				<div class="p-y-05 text-xs-center text-md-left">
 					<span data-language="{$translate_id['product_share']}">{$lang->product_share}</span>:
 				</div>
 				<div class="ya-share2 m-b-2 text-xs-center text-md-left" data-services="vkontakte,facebook,twitter"></div>
-				{* @END Поделиться в соц. сетях *}
 			</div>
 		</div>
 		{* Навигация табов *}
@@ -194,19 +182,18 @@
 					<a class="nav-link active" data-toggle="tab" href="#annotation" role="tab" data-language="{$translate_id['product_description']}">{$lang->product_description}</a>
 				</li>
 			{/if}
-			{* @END Описание *}
+
 			{* Характеристики *}
 			{if $product->features}
 				<li class="nav-item">
 					<a class="nav-link {if !$product->body} active{/if}" data-toggle="tab" href="#features" role="tab" data-language="{$translate_id['product_features']}">{$lang->product_features}</a>
 				</li>
 			{/if}
-			{* @END Характеристики *}
+
 			{* Комментарии *}
 			<li class="nav-item">
 				<a class="nav-link{if !$product->features && !$product->body} active{/if}" data-toggle="tab" href="#comments" role="tab" data-language="{$translate_id['product_comments']}">{$lang->product_comments}</a>
 			</li>
-			{* @END Комментарии *}
 		</ul>
 		{* Навигация табов *}
 		{* Контент табов *}
@@ -218,7 +205,7 @@
 					{$product->body}
 				</div>
 			{/if}
-			{* @END Описание *}
+
 			{* Характеристики *}
 			{if $product->features}
 				<button class="btn btn-block btn-link border-a-1-info m-b-1 hidden-lg-up" type="button" data-toggle="collapse" data-target="#features" aria-expanded="false" aria-controls="features">{$lang->product_features}</button>
@@ -237,7 +224,7 @@
 					</div>
 				</div>
 			{/if}
-			{* @END Характеристики *}
+
 			{* Комментарии *}
 			<button class="btn btn-block btn-link border-a-1-info hidden-lg-up" type="button" data-toggle="collapse" data-target="#comments" aria-expanded="false" aria-controls="comments">{$lang->product_comments}</button>
 			<div class="tab-pane collapse{if !$product->features && !$product->body} active{/if}" id="comments" role="tabpanel">
@@ -249,26 +236,24 @@
 								{* Якорь комментария *}
 								{* после добавления комментария кидает автоматически по якорю *}
 								<a name="comment_{$comment->id}"></a>
-								{* @END Якорь комментария *}
+
 								<div class="m-b-1">
 									{* Имя комментария *}
 									<div>
 										<span class="h5">{$comment->name|escape}</span>
 									</div>
-									{* @END Имя комментария *}
 									<div class="p-y-05">
 										{* Дата комментария *}
 										<span class="blog-data static">{$comment->date|date}, {$comment->date|time}</span>
-										{* @END Дата комментария *}
+
 										{* Статус комментария *}
 										{if !$comment->approved}
 											<span class="font-weight-bold text-muted" data-language="{$translate_id['post_comment_status']}">({$lang->post_comment_status})</span>
 										{/if}
-										{* @END Статус комментария *}
+
 									</div>
 									{* Тело комментария *}
 									{$comment->text|escape|nl2br}
-									{* @END Тело комментария *}
 								</div>
 							{/foreach}
 						{else}
@@ -286,7 +271,7 @@
 							</div>
 							{* Вывод ошибок формы *}
 							{if $error}
-								<div class="p-x-1 p-y-05 m-b-1 bg-danger text-white">
+								<div class="p-x-1 p-y-05 m-b-1 text-red">
 									{if $error=='captcha'}
 										<span data-language="{$translate_id['form_error_captcha']}">{$lang->form_error_captcha}</span>
 									{elseif $error=='empty_name'}
@@ -296,25 +281,24 @@
 									{/if}
 								</div>
 							{/if}
-							{* Вывод ошибок формы *}
+
 							<div class="row">
 								{* Имя комментария *}
 								<div class="col-lg-5 form-group">
 									<input class="form-control" type="text" name="name" value="{$comment_name|escape}" data-format=".+" data-notice="{$lang->form_enter_name}" data-language="{$translate_id['form_name']}" placeholder="{$lang->form_name}*"/>
 								</div>
-								{* @END Имя комментария *}
+
 								{if $settings->captcha_product}
 									<div class="col-xs-12 col-lg-7 form-inline m-b-1-md_down">
 										{* Изображение капчи *}
 										<div class="form-group">
 											<img class="brad-3" src="captcha/image.php?{math equation='rand(10,10000)'}" alt='captcha'/>
 										</div>
-										{* @END Изображение капчи *}
+
 										{* Поле ввода капчи *}
 										<div class="form-group">
 											<input class="form-control" type="text" name="captcha_code" value="" data-format="\d\d\d\d\d" data-notice="{$lang->form_enter_captcha}" data-language="{$translate_id['form_enter_captcha']}" placeholder="{$lang->form_enter_captcha}*"/>
 										</div>
-										{* @END Поле ввода капчи *}
 									</div>
 								{/if}
 							</div>
@@ -322,19 +306,17 @@
 							<div class="form-group">
 								<textarea class="form-control" rows="3" name="text" data-format=".+" data-notice="{$lang->form_enter_comment}" data-language="{$translate_id['form_enter_comment']}" placeholder="{$lang->form_enter_comment}*">{$comment_text}</textarea>
 							</div>
-							{* @END Текст комментария *}
+
 							{* Кнопка отправки формы *}
 							<div class="text-xs-right">
 								<input class="btn btn-warning" type="submit" name="comment" data-language="{$translate_id['form_send']}" value="{$lang->form_send}"/>
 							</div>
-							{* @END Кнопка отправки формы *}
 						</form>
 					</div>
 				</div>
 			</div>
-			{* @END Комментарии *}
 		</div>
-		{* @END Контент табов *}
+
 		{* Соседние товары *}
 		{if $prev_product || $next_product}
 			<nav>
@@ -352,7 +334,6 @@
 				</ol>
 			</nav>
 		{/if}
-		{* @END Соседние товары *}
 	</div>
 </div>
 {* Связанные товары *}
@@ -367,10 +348,9 @@
 				<div class="col-md-4 col-xl-3{if $p@iteration == 4} hidden-lg{/if}">
 					{include "tiny_products.tpl" product = $p}
 				</div>
-				{if $p@iteration % 3 == 0}<div class="col-xs-12 hidden-sm-down hidden-md-up"></div>{/if}
+				{if $p@iteration % 3 == 0}<div class="col-xs-12 hidden-sm-down"></div>{/if}
 			{/foreach}
 		</div>
 	</div>
 </div>
 {/if}
-{* @END Связанные товары *}

@@ -20,29 +20,29 @@
 			<li class="page-item">
 				<a class="page-link" href="{if $current_page_num == 2}{furl page=null}{else}{furl page=$current_page_num - 1}{/if}" aria-label="{$lang->pagination_prev}">
 					<span aria-hidden="true">&laquo;</span>
-					<span class="sr-only">{$lang->pagination_prev}</span>
+					<span>{$lang->pagination_prev}</span>
 				</a>
 			</li>
 		{else}
 			<li class="page-item disabled">
 				<span class="page-link" aria-label="{$lang->pagination_prev}">
 					<span aria-hidden="true">&laquo;</span>
-					<span class="sr-only">{$lang->pagination_prev}</span>
+					<span>{$lang->pagination_prev}</span>
 				</span>
 			</li>
 		{/if}
-		{* @ Ссылка на предыдущую страницу *}
+
 		{* Ссылка на 1 страницу *}
 		{if $current_page_num == 1}
 			<li class="page-item active">
-				<span class="page-link">1 <span class="sr-only">(current)</span></span>
+				<span class="page-link">1</span>
 			</li>
 		{else}
 			<li class="page-item">
-				<a class="page-link" href="{furl page=null}">1 <span class="sr-only">(current)</span></a>
+				<a class="page-link" href="{furl page=null}">1</a>
 			</li>
 		{/if}
-		{* @END Ссылка на 1 страницу *}
+
 		{* Страницы пагинации *}
 		{section name=pages loop=$page_to start=$page_from}
 			{* Номер текущей выводимой страницы *}
@@ -62,7 +62,7 @@
 				</li>
 			{/if}
 		{/section}
-		{* @END Страницы пагинации *}
+
 		{* Ссылка на последнююю страницу *}
 		{if $current_page_num==$total_pages_num}
 			<li class="page-item active">
@@ -78,23 +78,22 @@
 		<li class="page-item">
 			<a class="page-link" href="{furl page=all}" data-language="{$translate_id['pagination_all']}">{$lang->pagination_all}</a>
 		</li>
-		{* @END Ссылка на все страницы *}
+
 		{* Ссылка на следующую страницу *}
 		{if $current_page_num<$total_pages_num}
 			<li class="page-item">
 				<a class="page-link" href="{furl page=$current_page_num+1}" aria-label="{$lang->pagination_next}">
 					<span aria-hidden="true">&raquo;</span>
-					<span class="sr-only">{$lang->pagination_next}</span>
+					<span>{$lang->pagination_next}</span>
 				</a>
 			</li>
 		{else}
 			<li class="page-item disabled">
 				<span class="page-link" aria-label="{$lang->pagination_next}">
 					<span aria-hidden="true">&raquo;</span>
-					<span class="sr-only">{$lang->pagination_next}</span>
+					<span>{$lang->pagination_next}</span>
 				</span>
 			</li>
 		{/if}
-		{* @END Ссылка на следующую страницу *}
 	</ul>
 {/if}

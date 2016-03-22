@@ -108,8 +108,8 @@
                     </tr>
                     <tr>
                         <th style="text-align: right">Итого</th>
-                        <th>{$total_price} {$currency->sign}</th>
-                        <th style="text-align: right">{$total_amount} {$settings->units}</th>
+                        <th>{$total_amount} {$settings->units}</th>
+                        <th style="text-align: right">{$total_price} {$currency->sign}</th>
                     </tr>
                 </tfoot>
             </table>
