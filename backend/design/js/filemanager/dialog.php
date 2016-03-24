@@ -1,5 +1,21 @@
 <?php
-$config = include 'config/config.php';
+session_start();
+
+chdir('../../../..');
+require_once('api/Okay.php');
+
+$okay = new Okay();
+$manager = $okay->managers->get_manager();
+if ($manager) {
+	chdir('backend/design/js/filemanager/');
+	$config = include 'config/config.php';
+}
+else
+{
+	die();
+}
+
+//$config = include 'config/config.php';
 //TODO switch to array
 extract($config, EXTR_OVERWRITE);
 
