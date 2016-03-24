@@ -89,7 +89,7 @@ $(function() {
                     {else}
                         <p class=name><a href='#' class='set_main_theme'>{$t->name|escape|truncate:16:'...'}</a></p>
                     {/if}
-                    <a href="index.php?module=TemplatesAdmin">
+                    <a href="index.php?module=TemplatesAdmin" style="display: block;float: left;">
                         <img class="preview" src='{$root_dir}../design/{$t->name}/preview.png'>
                     </a>
                 </li>

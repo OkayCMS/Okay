@@ -381,9 +381,11 @@ a.edit {
     transition: all 0.3s ease;  
 }
 #header .add::before {
-    content: "\2795";
+    content: "+";
     display: inline-block;
     margin-right: 8px;
+    font-size: 21px;
+    line-height: 21px;
 }
 #main_menu .comments_num,
 #main_menu .orders_num {

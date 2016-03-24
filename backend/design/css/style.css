@@ -1366,7 +1366,6 @@ ul.themes li img.preview
     max-width: 145px;
     overflow: hidden;
     max-height: 20px;
-    float: left;
     padding-top: 3px;
 }
 .themes li .name input{

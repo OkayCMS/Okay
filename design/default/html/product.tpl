@@ -348,7 +348,7 @@
 				<div class="col-md-4 col-xl-3{if $p@iteration == 4} hidden-lg{/if}">
 					{include "tiny_products.tpl" product = $p}
 				</div>
-				{if $p@iteration % 3 == 0}<div class="col-xs-12 hidden-sm-down"></div>{/if}
+				{if $p@iteration % 4 == 0}<div class="col-xs-12 hidden-sm-down"></div>{/if}
 			{/foreach}
 		</div>
 	</div>

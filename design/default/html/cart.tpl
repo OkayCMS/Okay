@@ -80,12 +80,10 @@
 										<div class="form-group">
 											<input class="form-control" type="text" name="captcha_code" value="" data-format="\d\d\d\d\d" data-notice="{$lang->form_enter_captcha}" data-language="{$translate_id['form_enter_captcha']}" placeholder="{$lang->form_enter_captcha}*"/>
 										</div>
-									</div
+									</div>
 								{/if}
 								{* Кнопка отправки формы *}
-								<div class="form-group">
-									<input class="btn btn-warning" type="submit" name="checkout_fake" data-language="{$translate_id['cart_checkout']}" value="{$lang->cart_checkout}"/>
-								</div>
+                                <input class="btn btn-warning" type="submit" name="checkout_fake" data-language="{$translate_id['cart_checkout']}" value="{$lang->cart_checkout}"/>
 							</div>
 						</div>
 					</div>

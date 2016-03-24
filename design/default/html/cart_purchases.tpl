@@ -40,11 +40,13 @@
 			{* Изображение *}
 			<div class="purchase-img hidden-md-down">
 				{$image = $purchase->product->images|first}
-				{if $image}
-					<a href="{$lang_link}products/{$purchase->product->url}">
-						<img src="{$image->filename|resize:50:50}" alt="{$purchase->product->name|escape}" title="{$purchase->product->name|escape}">
-					</a>
-				{/if}
+                <a href="{$lang_link}products/{$purchase->product->url}">
+                    {if $image}
+                        <img src="{$image->filename|resize:50:50}" alt="{$purchase->product->name|escape}" title="{$purchase->product->name|escape}">
+                    {else}
+                        <img width="50" height="50" src="design/{$settings->theme}/images/no_image.png" alt="{$purchase->product->name|escape}" title="{$purchase->product->name|escape}"/>
+                    {/if}
+                </a>
 			</div>
 
 			{* Название *}

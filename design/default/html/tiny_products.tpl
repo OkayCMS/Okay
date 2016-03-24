@@ -56,7 +56,7 @@
             {/if}
 
 
-            {if $smarty.get.module != "ProductsView" && $smarty.get.module !="MainView"}
+            {if $smarty.get.module != "ProductsView" && $smarty.get.module !="MainView" && $smarty.get.module !="ProductView"}
             <a class="btn-comparison-remove {if $smarty.get.module == "ComparisonView"}fn-comparison{else}fn-wishlist{/if} okaycms hidden-md-down selected" href="#" data-id="{$product->id}" title="{if $smarty.get.module == "ComparisonView"}{$lang->tiny_products_remove_comparison}{else}{$lang->tiny_products_remove_favorite}{/if}">&times;</a>
             {/if}
             <div class="input-group">

@@ -16,7 +16,7 @@
 		{foreach $categories as $c}
 			{if $c->visible}
 				{* Если есть подкатегории *}
-				{if $c->subcategories}
+				{if $c->subcategories && $c->has_children_visible}
 					<div class="nav-item">
 						{* Кнопка раскрывающая категорию *}
 						<button class="btn-catalog-collapse {if $category->id != $c->id} collapsed{/if}" type="button" data-toggle="collapse" data-target="#cat_{$c->id}" aria-expanded="{if $category->id != $c->id}true{else}false{/if}" aria-controls="cat_{$c->id}"></button>
@@ -145,7 +145,7 @@
 					{if $browsed_product->image->filename}
 						<img src="{$browsed_product->image->filename|resize:50:50}" alt="{$browsed_product->name|escape}" title="{$browsed_product->name|escape}">
 					{else}
-						<img width="50" height="50" class="fn-img" src="design/{$settings->theme}/images/no_image.png" alt="{$product->name|escape}"/>
+						<img width="50" height="50" src="design/{$settings->theme}/images/no_image.png" alt="{$browsed_product->name|escape}" title="{$browsed_product->name|escape}"/>
 					{/if}
 				</a>
 			</div>
