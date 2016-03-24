@@ -34,7 +34,7 @@ class Yandex extends Okay
 		$button = '<form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
 					<input name="receiver" type="hidden" value="'.$settings['yandex_id'].'">
 					<input name="short-dest" type="hidden" value="'.$desc.'">
-					<input type="hidden" name="comment" value="'.$desc.'"/>
+					<input name="targets" type="hidden" value="'.$desc.'"/>
 					<input name="quickpay-form" type="hidden" value="shop">
 					<input data-type="number" type="hidden" name="sum" value="'.$price.'">
 					<input name="label" type="hidden" value="'.$order->id.'">   
