@@ -386,7 +386,7 @@ $(function(){
 function ajax_set_result(data) {
 	$( '#cart_informer' ).html( data.cart_informer );
 	$( '#fn-purchases' ).html( data.cart_purchases );
-	$( '#fn-ajax_deliveries' ).replaceWith( data.cart_deliveries );
+	$( '#fn-ajax_deliveries' ).html( data.cart_deliveries );
 }
 
 /* Аяксовое изменение кол-ва товаров в корзине */

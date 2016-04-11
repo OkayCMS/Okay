@@ -94,7 +94,7 @@ class ProductView extends View {
             $related_products[$p->related_id] = null;
         }
         if(!empty($related_ids)) {
-            foreach($this->products->get_products(array('id'=>$related_ids, 'visible'=>1)) as $p) {
+            foreach($this->products->get_products(array('id'=>$related_ids, 'visible'=>1, 'in_stock'=>1)) as $p) {
                 $related_products[$p->id] = $p;
             }
             

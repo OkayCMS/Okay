@@ -11,13 +11,26 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<meta name="description" content="{$meta_description|escape}{$filter_meta->description|escape}"/>
 	<meta name="keywords" content="{$meta_keywords|escape}{$filter_meta->keywords|escape}"/>
-	{if $module == 'ProductsView' && $set_canonical}
-		<meta name="robots" content="noindex,nofollow"/>
+	{if $module == 'ProductsView'}
+        {if $set_canonical}
+		    <meta name="robots" content="noindex,nofollow"/>
+        {elseif $smarty.get.page || $smarty.get.sort}
+            <meta name="robots" content="noindex,follow"/>
+        {else}
+            <meta name="robots" content="index,follow"/>
+        {/if}
 	{else}
     	<meta name="robots" content="index,follow"/>
 	{/if}
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
     <meta name="generator" content="OkayCMS {$config->version}"/>
+
+    {if $settings->g_webmaster}
+        <meta name="google-site-verification" content="{$settings->g_webmaster}" />
+    {/if}
+    {if $settings->y_webmaster}
+        <meta name='yandex-verification' content="{$settings->y_webmaster}" />
+    {/if}
 
 	{$rel_prev_next}
 
@@ -218,8 +231,8 @@
 		{* Телефоны *}
 		<div class="col-xs-8 col-lg-2 p-l-0 p-l-1-md_down">
 			<div class="i-phone h5 font-weight-bold">
-				<div><a class="link-black" href="tel:{$lang->index_phone_1}">{$lang->index_phone_1}</a></div>
-				<div><a class="link-black" href="tel:{$lang->index_phone_2}">{$lang->index_phone_2}</a></div>
+				<div><a class="link-black" href="tel:{$lang->index_phone_1}" >{$lang->index_phone_1}</a></div>
+				<div><a class="link-black" href="tel:{$lang->index_phone_2}" >{$lang->index_phone_2}</a></div>
 			</div>
 		</div>
 
@@ -408,5 +421,53 @@
 </div>
 {* Форма обратного звонка *}
 {include file='callback.tpl'}
+
+{if $settings->g_analytics}
+    {literal}
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', {/literal}'{$settings->g_analytics}'{literal}, 'auto');
+            ga('send', 'pageview');
+        </script>
+    {/literal}
+{/if}
+{if $settings->y_metric}
+    {literal}
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter{/literal}{$settings->y_metric}{literal} = new Ya.Metrika({
+                        id:{/literal}{$settings->y_metric}{literal},
+                        clickmap:true,
+                        trackLinks:true,
+                        accurateTrackBounce:true,
+                        webvisor:true,
+                        trackHash:true,
+                        ecommerce:"dataLayer"
+                    });
+                } catch(e) { }
+            });
+
+            var n = d.getElementsByTagName("script")[0],
+                    s = d.createElement("script"),
+                    f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+    </script>
+    <!-- /Yandex.Metrika counter -->
+{/literal}
+{/if}
 </body>
 </html>

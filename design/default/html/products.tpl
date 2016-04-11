@@ -6,7 +6,7 @@
 	{elseif $brand}
 		{$canonical="/brands/{$brand->url}" scope=parent}
 	{elseif $keyword}
-		{$canonical="/products?keyword={$keyword|escape}" scope=parent}
+		{$canonical="/all-products?keyword={$keyword|escape}" scope=parent}
 	{else}
 		{$canonical="/products" scope=parent}
 	{/if}

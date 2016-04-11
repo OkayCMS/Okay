@@ -10,8 +10,6 @@ Disallow: /compiled/
 Disallow: /cart/
 Disallow: /resize/
 Disallow: /password.php
-Disallow: */sort-
-Disallow: */page-
 Disallow: /*?currency_id
 Disallow: /*?keyword
 Disallow: /*?utm
@@ -31,8 +29,6 @@ Disallow: /compiled/
 Disallow: /cart/
 Disallow: /resize/
 Disallow: /password.php
-Disallow: */sort-
-Disallow: */page-
 Disallow: /*?currency_id
 Disallow: /*?keyword
 Disallow: /*?utm
@@ -52,8 +48,6 @@ Disallow: /compiled/
 Disallow: /cart/
 Disallow: /resize/
 Disallow: /password.php
-Disallow: */sort-
-Disallow: */page-
 Disallow: /*?currency_id
 Disallow: /*?keyword
 Disallow: /*?utm

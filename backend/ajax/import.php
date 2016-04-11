@@ -30,7 +30,7 @@ class ImportAjax extends Okay {
     
     private $import_files_dir      = 'backend/files/import/'; // Временная папка
     private $import_file           = 'import.csv';           // Временный файл
-    private $category_delimiter = ',';                       // Разделитель каегорий в файле
+    private $category_delimiter = ',,';                       // Разделитель каегорий в файле
     private $subcategory_delimiter = '/';                    // Разделитель подкаегорий в файле
     private $column_delimiter      = ';';
     private $products_count        = 10;

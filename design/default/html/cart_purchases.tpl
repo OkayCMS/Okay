@@ -53,6 +53,11 @@
 			<div class="purchase-name">
 				<a href="{$lang_link}products/{$purchase->product->url}">{$purchase->product->name|escape}</a>
 				{$purchase->variant->name|escape}
+                {if $purchase->variant->stock == 0}
+                    <label class="btn-warning cart_preorder">
+                        {$lang->product_pre_order}
+                    </label>
+                {/if}
 			</div>
 
 			{* Цена за ед. *}

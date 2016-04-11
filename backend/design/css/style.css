@@ -2605,3 +2605,18 @@ input[type="checkbox"] {
 .topvisor_help{
     left: 70px!important;
 }
+.fast_save{
+    bottom: 0;
+    position: fixed;
+    width: 100%;
+    text-align: center;
+    background: rgba(36, 53, 65, 0.27);
+    padding: 2px;
+    transition: 1s;
+    display: none;
+}
+.fast_save input{
+    display: inline-block;
+    float: none;
+
+}

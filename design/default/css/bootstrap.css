@@ -4342,3 +4342,9 @@ a.bg-pink:focus, a.bg-pink:hover {
 @media (min-width: 1200px) {
   .hidden-xl {
     display: none !important; } }
+
+.cart_preorder{
+    padding: 5px;
+    border-radius: 3px;
+    pointer-events: none;
+}

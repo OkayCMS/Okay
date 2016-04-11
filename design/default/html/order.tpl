@@ -60,6 +60,11 @@
                     {if $order->paid && $purchase->variant->attachment}
                         <a class="download_attachment" href="{$lang_link}order/{$order->url}/{$purchase->variant->attachment}">скачать файл</a>
                     {/if}
+                    {if $purchase->variant->stock == 0}
+                        <label class="btn-warning cart_preorder">
+                            {$lang->product_pre_order}
+                        </label>
+                    {/if}
 				</div>
 
 				{* Цена за ед. *}

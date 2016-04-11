@@ -1,6 +1,6 @@
 {if $deliveries}
 	{* Способ доставки *}
-    <div id="fn-ajax_deliveries" class="border-a-1-info p-a-1 m-b-2">
+    <div class="border-a-1-info p-a-1 m-b-2">
         <div class="h5 i-delivery m-b-1"><span data-language="{$translate_id['cart_delivery']}">{$lang->cart_delivery}</span></div>
         {foreach $deliveries as $delivery}
             <div class="m-l-2">

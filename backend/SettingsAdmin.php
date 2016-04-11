@@ -49,6 +49,12 @@ class SettingsAdmin extends Okay {
             $this->settings->site_work = $this->request->post('site_work');
             $this->settings->site_annotation = $this->request->post('site_annotation');
 
+            /*google and yandex analytics*/
+            $this->settings->g_analytics = $this->request->post('g_analytics');
+            $this->settings->g_webmaster = $this->request->post('g_webmaster');
+            $this->settings->y_metric = $this->request->post('y_metric');
+            $this->settings->y_webmaster = $this->request->post('y_webmaster');
+
 
             // Водяной знак
             $clear_image_cache = false;

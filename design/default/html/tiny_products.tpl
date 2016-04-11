@@ -9,7 +9,7 @@
                     <img class="card-spec" src='files/special/{$product->special}' alt='{$product->sp_img}'/>
                 {/if}
             {else}
-                <img class="fn-img" src="design/{$settings->theme}/images/no_image.png" alt="{$product->name|escape}"/>
+                <img class="fn-img" src="design/{$settings->theme}/images/no_image.png" width="200" height="180" alt="{$product->name|escape}"/>
                 {if $product->special}
                     <img class="card-spec" src='files/special/{$product->special}' alt='{$product->sp_img}'/>
                 {/if}

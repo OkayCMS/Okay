@@ -19,7 +19,7 @@
         отменен
     {/if}
 </h1>
-<table cellpadding="6" cellspacing="0" style="border-collapse: collapse; border: 2px solid #41ade2;">
+<table cellpadding="6" cellspacing="0" style="border-collapse: collapse; border: 2px solid #41ade2; width: 100%">
 	<tr style="border-bottom: 2px solid #41ade2;">
 		<td style=" width:300px;float: left;;padding: 5px;">
 			Статус
@@ -108,13 +108,13 @@
 	</tr>
 </table>
 
-<h1 style="float: left;font: 18px;background: #41ade2;color: #fff;padding: 5px;margin-top: 15px;width: 800px;">Вы заказали:</h1>
+<h1 style="float: left;font: 18px;background: #41ade2;color: #fff;padding: 5px;margin-top: 15px;width: 100%;clear: both">Вы заказали:</h1>
 
-<table cellpadding="6" cellspacing="0" style="border-collapse: collapse; border: 2px solid #2c6f95">
+<table cellpadding="6" cellspacing="0" style="border-collapse: collapse; border: 2px solid #2c6f95;width: 100%">
 
 	{foreach $purchases as $purchase}
 	<tr style="border-bottom:2px solid #2c6f95">
-		<td align="center" style="padding:6px; width:100px; background-color:#ffffff; ;font-family:arial;">
+		<td align="center" style="padding:6px; width:100px; background-color:#ffffff;font-family:arial;">
 			{$image = $purchase->product->images[0]}
 			<a href="{$config->root_url}/{$lang_link}products/{$purchase->product->url}">
                 <img border="0" src="{$image->filename|resize:50:50}">

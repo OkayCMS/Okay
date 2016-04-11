@@ -19,7 +19,7 @@
 
 			<div class="row">
 				{* Доставка *}
-				<div class="col-lg-7 m-b-2">
+				<div id="fn-ajax_deliveries" class="col-lg-7 m-b-2">
 					{include file='cart_deliveries.tpl'}
 				</div>
 

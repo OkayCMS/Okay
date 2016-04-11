@@ -88,6 +88,10 @@
     </div>
 	<div id="user">
 	<ul class="order_details">
+        <li>
+            <label class=property>IP покупателя</label>
+            <div class="edit_order_detail view_order_detail">{$order->ip}</div>
+        </li>
 		<li>
 			<label class=property>Дата</label>
 			<div class="edit_order_detail view_order_detail">

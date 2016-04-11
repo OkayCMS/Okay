@@ -207,5 +207,43 @@
         </ul>
     </div>
 
+
+    <div class="block layer">
+        <h2>Настройка аналитики
+            <div class="helper_wrap">
+                <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                <div class="right helper_bottom helper_block" style="width: 446px;">
+                            <span>
+                                <b>Google Analytics ID</b> - прописывается ID счетчика, в формате (UA-xxxxxxxx-x)
+                                <b>Google Webmaster</b> - прописывается только содержимое атрибута content (786f3d0f736b732c)
+                                <br>пример: <br>meta name='google-site-verification' content='<i style="font-weight: bold">786f3d0f736b732c</i>'
+                                <b>Yandex метрика</b> - прописывается числовой код метрики (ID)
+                                <b>Yandex вебмастер</b> - прописывается только содержимое атрибута content (786f3d0f736b732c)
+                                <br>пример: <br>meta name='yandex-verification' content='<i style="font-weight: bold">786f3d0f736b732c</i>'
+
+                            </span>
+                </div>
+            </div>
+        </h2>
+        <ul>
+            <li>
+                <label class="property">Google Analytics ID</label>
+                <input type="text" name="g_analytics" value="{$settings->g_analytics}" class="okay_inp">
+            </li>
+            <li>
+                <label class="property">Google Webmaster</label>
+                <input type="text" name="g_webmaster" value="{$settings->g_webmaster}" class="okay_inp">
+            </li>
+            <li>
+                <label class="property">Yandex метрика</label>
+                <input type="text" name="y_metric" value="{$settings->y_metric}" class="okay_inp">
+            </li>
+            <li>
+                <label class="property">Yandex вебмастер</label>
+                <input type="text" name="y_webmaster" value="{$settings->y_webmaster}" class="okay_inp">
+            </li>
+        </ul>
+    </div>
+
     <input class="button_green button_save" type="submit" name="save" value="Сохранить" />
 </form>

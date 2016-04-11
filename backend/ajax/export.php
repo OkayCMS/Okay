@@ -100,7 +100,7 @@ class ExportAjax extends Okay {
                     $categories[] = implode('/', $path);
                 }
             }
-            $product['category'] = implode(', ', $categories);
+            $product['category'] = implode(',, ', $categories);
         }
         
         // Изображения товаров

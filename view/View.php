@@ -120,7 +120,9 @@ class View extends Okay {
                 $strlen = $first_lang->id == $this->language->id ? "" : $first_lang->label;
                 $page_url = trim(substr($page_url, strlen($strlen)),"/");
             }
-            
+            if($_GET['page_url'] == 'all-products'){
+                $page_url = $_GET['page_url'];
+            }
             $this->design->assign('language', $this->language);
             $this->design->assign('languages', $languages);
             $this->design->assign('lang', $this->translations);
@@ -226,6 +228,7 @@ class View extends Okay {
         if(!isset($params['visible'])) {
             $params['visible'] = 1;
         }
+        $params['in_stock'] = 1;
         $params['featured'] = 1;
         if(!empty($params['var'])) {
             foreach($this->products->get_products($params) as $p) {
@@ -271,6 +274,7 @@ class View extends Okay {
         if(!isset($params['sort'])) {
             $params['sort'] = 'created';
         }
+        $params['in_stock'] = 1;
         if(!empty($params['var'])) {
             foreach($this->products->get_products($params) as $p) {
                 $products[$p->id] = $p;
@@ -312,6 +316,7 @@ class View extends Okay {
         if(!isset($params['visible'])) {
             $params['visible'] = 1;
         }
+        $params['in_stock'] = 1;
         $params['discounted'] = 1;
         if(!empty($params['var'])) {
             foreach($this->products->get_products($params) as $p) {
