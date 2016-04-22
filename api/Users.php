@@ -173,7 +173,7 @@ class Users extends Okay {
     
     public function delete_user($id) {
         if(!empty($id)) {
-            $query = $this->db->placehold("UPDATE __orders SET user_id=NULL WHERE id=? LIMIT 1", intval($id));
+            $query = $this->db->placehold("UPDATE __orders SET user_id=0 WHERE user_id=? LIMIT 1", intval($id));
             $this->db->query($query);
             
             $query = $this->db->placehold("DELETE FROM __users WHERE id=? LIMIT 1", intval($id));

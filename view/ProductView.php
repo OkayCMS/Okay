@@ -158,10 +158,6 @@ class ProductView extends View {
         
         //Автоматичекска генерация мета тегов и описания товара
         if (!empty($category)) {
-            $auto_meta_title = "";
-            $auto_meta_keywords = "";
-            $auto_meta_description = "";
-            //$auto_h1 = "";
             $parts = array(
                 '{$category}' => ($category->name ? $category->name : ''),
                 '{$category_h1}' => ($category->name_h1 ? $category->name_h1 : ''),

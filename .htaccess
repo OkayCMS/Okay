@@ -4,6 +4,7 @@ AddDefaultCharset UTF-8
 ErrorDocument 404 /404
 ErrorDocument 401 /password.php
 RewriteEngine on
+#RewriteBase /
 
 # Кэширование / поддерживается не на всех хостингах
 <ifmodule mod_expires.c>

@@ -107,6 +107,20 @@
 
 	{* js-проверка форм *}
 	<script src="design/{$settings->theme}/js/baloon.js"></script>
+
+    {if $settings->g_analytics}
+    {literal}
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', {/literal}'{$settings->g_analytics}'{literal}, 'auto');
+            ga('send', 'pageview');
+        </script>
+    {/literal}
+    {/if}
 </head>
 <body>
 <div class="border-b-1-info">
@@ -422,19 +436,6 @@
 {* Форма обратного звонка *}
 {include file='callback.tpl'}
 
-{if $settings->g_analytics}
-    {literal}
-        <script>
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-            ga('create', {/literal}'{$settings->g_analytics}'{literal}, 'auto');
-            ga('send', 'pageview');
-        </script>
-    {/literal}
-{/if}
 {if $settings->y_metric}
     {literal}
     <!-- Yandex.Metrika counter -->

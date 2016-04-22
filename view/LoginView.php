@@ -21,11 +21,10 @@ class LoginView extends View {
                 // Выбираем пользователя из базы
                 $user = $this->users->get_user($email);
                 if(!empty($user)) {
-                    // Генерируем секретный код и сохраняем в сессии
+                    // Генерируем секретный код и запишем в базу с датой до которой он будет активен (+5 минут от текущей)
                     $code = md5(uniqid($this->config->salt, true));
-                    $_SESSION['password_remind_code'] = $code;
-                    $_SESSION['password_remind_user_id'] = $user->id;
-                    
+                    $this->users->update_user($user->id, array('remind_code'=>$code, 'remind_expire'=>date('Y-m-d H:i:s', time()+300)));
+
                     // Отправляем письмо пользователю для восстановления пароля
                     $this->notify->email_password_remind($user->id, $code);
                     $this->design->assign('email_sent', true);
@@ -35,21 +34,15 @@ class LoginView extends View {
             }
             // Если к нам перешли по ссылке для восстановления пароля
             elseif($this->request->get('code')) {
-                // Проверяем существование сессии
-                if(!isset($_SESSION['password_remind_code']) || !isset($_SESSION['password_remind_user_id'])) {
-                    return false;
-                }
-                
-                // Проверяем совпадение кода в сессии и в ссылке
-                if($this->request->get('code') != $_SESSION['password_remind_code']) {
-                    return false;
-                }
-                
+                $this->db->query("update __users set remind_code=null, remind_expire=null where remind_expire<?", date('Y-m-d H:i:s'));
                 // Выбераем пользователя из базы
-                $user = $this->users->get_user(intval($_SESSION['password_remind_user_id']));
+                $this->db->query("select id from __users where remind_code=? limit 1", $this->request->get('code'));
+                $user = $this->db->result();
                 if(empty($user)) {
                     return false;
                 }
+
+                $this->users->update_user($user->id, array('remind_code'=>null, 'remind_expire'=>null));
                 
                 // Залогиниваемся под пользователем и переходим в кабинет для изменения пароля
                 $_SESSION['user_id'] = $user->id;
