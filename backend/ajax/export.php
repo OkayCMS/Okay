@@ -7,6 +7,7 @@ class ExportAjax extends Okay {
         'name'=>             'Товар',
         'price'=>            'Цена',
         'currency'=>         'ID валюты',
+        'currency_code'=>    'Код валюты',        
         'url'=>              'Адрес',
         'visible'=>          'Видим',
         'featured'=>         'Рекомендуемый',
@@ -116,6 +117,13 @@ class ExportAjax extends Okay {
         
         $variants = $this->variants->get_variants(array('product_id'=>array_keys($products)));
         
+        // Формируем массив с сопоставлением ID валют их коду
+        $currencies = $this->money->get_currencies();        
+        $currencies_list = array();
+        foreach($currencies as $currencie) {
+            $currencies_list[$currencie->id] = $currencie->code;
+        }
+        
         foreach($variants as $variant) {
             if(isset($products[$variant->product_id])) {
                 $v                    = array();
@@ -125,6 +133,7 @@ class ExportAjax extends Okay {
                 $v['sku']             = $variant->sku;
                 $v['stock']           = $variant->stock;
                 $v['currency']        = $variant->currency_id;
+                $v['currency_code']   = $currencies_list[$variant->currency_id];
                 if($variant->infinity) {
                     $v['stock']           = '';
                 }

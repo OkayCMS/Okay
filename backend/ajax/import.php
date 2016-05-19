@@ -13,6 +13,7 @@ class ImportAjax extends Okay {
         'variant'=>          array('variant', 'вариант'),
         'price'=>            array('price', 'цена'),
         'currency'=>         array('currency_id', 'currency', 'ID валюты'),
+        'currency_code'=>    array('currency_code', 'код валюты', 'валюта'),
         'compare_price'=>    array('compare price', 'старая цена'),
         'sku'=>              array('sku', 'артикул'),
         'stock'=>            array('stock', 'склад', 'на складе'),
@@ -226,6 +227,16 @@ class ImportAjax extends Okay {
         if (isset($item['currency'])) {
             $variant['currency_id'] = intval($item['currency']);
         }
+        
+        // Если присутствует код валюты определяем её ID
+        if (isset($item['currency_code'])) {		        
+            $currencies = $this->money->get_currencies();
+            foreach($currencies as $currencie) {
+              if (trim($item['currency_code']) == $currencie->code) {
+                $variant['currency_id'] = $currencie->id;
+              }
+            }           
+        }                   
         
         // Если задан артикул варианта, найдем этот вариант и соответствующий товар
         if(!empty($variant['sku'])) {
