@@ -26,4 +26,7 @@
 			{/foreach}
 		</div>
 	{/if}
+
+    {* Тело страницы *}
+    {$page->body}
 </div>

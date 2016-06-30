@@ -19,6 +19,16 @@
             {$callback->phone|escape}
         </td>
     </tr>
+    {if $callback->message}
+        <tr style="border-bottom: 2px solid #2c6f95;">
+            <td style='padding:6px; width:170px; background-color:#41ade2; border:1px solid #e0e0e0;font-family:arial;'>
+                Сообщение
+            </td>
+            <td style='padding:6px; width:330px; background-color:#ffffff; border:1px solid #e0e0e0;font-family:arial;'>
+                {$callback->message|escape}
+            </td>
+        </tr>
+    {/if}
     <tr style="border-bottom: 2px solid #2c6f95;">
         <td style='padding:6px; width:170px; background-color:#41ade2; border:1px solid #e0e0e0;font-family:arial;'>
             Страница обращения

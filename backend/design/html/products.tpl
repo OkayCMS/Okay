@@ -1,17 +1,27 @@
 {* Вкладки *}
 {capture name=tabs}
-	<li class="active"><a href="{url module=ProductsAdmin keyword=null category_id=null brand_id=null filter=null page=null limit=null}">Товары</a></li>
+	<li class="active">
+        <a href="{url module=ProductsAdmin keyword=null category_id=null brand_id=null filter=null page=null limit=null}">Товары</a>
+    </li>
     {if in_array('categories', $manager->permissions)}
-        <li><a href="index.php?module=CategoriesAdmin">Категории</a></li>
+        <li>
+            <a href="index.php?module=CategoriesAdmin">Категории</a>
+        </li>
     {/if}
     {if in_array('brands', $manager->permissions)}
-        <li><a href="index.php?module=BrandsAdmin">Бренды</a></li>
+        <li>
+            <a href="index.php?module=BrandsAdmin">Бренды</a>
+        </li>
     {/if}
     {if in_array('features', $manager->permissions)}
-        <li><a href="index.php?module=FeaturesAdmin">Свойства</a></li>
+        <li>
+            <a href="index.php?module=FeaturesAdmin">Свойства</a>
+        </li>
     {/if}
     {if in_array('special', $manager->permissions)}
-        <li><a href="index.php?module=SpecialAdmin">Промо-изображения</a></li>
+        <li>
+            <a href="index.php?module=SpecialAdmin">Промо-изображения</a>
+        </li>
     {/if}
 {/capture}
 
@@ -24,15 +34,15 @@
 
 {* Поиск *}
 <form method="get">
-<div id="search">
-	<input type="hidden" name="module" value="ProductsAdmin">
-	<input class="search" type="text" name="keyword" value="{$keyword|escape}" />
-	<input class="search_button" type="submit" value=""/>
-</div>
+    <div id="search">
+        <input type="hidden" name="module" value="ProductsAdmin">
+        <input class="search" type="text" name="keyword" value="{$keyword|escape}" />
+        <input class="search_button" type="submit" value=""/>
+    </div>
 </form>
 	
 {* Заголовок *}
-<div id="header">	
+<div id="header" style="overflow: visible;">
 	{if $products_count}
 		{if $category->name || $brand->name}
 			<h1>{$category->name} {$brand->name} ({$products_count} {$products_count|plural:'товар':'товаров':'товара'})</h1>
@@ -45,13 +55,17 @@
 		<h1>Нет товаров</h1>
 	{/if}
 	<a class="add" href="{url module=ProductAdmin return=$smarty.server.REQUEST_URI}">Добавить товар</a>
+    <div class="helper_wrap">
+        <a class="top_help" id="show_help_search" href="https://www.youtube.com/watch?v=5vO7uMwM9VA" target="_blank"></a>
+        <div class="right helper_block topvisor_help">
+            <p>Видеоинструкция по разделу</p>
+        </div>
+    </div>
 </div>	
 
 <div id="main_list">
     
     {if $products}
-
-
     {include file='pagination.tpl'}
     <div class="limit_show">
         <span>Показывать по: </span>
@@ -111,12 +125,7 @@
                             <label data-vid="{$variant->id}" class="yandex_icon {if $variant->yandex}active{/if}"></label>
                             <input class="price {if $variant->compare_price>0}compare_price{/if}" type="text" name="price[{$variant->id}]" value="{$variant->price}"
                             {if $variant->compare_price>0}title="Старая цена &mdash; {$variant->compare_price} {if $variant->currency_id}{$currencies[$variant->currency_id]->sign}{else}{$currency->sign}{/if}"{/if} />
-                            <select name="variant_currencies_id[{$variant->id}]">
-                                {foreach $currencies as $currency}
-                                    <option value="{$currency->id}"
-                                        {if $currency->id == $variant->currency_id}selected=""{/if}>{$currency->code}</option>
-                                {/foreach}
-                            </select>
+                            {if isset($currencies[$variant->currency_id])}<span>{$currencies[$variant->currency_id]->code}</span>{/if}
                             <input class="stock" type="text" name="stock[{$variant->id}]" value="{if $variant->infinity}∞{else}{$variant->stock}{/if}"/>{$settings->units}
                         </li>
                     {/foreach}
@@ -132,7 +141,6 @@
                     </div>
                 {/if}
             </div>
-				
 				<a href="{url module=ProductAdmin id=$product->id return=$smarty.server.REQUEST_URI}">{$product->name|escape}</a>
 	 			<span>{$brands_name[$product->brand_id]->name}</span>
 			</div>
@@ -230,7 +238,6 @@
     {/if}
 </div>
 
-
 {*Меню*}
 <div id="right_menu">
 	{*Фильтр*}
@@ -258,14 +265,14 @@
         <li {if $filter=='out_yandex'}class="selected"{/if}>
             <a href="{url keyword=null brand_id=null category_id=null page=null limit=null filter='out_yandex'}">Не в яндексе</a>
         </li>
+        <li {if $filter=='without_images'}class="selected"{/if}>
+            <a href="{url keyword=null brand_id=null category_id=null page=null limit=null filter='without_images'}">Без изображений</a>
+        </li>
     </ul>
     {*Фильтр END*}
-
-
 	{*Категории товаров *}
     {function name=categories_tree}
         {if $categories}
-
             <ul class="cats_right{if $level > 1} sub_menu{/if}">
                 {if $categories[0]->parent_id == 0}
                     <li class="clearfix {if !$category->id}selected{/if}">
@@ -299,11 +306,8 @@
         </ul>
         {*Бренды END*}
     {/if}
-	
 </div>
 {*Меню END*}
-
-
 {* On document load *}
 {literal}
 <script>
@@ -591,8 +595,8 @@ $(function() {
         $(this).parent().next().slideToggle(500);
     });
 
-    $('.cats_right li.selected').parents().removeClass('sub_menu');
-    $('.cats_right li.selected').parents().prev().find('span').addClass('open');
+    $('.cats_right li.selected').parents('.cats_right.sub_menu').removeClass('sub_menu');
+    $('.cats_right li.selected').parents('.cats_right').prev('li').find('span').addClass('open');
 
 });
 

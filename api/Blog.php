@@ -217,5 +217,35 @@ class Blog extends Okay {
             return false;
         }
     }
+
+    public function get_related_products($filter = array()) {
+        $product_id_filter = '';
+        $post_id_filter = '';
+        if(!empty($filter['post_id'])) {
+            $post_id_filter = $this->db->placehold('AND post_id in(?@)', (array)$filter['post_id']);
+        }
+        if(!empty($filter['product_id'])) {
+            $product_id_filter = $this->db->placehold('AND related_id in(?@)', (array)$filter['product_id']);
+        }
+        $query = $this->db->placehold("SELECT
+                post_id,
+                related_id,
+                position
+            FROM __related_blogs
+            WHERE
+                1
+                $post_id_filter
+                $product_id_filter
+            ORDER BY position
+        ");
+        $this->db->query($query);
+        return $this->db->results();
+    }
+
+    public function add_related_product($post_id, $related_id, $position=0) {
+        $query = $this->db->placehold("INSERT IGNORE INTO __related_blogs SET post_id=?, related_id=?, position=?", $post_id, $related_id, $position);
+        $this->db->query($query);
+        return $related_id;
+    }
     
 }

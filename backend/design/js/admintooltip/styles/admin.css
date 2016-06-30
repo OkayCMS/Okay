@@ -1,81 +1,84 @@
 .admTools {
-    position: fixed;
-    width: 14.375rem;
-    left: -14.375rem;
-    top: 10.5625rem;
     background-color: #333;
-    -webkit-transition: left .5s ease 0s;
-    -moz-transition: left .5s ease 0s;
-    -o-transition: left .5s ease 0s;
-    transition: left .5s ease 0s;
+    border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+    left: -240px;
+    position: fixed;
+    top: 170px;
+    transition: left 0.5s ease 0s;
+    width: 240px;
     z-index: 9999;
-    border: 0.0625rem solid rgba(255, 255, 255, 0.2); }
+}
 .admTools.open {
-    left: -0.0625rem; }
+    left: 0px; }
 .admTools p {
-    margin: 0.625rem;
+    margin: 10px;
     color: #fff; }
 .admTools .tool-descr {
     color: #8d8c8c;
-    font-size: 0.6875rem; }
+    font-size: 12px; }
 .admTools .tool-title {
     background-color: #484848;
-    margin: 0.625rem 0;
-    padding: 0.4375rem 0;
+    border-bottom: 1px solid #6d6d6d;
+    border-top: 1px solid #6d6d6d;
+    margin: 5px 0;
+    padding: 2px 0;
     text-align: center;
     text-transform: uppercase;
-    border-top: 0.0625rem solid #6d6d6d;
-    border-bottom: 0.0625rem solid #6d6d6d; }
+}
 
 .openTools {
-    background: #333 url("adm_tools.png") center no-repeat;
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: #333 url("adm_tools.png") no-repeat scroll center center;
+    border-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.2) -moz-use-text-color;
+    border-image: none;
+    border-style: solid solid solid none;
+    border-width: 1px 1px 1px medium;
     display: block;
-    width: 3rem;
-    height: 3rem;
+    height: 48px;
     position: absolute;
-    top: -0.0625rem;
-    right: -3rem;
-    border: 0.0625rem solid rgba(255, 255, 255, 0.2);
-    border-left: none; }
+    right: -48px;
+    top: -1px;
+    width: 48px;
+}
 
 .admin_bookmark {
-    background: url("adm_ent.png") no-repeat;
+    background: rgba(0, 0, 0, 0) url("adm_ent.png") no-repeat scroll 0 0;
     display: inline-block;
-    width: 1.625rem;
-    height: 1.625rem;
-    margin: 0 0.625rem; }
+    height: 28px;
+    margin: 10px;
+    width: 28px;
+}
 
 .changeTools {
-    display: block;
-    width: 4rem;
-    height: 2.375rem;
-    margin: 0 auto 0.625rem;
-    border-radius: 1.25rem;
     background-color: #900000;
+    border-radius: 25px;
+    display: block;
+    height: 38px;
+    margin: 0 auto 10px;
     position: relative;
-    -webkit-transition: background .5s ease 0s;
-    -moz-transition: background .5s ease 0s;
-    -o-transition: background .5s ease 0s;
-    transition: background .5s ease 0s; }
+    transition: background 0.5s ease 0s;
+    width: 65px;
+}
 .changeTools.on {
     background-color: #57d756; }
 .changeTools.on span {
-    left: 1.625rem; }
+    left: 26px; }
 .changeTools span {
-    position: absolute;
-    left: 0;
-    top: 0;
     background-color: #fff;
-    display: block;
-    width: 2.125rem;
-    height: 2.125rem;
-    margin: 0.125rem;
     border-radius: 50%;
-    box-shadow: 0 0 0.3125rem 0 rgba(50, 50, 50, 0.7);
-    -webkit-transition: left 0.5s ease 0s;
-    -moz-transition: left 0.5s ease 0s;
-    -o-transition: left 0.5s ease 0s;
-    transition: left 0.5s ease 0s; }
+    box-shadow: 0 0 1px 0 rgba(50, 50, 50, 0.7);
+    display: block;
+    height: 34px;
+    left: 0;
+    margin: 2px;
+    position: absolute;
+    top: 0;
+    transition: left 0.5s ease 0s;
+    width: 34px;
+}
 
 .tooltip {
     width: 187px;

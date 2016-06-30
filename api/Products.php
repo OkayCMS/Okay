@@ -19,6 +19,7 @@ class Products extends Okay {
         $is_featured_filter = '';
         $discounted_filter = '';
         $in_stock_filter = '';
+        $has_images_filter = '';
         $yandex_filter = '';
         $group_by = '';
         $order = 'p.position DESC';
@@ -58,7 +59,11 @@ class Products extends Okay {
         }
         
         if(isset($filter['in_stock'])) {
-            $in_stock_filter = $this->db->placehold('AND (SELECT count(*)>0 FROM __variants pv WHERE pv.product_id=p.id AND pv.price>0 AND (pv.stock IS NULL OR pv.stock>0) LIMIT 1) = ?', intval($filter['in_stock']));
+            $in_stock_filter = $this->db->placehold('AND (SELECT count(*)>0 FROM __variants pv WHERE pv.product_id=p.id AND (pv.stock IS NULL OR pv.stock>0) LIMIT 1) = ?', intval($filter['in_stock']));
+        }
+
+        if(isset($filter['has_images'])) {
+            $has_images_filter = $this->db->placehold('AND (SELECT count(*)>0 FROM __images pi WHERE pi.product_id=p.id LIMIT 1) = ?', intval($filter['has_images']));
         }
         
         if(isset($filter['yandex'])) {
@@ -181,6 +186,7 @@ class Products extends Okay {
                 $is_featured_filter
                 $discounted_filter
                 $in_stock_filter
+                $has_images_filter
                 $visible_filter
                 $price_filter
                 $group_by
@@ -215,6 +221,7 @@ class Products extends Okay {
         $visible_filter = '';
         $is_featured_filter = '';
         $in_stock_filter = '';
+        $has_images_filter = '';
         $yandex_filter = '';
         $discounted_filter = '';
         $features_filter = '';
@@ -253,7 +260,11 @@ class Products extends Okay {
         }
         
         if(isset($filter['in_stock'])) {
-            $in_stock_filter = $this->db->placehold('AND (SELECT count(*)>0 FROM __variants pv WHERE pv.product_id=p.id AND pv.price>0 AND (pv.stock IS NULL OR pv.stock>0) LIMIT 1) = ?', intval($filter['in_stock']));
+            $in_stock_filter = $this->db->placehold('AND (SELECT count(*)>0 FROM __variants pv WHERE pv.product_id=p.id AND (pv.stock IS NULL OR pv.stock>0) LIMIT 1) = ?', intval($filter['in_stock']));
+        }
+
+        if(isset($filter['has_images'])) {
+            $has_images_filter = $this->db->placehold('AND (SELECT count(*)>0 FROM __images pi WHERE pi.product_id=p.id LIMIT 1) = ?', intval($filter['has_images']));
         }
         
         if(isset($filter['yandex'])) {
@@ -318,6 +329,7 @@ class Products extends Okay {
                 $keyword_filter
                 $is_featured_filter
                 $in_stock_filter
+                $has_images_filter
                 $discounted_filter
                 $visible_filter
                 $features_filter

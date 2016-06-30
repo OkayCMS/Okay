@@ -1,6 +1,22 @@
 {capture name=tabs}
-	{if in_array('import', $manager->permissions)}<li><a href="index.php?module=ImportAdmin">Импорт</a></li>{/if}
-	<li class="active"><a href="index.php?module=ExportAdmin">Экспорт</a></li>
+	{if in_array('import', $manager->permissions)}
+        <li>
+            <a href="index.php?module=ImportAdmin">Импорт</a>
+        </li>
+    {/if}
+	<li class="active">
+        <a href="index.php?module=ExportAdmin">Экспорт</a>
+    </li>
+    {if in_array('import', $manager->permissions)}
+        <li>
+            <a href="index.php?module=MultiImportAdmin">Импорт переводов</a>
+        </li>
+    {/if}
+    {if in_array('export', $manager->permissions)}
+        <li>
+            <a href="index.php?module=MultiExportAdmin">Экспорт переводов</a>
+        </li>
+    {/if}
 {/capture}
 {$meta_title='Экспорт товаров' scope=parent}
 
@@ -9,11 +25,23 @@
 {literal}
 	
 var in_process=false;
+var field = '',
+    value = '';
 
 $(function() {
 
+    $('.fn-type').on('change', function() {
+        $('.fn-select').hide();
+        $('.fn-select.fn-select'+$(this).val()).show();
+    });
+
 	// On document load
 	$('input#start').click(function() {
+        var elem = $('.fn-select:visible');
+        if (elem) {
+            field = elem.attr('name');
+            value = elem.val();
+        }
  
  		Piecon.setOptions({fallback: 'force'});
  		Piecon.setProgress(0);
@@ -27,10 +55,14 @@ $(function() {
 	function do_export(page)
 	{
 		page = typeof(page) != 'undefined' ? page : 1;
-
+        var data = {page: page};
+        if (field && value) {
+            data[field] = value;
+        }
+        
 		$.ajax({
  			 url: "ajax/export.php",
- 			 	data: {page:page},
+ 			 	data: data,
  			 	dataType: 'json',
   				success: function(data){
   				
@@ -71,22 +103,46 @@ $(function() {
 
 
 {if $message_error}
-<!-- Системное сообщение -->
-<div class="message message_error">
-	<span class="text">
-	{if $message_error == 'no_permission'}Установите права на запись в папку {$export_files_dir}
-	{else}{$message_error}{/if}
-	</span>
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_error">
+        <span class="text">
+        {if $message_error == 'no_permission'}Установите права на запись в папку {$export_files_dir}
+        {else}{$message_error}{/if}
+        </span>
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 
 <div>
 	<h1>Экспорт товаров</h1>
 	{if $message_error != 'no_permission'}
-	<div id='progressbar'></div>
-	<input class="button_green" id="start" type="button" name="" value="Экспортировать" />	
+	    <div id='progressbar'></div>
+        <div id="start">
+            <input class="button_green" id="start" type="button" name="" value="Экспортировать" />
+            <select class="fn-type">
+                <option value="0">Все товары</option>
+                {if $brands}<option value="1">По брендам</option>{/if}
+                {if $categories}<option value="2">По категориям</option>{/if}
+            </select>
+            {if $brands}
+                <select class="fn-select fn-select1" name="brand_id" style="display: none;">
+                    {foreach $brands as $b}
+                        <option value="{$b->id}" {if $b@first}selected=""{/if}>{$b->name|escape}</option>
+                    {/foreach}
+                </select>
+            {/if}
+            {if $categories}
+                <select class="fn-select fn-select2" name="category_id" style="display: none;">
+                    {function name=categories_tree}
+                        {foreach $categories as $c}
+                            <option value="{$c->id}">{section name=sp loop=$level}&nbsp;&nbsp;&nbsp;&nbsp;{/section}{$c->name|escape}</option>
+                            {categories_tree categories=$c->subcategories level=$level+1}
+                        {/foreach}
+                    {/function}
+                    {categories_tree categories=$categories level=0}
+                </select>
+            {/if}
+        </div>
 	{/if}
 </div>
- 

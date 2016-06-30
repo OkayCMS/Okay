@@ -22,7 +22,8 @@ class Payment extends Okay {
                 p.currency_id, 
                 p.settings, 
                 p.enabled, 
-                p.position, 
+                p.position,
+                p.image,
                 $lang_sql->fields
             FROM __payment_methods p
             $lang_sql->join
@@ -48,7 +49,8 @@ class Payment extends Okay {
                 p.currency_id, 
                 p.settings, 
                 p.enabled, 
-                p.position, 
+                p.position,
+                p.image,
                 $lang_sql->fields
             FROM __payment_methods p
             $lang_sql->join
@@ -169,6 +171,7 @@ class Payment extends Okay {
         $this->db->query($query);
         
         if(!empty($id)) {
+            $this->image->delete_image($id, 'image', 'payment_methods', $this->config->original_payments_dir, $this->config->resized_payments_dir);
             $query = $this->db->placehold("DELETE FROM __payment_methods WHERE id=? LIMIT 1", intval($id));
             $this->db->query($query);
             $this->db->query("DELETE FROM __lang_payment_methods WHERE payment_id=?", intval($id));

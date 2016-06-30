@@ -1,11 +1,37 @@
 {capture name=tabs}
-	{if in_array('settings', $manager->permissions)}<li><a href="index.php?module=SettingsAdmin">Настройки</a></li>{/if}
-	{if in_array('currency', $manager->permissions)}<li><a href="index.php?module=CurrencyAdmin">Валюты</a></li>{/if}
-	{if in_array('delivery', $manager->permissions)}<li><a href="index.php?module=DeliveriesAdmin">Доставка</a></li>{/if}
-	{if in_array('payment', $manager->permissions)}<li><a href="index.php?module=PaymentMethodsAdmin">Оплата</a></li>{/if}
-	{if in_array('managers', $manager->permissions)}<li><a href="index.php?module=ManagersAdmin">Менеджеры</a></li>{/if}
-    {if in_array('languages', $manager->permissions)}<li><a href="index.php?module=LanguagesAdmin">Языки</a></li>{/if}
-	<li class="active"><a href="index.php?module=TranslationsAdmin">Переводы</a></li>
+	{if in_array('settings', $manager->permissions)}
+        <li>
+            <a href="index.php?module=SettingsAdmin">Настройки</a>
+        </li>
+    {/if}
+	{if in_array('currency', $manager->permissions)}
+        <li>
+            <a href="index.php?module=CurrencyAdmin">Валюты</a>
+        </li>
+    {/if}
+	{if in_array('delivery', $manager->permissions)}
+        <li>
+            <a href="index.php?module=DeliveriesAdmin">Доставка</a>
+        </li>
+    {/if}
+	{if in_array('payment', $manager->permissions)}
+        <li>
+            <a href="index.php?module=PaymentMethodsAdmin">Оплата</a>
+        </li>
+    {/if}
+	{if in_array('managers', $manager->permissions)}
+        <li>
+            <a href="index.php?module=ManagersAdmin">Менеджеры</a>
+        </li>
+    {/if}
+    {if in_array('languages', $manager->permissions)}
+        <li>
+            <a href="index.php?module=LanguagesAdmin">Языки</a>
+        </li>
+    {/if}
+	<li class="active">
+        <a href="index.php?module=TranslationsAdmin">Переводы</a>
+    </li>
 {/capture}
 
 {* Title *}
@@ -18,44 +44,52 @@
 </div>
 
 <div id="main_list">
-
+    <div>Сортировка переводов:</div>
+    <ul class="sort_translation">
+        <li>
+            <a {if $sort=='translation' || $sort=='translation_desc'} class="selected" {/if} href="{if $sort=='translation'}{url sort=translation_desc}{else}{url sort=translation}{/if}">По переводу &nbsp;{if $sort=='translation_desc'}&#8659;{else}&#8657;{/if}</a>
+        </li>
+        <li>
+            <a {if $sort=='date' || $sort=='date_desc'} class="selected" {/if}href="{if $sort=='date'}{url sort=date_desc}{else}{url sort=date}{/if}">По новизне &nbsp;{if $sort=='date_desc'}&#8659;{else}&#8657;{/if}</a>
+        </li>
+        <li>
+            <a {if $sort=='label' || $sort=='label_desc' || !$sort} class="selected" {/if}href="{if $sort=='label' || !$sort}{url sort=label_desc}{else}{url sort=null}{/if}">По переменной &nbsp;{if $sort=='label_desc'}&#8659;{else}&#8657;{/if}</a>
+        </li>
+    </ul>
 	<form id="list_form" method="post">
-	<input type="hidden" name="session_id" value="{$smarty.session.id}">
+        <input type="hidden" name="session_id" value="{$smarty.session.id}">
 
-	<div id="list">
-		
-		{foreach $translations as $translation}
-		<div class="{if !$translation->enabled}invisible{/if} row">
-	 		<div class="checkbox cell">
-				<input type="checkbox" id="{$translation->id}" name="check[]" value="{$translation->id}" />
-                <label for="{$translation->id}"></label>
-			</div>
-			<div class="name cell">
-				<span style='width:350px;display:inline-block;overflow:hidden'>
-                    <a href="{url module=TranslationAdmin id=$translation->id return=$smarty.server.REQUEST_URI}">{$translation->lang_{$lang_label}|escape}</a>
-                </span>
-                 <a href="{url module=TranslationAdmin id=$translation->id return=$smarty.server.REQUEST_URI}">{$translation->label|escape}</a>
-			</div>
-			<div class="icons cell">
-				<a class="delete" title="Удалить" href="#"></a>
-			</div>
-			<div class="clear"></div>
-		</div>
-		{/foreach}
-	</div>
+        <div id="list">
 
-	<div id="action">
-	<label id="check_all" class='dash_link'>Выбрать все</label>
+            {foreach $translations as $translation}
+                <div class="{if !$translation->enabled}invisible{/if} row">
+                    <div class="checkbox cell">
+                        <input type="checkbox" id="{$translation->id}" name="check[]" value="{$translation->id}" />
+                        <label for="{$translation->id}"></label>
+                    </div>
+                    <div class="name cell">
+                        <span style='width:350px;display:inline-block;overflow:hidden'>
+                            <a href="{url module=TranslationAdmin id=$translation->id return=$smarty.server.REQUEST_URI}">{$translation->value|escape}</a>
+                        </span>
+                         <a href="{url module=TranslationAdmin id=$translation->id return=$smarty.server.REQUEST_URI}">{$translation->label|escape}</a>
+                    </div>
+                    <div class="icons cell">
+                        <a class="delete" title="Удалить" href="#"></a>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            {/foreach}
+        </div>
 
-	<span id="select">
-	<select name="action">
-		<option value="delete">Удалить</option>
-	</select>
-	</span>
-
-	<input id="apply_action" class="button_green" type="submit" value="Применить">
-	
-	</div>
+        <div id="action">
+        <label id="check_all" class='dash_link'>Выбрать все</label>
+        <span id="select">
+            <select name="action">
+                <option value="delete">Удалить</option>
+            </select>
+        </span>
+        <input id="apply_action" class="button_green" type="submit" value="Применить">
+        </div>
 	</form>
 
 </div>

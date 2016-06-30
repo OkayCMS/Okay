@@ -1,11 +1,37 @@
 {capture name=tabs}
-	{if in_array('settings', $manager->permissions)}<li><a href="index.php?module=SettingsAdmin">Настройки</a></li>{/if}
-	{if in_array('currency', $manager->permissions)}<li><a href="index.php?module=CurrencyAdmin">Валюты</a></li>{/if}
-	{if in_array('delivery', $manager->permissions)}<li><a href="index.php?module=DeliveriesAdmin">Доставка</a></li>{/if}
-	{if in_array('payment', $manager->permissions)}<li><a href="index.php?module=PaymentMethodsAdmin">Оплата</a></li>{/if}
-	{if in_array('managers', $manager->permissions)}<li><a href="index.php?module=ManagersAdmin">Менеджеры</a></li>{/if}
-    {if in_array('languages', $manager->permissions)}<li><a href="index.php?module=LanguagesAdmin">Языки</a></li>{/if}
-	<li class="active"><a href="index.php?module=TranslationsAdmin">Переводы</a></li>
+	{if in_array('settings', $manager->permissions)}
+        <li>
+            <a href="index.php?module=SettingsAdmin">Настройки</a>
+        </li>
+    {/if}
+	{if in_array('currency', $manager->permissions)}
+        <li>
+            <a href="index.php?module=CurrencyAdmin">Валюты</a>
+        </li>
+    {/if}
+	{if in_array('delivery', $manager->permissions)}
+        <li>
+            <a href="index.php?module=DeliveriesAdmin">Доставка</a>
+        </li>
+    {/if}
+	{if in_array('payment', $manager->permissions)}
+        <li>
+            <a href="index.php?module=PaymentMethodsAdmin">Оплата</a>
+        </li>
+    {/if}
+	{if in_array('managers', $manager->permissions)}
+        <li>
+            <a href="index.php?module=ManagersAdmin">Менеджеры</a>
+        </li>
+    {/if}
+    {if in_array('languages', $manager->permissions)}
+        <li>
+            <a href="index.php?module=LanguagesAdmin">Языки</a>
+        </li>
+    {/if}
+	<li class="active">
+        <a href="index.php?module=TranslationsAdmin">Переводы</a>
+    </li>
 {/capture}
 
 {* On document load *}
@@ -50,25 +76,25 @@ function translit(str)
 {/if}
 
 {if $message_success}
-<!-- Системное сообщение -->
-<div class="message message_success">
-	<span>{if $message_success == 'added'}Перевод добавлен{elseif $message_success == 'updated'}Перевод обновлен{/if}</span>
-	<a class="button" href="{url module=TranslationsAdmin}">Вернуться</a>
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_success">
+        <span>{if $message_success == 'added'}Перевод добавлен{elseif $message_success == 'updated'}Перевод обновлен{/if}</span>
+        <a class="button" href="{url module=TranslationsAdmin}">Вернуться</a>
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 {if $message_error}
-<!-- Системное сообщение -->
-<div class="message message_error">
-	<span>
-    {if $message_error == 'label_empty'}Метка пуста{/if}
-    {if $message_error == 'label_exists'}Метка уже используется{/if}
-    {if $message_error == 'label_is_class'}Метка с именем определённым в api/Okay.php не допустима!!!{/if}
-    </span>
-	<a class="button" href="{url module=TranslationsAdmin}">Вернуться</a>
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_error">
+        <span>
+        {if $message_error == 'label_empty'}Переменная пуста{/if}
+        {if $message_error == 'label_exists'}Переменная уже используется{/if}
+        {if $message_error == 'label_is_class'}Переменная с именем определённым в api/Okay.php не допустима!!!{/if}
+        </span>
+        <a class="button" href="{url module=TranslationsAdmin}">Вернуться</a>
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 
@@ -82,7 +108,7 @@ function translit(str)
 			<h2>Перевод</h2>
             <BR>
 			<ul>
-				<li><label class=property>Метка
+				<li><label class=property>Переменная
                         <div class="helper_wrap">
                             <a href="javascript:;" id="show_help_search" class="helper_link"></a>
                             <div class="right helper_block">

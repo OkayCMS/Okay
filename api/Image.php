@@ -385,7 +385,7 @@ class Image extends Okay {
         
         // Убираем комменты и т.п. из картинки
         $thumb->stripImage();
-        
+
         //		$thumb->setImageCompressionQuality(100);
         
         // Записываем картинку

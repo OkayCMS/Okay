@@ -1,8 +1,24 @@
 {capture name=tabs}
-	<li><a href="index.php?module=ThemeAdmin">Тема</a></li>
-	<li><a href="index.php?module=TemplatesAdmin">Шаблоны</a></li>		
-	<li><a href="index.php?module=StylesAdmin">Стили</a></li>		
-	<li class="active"><a href="index.php?module=ImagesAdmin">Изображения</a></li>	
+	<li>
+        <a href="index.php?module=ThemeAdmin">Тема</a>
+    </li>
+	<li>
+        <a href="index.php?module=TemplatesAdmin">Шаблоны</a>
+    </li>
+	<li>
+        <a href="index.php?module=StylesAdmin">Стили</a>
+    </li>
+    <li>
+        <a href="index.php?module=ScriptsAdmin">Скрипты</a>
+    </li>
+	<li class="active">
+        <a href="index.php?module=ImagesAdmin">Изображения</a>
+    </li>
+    {if in_array('robots', $manager->permissions)}
+        <li>
+            <a href="index.php?module=RobotsAdmin">Robots.txt</a>
+        </li>
+    {/if}
 {/capture}
 
 {$meta_title = "Изображения" scope=parent}
@@ -47,43 +63,50 @@ $(function() {
 <h1>Изображения темы {$theme}</h1>
 
 {if $message_error}
-<!-- Системное сообщение -->
-<div class="message message_error">
-	<span class="text">{if $message_error == 'permissions'}Установите права на запись для папки {$images_dir}
-	{elseif $message_error == 'name_exists'}Файл с таким именем уже существует
-	{elseif $message_error == 'theme_locked'}Текущая тема защищена от изменений. Создайте копию темы.
-	{else}{$message_error}{/if}</span>
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_error">
+        <span class="text">
+            {if $message_error == 'permissions'}
+                Установите права на запись для папки {$images_dir}
+            {elseif $message_error == 'name_exists'}
+                Файл с таким именем уже существует
+            {elseif $message_error == 'theme_locked'}
+                Текущая тема защищена от изменений. Создайте копию темы.
+            {else}
+                {$message_error}
+            {/if}
+        </span>
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 <form method="post" enctype="multipart/form-data">
-<input type="hidden" name="session_id" value="{$smarty.session.id}">
-<input type="hidden" name="delete_image" value="">
-<!-- Список файлов для выбора -->
-<div class="block layer">
-	<ul class="theme_images">
-		{foreach $images as $image}
-			<li name='{$image->name|escape}'>
-			<a href='#' class='delete' title="Удалить"><img src='design/images/delete.png'></a>
-			<a href='#' class='edit' title="Переименовать"></a>
-			<p class="name">{$image->name|escape|truncate:16:'...'}</p>
-			<div class="theme_image">
-			<a class='preview' href='../{$images_dir}{$image->name|escape}'><img src='../{$images_dir}{$image->name|escape}'></a>
-			</div>
-			<p class=size>{if $image->size>1024*1024}{($image->size/1024/1024)|round:2} МБ{elseif $image->size>1024}{($image->size/1024)|round:2} КБ{else}{$image->size} Байт{/if}, {$image->width}&times;{$image->height} px</p>
-			</li>
-		{/foreach}
-	</ul>
-</div>
+    <input type="hidden" name="session_id" value="{$smarty.session.id}">
+    <input type="hidden" name="delete_image" value="">
+    <!-- Список файлов для выбора -->
+    <div class="block layer">
+        <ul class="theme_images">
+            {foreach $images as $image}
+                <li name='{$image->name|escape}'>
+                <a href='#' class='delete' title="Удалить"><img src='design/images/delete.png'></a>
+                <a href='#' class='edit' title="Переименовать"></a>
+                <p class="name">{$image->name|escape|truncate:16:'...'}</p>
+                <div class="theme_image">
+                <a class='preview' href='../{$images_dir}{$image->name|escape}'><img src='../{$images_dir}{$image->name|escape}'></a>
+                </div>
+                <p class=size>{if $image->size>1024*1024}{($image->size/1024/1024)|round:2} МБ{elseif $image->size>1024}{($image->size/1024)|round:2} КБ{else}{$image->size} Байт{/if}, {$image->width}&times;{$image->height} px</p>
+                </li>
+            {/foreach}
+        </ul>
+    </div>
 
 
-<div class="block upload_image">
-<span id="upload_image"><i class="dash_link">Добавить изображение</i></span>
-</div>
+    <div class="block upload_image">
+        <span id="upload_image"><i class="dash_link">Добавить изображение</i></span>
+    </div>
 
-<div class="block">
-<input class="button_green button_save" type="submit" name="save" value="Сохранить" />
-</div>
+    <div class="block">
+        <input class="button_green button_save" type="submit" name="save" value="Сохранить" />
+    </div>
 
 </form>

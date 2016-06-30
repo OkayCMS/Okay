@@ -1,22 +1,36 @@
 {capture name=tabs}
     {if in_array('settings', $manager->permissions)}
-        <li><a href="index.php?module=SettingsAdmin">Настройки</a></li>
+        <li>
+            <a href="index.php?module=SettingsAdmin">Настройки</a>
+        </li>
     {/if}
-    <li class="active"><a href="index.php?module=CurrencyAdmin">Валюты</a></li>
+    <li class="active">
+        <a href="index.php?module=CurrencyAdmin">Валюты</a>
+    </li>
     {if in_array('delivery', $manager->permissions)}
-        <li><a href="index.php?module=DeliveriesAdmin">Доставка</a></li>
+        <li>
+            <a href="index.php?module=DeliveriesAdmin">Доставка</a>
+        </li>
     {/if}
     {if in_array('payment', $manager->permissions)}
-        <li><a href="index.php?module=PaymentMethodsAdmin">Оплата</a></li>
+        <li>
+            <a href="index.php?module=PaymentMethodsAdmin">Оплата</a>
+        </li>
     {/if}
     {if in_array('managers', $manager->permissions)}
-        <li><a href="index.php?module=ManagersAdmin">Менеджеры</a></li>
+        <li>
+            <a href="index.php?module=ManagersAdmin">Менеджеры</a>
+        </li>
     {/if}
     {if in_array('languages', $manager->permissions)}
-        <li><a href="index.php?module=LanguagesAdmin">Языки</a></li>
+        <li>
+            <a href="index.php?module=LanguagesAdmin">Языки</a>
+        </li>
     {/if}
     {if in_array('languages', $manager->permissions)}
-        <li><a href="index.php?module=TranslationsAdmin">Переводы</a></li>
+        <li>
+            <a href="index.php?module=TranslationsAdmin">Переводы</a>
+        </li>
     {/if}
 {/capture}
 
@@ -115,11 +129,9 @@ $(function() {
 {/literal}
 
 {if $languages}{include file='include_languages.tpl'}{/if}
-
 	<div id="header">
 		<h1>Валюты</h1>
 		<a class="add" id="add_currency" href="#">Добавить</a>
-
 	</div>
 
 <form method=post>
@@ -139,9 +151,12 @@ $(function() {
                     <li class="move">
                         <div class="move_zone"></div>
                     </li>
-                    <li class="name">
+                    <li class="name {if $c@first}main_curr{/if}">
                         <input name="currency[id][{$c->id}]" type="hidden" value="{$c->id|escape}"/>
                         <input name="currency[name][{$c->id}]" type="text" value="{$c->name|escape}"/>
+                        {if $c@first}
+                            <span class="main_curr_icon">Основная</span>
+                        {/if}
                     </li>
                     <li class="icons currency">
                         <a class="cents" href="#" title="Отображать копейки"></a>

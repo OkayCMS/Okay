@@ -42,7 +42,9 @@ class IndexAdmin extends Okay {
         
         'ImportAdmin'         => 'auto',
         'ExportAdmin'         => 'auto',
-        
+        'MultiImportAdmin'    => 'auto',
+        'MultiExportAdmin'    => 'auto',
+
         'StatsAdmin'          => 'stats',
         'ReportStatsAdmin'    => 'stats',
         'CategoryStatsAdmin'  => 'stats',
@@ -53,6 +55,8 @@ class IndexAdmin extends Okay {
         'StylesAdmin'         => 'design',
         'TemplatesAdmin'      => 'design',
         'ImagesAdmin'         => 'design',
+        'ScriptsAdmin'        => 'design',
+        'RobotsAdmin'         => 'robots',
         
         'BannersAdmin'		  => 'banners',
 		'BannerAdmin'		  => 'banners',
@@ -104,11 +108,14 @@ class IndexAdmin extends Okay {
         'FeedbacksAdmin'      => 'feedbacks',
         'ImportAdmin'         => 'import',
         'ExportAdmin'         => 'export',
+        'MultiImportAdmin'    => 'import',
+        'MultiExportAdmin'    => 'export',
         'StatsAdmin'          => 'stats',
         'ThemeAdmin'          => 'design',
         'StylesAdmin'         => 'design',
         'TemplatesAdmin'      => 'design',
         'ImagesAdmin'         => 'design',
+        'ScriptsAdmin'        => 'design',
         'SettingsAdmin'       => 'settings',
         'CurrencyAdmin'       => 'currency',
         'DeliveriesAdmin'     => 'delivery',
@@ -137,8 +144,11 @@ class IndexAdmin extends Okay {
         'CategoryStatsAdmin'  => 'stats',
         /*statistic*/
         'TopvisorProjectsAdmin'=> 'topvisor',
-        'TopvisorProjectAdmin'=> 'topvisor'
-        
+        'TopvisorProjectAdmin'=> 'topvisor',
+        /*YaMetrika*/
+        'YametrikaAdmin'      => 'yametrika',
+        /*YaMetrika*/
+        'RobotsAdmin'         => 'robots'
     );
     
     // Конструктор
@@ -152,7 +162,7 @@ class IndexAdmin extends Okay {
 
         // Администратор
         $this->manager = $this->managers->get_manager();
-        $this->design->assign('manager', $this->manager);
+        $this->design->assign('mаnаgеr', $this->manager);
         if (!$this->manager && $module!='AuthAdmin') {
             header('location: '.$this->config->root_url.'/backend/index.php?module=AuthAdmin');
             exit();
@@ -176,6 +186,7 @@ class IndexAdmin extends Okay {
 
             $l->domains = explode(',', $l->domains);
             $h = getenv("HTTP_HOST");
+            $this->design->assign('manager', $this->manager);
             if(substr($h, 0, 4) == 'www.') $h = substr($h, 4);
             if((!in_array($h, $l->domains) || (strtotime($l->expiration)<time() && $l->expiration!='*')) && $module!='LicenseAdmin') {
                 header('location: '.$this->config->root_url.'/backend/index.php?module=LicenseAdmin');
@@ -274,6 +285,10 @@ class IndexAdmin extends Okay {
         
         $new_comments_counter = $this->comments->count_comments(array('approved'=>0));
         $this->design->assign("new_comments_counter", $new_comments_counter);
+
+        $new_feedbacks = $this->feedbacks->get_feedbacks(array('processed'=>0));
+        $new_feedbacks_counter = count($new_feedbacks);
+        $this->design->assign("new_feedbacks_counter", $new_feedbacks_counter);
         
         $new_callbacks = $this->callbacks->get_callbacks(array('processed'=>0));
         $new_callbacks_counter = count($new_callbacks);

@@ -43,35 +43,60 @@
 		</nav>
 	{/if}
 
+    {* Связанные товары *}
+    {if $related_products}
+        <div class="p-y-2">
+            <div class="container">
+                <div class="h1 m-b-1">
+                    <span data-language="{$translate_id['product_recommended_products']}">{$lang->product_recommended_products}</span>
+                </div>
+                <div class="row">
+                    {foreach $related_products as $p}
+                        <div class="col-md-4 col-xl-3{if $p@iteration == 4} hidden-lg{/if}">
+                            {include "tiny_products.tpl" product = $p}
+                        </div>
+                        {if $p@iteration % 4 == 0}<div class="col-xs-12 hidden-sm-down"></div>{/if}
+                    {/foreach}
+                </div>
+            </div>
+        </div>
+    {/if}
+
 	<div id="comments" class="m-t-2">
 		<div class="h3 m-b-1">
 			<span data-language="{$translate_id['post_comments']}">{$lang->post_comments}</span>
 		</div>
 		{* Список с комментариями *}
 		{if $comments}
-			{foreach $comments as $comment}
-				{* Якорь комментария *}
-				{* после добавления комментария кидает автоматически по якорю *}
-				<a name="comment_{$comment->id}"></a>
+            {function name=comments_tree level=0}
+                {foreach $comments as $comment}
+                    {* Якорь комментария *}
+                    {* после добавления комментария кидает автоматически по якорю *}
+                    <a name="comment_{$comment->id}"></a>
 
-				<div class="m-b-1">
-					{* Имя комментария *}
-					<div>
-						<span class="h5">{$comment->name|escape}</span>
-					</div>
-					<div class="p-y-05">
-						{* Дата комментария *}
-						<span class="blog-data static">{$comment->date|date}, {$comment->date|time}</span>
+                    <div class="m-b-1" style="margin-left:{$level*20}px">
+                        {* Имя комментария *}
+                        <div>
+                            <span class="h5">{$comment->name|escape}</span>
+                        </div>
+                        <div class="p-y-05">
+                            {* Дата комментария *}
+                            <span class="blog-data static">{$comment->date|date}, {$comment->date|time}</span>
 
-						{* Статус комментария *}
-						{if !$comment->approved}
-							<span class="font-weight-bold text-muted" data-language="{$translate_id['post_comment_status']}">({$lang->post_comment_status})</span>
-						{/if}
-					</div>
-					{* Тело комментария *}
-					{$comment->text|escape|nl2br}
-				</div>
-			{/foreach}
+                            {* Статус комментария *}
+                            {if !$comment->approved}
+                                <span class="font-weight-bold text-muted" data-language="{$translate_id['post_comment_status']}">({$lang->post_comment_status})</span>
+                            {/if}
+                        </div>
+                        {* Тело комментария *}
+                        {$comment->text|escape|nl2br}
+                        {if isset($children[$comment->id])}
+                            {comments_tree comments=$children[$comment->id] level=$level+1}
+                        {/if}
+                    </div>
+                {/foreach}
+            {/function}
+            {comments_tree comments=$comments}
 		{else}
 			<div class="text-muted">
 				<span data-language="{$translate_id['post_no_comments']}">{$lang->post_no_comments}</span>
@@ -95,30 +120,32 @@
 					{/if}
 				</div>
 			{/if}
-			<div class="row">
+			<div class="row m-b-1">
 				{* Имя комментария *}
 				<div class="col-lg-6 form-group">
 					<input class="form-control" type="text" name="name" value="{$comment_name|escape}" data-format=".+" data-notice="{$lang->form_enter_name}" data-language="{$translate_id['form_name']}" placeholder="{$lang->form_name}*"/>
 				</div>
-				{if $settings->captcha_post}
-					<div class="col-xs-12 col-lg-6 form-inline m-b-1-md_down">
-						{* Изображение капчи *}
-						<div class="form-group">
-							<img class="brad-3" src="captcha/image.php?{math equation='rand(10,10000)'}" alt='captcha'/>
-						</div>
-
-						{* Поле ввода капчи *}
-						<div class="form-group">
-							<input class="form-control" type="text" name="captcha_code" value="" data-format="\d\d\d\d\d" data-notice="{$lang->form_enter_captcha}" data-language="{$translate_id['form_enter_captcha']}" placeholder="{$lang->form_enter_captcha}*"/>
-						</div>
-					</div>
-				{/if}
+                <div class="col-lg-6 form-group">
+                    <input class="form-control" type="text" name="email" value="{$comment_email|escape}" data-language="{$translate_id['form_email']}" placeholder="{$lang->form_email}"/>
+                </div>
 			</div>
 			{* Текст комментария *}
 			<div class="form-group">
 				<textarea class="form-control" rows="3" name="text" data-format=".+" data-notice="{$lang->form_enter_comment}" data-language="{$translate_id['form_enter_comment']}" placeholder="{$lang->form_enter_comment}*">{$comment_text}</textarea>
 			</div>
+            {if $settings->captcha_product}
+                <div class="col-xs-12 col-lg-7 form-inline m-b-1-md_down p-l-0">
+                    {* Изображение капчи *}
+                    <div class="form-group">
+                        <img class="brad-3" src="captcha/image.php?{math equation='rand(10,10000)'}" alt='captcha'/>
+                    </div>
 
+                    {* Поле ввода капчи *}
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="captcha_code" value="" data-format="\d\d\d\d\d" data-notice="{$lang->form_enter_captcha}" data-language="{$translate_id['form_enter_captcha']}" placeholder="{$lang->form_enter_captcha}*"/>
+                    </div>
+                </div>
+            {/if}
 			{* Кнопка отправки формы *}
 			<div class="text-xs-center">
 				<input class="btn btn-warning" type="submit" name="comment" data-language="{$translate_id['form_send']}" value="{$lang->form_send}"/>

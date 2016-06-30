@@ -45,7 +45,8 @@
         WHERE 
             1
             $keyword_filter
-            AND visible=1 
+            AND visible=1
+            GROUP BY p.id
         ORDER BY p.name 
         LIMIT ?
     ", $limit);

@@ -1,6 +1,6 @@
 ;<? exit(); ?>
 
-license = y7cfgr9qvv idwptlsxfs qikmoyrnpt putxvrtpx1 vovyvpddnv w9uqox9hwk fzmnlrjzmf nrwqopmvqt wnyylrmurw zdvxrdud9y az79on8kzn 9eyzenailo hzpxisjlmp ouzpwjlbs5 mhp6qqwpyf yttd8j9vrv gosllkhncz onmutmrsmr qzjby2ozs8 vpt7
+license = 9tsd9gwzfs bcicnizugw ohqmpyqjml lznmnruyui row877flsy qurqbuqavh jevhqhmkuk xwonzrmppn kvvrzztgph ouwmt8sh7h tpcxswzwrt pzruknuqjz jxijjvynun zwwum4yqm4 uin9ybvxv9 rnog8tgwug ifbsanejdj vkxrytkmuw lqruh5r7rk vfqwqvyisn tjvuusak6s ywfrwkamtm qtoszzuuvu his6t4inyg oyqasbqnzt okpntwtyru tutzoyaz7o wy7yjsroi7 gokly5irhl ugoevnorsg umvvywqwro zrtzarfnpw fwavlu8pih ouxfptcys7 yfjqgf
 
 [database]
 
@@ -73,6 +73,14 @@ resized_brands_dir = files/brands_resized/;
 ;Изображения оригиналов и нарезок фоток категории
 original_categories_dir = files/categories/;
 resized_categories_dir = files/categories_resized/;
+
+;Изображения оригиналов и нарезок фоток доставки
+original_deliveries_dir = files/deliveries/;
+resized_deliveries_dir = files/deliveries_resized/;
+
+;Изображения оригиналов и нарезок фоток способов оплаты
+original_payments_dir = files/payments/;
+resized_payments_dir = files/payments_resized/;
 
 ;Изображения баннеров
 banners_images_dir = files/slides/;

@@ -1,28 +1,30 @@
 {* Вкладки *}
 {capture name=tabs}
-	<li class="active"><a href="index.php?module=BlogAdmin">Блог</a></li>
+	<li class="active">
+        <a href="index.php?module=BlogAdmin">Блог</a>
+    </li>
 {/capture}
 
 {* Title *}
 {$meta_title='Блог' scope=parent}
 
 {if $posts || $keyword}
-<form method="get">
-<div id="search">
-	<input type="hidden" name="module" value='BlogAdmin'>
-	<input class="search" type="text" name="keyword" value="{$keyword|escape}" />
-	<input class="search_button" type="submit" value=""/>
-</div>
-</form>
+    <form method="get">
+    <div id="search">
+        <input type="hidden" name="module" value='BlogAdmin'>
+        <input class="search" type="text" name="keyword" value="{$keyword|escape}" />
+        <input class="search_button" type="submit" value=""/>
+    </div>
+    </form>
 {/if}
 
 <div id="header">
 	{if $keyword && $posts_count}
-	<h1>{$posts_count|plural:'Нашлась':'Нашлись':'Нашлись'} {$posts_count} {$posts_count|plural:'запись':'записей':'записи'}</h1>
+	    <h1>{$posts_count|plural:'Нашлась':'Нашлись':'Нашлись'} {$posts_count} {$posts_count|plural:'запись':'записей':'записи'}</h1>
 	{elseif $posts_count}
-	<h1>{$posts_count} {$posts_count|plural:'запись':'записей':'записи'} в блоге</h1>
+	    <h1>{$posts_count} {$posts_count|plural:'запись':'записей':'записи'} в блоге</h1>
 	{else}
-	<h1>Нет записей</h1>
+	    <h1>Нет записей</h1>
 	{/if}
 	<a class="add" href="{url module=PostAdmin return=$smarty.server.REQUEST_URI}">Добавить запись</a>
 </div>
@@ -54,8 +56,7 @@
                             {$post->date|date}
                         </div>
                         <div class="icons cell blogs">
-                            <a class="preview" title="Предпросмотр в новом окне" href="../{$lang_link}blog/{$post->url}"
-                               target="_blank"></a>
+                            <a class="preview" title="Предпросмотр в новом окне" href="../{$lang_link}blog/{$post->url}" target="_blank"></a>
                             <a class="enable" title="Активна" href="#"></a>
                             <a class="delete" title="Удалить" href="#"></a>
                         </div>
@@ -66,11 +67,11 @@
             <div id="action">
                 <label id="check_all" class="dash_link">Выбрать все</label>
                 <span id="select">
-                <select name="action">
-                    <option value="enable">Сделать видимыми</option>
-                    <option value="disable">Сделать невидимыми</option>
-                    <option value="delete">Удалить</option>
-                </select>
+                    <select name="action">
+                        <option value="enable">Сделать видимыми</option>
+                        <option value="disable">Сделать невидимыми</option>
+                        <option value="delete">Удалить</option>
+                    </select>
                 </span>
                 <input id="apply_action" class="button_green" type="submit" value="Применить">
             </div>

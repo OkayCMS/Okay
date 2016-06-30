@@ -27,6 +27,7 @@ class SettingsAdmin extends Okay {
             $this->settings->order_email = $this->request->post('order_email');
             $this->settings->comment_email = $this->request->post('comment_email');
             $this->settings->notify_from_email = $this->request->post('notify_from_email');
+            $this->settings->notify_from_name = $this->request->post('notify_from_name');
             
             $this->settings->decimals_point = $this->request->post('decimals_point');
             $this->settings->thousands_separator = $this->request->post('thousands_separator');
@@ -54,7 +55,9 @@ class SettingsAdmin extends Okay {
             $this->settings->g_webmaster = $this->request->post('g_webmaster');
             $this->settings->y_metric = $this->request->post('y_metric');
             $this->settings->y_webmaster = $this->request->post('y_webmaster');
-
+            $this->settings->yandex_metrika_app_id = $this->request->post('yandex_metrika_app_id');
+            $this->settings->yandex_metrika_token = $this->request->post('yandex_metrika_token');
+            $this->settings->yandex_metrika_counter_id = $this->request->post('yandex_metrika_counter_id');
 
             // Водяной знак
             $clear_image_cache = false;

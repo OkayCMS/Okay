@@ -16,7 +16,8 @@ class Delivery extends Okay {
                 d.price, 
                 d.enabled, 
                 d.position, 
-                d.separate_payment, 
+                d.separate_payment,
+                d.image,
                 $lang_sql->fields
             FROM __delivery d
             $lang_sql->join
@@ -45,7 +46,8 @@ class Delivery extends Okay {
                 d.price, 
                 d.enabled, 
                 d.position, 
-                d.separate_payment, 
+                d.separate_payment,
+                d.image,
                 $lang_sql->fields
             FROM __delivery d
             $lang_sql->join
@@ -101,6 +103,7 @@ class Delivery extends Okay {
         $this->db->query($query);
         
         if(!empty($id)) {
+            $this->image->delete_image($id, 'image', 'delivery', $this->config->original_deliveries_dir, $this->config->resized_deliveries_dir);
             $query = $this->db->placehold("DELETE FROM __delivery WHERE id=? LIMIT 1", intval($id));
             $this->db->query($query);
             $this->db->query("DELETE FROM __lang_delivery WHERE delivery_id=? LIMIT 1", intval($id));

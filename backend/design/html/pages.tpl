@@ -1,9 +1,11 @@
 {* Вкладки *}
 {capture name=tabs}
 	{if in_array('pages', $manager->permissions)}
-	{foreach $menus as $m}
-		<li {if $m->id == $menu->id}class="active"{/if}><a href="{url module=PagesAdmin menu_id=$m->id}">{$m->name}</a></li>
-	{/foreach}
+        {foreach $menus as $m}
+            <li {if $m->id == $menu->id}class="active"{/if}>
+                <a href="{url module=PagesAdmin menu_id=$m->id}">{$m->name}</a>
+            </li>
+        {/foreach}
 	{/if}
 {/capture}
 
@@ -48,11 +50,11 @@
             <div id="action">
                 <label id="check_all" class="dash_link">Выбрать все</label>
                 <span id="select">
-                <select name="action">
-                    <option value="enable">Сделать видимыми</option>
-                    <option value="disable">Сделать невидимыми</option>
-                    <option value="delete">Удалить</option>
-                </select>
+                    <select name="action">
+                        <option value="enable">Сделать видимыми</option>
+                        <option value="disable">Сделать невидимыми</option>
+                        <option value="delete">Удалить</option>
+                    </select>
                 </span>
                 <input id="apply_action" class="button_green" type="submit" value="Применить">
             </div>

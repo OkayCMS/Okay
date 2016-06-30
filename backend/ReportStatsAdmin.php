@@ -64,7 +64,7 @@ class ReportStatsAdmin extends Okay {
         $filter['page'] = max(1, $this->request->get('page', 'integer'));
         $filter['limit'] = 40;
         $cat_filter = $this->request->get('category_id','integer');
-        
+        $this->design->assign('category',$cat_filter );
         $temp_filter = $filter;
         unset($temp_filter['limit']);
         unset($temp_filter['page']);

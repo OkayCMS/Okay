@@ -359,12 +359,37 @@ class Languages extends Okay {
     }
     
     public function get_translations($filter = array()) {
+        $order = 'ORDER BY label';
         $lang = '*';
         if(!empty($filter['lang'])) {
-            $lang = 'label, lang_'.$filter['lang'].' as value';
+            $lang = 'id, label, lang_'.$filter['lang'].' as value';
+        }
+
+        if (!empty($filter['sort'])) {
+            switch ($filter['sort']) {
+                case 'label_desc':
+                    $order = 'ORDER BY label DESC';
+                    break;
+                case 'date':
+                    $order = 'ORDER BY id';
+                    break;
+                case 'date_desc':
+                    $order = 'ORDER BY id DESC';
+                    break;
+                case 'translation':
+                    if (!empty($filter['lang'])) {
+                        $order = 'ORDER BY value';
+                    }
+                    break;
+                case 'translation_desc':
+                    if (!empty($filter['lang'])) {
+                        $order = 'ORDER BY value DESC';
+                    }
+                    break;
+            }
         }
         
-        $query = "SELECT ".$lang." FROM __translations WHERE 1 ORDER BY label";
+        $query = "SELECT ".$lang." FROM __translations WHERE 1 $order";
         if($this->db->query($query)) {
             return $this->db->results();
         }

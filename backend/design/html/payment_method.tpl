@@ -1,18 +1,44 @@
 {* Вкладки *}
 {capture name=tabs}
-	{if in_array('settings', $manager->permissions)}<li><a href="index.php?module=SettingsAdmin">Настройки</a></li>{/if}
-	{if in_array('currency', $manager->permissions)}<li><a href="index.php?module=CurrencyAdmin">Валюты</a></li>{/if}
-	{if in_array('delivery', $manager->permissions)}<li><a href="index.php?module=DeliveriesAdmin">Доставка</a></li>{/if}
-	<li class="active"><a href="index.php?module=PaymentMethodsAdmin">Оплата</a></li>
-	{if in_array('managers', $manager->permissions)}<li><a href="index.php?module=ManagersAdmin">Менеджеры</a></li>{/if}
-    {if in_array('languages', $manager->permissions)}<li><a href="index.php?module=LanguagesAdmin">Языки</a></li>{/if}
-    {if in_array('languages', $manager->permissions)}<li><a href="index.php?module=TranslationsAdmin">Переводы</a></li>{/if}
+	{if in_array('settings', $manager->permissions)}
+        <li>
+            <a href="index.php?module=SettingsAdmin">Настройки</a>
+        </li>
+    {/if}
+	{if in_array('currency', $manager->permissions)}
+        <li>
+            <a href="index.php?module=CurrencyAdmin">Валюты</a>
+        </li>
+    {/if}
+	{if in_array('delivery', $manager->permissions)}
+        <li>
+            <a href="index.php?module=DeliveriesAdmin">Доставка</a>
+        </li>
+    {/if}
+	<li class="active">
+        <a href="index.php?module=PaymentMethodsAdmin">Оплата</a>
+    </li>
+	{if in_array('managers', $manager->permissions)}
+        <li>
+            <a href="index.php?module=ManagersAdmin">Менеджеры</a>
+        </li>
+    {/if}
+    {if in_array('languages', $manager->permissions)}
+        <li>
+            <a href="index.php?module=LanguagesAdmin">Языки</a>
+        </li>
+    {/if}
+    {if in_array('languages', $manager->permissions)}
+        <li>
+            <a href="index.php?module=TranslationsAdmin">Переводы</a>
+        </li>
+    {/if}
 {/capture}
 
 {if $payment_method->id}
-{$meta_title = $payment_method->name scope=parent}
+    {$meta_title = $payment_method->name scope=parent}
 {else}
-{$meta_title = 'Новый способ оплаты' scope=parent}
+    {$meta_title = 'Новый способ оплаты' scope=parent}
 {/if}
 
 {* Подключаем Tiny MCE *}
@@ -28,34 +54,39 @@ $(function() {
 		$('div#module_settings').hide().find("input, select, textarea").attr("disabled", true);
 		$('div#module_settings[module='+$(this).val()+']').show().find("input, select, textarea").attr("disabled", false);
 	});
+
+    // Удаление изображений
+    $(".images a.delete").click(function () {
+        $("input[name='delete_image']").val('1');
+        $(this).closest("ul").fadeOut(200, function () {
+            $(this).remove();
+        });
+        return false;
+    });
 });
-
-
 </script>
-
-
 {/literal}
 
 {if $languages}{include file='include_languages.tpl'}{/if}
 
 {if $message_success}
-<!-- Системное сообщение -->
-<div class="message message_success">
-	<span class="text">{if $message_success == 'added'}Способ оплаты добавлен{elseif $message_success == 'updated'}Способ оплаты изменен{else}{$message_success}{/if}</span>
-	{if $smarty.get.return}
-	<a class="button" href="{$smarty.get.return}">Вернуться</a>
-	{/if}
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_success">
+        <span class="text">{if $message_success == 'added'}Способ оплаты добавлен{elseif $message_success == 'updated'}Способ оплаты изменен{else}{$message_success}{/if}</span>
+        {if $smarty.get.return}
+        <a class="button" href="{$smarty.get.return}">Вернуться</a>
+        {/if}
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 {if $message_error}
-<!-- Системное сообщение -->
-<div class="message message_error">
-	<span class="text">{if $message_error=='empty_name'}Введите название{else}{$message_error}{/if}</span>
-	<a class="button" href="">Вернуться</a>
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_error">
+        <span class="text">{if $message_error=='empty_name'}Введите название{else}{$message_error}{/if}</span>
+        <a class="button" href="">Вернуться</a>
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 
@@ -100,23 +131,31 @@ $(function() {
 			<h2>{$payment_module->name}</h2>
 			{* Параметры модуля оплаты *}
 			<ul>
-			{foreach $payment_module->settings as $setting}
-				{$variable_name = $setting->variable}
-				{if $setting->options|@count>1}
-				<li><label class=property>{$setting->name}</label>
-				<select name="payment_settings[{$setting->variable}]">
-					{foreach $setting->options as $option}
-					<option value='{$option->value}' {if $option->value==$payment_settings[$setting->variable]}selected{/if}>{$option->name|escape}</option>
-					{/foreach}
-				</select>
-				</li>
-				{elseif $setting->options|@count==1}
-				{$option = $setting->options|@first}
-				<li><label class="property" for="{$setting->variable}">{$setting->name|escape}</label><input name="payment_settings[{$setting->variable}]" class="okay_inp" type="checkbox" value="{$option->value|escape}" {if $option->value==$payment_settings[$setting->variable]}checked{/if} id="{$setting->variable}" /> <label for="{$setting->variable}">{$option->name}</label></li>
-				{else}
-				<li><label class="property" for="{$setting->variable}">{$setting->name|escape}</label><input name="payment_settings[{$setting->variable}]" class="okay_inp" type="text" value="{$payment_settings[$setting->variable]|escape}" id="{$setting->variable}"/></li>
-				{/if}
-			{/foreach}
+                {foreach $payment_module->settings as $setting}
+                    {$variable_name = $setting->variable}
+                    {if $setting->options|@count>1}
+                        <li>
+                            <label class=property>{$setting->name}</label>
+                            <select name="payment_settings[{$setting->variable}]">
+                                {foreach $setting->options as $option}
+                                    <option value='{$option->value}' {if $option->value==$payment_settings[$setting->variable]}selected{/if}>{$option->name|escape}</option>
+                                {/foreach}
+                            </select>
+                        </li>
+                        {elseif $setting->options|@count==1}
+                        {$option = $setting->options|@first}
+                        <li>
+                            <label class="property" for="{$setting->variable}">{$setting->name|escape}</label>
+                            <input name="payment_settings[{$setting->variable}]" class="okay_inp" type="checkbox" value="{$option->value|escape}" {if $option->value==$payment_settings[$setting->variable]}checked{/if} id="{$setting->variable}" />
+                            <label for="{$setting->variable}">{$option->name}</label>
+                        </li>
+                    {else}
+                        <li>
+                            <label class="property" for="{$setting->variable}">{$setting->name|escape}</label>
+                            <input name="payment_settings[{$setting->variable}]" class="okay_inp" type="text" value="{$payment_settings[$setting->variable]|escape}" id="{$setting->variable}"/>
+                        </li>
+                    {/if}
+                {/foreach}
 			</ul>
 			{* END Параметры модуля оплаты *}
         	
@@ -129,12 +168,26 @@ $(function() {
 	
 	<!-- Правая колонка -->
 	<div id="column_right">
+        <div class="block layer images">
+            <h2>Изображение</h2>
+            <input class='upload_image' name="image" type="file"/>
+            <input type="hidden" name="delete_image" value=""/>
+            {if $payment_method->image}
+                <ul>
+                    <li>
+                        <a href='#' class="delete"></a>
+                        <img src="{$payment_method->image|resize:100:100:false:$config->resized_payments_dir}" alt="" />
+                    </li>
+                </ul>
+            {/if}
+        </div>
+
 		<div class="block layer">
 		<h2>Возможные способы доставки</h2>
 		<ul>
 		{foreach $deliveries as $delivery}
 			<li>
-			<input type=checkbox name="payment_deliveries[]" id="delivery_{$delivery->id}" value='{$delivery->id}' {if in_array($delivery->id, $payment_deliveries)}checked{/if}> <label for="delivery_{$delivery->id}">{$delivery->name}</label><br>
+			    <input type=checkbox name="payment_deliveries[]" id="delivery_{$delivery->id}" value='{$delivery->id}' {if in_array($delivery->id, $payment_deliveries)}checked{/if}> <label for="delivery_{$delivery->id}">{$delivery->name}</label><br>
 			</li>
 		{/foreach}
 		</ul>		

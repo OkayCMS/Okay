@@ -32,5 +32,21 @@ files/categories_resized/*.tif
 files/categories_resized/*.bmp
 files/categories_resized/*.ico
 
+files/deliveries_resized/*.jpg
+files/deliveries_resized/*.jpeg
+files/deliveries_resized/*.png
+files/deliveries_resized/*.gif
+files/deliveries_resized/*.tif
+files/deliveries_resized/*.bmp
+files/deliveries_resized/*.ico
+
+files/payments_resized/*.jpg
+files/payments_resized/*.jpeg
+files/payments_resized/*.png
+files/payments_resized/*.gif
+files/payments_resized/*.tif
+files/payments_resized/*.bmp
+files/payments_resized/*.ico
+
 .idea/
 tmp/

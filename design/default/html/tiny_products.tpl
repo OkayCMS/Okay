@@ -36,7 +36,7 @@
 			{* Варианты товара *}
 			<select name="variant" class="fn-variant okaycms form-control c-select{if $product->variants|count < 2} hidden-xs-up{/if}">
 	            {foreach $product->variants as $v}
-	                <option value="{$v->id}" data-price="{$v->price|convert}" data-stock="{$v->stock}"{if $v->compare_price > 0} data-cprice="{$v->compare_price|convert}"{/if}{if $v->sku} data-sku="{$v->sku}"{/if}{if $v@first} selected{/if}>{if $v->name}{$v->name}{else}{$product->name|escape}{/if}</option>
+	                <option value="{$v->id}" data-price="{$v->price|convert}" data-stock="{$v->stock}"{if $v->compare_price > 0} data-cprice="{$v->compare_price|convert}"{/if}{if $v->sku} data-sku="{$v->sku}"{/if}>{if $v->name}{$v->name}{else}{$product->name|escape}{/if}</option>
 	            {/foreach}
 	        </select>
 
@@ -56,7 +56,7 @@
             {/if}
 
 
-            {if $smarty.get.module != "ProductsView" && $smarty.get.module !="MainView" && $smarty.get.module !="ProductView"}
+            {if $smarty.get.module != "ProductsView" && $smarty.get.module !="MainView" && $smarty.get.module !="ProductView" && $smarty.get.module !="BlogView"}
             <a class="btn-comparison-remove {if $smarty.get.module == "ComparisonView"}fn-comparison{else}fn-wishlist{/if} okaycms hidden-md-down selected" href="#" data-id="{$product->id}" title="{if $smarty.get.module == "ComparisonView"}{$lang->tiny_products_remove_comparison}{else}{$lang->tiny_products_remove_favorite}{/if}">&times;</a>
             {/if}
             <div class="input-group">

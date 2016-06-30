@@ -60,7 +60,7 @@ class CartView extends View {
                 $this->design->assign('error', 'empty_name');
             } elseif(empty($order->email)) {
                 $this->design->assign('error', 'empty_email');
-            } elseif($this->settings->captcha_cart && ($_SESSION['captcha_code'] != $captcha_code || empty($captcha_code))) {
+            } elseif($this->settings->captcha_cart && (($_SESSION['captcha_code'] != $captcha_code || empty($captcha_code)) || empty($_SESSION['captcha_code']))) {
                 $this->design->assign('error', 'captcha');
             } else {
                 // Добавляем заказ в базу
@@ -93,6 +93,7 @@ class CartView extends View {
 
                 // Очищаем корзину (сессию)
                 $this->cart->empty_cart();
+                unset($_SESSION['captcha_code']);
 
                 // Перенаправляем на страницу заказа
                 header('location: '.$this->config->root_url.'/'.$this->lang_link.'order/'.$order->url);
@@ -143,6 +144,8 @@ class CartView extends View {
             } else {
                 $this->design->assign('name', $this->user->name);
                 $this->design->assign('email', $this->user->email);
+                $this->design->assign('phone', $this->user->phone);
+                $this->design->assign('address', $this->user->address);
             }
         }
         

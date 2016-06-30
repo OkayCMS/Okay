@@ -26,20 +26,35 @@
 -->
 </style>
 
-{if $product->id}{$id = $product->id}{/if}
-{if $category->id}{$id = $category->id}{/if}
-{if $brand->id}{$id = $brand->id}{/if}
-{if $feature->id}{$id = $feature->id}{/if}
-{if $post->id}{$id = $post->id}{/if}
-{if $page->id}{$id = $page->id}{/if}
-{if $payment_method->id}{$id = $payment_method->id}{/if}
-{if $delivery->id}{$id = $delivery->id}{/if}
+{if $product->id}
+    {$id = $product->id}
+{/if}
+{if $category->id}
+    {$id = $category->id}
+{/if}
+{if $brand->id}
+    {$id = $brand->id}
+{/if}
+{if $feature->id}
+    {$id = $feature->id}
+{/if}
+{if $post->id}
+    {$id = $post->id}
+{/if}
+{if $page->id}
+    {$id = $page->id}
+{/if}
+{if $payment_method->id}
+    {$id = $payment_method->id}
+{/if}
+{if $delivery->id}
+    {$id = $delivery->id}
+{/if}
 
 {if $languages}
-<div class='languages'>
-{foreach $languages as $lang}
-<a href="{url lang_id=$lang->id id=$id}" data-label='{$lang->label}' {if $lang->id == $lang_id}class='active'{/if}>{$lang->name}{if $langs.{$lang->id}}&crarr;{/if}</a>
-{/foreach}
-</div>
-
+    <div class='languages'>
+    {foreach $languages as $lang}
+        <a href="{url lang_id=$lang->id id=$id}" data-label='{$lang->label}' {if $lang->id == $lang_id}class='active'{/if}>{$lang->name}{if $langs.{$lang->id}}&crarr;{/if}</a>
+    {/foreach}
+    </div>
 {/if}

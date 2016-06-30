@@ -47,9 +47,15 @@ class ExportAjax extends Okay {
         if (!empty($date_filter)) {
             $filter['date_filter'] = $date_filter;
         }
-        
-        $date_from = $this->request->get('date_from');
-        $date_to = $this->request->get('date_to');
+
+        if($this->request->get('date_from') || $this->request->get('date_to')) {
+            $date_from = $this->request->get('date_from');
+            $date_to = $this->request->get('date_to');
+        }
+
+        if($this->request->get('category')){
+            $filter['category_id'] = $this->request->get('category');
+        }
         
         if (!empty($date_from)) {
             $filter['date_from'] = date("Y-m-d 00:00:01",strtotime($date_from));
@@ -57,7 +63,6 @@ class ExportAjax extends Okay {
         if (!empty($date_to)) {
             $filter['date_to'] = date("Y-m-d 23:59:00",strtotime($date_to));
         }
-        
         $status = $this->request->get('status', 'integer');
         if (!empty($status)) {
             switch ($status) {
@@ -94,7 +99,6 @@ class ExportAjax extends Okay {
         $temp_filter = $filter;
         unset($temp_filter['limit']);
         unset($temp_filter['page']);
-        
         $total_count = $this->reportstat->get_report_purchases_count($temp_filter);
         
         if($this->request->get('page') == 'all') {
@@ -104,11 +108,25 @@ class ExportAjax extends Okay {
         $total_summ = 0;
         $total_amount = 0;
         $report_stat_purchases = $this->reportstat->get_report_purchases($filter);
-        foreach ($report_stat_purchases as $id=>$r) {
+       /* foreach ($report_stat_purchases as $id=>$r) {
             if (!empty($r->product_id)) {
                 $tmp_cat = $this->categories->get_categories(array('product_id' => $r->product_id));
                 $tmp_cat = reset($tmp_cat);
                 if (!empty($cat_filter) && $tmp_cat->id != $cat_filter) {
+                    unset($report_stat_purchases[$id]);
+                } else {
+                    $report_stat_purchases[$id]->category_name = $tmp_cat->name;
+                }
+            }
+        }*/
+        $cat_filter = $this->request->get('category');
+        $cat = $this->categories->get_category(intval($filter['category_id']));
+        foreach ($report_stat_purchases as $id=>$r) {
+            if (!empty($r->product_id)) {
+                $tmp_cat = $this->categories->get_categories(array('product_id' => $r->product_id));
+                $tmp_cat = reset($tmp_cat);
+
+                if (!empty($cat_filter) && !in_array($cat_filter,(array)$tmp_cat->path[$cat->level_depth-1]->children)) {
                     unset($report_stat_purchases[$id]);
                 } else {
                     $report_stat_purchases[$id]->category_name = $tmp_cat->name;

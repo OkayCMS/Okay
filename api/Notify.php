@@ -49,7 +49,7 @@ class Notify extends Okay {
         }
         
         $products = array();
-        foreach($this->products->get_products(array('id'=>$products_ids)) as $p) {
+        foreach($this->products->get_products(array('id'=>$products_ids,'limit' => count($products_ids))) as $p) {
             $products[$p->id] = $p;
         }
         
@@ -87,7 +87,8 @@ class Notify extends Okay {
         }
         $email_template = $this->design->fetch($this->config->root_dir.'design/'.$this->settings->theme.'/html/email_order.tpl');
         $subject = $this->design->get_var('subject');
-        $this->email($order->email, $subject, $email_template, $this->settings->notify_from_email);
+        $from = ($this->settings->notify_from_name ? $this->settings->notify_from_name." <".$this->settings->notify_from_email.">" : $this->settings->notify_from_email);
+        $this->email($order->email, $subject, $email_template, $from);
         
         /*lang_modify...*/
         if (!empty($order->lang_id) && isset($languages[$order->lang_id])) {
@@ -122,7 +123,7 @@ class Notify extends Okay {
         }
         
         $products = array();
-        foreach($this->products->get_products(array('id'=>$products_ids)) as $p) {
+        foreach($this->products->get_products(array('id'=>$products_ids,'limit' => count($products_ids))) as $p) {
             $products[$p->id] = $p;
         }
         
@@ -186,6 +187,30 @@ class Notify extends Okay {
         $subject = $this->design->get_var('subject');
         $this->email($this->settings->comment_email, $subject, $email_template, $this->settings->notify_from_email);
     }
+
+    public function email_comment_answer_to_user($comment_id) {
+        if(!($comment = $this->comments->get_comment(intval($comment_id)))
+                || !($parent_comment = $this->comments->get_comment(intval($comment->parent_id)))
+                || !$parent_comment->email) {
+            return false;
+        }
+
+        if($comment->type == 'product') {
+            $comment->product = $parent_comment->product = $this->products->get_product(intval($comment->object_id));
+        }
+        if($comment->type == 'blog') {
+            $comment->post = $parent_comment->post = $this->blog->get_post(intval($comment->object_id));
+        }
+
+        $this->design->assign('comment', $comment);
+        $this->design->assign('parent_comment', $parent_comment);
+
+        // Отправляем письмо
+        $email_template = $this->design->fetch($this->config->root_dir.'design/'.$this->settings->theme.'/html/email_comment_answer_to_user.tpl');
+        $subject = $this->design->get_var('subject');
+        $from = ($this->settings->notify_from_name ? $this->settings->notify_from_name." <".$this->settings->notify_from_email.">" : $this->settings->notify_from_email);
+        $this->email($parent_comment->email, $subject, $email_template, $from, $from);
+    }
     
     public function email_password_remind($user_id, $code) {
         if(!($user = $this->users->get_user(intval($user_id)))) {
@@ -198,7 +223,8 @@ class Notify extends Okay {
         // Отправляем письмо
         $email_template = $this->design->fetch($this->config->root_dir.'design/'.$this->settings->theme.'/html/email_password_remind.tpl');
         $subject = $this->design->get_var('subject');
-        $this->email($user->email, $subject, $email_template, $this->settings->notify_from_email);
+        $from = ($this->settings->notify_from_name ? $this->settings->notify_from_name." <".$this->settings->notify_from_email.">" : $this->settings->notify_from_email);
+        $this->email($user->email, $subject, $email_template, $from);
         
         $this->design->smarty->clearAssign('user');
         $this->design->smarty->clearAssign('code');
@@ -215,6 +241,21 @@ class Notify extends Okay {
         $email_template = $this->design->fetch($this->config->root_dir.'backend/design/html/email_feedback_admin.tpl');
         $subject = $this->design->get_var('subject');
         $this->email($this->settings->comment_email, $subject, $email_template, "$feedback->name <$feedback->email>", "$feedback->name <$feedback->email>");
+    }
+
+    public function email_feedback_answer_to_user($comment_id,$text) {
+        if(!($feedback = $this->feedbacks->get_feedback(intval($comment_id)))) {
+            return false;
+        }
+
+        $this->design->assign('feedback', $feedback);
+        $this->design->assign('text', $text);
+
+        // Отправляем письмо
+        $email_template = $this->design->fetch($this->config->root_dir.'design/'.$this->settings->theme.'/html/email_feedback_answer_to_user.tpl');
+        $subject = $this->design->get_var('subject');
+        $from = ($this->settings->notify_from_name ? $this->settings->notify_from_name." <".$this->settings->notify_from_email.">" : $this->settings->notify_from_email);
+        $this->email($feedback->email, $subject, $email_template, $from, $from);
     }
     
 }

@@ -27,6 +27,19 @@ class CommentsAdmin extends Okay {
         
         // Обработка действий
         if($this->request->method('post')) {
+            if ($this->request->post('comment_answer', 'boolean') && ($parent_comment = $this->comments->get_comment($this->request->post('parent_id', 'integer')))) {
+                $comment = new stdClass();
+                $comment->parent_id = $parent_comment->id;
+                $comment->type = $parent_comment->type;
+                $comment->object_id = $parent_comment->object_id;
+                $comment->text = $this->request->post('text');
+                $comment->name = ($this->settings->notify_from_name ? $this->settings->notify_from_name : 'Administrator');
+                $comment->approved = 1;
+                $comment->id = $this->comments->add_comment($comment);
+                if (!empty($parent_comment->email) && $comment->id) {
+                    $this->notify->email_comment_answer_to_user($comment->id);
+                }
+            }
             // Действия с выбранными
             $ids = $this->request->post('check');
             if(!empty($ids) && is_array($ids)) {
@@ -46,7 +59,19 @@ class CommentsAdmin extends Okay {
                 }
             }
         }
-        
+
+        if (empty($keyword)) {
+            $filter2 = $filter;
+            $filter2['limit'] = 10000;
+            $filter2['has_parent'] = true;
+            $children = array();
+            foreach ($this->comments->get_comments($filter2) as $c) {
+                $children[$c->parent_id][] = $c;
+            }
+            $this->design->assign('children', $children);
+            $filter['has_parent'] = false;
+        }
+
         // Отображение
         $comments_count = $this->comments->count_comments($filter);
         // Показать все страницы сразу
@@ -67,7 +92,7 @@ class CommentsAdmin extends Okay {
             }
         }
         $products = array();
-        foreach($this->products->get_products(array('id'=>$products_ids)) as $p) {
+        foreach($this->products->get_products(array('id'=>$products_ids, 'limit' => count($products_ids))) as $p) {
             $products[$p->id] = $p;
         }
         

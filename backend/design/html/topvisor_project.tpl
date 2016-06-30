@@ -1,7 +1,11 @@
 {* Вкладки *}
 {capture name=tabs}
-    <li><a href="index.php?module=TopvisorProjectsAdmin">Топвизор</a></li>
-    <li class="active"><a href="index.php?module=TopvisorProjectAdmin&id={$project->id}">Проект</a></li>    
+    <li>
+        <a href="index.php?module=TopvisorProjectsAdmin">Топвизор</a>
+    </li>
+    <li class="active">
+        <a href="index.php?module=TopvisorProjectAdmin&id={$project->id}">Проект</a>
+    </li>
 {/capture}
 
 {* Title *}
@@ -197,16 +201,6 @@
                                 <div class="clear"></div>
                             </div>
                         </div>
-                        {*<div id="action">
-                            <label class="dash_link check_all">Выбрать все</label>
-                            <span id="select">
-                            <select name="action">
-                                <option value="delete">Удалить</option>
-                            </select>
-                            </span>
-                            <input id="apply_action" class="button_green" type="submit" value="Применить"/>
-                        </div>*}
-            
                     </form>
                 </div>
                 

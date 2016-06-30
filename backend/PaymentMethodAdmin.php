@@ -30,6 +30,17 @@ class PaymentMethodAdmin extends Okay {
                     $this->payment->update_payment_method($payment_method->id, $payment_method);
                     $this->design->assign('message_success', 'updated');
                 }
+
+                // Удаление изображения
+                if ($this->request->post('delete_image')) {
+                    $this->image->delete_image($payment_method->id, 'image', 'payment_methods', $this->config->original_payments_dir, $this->config->resized_payments_dir);
+                }
+                // Загрузка изображения
+                $image = $this->request->files('image');
+                if (!empty($image['name']) && ($filename = $this->image->upload_image($image['tmp_name'], $image['name'], $this->config->original_payments_dir))) {
+                    $this->image->delete_image($payment_method->id, 'image', 'payment_methods', $this->config->original_payments_dir, $this->config->resized_payments_dir);
+                    $this->payment->update_payment_method($payment_method->id, array('image'=>$filename));
+                }
                 if($payment_method->id) {
                     $this->payment->update_payment_settings($payment_method->id, $payment_settings);
                     $this->payment->update_payment_deliveries($payment_method->id, $payment_deliveries);

@@ -1,43 +1,67 @@
 {* Вкладки *}
 {capture name=tabs}
-	{if in_array('settings', $manager->permissions)}<li><a href="index.php?module=SettingsAdmin">Настройки</a></li>{/if}
-	{if in_array('currency', $manager->permissions)}<li><a href="index.php?module=CurrencyAdmin">Валюты</a></li>{/if}
-	{if in_array('delivery', $manager->permissions)}<li><a href="index.php?module=DeliveriesAdmin">Доставка</a></li>{/if}
-	{if in_array('payment', $manager->permissions)}<li><a href="index.php?module=PaymentMethodsAdmin">Оплата</a></li>{/if}
-	{if in_array('managers', $manager->permissions)}<li><a href="index.php?module=ManagersAdmin">Менеджеры</a></li>{/if}
-    <li class="active"><a href="index.php?module=LanguagesAdmin">Языки</a></li>
+	{if in_array('settings', $manager->permissions)}
+        <li>
+            <a href="index.php?module=SettingsAdmin">Настройки</a>
+        </li>
+    {/if}
+	{if in_array('currency', $manager->permissions)}
+        <li>
+            <a href="index.php?module=CurrencyAdmin">Валюты</a>
+        </li>
+    {/if}
+	{if in_array('delivery', $manager->permissions)}
+        <li>
+            <a href="index.php?module=DeliveriesAdmin">Доставка</a>
+        </li>
+    {/if}
+	{if in_array('payment', $manager->permissions)}
+        <li>
+            <a href="index.php?module=PaymentMethodsAdmin">Оплата</a>
+        </li>
+    {/if}
+	{if in_array('managers', $manager->permissions)}
+        <li>
+            <a href="index.php?module=ManagersAdmin">Менеджеры</a>
+        </li>
+    {/if}
+    <li class="active">
+        <a href="index.php?module=LanguagesAdmin">Языки</a>
+    </li>
     {if in_array('languages', $manager->permissions)}
-        <li><a href="index.php?module=TranslationsAdmin">Переводы</a></li>
+        <li>
+            <a href="index.php?module=TranslationsAdmin">Переводы</a>
+        </li>
     {/if}
 {/capture}
 
 {if $language->id}
-{$meta_title = $language->name scope=parent}
+    {$meta_title = $language->name scope=parent}
 {else}
-{$meta_title = 'Новый язык' scope=parent}
+    {$meta_title = 'Новый язык' scope=parent}
 {/if}
 
 {if $message_success}
-<!-- Системное сообщение -->
-<div class="message message_success">
-	<span>{if $message_success == 'added'}Язык добавлен{elseif $message_success == 'updated'}language обновлен{/if}</span>
-	{if $smarty.get.return}
-	<a class="button" href="{$smarty.get.return}">Вернуться</a>
-	{/if}
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_success">
+        <span>{if $message_success == 'added'}Язык добавлен{elseif $message_success == 'updated'}language обновлен{/if}</span>
+        {if $smarty.get.return}
+        <a class="button" href="{$smarty.get.return}">Вернуться</a>
+        {/if}
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 {if $message_error}
-<!-- Системное сообщение -->
-<div class="message message_error">
-	<span>
-    {if $message_error == 'label_empty'}Метка пуста{/if}
-    {if $message_error == 'label_exists'}Метка уже используется{/if}
-    </span>
-	<a class="button" href="">Вернуться</a>
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_error">
+        <span>
+        {if $message_error == 'label_empty'}Метка пуста{/if}
+        {if $message_error == 'label_exists'}Метка уже используется{/if}
+        </span>
+        <a class="button" href="">Вернуться</a>
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 

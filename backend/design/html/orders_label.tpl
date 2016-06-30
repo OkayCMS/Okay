@@ -1,21 +1,33 @@
 {* Вкладки *}
 {capture name=tabs}
 	{if in_array('orders', $manager->permissions)}
-	<li {if $status===0}class="active"{/if}><a href="{url module=OrdersAdmin status=0 keyword=null id=null page=null label=null}">Новые</a></li>
-	<li {if $status==1}class="active"{/if}><a href="{url module=OrdersAdmin status=1 keyword=null id=null page=null label=null}">Приняты</a></li>
-	<li {if $status==2}class="active"{/if}><a href="{url module=OrdersAdmin status=2 keyword=null id=null page=null label=null}">Выполнены</a></li>
-	<li {if $status==3}class="active"{/if}><a href="{url module=OrdersAdmin status=3 keyword=null id=null page=null label=null}">Удалены</a></li>
-	{if $keyword}
-	<li class="active"><a href="{url module=OrdersAdmin keyword=$keyword id=null label=null}">Поиск</a></li>
+        <li {if $status===0}class="active"{/if}>
+            <a href="{url module=OrdersAdmin status=0 keyword=null id=null page=null label=null}">Новые</a>
+        </li>
+        <li {if $status==1}class="active"{/if}>
+            <a href="{url module=OrdersAdmin status=1 keyword=null id=null page=null label=null}">Приняты</a>
+        </li>
+        <li {if $status==2}class="active"{/if}>
+            <a href="{url module=OrdersAdmin status=2 keyword=null id=null page=null label=null}">Выполнены</a>
+        </li>
+        <li {if $status==3}class="active"{/if}>
+            <a href="{url module=OrdersAdmin status=3 keyword=null id=null page=null label=null}">Удалены</a>
+        </li>
+        {if $keyword}
+        <li class="active">
+            <a href="{url module=OrdersAdmin keyword=$keyword id=null label=null}">Поиск</a>
+        </li>
+	    {/if}
 	{/if}
-	{/if}
-	<li class="active"><a href="{url module=OrdersLabelsAdmin keyword=null id=null page=null label=null}">Метки</a></li>
+        <li class="active">
+            <a href="{url module=OrdersLabelsAdmin keyword=null id=null page=null label=null}">Метки</a>
+        </li>
 {/capture}
 
 {if $label->id}
-{$meta_title = $label->name scope=parent}
+    {$meta_title = $label->name scope=parent}
 {else}
-{$meta_title = 'Новая метка' scope=parent}
+    {$meta_title = 'Новая метка' scope=parent}
 {/if}
 
 {* On document load *}
@@ -47,23 +59,23 @@ $(function() {
 
 
 {if $message_success}
-<!-- Системное сообщение -->
-<div class="message message_success">
-	<span class="text">{if $message_success == 'added'}Метка добавлена{elseif $message_success == 'updated'}Метка обновлена{/if}</span>
-	{if $smarty.get.return}
-	<a class="button" href="{$smarty.get.return}">Вернуться</a>
-	{/if}
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_success">
+        <span class="text">{if $message_success == 'added'}Метка добавлена{elseif $message_success == 'updated'}Метка обновлена{/if}</span>
+        {if $smarty.get.return}
+        <a class="button" href="{$smarty.get.return}">Вернуться</a>
+        {/if}
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 {if $message_error}
-<!-- Системное сообщение -->
-<div class="message message_error">
-	<span class="text">{if $message_error=='empty_name'}Введите название{else}{$message_error}{/if}</span>
-	<a class="button" href="">Вернуться</a>
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_error">
+        <span class="text">{if $message_error=='empty_name'}Введите название{else}{$message_error}{/if}</span>
+        <a class="button" href="">Вернуться</a>
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 <!-- Основная форма -->
@@ -77,10 +89,7 @@ $(function() {
 			<input id="color_input" name="color" class="okay_inp" type="hidden" value="{$label->color|escape}" />
 		</div>
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />
-		
-	</div> 
-
-	
+	</div>
 </form>
 <!-- Основная форма (The End) -->
 

@@ -1,24 +1,36 @@
 {* Вкладки *}
 {capture name=tabs}
 	{if in_array('orders', $manager->permissions)}
-		<li {if $order->status==0}class="active"{/if}><a href="index.php?module=OrdersAdmin&status=0">Новые</a></li>
-		<li {if $order->status==1}class="active"{/if}><a href="index.php?module=OrdersAdmin&status=1">Приняты</a></li>
-		<li {if $order->status==2}class="active"{/if}><a href="index.php?module=OrdersAdmin&status=2">Выполнены</a></li>
-		<li {if $order->status==3}class="active"{/if}><a href="index.php?module=OrdersAdmin&status=3">Удалены</a></li>
-	{if $keyword}
-	<li class="active"><a href="{url module=OrdersAdmin keyword=$keyword id=null label=null}">Поиск</a></li>
+		<li {if $order->status==0}class="active"{/if}>
+            <a href="index.php?module=OrdersAdmin&status=0">Новые</a>
+        </li>
+		<li {if $order->status==1}class="active"{/if}>
+            <a href="index.php?module=OrdersAdmin&status=1">Приняты</a>
+        </li>
+		<li {if $order->status==2}class="active"{/if}>
+            <a href="index.php?module=OrdersAdmin&status=2">Выполнены</a>
+        </li>
+		<li {if $order->status==3}class="active"{/if}>
+            <a href="index.php?module=OrdersAdmin&status=3">Удалены</a>
+        </li>
+        {if $keyword}
+        <li class="active">
+            <a href="{url module=OrdersAdmin keyword=$keyword id=null label=null}">Поиск</a>
+        </li>
+        {/if}
 	{/if}
-	{/if}
-	{if in_array('labels', $manager->permissions)}
-	<li><a href="{url module=OrdersLabelsAdmin keyword=null id=null page=null label=null}">Метки</a></li>
-	{/if}
+    {if in_array('labels', $manager->permissions)}
+        <li>
+            <a href="{url module=OrdersLabelsAdmin keyword=null id=null page=null label=null}">Метки</a>
+        </li>
+    {/if}
 {/capture}
 
 
 {if $order->id}
-{$meta_title = "Заказ №`$order->id`" scope=parent}
+    {$meta_title = "Заказ №`$order->id`" scope=parent}
 {else}
-{$meta_title = 'Новый заказ' scope=parent}
+    {$meta_title = 'Новый заказ' scope=parent}
 {/if}
 
 <!-- Основная форма -->
@@ -42,10 +54,10 @@
 
 	<div id=next_order>
 		{if $prev_order}
-		<a class=prev_order href="{url id=$prev_order->id}">←</a>
+		    <a class=prev_order href="{url id=$prev_order->id}">←</a>
 		{/if}
 		{if $next_order}
-		<a class=next_order href="{url id=$next_order->id}">→</a>
+		    <a class=next_order href="{url id=$next_order->id}">→</a>
 		{/if}
 	</div>
 		
@@ -58,14 +70,14 @@
 <div class="message message_error">
 	<span class="text">{if $message_error=='error_closing'}Нехватка товара на складе{else}{$message_error|escape}{/if}</span>
 	{if $smarty.get.return}
-	<a class="button" href="{$smarty.get.return}">Вернуться</a>
+	    <a class="button" href="{$smarty.get.return}">Вернуться</a>
 	{/if}
 </div>
 {elseif $message_success}
 <div class="message message_success">
 	<span class="text">{if $message_success=='updated'}Заказ обновлен{elseif $message_success=='added'}Заказ добавлен{else}{$message_success}{/if}</span>
 	{if $smarty.get.return}
-	<a class="button" href="{$smarty.get.return}">Вернуться</a>
+	    <a class="button" href="{$smarty.get.return}">Вернуться</a>
 	{/if}
 </div>
 {/if}
@@ -170,7 +182,8 @@
         <h2>Покупатель
             <a href='#' class="edit_user">
                 <img src='design/images/pen.png' alt='Редактировать' title='Редактировать'>
-            </a> {if $user}
+            </a>
+            {if $user}
                 <a href="#" class='delete_user'>
                     <img src='design/images/delete.png' alt='Удалить' title='Удалить'>
                 </a>

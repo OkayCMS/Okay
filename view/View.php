@@ -126,14 +126,7 @@ class View extends Okay {
             $this->design->assign('language', $this->language);
             $this->design->assign('languages', $languages);
             $this->design->assign('lang', $this->translations);
-            $langs = $this->languages->get_translations();
-            $t_id = array();
-            if(!empty($langs)) {
-                foreach ($langs as $i => $v) {
-                    $t_id[$v->label] = $v->id;
-                }
-                $this->design->assign('translate_id', $t_id);
-            }
+            $this->design->assign('translate_id', $this->translations->get_labels_ids());
 
             
             if (preg_match('~all-products/page-[0-9]+/?$~', $page_url)) {

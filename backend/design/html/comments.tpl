@@ -15,26 +15,26 @@
 
 
 {if $comments || $keyword}
-<form method="get">
-<div id="search">
-	<input type="hidden" name="module" value='CommentsAdmin'>
-	<input class="search" type="text" name="keyword" value="{$keyword|escape}" />
-	<input class="search_button" type="submit" value=""/>
-</div>
-</form>
+    <form method="get">
+    <div id="search">
+        <input type="hidden" name="module" value='CommentsAdmin'>
+        <input class="search" type="text" name="keyword" value="{$keyword|escape}" />
+        <input class="search_button" type="submit" value=""/>
+    </div>
+    </form>
 {/if}
 
 
 {* Заголовок *}
 <div id="header">
 	{if $keyword && $comments_count}
-	<h1>{$comments_count|plural:'Нашелся':'Нашлось':'Нашлись'} {$comments_count} {$comments_count|plural:'комментарий':'комментариев':'комментария'}</h1> 
+	    <h1>{$comments_count|plural:'Нашелся':'Нашлось':'Нашлись'} {$comments_count} {$comments_count|plural:'комментарий':'комментариев':'комментария'}</h1>
 	{elseif !$type}
-	<h1>{$comments_count} {$comments_count|plural:'комментарий':'комментариев':'комментария'}</h1> 
+	    <h1>{$comments_count} {$comments_count|plural:'комментарий':'комментариев':'комментария'}</h1>
 	{elseif $type=='product'}
-	<h1>{$comments_count} {$comments_count|plural:'комментарий':'комментариев':'комментария'} к товарам</h1> 
+	    <h1>{$comments_count} {$comments_count|plural:'комментарий':'комментариев':'комментария'} к товарам</h1>
 	{elseif $type=='blog'}
-	<h1>{$comments_count} {$comments_count|plural:'комментарий':'комментариев':'комментария'} к записям в блоге</h1> 
+	    <h1>{$comments_count} {$comments_count|plural:'комментарий':'комментариев':'комментария'} к записям в блоге</h1>
 	{/if}
 </div>
 
@@ -44,48 +44,61 @@
         {include file='pagination.tpl'}
         <form id="list_form" method="post">
             <input type="hidden" name="session_id" value="{$smarty.session.id}">
-            <div id="list" class="sortable">
-                {foreach $comments as $comment}
-                    <div class="{if !$comment->approved}unapproved{/if} row">
-                        <div class="checkbox cell">
-                            <input type="checkbox" id="{$comment->id}" name="check[]" value="{$comment->id}"/>
-                            <label for="{$comment->id}"></label>
-                        </div>
-                        <div class="name cell">
-                            <div class="comment_name">
-                                {$comment->name|escape}
-                                <a class="approve" href="#">Одобрить</a>
+            {function name=comments_tree level=0}
+                <div id="list" class="sortable">
+                    {foreach $comments as $comment}
+                        <div class="{if !$comment->approved}unapproved{/if} row">
+                            <div class="checkbox cell" style="margin-left:{$level*20}px">
+                                <input type="checkbox" id="{$comment->id}" name="check[]" value="{$comment->id}"/>
+                                <label for="{$comment->id}"></label>
                             </div>
-                            <div class="comment_text">
-                                {$comment->text|escape|nl2br}
-                            </div>
-                            <div class="comment_info">
-                                Комментарий оставлен {$comment->date|date} в {$comment->date|time}
-                                {if $comment->type == 'product'}
-                                    к товару
-                                    <a target="_blank" href="{$config->root_url}/products/{$comment->product->url}#comment_{$comment->id}">{$comment->product->name}</a>
-                                {elseif $comment->type == 'blog'}
-                                    к статье
-                                    <a target="_blank" href="{$config->root_url}/blog/{$comment->post->url}#comment_{$comment->id}">{$comment->post->name}</a>
+                            <div class="name cell">
+                                <div class="comment_name" data-email_name="{$comment->name|escape}">
+                                    {$comment->name|escape}{if $comment->email}&nbsp;({$comment->email|escape}){/if}
+                                    {if !$comment->parent_id}
+                                        <a class="approve" href="#">Одобрить</a>
+                                    {/if}
+                                </div>
+                                <div class="comment_text">
+                                    {$comment->text|escape|nl2br}
+                                </div>
+                                {if !$comment->parent_id}
+                                    {if $comment->email}
+                                        <a href="#comment_answer" class="answer" data-parent_id="{$comment->id}">Ответить</a>
+                                    {/if}
+                                    <div class="comment_info">
+                                        Комментарий оставлен {$comment->date|date} в {$comment->date|time}
+                                        {if $comment->type == 'product'}
+                                            к товару
+                                            <a target="_blank" href="{$config->root_url}/products/{$comment->product->url}#comment_{$comment->id}">{$comment->product->name}</a>
+                                        {elseif $comment->type == 'blog'}
+                                            к статье
+                                            <a target="_blank" href="{$config->root_url}/blog/{$comment->post->url}#comment_{$comment->id}">{$comment->post->name}</a>
+                                        {/if}
+                                    </div>
                                 {/if}
                             </div>
+                            <div class="icons cell">
+                                <a class="delete" title="Удалить" href="#"></a>
+                            </div>
+                            <div class="clear"></div>
+                            {if isset($children[$comment->id])}
+                                {comments_tree comments=$children[$comment->id] level=$level+1}
+                            {/if}
                         </div>
-                        <div class="icons cell">
-                            <a class="delete" title="Удалить" href="#"></a>
-                        </div>
-                        <div class="clear"></div>
-                    </div>
-                {/foreach}
-            </div>
+                    {/foreach}
+                </div>
+            {/function}
+            {comments_tree comments=$comments}
 
             <div id="action">
                 Выбрать <label id="check_all" class="dash_link">все</label> или
                 <label id="check_unapproved" class="dash_link">ожидающие</label>
                 <span id="select">
-                <select name="action">
-                    <option value="approve">Одобрить</option>
-                    <option value="delete">Удалить</option>
-                </select>
+                    <select name="action">
+                        <option value="approve">Одобрить</option>
+                        <option value="delete">Удалить</option>
+                    </select>
                 </span>
                 <input id="apply_action" class="button_green" type="submit" value="Применить">
             </div>
@@ -100,17 +113,31 @@
 <div id="right_menu">
     <ul>
         <li {if !$type}class="selected"{/if}><a href="{url type=null}">Все комментарии</a></li>
-    </ul>
-    <ul>
         <li {if $type == 'product'}class="selected"{/if}><a href='{url keyword=null type=product}'>К товарам</a></li>
         <li {if $type == 'blog'}class="selected"{/if}><a href='{url keyword=null type=blog}'>К блогу</a></li>
     </ul>
 </div>
 
+<form id="comment_answer" style="display: none;" method="post">
+    <input type="hidden" name="session_id" value="{$smarty.session.id}">
+    <h2>Написать ответ</h2>
+    <input type="hidden" name="parent_id" value="" />
+    <textarea name="text" rows="10" cols="50"></textarea>
+    <br>
+    <input class="button" type="submit" name="comment_answer" value="Отправить" />
+</form>
 
+<script type="text/javascript" src="design/js/fancybox/jquery.fancybox.js"></script>
+<link type="text/css" href="design/js/fancybox/jquery.fancybox.css" rel="stylesheet" />
 {literal}
 <script>
 $(function() {
+
+    $('.answer').click(function() {
+        $('input[name="parent_id"]').val($(this).data('parent_id'));
+        $('#comment_answer textarea').html($(this).parent().find('.comment_name').data('email_name')+',');
+    });
+    $('.answer').fancybox();
 
 	// Раскраска строк
 	function colorize()

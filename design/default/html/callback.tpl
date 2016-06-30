@@ -6,13 +6,17 @@
 
 		{* Имя клиента *}
 		<div class="form-group">
-			<input class="form-control" type="text" name="name" data-format=".+" data-notice="{$lang->form_enter_name}" value="{$name|escape}" data-language="{$translate_id['form_name']}" placeholder="{$lang->form_name}*"/>
+			<input class="form-control" type="text" name="name" data-format=".+" data-notice="{$lang->form_enter_name}" value="{if $user->name}{$user->name}{else}{$name|escape}{/if}" data-language="{$translate_id['form_name']}" placeholder="{$lang->form_name}*"/>
 		</div>
 
 		{* Телефон клиента *}
 		<div class="form-group">
 			<input class="form-control" type="text" name="phone" data-format=".+" data-notice="{$lang->form_enter_phone}" value="{$phone|escape}" data-language="{$translate_id['form_phone']}" placeholder="{$lang->form_phone}*"/>
 		</div>
+
+        <div class="form-group">
+            <textarea class="form-control" rows="3" name="message" data-language="{$translate_id['form_enter_message']}" placeholder="{$lang->form_enter_message}*"></textarea>
+        </div>
 
 		{* Кнопка отправки формы *}
 		<div class="text-xs-center">

@@ -1,32 +1,36 @@
 {capture name=tabs}		
-	<li><a href="index.php?module=BannersImagesAdmin">Баннеры</a></li>
-	<li class="active"><a href="index.php?module=BannersAdmin">Группы баннеров</a></li>
+	<li>
+        <a href="index.php?module=BannersImagesAdmin">Баннеры</a>
+    </li>
+	<li class="active">
+        <a href="index.php?module=BannersAdmin">Группы баннеров</a>
+    </li>
 {/capture}
 
 {if $banner->id}
-{$meta_title = $banner->name scope=parent}
+    {$meta_title = $banner->name scope=parent}
 {else}
-{$meta_title = 'Новая группа' scope=parent}
+    {$meta_title = 'Новая группа' scope=parent}
 {/if}
 
 {if $message_success}
-<!-- Системное сообщение -->
-<div class="message message_success">
-	<span class="text">{if $message_success == 'added'}Группа добавлена{elseif $message_success == 'updated'}Группа обновлена{/if}</span>
-	{if $smarty.get.return}
-	<a class="button" href="{$smarty.get.return}">Вернуться</a>
-	{/if}
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_success">
+        <span class="text">{if $message_success == 'added'}Группа добавлена{elseif $message_success == 'updated'}Группа обновлена{/if}</span>
+        {if $smarty.get.return}
+        <a class="button" href="{$smarty.get.return}">Вернуться</a>
+        {/if}
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 {if $message_error}
-<!-- Системное сообщение -->
-<div class="message message_error">
-	<span class="text">{if $message_error == 'url_exists'}Страница с таким адресом уже существует{/if}</span>
-	<a class="button" href="">Вернуться</a>
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_error">
+        <span class="text">{if $message_error == 'url_exists'}Страница с таким адресом уже существует{/if}</span>
+        <a class="button" href="">Вернуться</a>
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 <!-- Основная форма -->
@@ -43,7 +47,6 @@
 
 	<!-- Левая колонка свойств товара -->
 	<div id="column_left">
-			
 		<!-- Параметры страницы -->
 		<div class="block layer">
 			<h2>Описание</h2>
@@ -51,12 +54,9 @@
 				<li><textarea name="description" class="okay_inp">{$banner->description|escape}</textarea></li>
 			</ul>
 		</div>
-		<!-- Параметры страницы (The End)-->		
-
-			
+		<!-- Параметры страницы (The End)-->
 	</div>
-	<!-- Левая колонка свойств товара (The End)--> 
-	
+	<!-- Левая колонка свойств товара (The End)-->
 	<br />
 		<div class="block layer">
 			<h2>Баннер отображать на:</h2>				
@@ -172,4 +172,3 @@
 	
 </form>
 <!-- Основная форма (The End) -->
-

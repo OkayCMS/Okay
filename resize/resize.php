@@ -28,6 +28,14 @@ if (isset($_GET['object']) && !empty($_GET['object'])) {
         $original_img_dir = $okay->config->original_categories_dir;
         $resized_img_dir = $okay->config->resized_categories_dir;
     }
+    if ($_GET['object'] == 'deliveries_resized') {
+        $original_img_dir = $okay->config->original_deliveries_dir;
+        $resized_img_dir = $okay->config->resized_deliveries_dir;
+    }
+    if ($_GET['object'] == 'payments_resized') {
+        $original_img_dir = $okay->config->original_payments_dir;
+        $resized_img_dir = $okay->config->resized_payments_dir;
+    }
 
 }
 /*/resizing_image*/

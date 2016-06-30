@@ -56,7 +56,7 @@
             $(".word_desc").html(total_words);
         });
 
-        $('input').keyup(function(){
+        $('input,textarea,select, a.delete').bind('keyup change click',function(){
            $('.fast_save').show();
         });
 

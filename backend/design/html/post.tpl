@@ -1,5 +1,7 @@
 {capture name=tabs}
-	<li class="active"><a href="index.php?module=BlogAdmin">Блог</a></li>
+	<li class="active">
+        <a href="index.php?module=BlogAdmin">Блог</a>
+    </li>
 {/capture}
 
 {if $post->id}
@@ -13,7 +15,7 @@
 {* On document load *}
 {literal}
 <script src="design/js/jquery/datepicker/jquery.ui.datepicker-ru.js"></script>
-
+<script src="design/js/autocomplete/jquery.autocomplete-min.js"></script>
 <script>
     $(window).on("load", function() {
     
@@ -27,6 +29,56 @@
 	$('input[name="date"]').datepicker({
 		regional:'ru'
 	});
+
+    $("table.related_products").sortable({ items: 'tr' , axis: 'y',  cancel: '#header', handle: '.move_zone' });
+
+
+    // Сортировка связанных товаров
+    $(".sortable").sortable({
+        items: "div.row",
+        tolerance:"pointer",
+        scrollSensitivity:40,
+        opacity:0.7,
+        handle: '.move_zone'
+    });
+
+    // Удаление связанного товара
+    $(".related_products a.delete").live('click', function() {
+        $(this).closest("div.row").fadeOut(200, function() { $(this).remove(); });
+        return false;
+    });
+
+
+    // Добавление связанного товара
+    var new_related_product = $('#new_related_product').clone(true);
+    $('#new_related_product').remove().removeAttr('id');
+
+    $("input#related_products").autocomplete({
+        serviceUrl:'ajax/search_products.php',
+        minChars:0,
+        noCache: false,
+        onSelect:
+                function(suggestion){
+                    $("input#related_products").val('').focus().blur();
+                    new_item = new_related_product.clone().appendTo('.related_products');
+                    new_item.removeAttr('id');
+                    new_item.find('a.related_product_name').html(suggestion.data.name);
+                    new_item.find('a.related_product_name').attr('href', 'index.php?module=ProductAdmin&id='+suggestion.data.id);
+                    new_item.find('input[name*="related_products"]').val(suggestion.data.id);
+                    if(suggestion.data.image)
+                        new_item.find('img.product_icon').attr("src", suggestion.data.image);
+                    else
+                        new_item.find('img.product_icon').remove();
+                    new_item.show();
+                },
+        formatResult:
+                function(suggestions, currentValue){
+                    var reEscape = new RegExp('(\\' + ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'].join('|\\') + ')', 'g');
+                    var pattern = '(' + currentValue.replace(reEscape, '\\$1') + ')';
+                    return (suggestions.data.image?"<img align=absmiddle src='"+suggestions.data.image+"'> ":'') + suggestions.value.replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>');
+                }
+
+    });
 	
 	// Автозаполнение мета-тегов
 	meta_title_touched = true;
@@ -46,7 +98,6 @@
 	
 	$('input[name="name"]').keyup(function() { set_meta(); });
 	$('select[name="brand_id"]').change(function() { set_meta(); });
-	$('select[name="categories[]"]').change(function() { set_meta(); });
 
 });
 
@@ -244,6 +295,55 @@ function translit(str)
 			</ul>
 			{/if}
 		</div>
+
+        <div class="block layer">
+            <h2>Рекомендуемые товары</h2>
+            <div id=list class="sortable related_products">
+                {foreach $related_products as $related_product}
+                    <div class="row">
+                        <div class="move cell">
+                            <div class="move_zone"></div>
+                        </div>
+                        <div class="image cell">
+                            <input type=hidden name=related_products[] value='{$related_product->id}'>
+                            <a href="{url module=ProductAdmin id=$related_product->id}">
+                                {if $related_product->images[0]}
+                                    <img class=product_icon src='{$related_product->images[0]->filename|resize:35:35}'>
+                                {else}
+                                    <img class=product_icon src="../design/{$settings->theme|escape}/images/no_image.png" width="22">
+                                {/if}
+                            </a>
+                        </div>
+                        <div class="name cell">
+                            <a href="{url module=ProductAdmin id=$related_product->id}">{$related_product->name}</a>
+                        </div>
+                        <div class="icons cell">
+                            <a href='#' class="delete"></a>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                {/foreach}
+                <div id="new_related_product" class="row" style='display:none;'>
+                    <div class="move cell">
+                        <div class="move_zone"></div>
+                    </div>
+                    <div class="image cell">
+                        <input type=hidden name=related_products[] value=''>
+                        <img class=product_icon src=''>
+                    </div>
+                    <div class="name cell">
+                        <a class="related_product_name" href=""></a>
+                    </div>
+                    <div class="icons cell">
+                        <a href='#' class="delete"></a>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <input type=text name=related id='related_products' class="input_autocomplete" placeholder='Выберите товар чтобы добавить его'>
+        </div>
+        <input class="button_green button_save" type="submit" name="" value="Сохранить"/>
+
 	</div>
 	<!-- Правая колонка свойств товара (The End)--> 
 	

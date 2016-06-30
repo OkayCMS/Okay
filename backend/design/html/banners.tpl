@@ -1,7 +1,11 @@
 {* Вкладки *}
 {capture name=tabs}
-	<li><a href="index.php?module=BannersImagesAdmin">Баннеры</a></li>
-    <li class="active"><a href="index.php?module=BannersAdmin">Группы баннеров</a></li>
+	<li>
+        <a href="index.php?module=BannersImagesAdmin">Баннеры</a>
+    </li>
+    <li class="active">
+        <a href="index.php?module=BannersAdmin">Группы баннеров</a>
+    </li>
 {/capture}
 
 {* Title *}
@@ -44,19 +48,15 @@
 
             <div id="action">
                 <label id="check_all" class="dash_link">Выбрать все</label>
-		
-		<span id="select">
-		<select name="action">
-            <option value="enable">Сделать видимыми</option>
-            <option value="disable">Сделать невидимыми</option>
-            <option value="delete">Удалить</option>
-        </select>
-		</span>
-
+                <span id="select">
+                    <select name="action">
+                        <option value="enable">Сделать видимыми</option>
+                        <option value="disable">Сделать невидимыми</option>
+                        <option value="delete">Удалить</option>
+                    </select>
+                </span>
                 <input id="apply_action" class="button_green" type="submit" value="Применить">
-
             </div>
-
         </form>
     </div>
 {else}

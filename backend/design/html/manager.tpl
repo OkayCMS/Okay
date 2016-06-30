@@ -1,18 +1,44 @@
 {* Вкладки *}
 {capture name=tabs}
-	{if in_array('settings', $manager->permissions)}<li><a href="index.php?module=SettingsAdmin">Настройки</a></li>{/if}
-	{if in_array('currency', $manager->permissions)}<li><a href="index.php?module=CurrencyAdmin">Валюты</a></li>{/if}
-	{if in_array('delivery', $manager->permissions)}<li><a href="index.php?module=DeliveriesAdmin">Доставка</a></li>{/if}
-	{if in_array('payment', $manager->permissions)}<li><a href="index.php?module=PaymentMethodsAdmin">Оплата</a></li>{/if}
-	<li class="active"><a href="index.php?module=ManagersAdmin">Менеджеры</a></li>
-    {if in_array('languages', $manager->permissions)}<li><a href="index.php?module=LanguagesAdmin">Языки</a></li>{/if}
-    {if in_array('languages', $manager->permissions)}<li><a href="index.php?module=TranslationsAdmin">Переводы</a></li>{/if}
+	{if in_array('settings', $manager->permissions)}
+        <li>
+            <a href="index.php?module=SettingsAdmin">Настройки</a>
+        </li>
+    {/if}
+	{if in_array('currency', $manager->permissions)}
+        <li>
+            <a href="index.php?module=CurrencyAdmin">Валюты</a>
+        </li>
+    {/if}
+	{if in_array('delivery', $manager->permissions)}
+        <li>
+            <a href="index.php?module=DeliveriesAdmin">Доставка</a>
+        </li>
+    {/if}
+	{if in_array('payment', $manager->permissions)}
+        <li>
+            <a href="index.php?module=PaymentMethodsAdmin">Оплата</a>
+        </li>
+    {/if}
+	<li class="active">
+        <a href="index.php?module=ManagersAdmin">Менеджеры</a>
+    </li>
+    {if in_array('languages', $manager->permissions)}
+        <li>
+            <a href="index.php?module=LanguagesAdmin">Языки</a>
+        </li>
+    {/if}
+    {if in_array('languages', $manager->permissions)}
+        <li>
+            <a href="index.php?module=TranslationsAdmin">Переводы</a>
+        </li>
+    {/if}
 {/capture}
 
 {if $m->login}
-{$meta_title = $m->login scope=parent}
+    {$meta_title = $m->login scope=parent}
 {else}
-{$meta_title = 'Новый менеджер' scope=parent}
+    {$meta_title = 'Новый менеджер' scope=parent}
 {/if}
 
 {* On document load *}
@@ -35,28 +61,33 @@ $(function() {
 
 
 {if $message_success}
-<!-- Системное сообщение -->
-<div class="message message_success">
-	<span class="text">{if $message_success=='added'}Менеджер добавлен{elseif $message_success=='updated'}Менеджер обновлен{else}{$message_success|escape}{/if}</span>
-	{if $smarty.get.return}
-	<a class="button" href="{$smarty.get.return}">Вернуться</a>
-	{/if}
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_success">
+        <span class="text">{if $message_success=='added'}Менеджер добавлен{elseif $message_success=='updated'}Менеджер обновлен{else}{$message_success|escape}{/if}</span>
+        {if $smarty.get.return}
+        <a class="button" href="{$smarty.get.return}">Вернуться</a>
+        {/if}
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 {if $message_error}
-<!-- Системное сообщение -->
-<div class="message message_error">
-	<span class="text">
-	{if $message_error=='login_exists'}Менеджер с таким логином уже существует
-	{elseif $message_error=='empty_login'}Введите логин
-	{elseif $message_error=='not_writable'}Установите права на запись для файла /backend/.passwd
-	{else}{$message_error|escape}{/if}
-	</span>
-	<a class="button" href="">Вернуться</a>
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_error">
+        <span class="text">
+            {if $message_error=='login_exists'}
+                Менеджер с таким логином уже существует
+            {elseif $message_error=='empty_login'}
+                Введите логин
+            {elseif $message_error=='not_writable'}
+                Установите права на запись для файла /backend/.passwd
+            {else}
+                {$message_error|escape}
+            {/if}
+        </span>
+        <a class="button" href="">Вернуться</a>
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 
@@ -81,7 +112,6 @@ $(function() {
 		<!-- Параметры  -->
 		<div class="block">
 			<ul>
-			
 				{$perms = [
 					'products'   =>'Товары',
 					'categories' =>'Категории',
@@ -99,7 +129,7 @@ $(function() {
 					'import'     =>'Импорт',
 					'export'     =>'Экспорт',
 					'stats'      =>'Статистика',
-					'design'     =>'Дизайн',
+					'design'     =>'Шаблоны',
 					'settings'   =>'Настройки',
 					'currency'   =>'Валюты',
 					'delivery'   =>'Способы доставки',
@@ -110,26 +140,23 @@ $(function() {
                     'banners'	 =>'Управление баннерами',
                     'callbacks'  =>'Заказ обратного звонка',
                     'special'    =>'Промо-изображения',
-                    'topvisor'   =>'Топвизор'
+                    'topvisor'   =>'Топвизор',
+                    'yametrika'  =>'Яндекс Мектрика',
+                    'robots'     =>'Файл robots.txt'
 				]}
 				
 				{foreach $perms as $p=>$name}
-				<li><label class=property for="{$p}">{$name}</label>
-				<input id="{$p}" name="permissions[]" class="okay_inp" type="checkbox" value="{$p}"
-				{if $m->permissions && in_array($p, $m->permissions)}checked{/if} {if $m->id==$manager->id}disabled{/if}/></li>
+				    <li>
+                        <label class=property for="{$p}">{$name}</label>
+				    <input id="{$p}" name="permissions[]" class="okay_inp" type="checkbox" value="{$p}" {if $m->permissions && in_array($p, $m->permissions)}checked{/if} {if $m->id==$manager->id}disabled{/if}/>
+                    </li>
 				{/foreach}
-				
 			</ul>
 			
 		</div>
 		<!-- Параметры (The End)-->
-		
-
-			
 	</div>
 	<!-- Левая колонка (The End)-->
-
-
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />
 	{if $m->cnt_try >= 10}
 		<input class="button_green button_save" type="submit" name="unlock_manager" value="Разблокировать" />

@@ -336,7 +336,7 @@ class ProductAdmin extends Okay {
             foreach($related_products as &$r_p) {
                 $r_products[$r_p->related_id] = &$r_p;
             }
-            $temp_products = $this->products->get_products(array('id'=>array_keys($r_products)));
+            $temp_products = $this->products->get_products(array('id'=>array_keys($r_products),'limit' => count(array_keys($r_products))));
             foreach($temp_products as $temp_product) {
                 $r_products[$temp_product->id] = $temp_product;
             }
@@ -389,8 +389,7 @@ class ProductAdmin extends Okay {
         $this->design->assign('special_images', $special_images);
         // END Промо изображения
 
-        $this->smarty_func();
-        return $this->design->fetch('product.tpl');
+        return $this->smarty_func();
     }
 
     private function smarty_func(){
@@ -413,13 +412,14 @@ class ProductAdmin extends Okay {
             $h = getenv("HTTP_HOST");
             if(substr($h, 0, 4) == 'www.') $h = substr($h, 4);
             if((!in_array($h, $l->domains) || (strtotime($l->expiration)<time() && $l->expiration!='*')) && $module!='LicenseAdmin') {
-                header('location: '.$this->config->root_url.'/backend/index.php?module=LicenseAdmin');
+                $this->design->fеtсh('рrоduсt.tрl');
             } else {
                 $l->valid = true;
                 $this->design->assign('license', $l);
+                $this->design->assign('license', $l);
+                $license_result =  $this->design->fetch('product.tpl');
+                return $license_result;
             }
-
-            $this->design->assign('license', $l);
         }
         else{
             die('<a href="http://okay-cms.com">OkayCMS</a>');

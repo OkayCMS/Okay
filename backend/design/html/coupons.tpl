@@ -1,14 +1,22 @@
 {* Вкладки *}
 {capture name=tabs}
     {if in_array('users', $manager->permissions)}
-        <li><a href="index.php?module=UsersAdmin">Пользователи</a></li>
+        <li>
+            <a href="index.php?module=UsersAdmin">Пользователи</a>
+        </li>
     {/if}
     {if in_array('groups', $manager->permissions)}
-        <li><a href="index.php?module=GroupsAdmin">Группы</a></li>
+        <li>
+            <a href="index.php?module=GroupsAdmin">Группы</a>
+        </li>
     {/if}
-    <li class="active"><a href="index.php?module=CouponsAdmin">Купоны</a></li>
+    <li class="active">
+        <a href="index.php?module=CouponsAdmin">Купоны</a>
+    </li>
     {if in_array('users', $manager->permissions)}
-        <li><a href="index.php?module=SubscribeMailingAdmin">Подписчики</a></li>
+        <li>
+            <a href="index.php?module=SubscribeMailingAdmin">Подписчики</a>
+        </li>
     {/if}
 {/capture}
 
@@ -17,9 +25,9 @@
 
 <div id="header">
 	{if $coupons_count}
-	<h1>{$coupons_count} {$coupons_count|plural:'купон':'купонов':'купона'}</h1>
+	    <h1>{$coupons_count} {$coupons_count|plural:'купон':'купонов':'купона'}</h1>
 	{else}
-	<h1>Нет купонов</h1>
+	    <h1>Нет купонов</h1>
 	{/if}
 	<a class="add" href="{url module=CouponAdmin return=$smarty.server.REQUEST_URI}">Новый купон</a>
 </div>
@@ -80,9 +88,9 @@
             <div id="action">
                 <label id="check_all" class="dash_link">Выбрать все</label>
                 <span id="select">
-                <select name="action">
-                    <option value="delete">Удалить</option>
-                </select>
+                    <select name="action">
+                        <option value="delete">Удалить</option>
+                    </select>
                 </span>
                 <input id="apply_action" class="button_green" type="submit" value="Применить">
             </div>

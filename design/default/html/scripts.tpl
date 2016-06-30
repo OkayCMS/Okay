@@ -50,4 +50,13 @@
 			location.href = location.href + '#subscribe_error';
 		} );
 	{/if}
+    {if $smarty.get.module == "MainView" || $smarty.get.module == "ProductsView" || $smarty.get.module == "ProductView" || $smarty.get.module == "ComparisonView" || $smarty.get.module == "WishlistView"}
+        $(document).ready(function(){
+            $('select[name=variant]').each(function(){
+                var first_in_stock = $(this).find('option[data-stock!="0"]').first();
+                first_in_stock.attr('selected',true);
+                first_in_stock.trigger('change');
+            });
+        });
+    {/if}
 </script>

@@ -573,7 +573,7 @@ div.variant_not_in_stock {
 #search input.search_button {
     width: 32px;
     height: 32px;
-    padding 0;
+    padding: 0;
     background: #18a5ff url(../images/search.png) no-repeat center center;
     cursor: pointer;
     border: none;
@@ -1037,8 +1037,19 @@ textarea.editor_small{
     width:20px;
     height: 16px;
 }
-
-
+.main_curr{
+    position: relative;
+}
+.main_curr_icon{
+    background: #243541 none repeat scroll 0 0;
+    color: #fff;
+    display: block;
+    font-size: 11px;
+    padding: 2px;
+    position: absolute;
+    right: 2px;
+    top: -3px;
+}
 
 span.alert {
     background-image: url(../images/bullet_error.png);
@@ -2619,4 +2630,67 @@ input[type="checkbox"] {
     display: inline-block;
     float: none;
 
+}
+.sort_translation li a {
+    text-decoration: none;
+    display: block;
+}
+.sort_translation li a.selected {
+    background: #56b9ff;
+    color: #fff;
+}
+.sort_translation {
+    list-style: none;
+}
+.sort_translation li{
+    text-align: center;
+    width: 180px;
+    padding: 2px;
+    border:1px solid #56b9ff;
+    border-radius: 2px;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+#comment_answer textarea, #feedback_answer textarea{
+    height: 200px;
+    width: 430px;
+    min-height: 200px;
+    min-width: 430px;
+    max-width: 430px;
+    max-height: 200px;
+    margin-bottom: 10px;
+}
+#comment_answer h2, #feedback_answer h2{
+    text-align: center;
+    font-size: 18px;
+    border-bottom: 1px solid #56b9ff;
+    margin-bottom: 10px;
+}
+.settings_robots_area{
+    width: 925px;
+    height: 355px;
+    max-width: 925px;
+    min-width: 925px;
+}
+.ya_metrica_helper{
+    border: 1px solid #56b9ff;
+    border-radius: 3px;
+    background: #fff;
+    color: #000000;
+    padding: 10px;
+}
+.fn-helper{
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+.ya_metrica_helper p{
+    font-weight: bold;
+    text-align: center;
+}
+.ya_metrica_helper ul{
+    padding-left: 15px;
+}
+.ya_metrica_helper li{
+    list-style: square;
+    display: list-item!important;
 }

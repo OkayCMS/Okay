@@ -255,7 +255,7 @@
 		{if !$order->paid}
 			<div class="col-lg-6">
 				{* Выбор способа оплаты *}
-				<div class="h5 i-payment m-b-1">
+				<div class="h5 m-b-1">
 					<span data-language="{$translate_id['order_payment_details']}">{$lang->order_payment_details}</span>
 				</div>
 				{if $payment_methods && !$payment_method && $order->total_price>0}
@@ -264,7 +264,10 @@
 							<div class="m-l-2{if $payment_method@first} active{/if}">
 								<label class="font-weight-bold">
 									<input type="radio" name="payment_method_id" value="{$payment_method->id}"{if $delivery@first && $payment_method@first} checked{/if} id="payment_{$delivery->id}_{$payment_method->id}"/>
-									{$total_price_with_delivery = $cart->total_price}
+                                    {if $payment_method->image}
+                                        <img src="{$payment_method->image|resize:50:50:false:$config->resized_payments_dir}"/>
+                                    {/if}
+                                    {$total_price_with_delivery = $cart->total_price}
 									{if !$delivery->separate_payment && $cart->total_price < $delivery->free_from}
 										{$total_price_with_delivery = $cart->total_price + $delivery->price}
 									{/if}

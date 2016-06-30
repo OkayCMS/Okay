@@ -1,24 +1,34 @@
 {* Вкладки *}
 {capture name=tabs}
     {if in_array('products', $manager->permissions)}
-        <li><a href="index.php?module=ProductsAdmin">Товары</a></li>
+        <li>
+            <a href="index.php?module=ProductsAdmin">Товары</a>
+        </li>
     {/if}
     {if in_array('categories', $manager->permissions)}
-        <li><a href="index.php?module=CategoriesAdmin">Категории</a></li>
+        <li>
+            <a href="index.php?module=CategoriesAdmin">Категории</a>
+        </li>
     {/if}
     {if in_array('brands', $manager->permissions)}
-        <li><a href="index.php?module=BrandsAdmin">Бренды</a></li>
+        <li>
+            <a href="index.php?module=BrandsAdmin">Бренды</a>
+        </li>
     {/if}
-    <li class="active"><a href="index.php?module=FeaturesAdmin">Свойства</a></li>
+    <li class="active">
+        <a href="index.php?module=FeaturesAdmin">Свойства</a>
+    </li>
     {if in_array('special', $manager->permissions)}
-        <li><a href="index.php?module=SpecialAdmin">Промо-изображения</a></li>
+        <li>
+            <a href="index.php?module=SpecialAdmin">Промо-изображения</a>
+        </li>
     {/if}
 {/capture}
 
 {if $feature->id}
-{$meta_title = $feature->name scope=parent}
+    {$meta_title = $feature->name scope=parent}
 {else}
-{$meta_title = 'Новое свойство' scope=parent}
+    {$meta_title = 'Новое свойство' scope=parent}
 {/if}
 <script src="design/js/sumoselect/jquery.sumoselect.js"></script>
 <link rel="stylesheet" type="text/css" href="design/js/sumoselect/sumoselect.css" media="screen" />
@@ -72,19 +82,19 @@ function translit(str) {
 {if $languages}{include file='include_languages.tpl'}{/if}
 
 {if $message_success}
-<div class="message message_success">
-	<span class="text">{if $message_success=='added'}Свойство добавлено{elseif $message_success=='updated'}Свойство обновлено{else}{$message_success}{/if}</span>
-	{if $smarty.get.return}
-	<a class="button" href="{$smarty.get.return}">Вернуться</a>
-	{/if}
-</div>
+    <div class="message message_success">
+        <span class="text">{if $message_success=='added'}Свойство добавлено{elseif $message_success=='updated'}Свойство обновлено{else}{$message_success}{/if}</span>
+        {if $smarty.get.return}
+        <a class="button" href="{$smarty.get.return}">Вернуться</a>
+        {/if}
+    </div>
 {/if}
 
 {if $message_error}
-<div class="message message_error">
-	<span class="text">{if $message_error=='empty_name'}Введите название{else}{$message_error}{/if}</span>
-	<a class="button" href="">Вернуться</a>
-</div>
+    <div class="message message_error">
+        <span class="text">{if $message_error=='empty_name'}Введите название{else}{$message_error}{/if}</span>
+        <a class="button" href="">Вернуться</a>
+    </div>
 {/if}
 
 <form method=post id=product>
@@ -111,10 +121,12 @@ function translit(str) {
                 </div>
             </h2>
             <ul>
-                <li><label class="property">ID свойства</label>
+                <li>
+                    <label class="property">ID свойства</label>
                     <input name="auto_name_id" class="okay_inp" type="text" value="{$feature->auto_name_id|escape}"/>
                 </li>
-                <li><label class="property">ID значения</label>
+                <li>
+                    <label class="property">ID значения</label>
                     <input name="auto_value_id" class="okay_inp" type="text" value="{$feature->auto_value_id|escape}"/>
                 </li>
             </ul>
@@ -147,7 +159,10 @@ function translit(str) {
         <div class="block">
             <h2>Настройки свойства</h2>
             <ul>
-                <li><label class="property" for="block_translit">Заблокировать авто генерацию ссылки</label><input type="checkbox" id="block_translit" {if $feature->id}checked=""{/if} /></li>
+                <li>
+                    <label class="property" for="block_translit">Заблокировать авто генерацию ссылки</label>
+                    <input type="checkbox" id="block_translit" {if $feature->id}checked=""{/if} />
+                </li>
                 <li>
                     <label for="url">url</label>
                     <input type="text" name="url" id="url" value="{$feature->url}"/>

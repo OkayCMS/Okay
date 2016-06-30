@@ -1,5 +1,3 @@
-{capture name=tabs}
-{/capture}
 {$meta_title='Экспорт покупателей' scope=parent}
 
 <script src="{$config->root_url}/backend/design/js/piecon/piecon.js"></script>
@@ -69,22 +67,22 @@ $(function() {
 
 
 {if $message_error}
-<!-- Системное сообщение -->
-<div class="message message_error">
-	<span class="text">
-	{if $message_error == 'no_permission'}Установите права на запись в папку {$export_files_dir}
-	{else}{$message_error}{/if}
-	</span>
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_error">
+        <span class="text">
+        {if $message_error == 'no_permission'}Установите права на запись в папку {$export_files_dir}
+        {else}{$message_error}{/if}
+        </span>
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 
 <div>
 	<h1>Экспорт покупателей</h1>
 	{if $message_error != 'no_permission'}
-	<div id='progressbar'></div>
-	<input class="button_green" id="start" type="button" name="" value="Экспортировать" />
+        <div id='progressbar'></div>
+        <input class="button_green" id="start" type="button" name="" value="Экспортировать" />
 	{/if}
 </div>
  

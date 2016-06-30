@@ -207,6 +207,7 @@ $(function(){
 		speed: 500,
 		slidesToShow: 1,
 		slidesToScroll: 1,
+        swipeToSlide : true,
 		dots: true,
 		arrows: false,
 		adaptiveHeight: true,
@@ -220,6 +221,7 @@ $(function(){
 		speed: 500,
 		slidesToShow: 4,
 		slidesToScroll: 1,
+        swipeToSlide : true,
 		arrows: true,
 		responsive: [
 			{
@@ -244,6 +246,7 @@ $(function(){
 		speed: 500,
 		slidesToShow: 6,
 		slidesToScroll: 1,
+        swipeToSlide : true,
 		arrows: true,
 		responsive: [
 			{
@@ -278,6 +281,7 @@ $(function(){
 						$( '#fn-products_content' ).html( data.products_content );
 						$( '.shpu_pagination' ).html( data.products_pagination );
 						$('#fn-products_sort').html(data.products_sort);
+                        $('.ajax_wait').remove();
 					}
 				} )
 			};
@@ -295,6 +299,7 @@ $(function(){
 			stop: function(event, ui) {
 				slider_min.val( ui.values[0] );
 				slider_max.val( ui.values[1] );
+                $('.col-lg-9').append('<div class="ajax_wait"></div>');
 				ajax_slider();
 			}
 		} );
@@ -307,6 +312,7 @@ $(function(){
 		// Если после фильтрации у нас осталось товаров на несколько страниц, то постраничную навигацию мы тоже проведем с помощью ajax чтоб не сбить фильтр по цене
 		$( document ).on( 'click', '.shpu_pagination .is_ajax a,#fn-products_sort .is_ajax a', function(e) {
 			e.preventDefault();
+            $('.col-lg-9').append('<div class="ajax_wait"></div>');
 			var link = $(this).attr( 'href' ),
 				send_min = $("#fn-slider-min").val();
 				send_max = $("#fn-slider-max").val();
@@ -318,6 +324,7 @@ $(function(){
 					$( '#fn-products_content' ).html( data.products_content );
 					$( '.shpu_pagination' ).html( data.products_pagination );
 					$('#fn-products_sort').html(data.products_sort);
+                    $('.ajax_wait').remove();
 				}
 			} );
 		} );
@@ -642,3 +649,13 @@ $.fn.rater.rate = function ($this, opts, rating) {
 		});
 	});
 };
+$('.card .fn-variant').focus(function() {
+    $(this).parents('.card').addClass('hover');
+    $('.card .fn-variant').one('change', function() {
+        $(this).parents('.card').removeClass('hover');
+        $(this).blur();
+    });
+});
+$('.card .fn-variant').blur(function() {
+    $(this).parents('.card').removeClass('hover');
+});

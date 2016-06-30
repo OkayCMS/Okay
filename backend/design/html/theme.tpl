@@ -1,12 +1,28 @@
 {capture name=tabs}
-	<li class="active"><a href="index.php?module=ThemeAdmin">Тема</a></li>
-	<li><a href="index.php?module=TemplatesAdmin">Шаблоны</a></li>		
-	<li><a href="index.php?module=StylesAdmin">Стили</a></li>		
-	<li><a href="index.php?module=ImagesAdmin">Изображения</a></li>
+	<li class="active">
+        <a href="index.php?module=ThemeAdmin">Тема</a>
+    </li>
+	<li>
+        <a href="index.php?module=TemplatesAdmin">Шаблоны</a>
+    </li>
+	<li>
+        <a href="index.php?module=StylesAdmin">Стили</a>
+    </li>
+    <li>
+        <a href="index.php?module=ScriptsAdmin">Скрипты</a>
+    </li>
+	<li>
+        <a href="index.php?module=ImagesAdmin">Изображения</a>
+    </li>
+    {if in_array('robots', $manager->permissions)}
+        <li>
+            <a href="index.php?module=RobotsAdmin">Robots.txt</a>
+        </li>
+    {/if}
 {/capture}
 
 {if $theme->name}
-{$meta_title = "Тема {$theme->name}" scope=parent}
+    {$meta_title = "Тема {$theme->name}" scope=parent}
 {/if}
 
 <script>

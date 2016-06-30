@@ -66,12 +66,12 @@
 		<div class="row m-y-1 p-x-05">
 			{* Минимальная цена товаров *}
 			<div class="col-xs-6">
-				<input id="fn-slider-min" name="p[min]" value="{$prices->current->min|default:$prices->range->min}" data-price="{$prices->range->min}" type="text" class="form-control">
+				<input id="fn-slider-min" name="p[min]" value="{($prices->current->min|default:$prices->range->min)|escape}" data-price="{$prices->range->min}" type="text" class="form-control">
 			</div>
 
 			{* Максимальная цена товаров *}
 			<div class="col-xs-6">
-				<input id="fn-slider-max" name="p[max]" value="{$prices->current->max|default:$prices->range->max}" data-price="{$prices->range->max}" type="text" class="form-control">
+				<input id="fn-slider-max" name="p[max]" value="{($prices->current->max|default:$prices->range->max)|escape}" data-price="{$prices->range->max}" type="text" class="form-control">
 			</div>
 		</div>
 		{* Слайдер цен *}
@@ -141,7 +141,7 @@
 	<div class="m-b-2 clearfix hidden-md-down">
 		{foreach $browsed_products as $browsed_product}
 			<div class="browsed-item">
-				<a href="products/{$browsed_product->url}">
+				<a href="{$lang_link}products/{$browsed_product->url}">
 					{if $browsed_product->image->filename}
 						<img src="{$browsed_product->image->filename|resize:50:50}" alt="{$browsed_product->name|escape}" title="{$browsed_product->name|escape}">
 					{else}

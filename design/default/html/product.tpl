@@ -3,13 +3,13 @@
 {$canonical="/products/{$product->url}" scope=parent}
 
 <div class="border-b-1-info">
-	<div class="container">
+	<div class="container" itemscope itemtype="http://schema.org/Product">
 		{* Хлебные крошки *}
 		{include file='breadcrumb.tpl'}
 
 		{* Заголовок страницы *}
 		<h1 class="m-b-1">
-			<span data-product="{$product->id}">{$product->name|escape}</span>
+			<span data-product="{$product->id}" itemprop="name">{$product->name|escape}</span>
 		</h1>
 
 		<div class="row fn-transfer">
@@ -22,7 +22,7 @@
 						{/if}
 
 						{* Большое фото товара *}
-						<img class="fn-img" src="{$product->image->filename|resize:300:300}" alt="{$product->name|escape}" title="{$product->name|escape}"/>
+						<img itemprop="image" class="fn-img" src="{$product->image->filename|resize:300:300}" alt="{$product->name|escape}" title="{$product->name|escape}"/>
 					</a>
 					{* Дополнительные фото продукта *}
 					{if $product->images|count > 1}
@@ -50,13 +50,14 @@
                     </a>
                 </div>
 			{/if}
-			<div class="col-lg-7 fn-product">
+			<div class="col-lg-7 fn-product" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
 				<form class="fn-variants okaycms row" action="/{$lang_link}cart">
 					<div class="col-lg-6">
 						{* Цена *}
 						<div class="h4 font-weight-bold">
-							<span class="fn-price">{$product->variant->price|convert}</span> {$currency->sign|escape}
-						</div>
+							<span class="fn-price" itemprop="price" content="{$product->variant->price|convert}">{$product->variant->price|convert}</span>
+                            <span itemprop="priceCurrency" content="{$currency->code|escape}">{$currency->sign|escape}</span>
+                        </div>
 
 						{* Старая цена *}
 						<div class="text-line-through text-red{if !$product->variant->compare_price} hidden-xs-up{/if}">
@@ -64,12 +65,17 @@
 						</div>
 
 						{* Рейтинг товара *}
-						<div id="product_{$product->id}" class="product_rating">
+						<div id="product_{$product->id}" class="product_rating" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
 							<span data-language="{$translate_id['product_rating']}">{$lang->product_rating}</span>:
 							<span class="rating_starOff">
 								<span class="rating_starOn" style="width:{$product->rating*90/5|string_format:'%.0f'}px;"></span>
 							</span>
-						</div>
+                            {*Вывод количества голосов данного товара, скрыт ради микроразметки*}
+                            <span itemprop="reviewCount" style="display: none;">{$product->votes|string_format:"%.0f"}</span>
+                            <span itemprop="ratingValue">({$product->rating|string_format:"%.1f"})</span>
+                            {*Вывод лучшей оценки товара, вывод ради микроразметки*}
+                            <span itemprop="bestRating" style="display:none;">5</span>
+                        </div>
 
 						{* Артикул товара *}
 						<div{if !$product->variant->sku} class="hidden-xs-up"{/if}><span data-language="{$translate_id['product_sku']}">{$lang->product_sku}</span>: <span class="fn-sku">{$product->variant->sku}</span></div>
@@ -77,7 +83,7 @@
 						{* Варианты товара *}
 						<select name="variant" class="fn-variant okaycms form-control c-select m-t-1 m-b-1-md_down{if $product->variants|count < 2} hidden-xs-up{/if}">
 							{foreach $product->variants as $v}
-								<option value="{$v->id}" data-price="{$v->price|convert}" data-stock="{$v->stock}"{if $v->compare_price > 0} data-cprice="{$v->compare_price|convert}"{/if}{if $v->sku} data-sku="{$v->sku}"{/if}{if $v@first} selected{/if}>{if $v->name}{$v->name}{else}{$product->name|escape}{/if}</option>
+								<option value="{$v->id}" data-price="{$v->price|convert}" data-stock="{$v->stock}"{if $v->compare_price > 0} data-cprice="{$v->compare_price|convert}"{/if}{if $v->sku} data-sku="{$v->sku}"{/if}>{if $v->name}{$v->name}{else}{$product->name|escape}{/if}</option>
 							{/foreach}
 						</select>
 					</div>
@@ -201,7 +207,7 @@
 			{* Описание *}
 			{if $product->body}
 				<button class="btn btn-block btn-link border-a-1-info m-b-1 hidden-lg-up" type="button" data-toggle="collapse" data-target="#annotation" aria-expanded="false" aria-controls="annotation">{$lang->product_description}</button>
-				<div class="tab-pane collapse active" id="annotation" role="tabpanel">
+				<div class="tab-pane collapse active" id="annotation" role="tabpanel" itemprop="description">
 					{$product->body}
 				</div>
 			{/if}
@@ -232,30 +238,36 @@
 					{* Список с комментариями *}
 					<div class="col-lg-7">
 						{if $comments}
-							{foreach $comments as $comment}
-								{* Якорь комментария *}
-								{* после добавления комментария кидает автоматически по якорю *}
-								<a name="comment_{$comment->id}"></a>
+                            {function name=comments_tree level=0}
+                                {foreach $comments as $comment}
+                                    {* Якорь комментария *}
+                                    {* после добавления комментария кидает автоматически по якорю *}
+                                    <a name="comment_{$comment->id}"></a>
 
-								<div class="m-b-1">
-									{* Имя комментария *}
-									<div>
-										<span class="h5">{$comment->name|escape}</span>
-									</div>
-									<div class="p-y-05">
-										{* Дата комментария *}
-										<span class="blog-data static">{$comment->date|date}, {$comment->date|time}</span>
+                                    <div class="m-b-1" style="margin-left:{$level*20}px">
+                                        {* Имя комментария *}
+                                        <div>
+                                            <span class="h5">{$comment->name|escape}</span>
+                                        </div>
+                                        <div class="p-y-05">
+                                            {* Дата комментария *}
+                                            <span class="blog-data static">{$comment->date|date}, {$comment->date|time}</span>
 
-										{* Статус комментария *}
-										{if !$comment->approved}
-											<span class="font-weight-bold text-muted" data-language="{$translate_id['post_comment_status']}">({$lang->post_comment_status})</span>
-										{/if}
+                                            {* Статус комментария *}
+                                            {if !$comment->approved}
+                                                <span class="font-weight-bold text-muted" data-language="{$translate_id['post_comment_status']}">({$lang->post_comment_status})</span>
+                                            {/if}
 
-									</div>
-									{* Тело комментария *}
-									{$comment->text|escape|nl2br}
-								</div>
-							{/foreach}
+                                        </div>
+                                        {* Тело комментария *}
+                                        {$comment->text|escape|nl2br}
+                                        {if isset($children[$comment->id])}
+                                            {comments_tree comments=$children[$comment->id] level=$level+1}
+                                        {/if}
+                                    </div>
+                                {/foreach}
+                            {/function}
+                            {comments_tree comments=$comments}
 						{else}
 							<div class="text-muted m-b-1">
 								<span data-language="{$translate_id['cart_header']}">{$lang->product_no_comments}</span>
@@ -282,31 +294,34 @@
 								</div>
 							{/if}
 
-							<div class="row">
+							<div class="row m-b-1">
 								{* Имя комментария *}
-								<div class="col-lg-5 form-group">
+								<div class="col-lg-6 form-group">
 									<input class="form-control" type="text" name="name" value="{$comment_name|escape}" data-format=".+" data-notice="{$lang->form_enter_name}" data-language="{$translate_id['form_name']}" placeholder="{$lang->form_name}*"/>
 								</div>
+                                <div class="col-lg-6 form-group">
+                                    <input class="form-control" type="text" name="email" value="{$comment_email|escape}" data-language="{$translate_id['form_email']}" placeholder="{$lang->form_email}"/>
+                                </div>
 
-								{if $settings->captcha_product}
-									<div class="col-xs-12 col-lg-7 form-inline m-b-1-md_down">
-										{* Изображение капчи *}
-										<div class="form-group">
-											<img class="brad-3" src="captcha/image.php?{math equation='rand(10,10000)'}" alt='captcha'/>
-										</div>
-
-										{* Поле ввода капчи *}
-										<div class="form-group">
-											<input class="form-control" type="text" name="captcha_code" value="" data-format="\d\d\d\d\d" data-notice="{$lang->form_enter_captcha}" data-language="{$translate_id['form_enter_captcha']}" placeholder="{$lang->form_enter_captcha}*"/>
-										</div>
-									</div>
-								{/if}
 							</div>
 							{* Текст комментария *}
 							<div class="form-group">
 								<textarea class="form-control" rows="3" name="text" data-format=".+" data-notice="{$lang->form_enter_comment}" data-language="{$translate_id['form_enter_comment']}" placeholder="{$lang->form_enter_comment}*">{$comment_text}</textarea>
 							</div>
 
+                            {if $settings->captcha_product}
+                                <div class="col-xs-12 col-lg-7 form-inline m-b-1-md_down p-l-0">
+                                    {* Изображение капчи *}
+                                    <div class="form-group">
+                                        <img class="brad-3" src="captcha/image.php?{math equation='rand(10,10000)'}" alt='captcha'/>
+                                    </div>
+
+                                    {* Поле ввода капчи *}
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" name="captcha_code" value="" data-format="\d\d\d\d\d" data-notice="{$lang->form_enter_captcha}" data-language="{$translate_id['form_enter_captcha']}" placeholder="{$lang->form_enter_captcha}*"/>
+                                    </div>
+                                </div>
+                            {/if}
 							{* Кнопка отправки формы *}
 							<div class="text-xs-right">
 								<input class="btn btn-warning" type="submit" name="comment" data-language="{$translate_id['form_send']}" value="{$lang->form_send}"/>
@@ -354,3 +369,69 @@
 	</div>
 </div>
 {/if}
+
+{if $related_posts}
+    <div class="p-y-2">
+        <div class="container">
+            <div class="h1 m-b-1">
+                <span data-language="{$translate_id['product_related_post']}">{$lang->product_related_post}</span>
+            </div>
+            <div class="row">
+                {foreach $related_posts as $r_p}
+                    <div class="col-md-4 col-xl-3{if $p@iteration == 4} hidden-lg{/if}">
+                        <div class="text-center">
+                            <a class="blog-img" href="{$lang_link}blog/{$r_p->url}">
+                                {* Дата создания поста *}
+                                <div class="blog-data m-l-3 hidden-md-down">{$r_p->date|date}</div>
+
+                                {* Изображение поста *}
+                                {if $r_p->image}
+                                    <img class="hidden-sm-down" src="{$r_p->image|resize:150:150:false:$config->resized_blog_dir}" />
+                                {/if}
+                            </a>
+                            <div class="h5 font-weight-bold">
+                                <a class="link-black" href="{$lang_link}blog/{$r_p->url}" data-post="{$r_p->id}">{$r_p->name|escape}</a>
+                            </div>
+                        </div>
+                    </div>
+                    {if $r_p@iteration % 4 == 0}<div class="col-xs-12 hidden-sm-down"></div>{/if}
+                {/foreach}
+            </div>
+        </div>
+    </div>
+{/if}
+
+{*микроразметка по схеме JSON-LD*}
+{literal}
+<script type="application/ld+json">
+{
+"@context": "http://schema.org/",
+"@type": "Product",
+"name": "{/literal}{$product->name|escape}{literal}",
+"image": "{/literal}{$product->image->filename|resize:330:300}{literal}",
+"description": "{/literal}{$product->annotation|strip_tags}{literal}",
+"mpn": "{/literal}{if $product->variant->sku}{$product->variant->sku}{else}Не указано{/if}{literal}",
+"brand": {
+"@type": "Brand",
+"name": "{/literal}{$brand->name|escape}{literal}"
+},
+"aggregateRating": {
+"@type": "AggregateRating",
+"ratingValue": "{/literal}{$product->rating|string_format:'%.1f'}{literal}",
+"reviewCount": "{/literal}{$product->votes|string_format:'%.0f'}{literal}"
+},
+"offers": {
+"@type": "Offer",
+"priceCurrency": "{/literal}{$currency->code|escape}{literal}",
+"price": "{/literal}{$product->variant->price|convert|replace:',':'.'}{literal}",
+"priceValidUntil": "{/literal}{$smarty.now|date_format:'%Y-%m-%d'}{literal}",
+"itemCondition": "http://schema.org/UsedCondition",
+"availability": "http://schema.org/InStock",
+"seller": {
+"@type": "Organization",
+"name": "{/literal}{$settings->company_name}{literal}"
+}
+}
+}
+</script>
+{/literal}

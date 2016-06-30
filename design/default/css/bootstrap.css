@@ -1880,10 +1880,12 @@ input[type="button"].btn-block {
       width: 100%; } }
   .card:not(.fixed) {
     margin-bottom: 1.875rem; }
-  .card:hover {
+  .card:hover,
+  .card.hover{
     overflow: visible;
     z-index: 1; }
-  .card:hover .fn-variants {
+  .card:hover .fn-variants,
+  .card.hover .fn-variants{
       display: block; }
     .card:hover .card-title a {
       color: #243541; }
@@ -1912,7 +1914,6 @@ input[type="button"].btn-block {
 
 .card-spec {
   position: absolute;
-  max-width: 100px!important;
   left: 0;
   top: 0; }
 
@@ -4347,4 +4348,18 @@ a.bg-pink:focus, a.bg-pink:hover {
     padding: 5px;
     border-radius: 3px;
     pointer-events: none;
+}
+.ajax_wait{
+    background: rgba(255, 255, 255, 0.52) url('../images/ajax_wait.gif') no-repeat;
+    display: block;
+    height: 100%;
+    left: 0;
+    top: 0;
+    width: 100%;
+    position: absolute;
+    background-position: 400px 400px;
+}
+.logo_fix{
+    position: relative;
+    top: -4px;
 }

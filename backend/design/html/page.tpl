@@ -1,15 +1,17 @@
 {capture name=tabs}
 	{if in_array('pages', $manager->permissions)}
-	{foreach $menus  as $m}
-		<li {if $m->id == $menu->id}class="active"{/if}><a href='index.php?module=PagesAdmin&menu_id={$m->id}'>{$m->name}</a></li>
-	{/foreach}
+        {foreach $menus  as $m}
+            <li {if $m->id == $menu->id}class="active"{/if}>
+                <a href='index.php?module=PagesAdmin&menu_id={$m->id}'>{$m->name}</a>
+            </li>
+        {/foreach}
 	{/if}
 {/capture}
 
 {if $page->id}
-{$meta_title = $page->name scope=parent}
+    {$meta_title = $page->name scope=parent}
 {else}
-{$meta_title = 'Новая страница' scope=parent}
+    {$meta_title = 'Новая страница' scope=parent}
 {/if}
 
 {* Подключаем Tiny MCE *}
@@ -121,38 +123,33 @@ function translit(str)
 {if $languages}{include file='include_languages.tpl'}{/if}
 
 {if $message_success}
-<!-- Системное сообщение -->
-<div class="message message_success">
-	<span class="text">{if $message_success == 'added'}Страница добавлена{elseif $message_success == 'updated'}Страница обновлена{/if}</span>
-	<a class="link" target="_blank" href="../{$lang_link}{$page->url}">Открыть страницу на сайте</a>
-	{if $smarty.get.return}
-	<a class="button" href="{$smarty.get.return}">Вернуться</a>
-	{/if}
-	
-	<span class="share">		
-		<a href="#" onClick='window.open("http://vkontakte.ru/share.php?url={$config->root_url|urlencode}/{$page->url|urlencode}&title={$page->name|urlencode}&description={$page->body|urlencode}&noparse=false","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
-  		<img src="{$config->root_url}/backend/design/images/vk_icon.png" /></a>
-		<a href="#" onClick='window.open("http://www.facebook.com/sharer.php?u={$config->root_url|urlencode}/{$page->url|urlencode}","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
-  		<img src="{$config->root_url}/backend/design/images/facebook_icon.png" /></a>
-		<a href="#" onClick='window.open("http://twitter.com/share?text={$page->name|urlencode}&url={$config->root_url|urlencode}/{$page->url|urlencode}&hashtags={$page->meta_keywords|replace:' ':''|urlencode}","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
-  		<img src="{$config->root_url}/backend/design/images/twitter_icon.png" /></a>
-	</span>
-	
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_success">
+        <span class="text">{if $message_success == 'added'}Страница добавлена{elseif $message_success == 'updated'}Страница обновлена{/if}</span>
+        <a class="link" target="_blank" href="../{$lang_link}{$page->url}">Открыть страницу на сайте</a>
+        {if $smarty.get.return}
+        <a class="button" href="{$smarty.get.return}">Вернуться</a>
+        {/if}
+        <span class="share">
+            <a href="#" onClick='window.open("http://vkontakte.ru/share.php?url={$config->root_url|urlencode}/{$page->url|urlencode}&title={$page->name|urlencode}&description={$page->body|urlencode}&noparse=false","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
+            <img src="{$config->root_url}/backend/design/images/vk_icon.png" /></a>
+            <a href="#" onClick='window.open("http://www.facebook.com/sharer.php?u={$config->root_url|urlencode}/{$page->url|urlencode}","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
+            <img src="{$config->root_url}/backend/design/images/facebook_icon.png" /></a>
+            <a href="#" onClick='window.open("http://twitter.com/share?text={$page->name|urlencode}&url={$config->root_url|urlencode}/{$page->url|urlencode}&hashtags={$page->meta_keywords|replace:' ':''|urlencode}","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
+            <img src="{$config->root_url}/backend/design/images/twitter_icon.png" /></a>
+        </span>
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 {if $message_error}
-<!-- Системное сообщение -->
-<div class="message message_error">
-	<span class="text">{if $message_error == 'url_exists'}Страница с таким адресом уже существует{elseif $message_error=='empty_header'}Введите заголовок{elseif $message_error == 'url_wrong'}Адрес не должен начинаться или заканчиваться символом '-'{else}{$message_error}{/if}</span>
-	<a class="button" href="">Вернуться</a>
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_error">
+        <span class="text">{if $message_error == 'url_exists'}Страница с таким адресом уже существует{elseif $message_error=='empty_header'}Введите заголовок{elseif $message_error == 'url_wrong'}Адрес не должен начинаться или заканчиваться символом '-'{else}{$message_error}{/if}</span>
+        <a class="button" href="">Вернуться</a>
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
-
-
-
 <!-- Основная форма -->
 <form method=post id=product enctype="multipart/form-data">
 	<input type=hidden name="session_id" value="{$smarty.session.id}">
@@ -163,13 +160,16 @@ function translit(str)
 		<div class="checkbox">
 			<input name=visible value='1' type="checkbox" id="active_checkbox" {if $page->visible}checked{/if}/> <label for="active_checkbox" class="visible_icon">Активна</label>
 		</div>
-	</div> 
-
+	</div>
 		<!-- Параметры страницы -->
 		<div class="block">
 			<ul>
-				<li><label class=property>Название пункта в меню</label><input name="name" class="okay_inp" type="text" value="{$page->name|escape}" /></li>
-				<li><label class=property>Меню</label>	
+				<li>
+                    <label class=property>Название пункта в меню</label>
+                    <input name="name" class="okay_inp" type="text" value="{$page->name|escape}" />
+                </li>
+				<li>
+                    <label class=property>Меню</label>
 					<select name="menu_id">
 				   		{foreach $menus as $m}
 				        	<option value='{$m->id}' {if $page->menu_id == $m->id}selected{/if}>{$m->name|escape}</option>
@@ -187,7 +187,8 @@ function translit(str)
 		<div class="block layer">
 			<h2>Параметры страницы</h2>
 			<ul>
-                <li><label class="property" for="block_translit">Заблокировать авто генерацию ссылки</label>
+                <li>
+                    <label class="property" for="block_translit">Заблокировать авто генерацию ссылки</label>
                     <input type="checkbox" id="block_translit" {if $page->id}checked=""{/if} />
                     <div class="helper_wrap">
                         <a href="javascript:;" id="show_help_search" class="helper_link"></a>
@@ -198,8 +199,13 @@ function translit(str)
                         </div>
                     </div>
                 </li>
-				<li><label class=property>Адрес (URL)</label><div class="page_url">/</div><input name="url" class="page_url" type="text" value="{$page->url|escape}" /></li>
-				<li><label class=property>Title (<span class="count_title_symbol"></span>/<span class="word_title"></span>)
+				<li>
+                    <label class=property>Адрес (URL)</label>
+                    <div class="page_url">/</div>
+                    <input name="url" class="page_url" type="text" value="{$page->url|escape}" />
+                </li>
+				<li>
+                    <label class=property>Title (<span class="count_title_symbol"></span>/<span class="word_title"></span>)
                         <div class="helper_wrap">
                             <a href="javascript:;" id="show_help_search" class="helper_link"></a>
                             <div class="right helper_block">
@@ -208,8 +214,10 @@ function translit(str)
                             </div>
                         </div>
                     </label>
-                    <input name="meta_title" class="okay_inp" type="text" value="{$page->meta_title|escape}" /></li>
-				<li><label class=property>Keywords (<span class="count_keywords_symbol"></span>/<span class="word_keywords"></span>)
+                    <input name="meta_title" class="okay_inp" type="text" value="{$page->meta_title|escape}" />
+                </li>
+				<li>
+                    <label class=property>Keywords (<span class="count_keywords_symbol"></span>/<span class="word_keywords"></span>)
                         <div class="helper_wrap">
                             <a href="javascript:;" id="show_help_search" class="helper_link"></a>
                             <div class="right helper_block">
@@ -218,8 +226,10 @@ function translit(str)
                             </div>
                         </div>
                     </label>
-                    <input name="meta_keywords" class="okay_inp" type="text" value="{$page->meta_keywords|escape}" /></li>
-				<li><label class=property>Description (<span class="count_desc_symbol"></span>/<span class="word_desc"></span>)
+                    <input name="meta_keywords" class="okay_inp" type="text" value="{$page->meta_keywords|escape}" />
+                </li>
+				<li>
+                    <label class=property>Description (<span class="count_desc_symbol"></span>/<span class="word_desc"></span>)
                         <div class="helper_wrap">
                             <a href="javascript:;" id="show_help_search" class="helper_link"></a>
                             <div class="right helper_block">
@@ -228,12 +238,12 @@ function translit(str)
                                 <span>В скобках указывается количество символов/слов в строке</span>
                             </div>
                         </div>
-                    </label><textarea name="meta_description" class="okay_inp">{$page->meta_description|escape}</textarea></li>
+                    </label>
+                    <textarea name="meta_description" class="okay_inp">{$page->meta_description|escape}</textarea>
+                </li>
 			</ul>
 		</div>
-		<!-- Параметры страницы (The End)-->		
-
-			
+		<!-- Параметры страницы (The End)-->
 	</div>
 	<!-- Левая колонка свойств товара (The End)--> 
 		

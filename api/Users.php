@@ -54,7 +54,9 @@ class Users extends Okay {
                 u.id, 
                 u.email, 
                 u.password, 
-                u.name, 
+                u.name,
+                u.phone,
+                u.address,
                 u.group_id, 
                 u.enabled, 
                 u.last_ip, 
@@ -120,7 +122,9 @@ class Users extends Okay {
                 u.id, 
                 u.email, 
                 u.password, 
-                u.name, 
+                u.name,
+                u.phone,
+                u.address,
                 u.group_id, 
                 u.enabled, 
                 u.last_ip, 
@@ -173,7 +177,7 @@ class Users extends Okay {
     
     public function delete_user($id) {
         if(!empty($id)) {
-            $query = $this->db->placehold("UPDATE __orders SET user_id=0 WHERE user_id=? LIMIT 1", intval($id));
+            $query = $this->db->placehold("UPDATE __orders SET user_id=0 WHERE user_id=?", intval($id));
             $this->db->query($query);
             
             $query = $this->db->placehold("DELETE FROM __users WHERE id=? LIMIT 1", intval($id));

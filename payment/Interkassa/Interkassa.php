@@ -20,20 +20,30 @@ class Interkassa extends Okay
 		// описание заказа
 		$desc = 'Оплата заказа №'.$order->id;
 		
-		$shop_id = $settings['interkassa_shop_id'];
+		$success_url = $this->config->root_url.'/order/'.$order->url;
+		$callback_url = $this->config->root_url.'/payment/Interkassa/callback.php';
 
-        $res['shop_id'] = $shop_id;
-        $res['price'] = $price;
+
+        $res['settings_pay'] = $settings;
         $res['order'] = $order;
+        $res['settings_pay'] = $settings;
+        $res['payment_currency'] = $payment_currency;
+        $res['price'] = $price;
         $res['desc'] = $desc;
-					
-		$button = "<form name='payment' action='https://interkassa.com/lib/payment.php' method='post' 
-					enctype='application/x-www-form-urlencoded' accept-charset='UTF-8'>
-					<input type='hidden' name='ik_shop_id' value='$shop_id'>
-					<input type='hidden' name='ik_payment_amount' value='$price'>
-					<input type='hidden' name='ik_payment_id' value='$order->id'>
-					<input type='hidden' name='ik_payment_desc' value='$desc'>
-					<input type='submit' name='process' value='$button_text' class='checkout_button'>
+        $res['success_url'] = $success_url;
+        $res['callback_url'] = $callback_url;
+
+		$button = "<form name='payment' method='post' action='https://sci.interkassa.com/' accept-charset='UTF-8'> 
+					<input type='hidden' name='ik_co_id' value='".$settings['ik_co_id']."'>
+					<input type='hidden' name='ik_pm_no' value='".$order->id."'>
+					<input type='hidden' name='ik_cur'   value='".$payment_currency->code."'>
+					<input type='hidden' name='ik_am'    value='$price'>
+					<input type='hidden' name='ik_desc'  value='$desc'>
+
+					<input type='hidden' name='ik_suc_u'  value='$success_url'>
+					<input type='hidden' name='ik_ia_u'  value='$callback_url'>
+
+					<input type='submit' name='process'  value='$button_text' class='checkout_button'>
 					</form>";
 		return $res;
 	}

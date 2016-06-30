@@ -8,57 +8,51 @@ $okay = new Okay();
 ////////////////////////////////////////////////
 // Проверка статуса
 ////////////////////////////////////////////////
-if($_POST['ik_payment_state'] !== 'success')
-	die('bad status');
+if($_POST['ik_inv_st'] !== 'success')
+	err('bad status');
 
 ////////////////////////////////////////////////
 // Выберем заказ из базы
 ////////////////////////////////////////////////
-$order = $okay->orders->get_order(intval($_POST['ik_payment_id']));
+$order = $okay->orders->get_order(intval($_POST['ik_pm_no']));
 if(empty($order))
-	die('Оплачиваемый заказ не найден');
+	err('Оплачиваемый заказ не найден');
  
 ////////////////////////////////////////////////
 // Выбираем из базы соответствующий метод оплаты
 ////////////////////////////////////////////////
 $method = $okay->payment->get_payment_method(intval($order->payment_method_id));
 if(empty($method))
-	die("Неизвестный метод оплаты");
+	err("Неизвестный метод оплаты");
 	
 $settings = unserialize($method->settings);
 $payment_currency = $okay->money->get_currency(intval($method->currency_id));
 
 ////////////////////////////////////////////////
-// Проверка id магазина
+// Проверка id кассы
 ////////////////////////////////////////////////
-if($settings['interkassa_shop_id'] !== $_POST['ik_shop_id'])
-	die('bad shop id');
+if($settings['ik_co_id'] !== $_POST['ik_co_id'])
+	err('Неверный идентификатор кассы');
 
 // Проверяем контрольную подпись
-$ik_shop_id = $_POST['ik_shop_id'];
-$ik_payment_amount = $_POST['ik_payment_amount'];
-$ik_payment_id = $_POST['ik_payment_id'];
-$ik_payment_desc = $_POST['ik_payment_desc'];
-$ik_paysystem_alias = $_POST['ik_paysystem_alias'];
-$ik_baggage_fields = $_POST['ik_baggage_fields'];
-$ik_payment_state = $_POST['ik_payment_state'];
-$ik_trans_id = $_POST['ik_trans_id'];
-$ik_currency_exch = $_POST['ik_currency_exch'];
-$ik_fees_payer = $_POST['ik_fees_payer'];
-$ik_sign_hash = $_POST['ik_sign_hash'];;
+$ik_key = $settings['ik_secret_key'];
 
-$secret_key = $settings['interkassa_secret_key'];
-$ik_sign_hash_str = $ik_shop_id.':'.$ik_payment_amount.':'.$ik_payment_id.':'.$ik_paysystem_alias.':'.$ik_baggage_fields.':'.$ik_payment_state.':'.$ik_trans_id.':'.$ik_currency_exch.':'.$ik_fees_payer.':'.$secret_key;
+$dataSet = $_POST;
+unset($dataSet['ik_sign']);
+ksort($dataSet, SORT_STRING); // сортируем по ключам в алфавитном порядке элементы массива 
+array_push($dataSet, $ik_key); // добавляем в конец массива "секретный ключ" 
+$signString = implode(':', $dataSet); // конкатенируем значения через символ ":" 
+$sign = base64_encode(md5($signString, true)); // берем MD5 хэш в бинарном виде по сформированной строке и кодируем в BASE64 
 
-if(strtoupper($ik_sign_hash) !== strtoupper(md5($ik_sign_hash_str)))
-	die('bad sign');
+if($sign !== $_POST['ik_sign'])
+	err('bad sign');
 
 // Нельзя оплатить уже оплаченный заказ  
 if($order->paid)
-	die('Этот заказ уже оплачен');
+	err('Этот заказ уже оплачен');
 
-if($_POST['ik_payment_amount'] != round($okay->money->convert($order->total_price, $method->currency_id, false), 2) || $_POST['ik_payment_amount']<=0)
-	die("incorrect price");
+if($_POST['ik_am'] != round($okay->money->convert($order->total_price, $method->currency_id, false), 2) || $_POST['ik_am']<=0)
+	err("incorrect price");
 
 // Установим статус оплачен
 $okay->orders->update_order(intval($order->id), array('paid'=>1));
@@ -70,4 +64,9 @@ $okay->notify->email_order_admin(intval($order->id));
 // Спишем товары  
 $okay->orders->close(intval($order->id));
 
-exit();
+function err($msg)
+{
+	header($_SERVER['SERVER_PROTOCOL'].' 400 Bad Request', true, 400);
+	//mail("test@test", "interkassa: $msg", $msg);
+	die($msg);
+}

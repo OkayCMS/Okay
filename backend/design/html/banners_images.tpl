@@ -1,7 +1,11 @@
 {* Вкладки *}
 {capture name=tabs}
-    <li class="active"><a href="index.php?module=BannersImagesAdmin">Баннеры</a></li>
-    <li><a href="index.php?module=BannersAdmin">Группы баннеров</a></li>
+    <li class="active">
+        <a href="index.php?module=BannersImagesAdmin">Баннеры</a>
+    </li>
+    <li>
+        <a href="index.php?module=BannersAdmin">Группы баннеров</a>
+    </li>
 {/capture}
 
 {* Title *}
@@ -39,73 +43,72 @@
 <div id="main_list">
     {include file='pagination.tpl'}
     {if $banners_images}
-    {* Основная форма *}
-    <form id="list_form" method="post">
-        <input type="hidden" name="session_id" value="{$smarty.session.id}">
-        <div id="list">
-            {foreach $banners_images as $banners_image}
-                <div class="{if !$banners_image->visible}invisible{/if} {if $banners_image->featured}featured{/if} row">
-                    <input type="hidden" name="positions[{$banners_image->id}]" value="{$banners_image->position}">
-
-                    <div class="move cell">
-                        <div class="move_zone"></div>
+        {* Основная форма *}
+        <form id="list_form" method="post">
+            <input type="hidden" name="session_id" value="{$smarty.session.id}">
+            <div id="list">
+                {foreach $banners_images as $banners_image}
+                    <div class="{if !$banners_image->visible}invisible{/if} {if $banners_image->featured}featured{/if} row">
+                        <input type="hidden" name="positions[{$banners_image->id}]" value="{$banners_image->position}">
+                        <div class="move cell">
+                            <div class="move_zone"></div>
+                        </div>
+                        <div class="checkbox cell">
+                            <input type="checkbox" id="{$banners_image->id}" name="check[]" value="{$banners_image->id}"/>
+                            <label for="{$banners_image->id}"></label>
+                        </div>
+                        <div class="image cell">
+                            {if $banners_image->image}
+                                <a href="{url module=BannersImageAdmin id=$banners_image->id return=$smarty.server.REQUEST_URI}">
+                                    <img src="../{$config->banners_images_dir}{$banners_image->image}" width="30px"/>
+                                </a>
+                            {/if}
+                        </div>
+                        <div class="name cell">
+                            <a href="{url module=BannersImageAdmin id=$banners_image->id return=$smarty.server.REQUEST_URI}">{$banners_image->name|escape}</a>
+                        </div>
+                        <div class="icons cell banner">
+                            <a class="enable" title="Активен" href="#"></a>
+                            <a class="delete" title="Удалить" href="#"></a>
+                        </div>
+                        <div class="icons cell">
+                            {if $banners}
+                                <select name=image_banners[{$banners_image->id}] style="width:150px;">
+                                    {foreach $banners as $b}
+                                        <option value="{$b->id}"{if $b->id == $banners_image->banner_id} selected{/if}>{$b->name}</option>
+                                    {/foreach}
+                                </select>
+                            {/if}
+                        </div>
+                        <div class="clear"></div>
                     </div>
-                    <div class="checkbox cell">
-                        <input type="checkbox" id="{$banners_image->id}" name="check[]" value="{$banners_image->id}"/>
-                        <label for="{$banners_image->id}"></label>
-                    </div>
-                    <div class="image cell">
-                        {if $banners_image->image}
-                            <a href="{url module=BannersImageAdmin id=$banners_image->id return=$smarty.server.REQUEST_URI}">
-                                <img src="../{$config->banners_images_dir}{$banners_image->image}" width="30px"/>
-                            </a>
-                        {/if}
-                    </div>
-                    <div class="name cell">
-                        <a href="{url module=BannersImageAdmin id=$banners_image->id return=$smarty.server.REQUEST_URI}">{$banners_image->name|escape}</a>
-                    </div>
-                    <div class="icons cell banner">
-                        <a class="enable" title="Активен" href="#"></a>
-                        <a class="delete" title="Удалить" href="#"></a>
-                    </div>
-                    <div class="icons cell">
-                        {if $banners}
-                            <select name=image_banners[{$banners_image->id}] style="width:150px;">
-                                {foreach $banners as $b}
-                                    <option value="{$b->id}"{if $b->id == $banners_image->banner_id} selected{/if}>{$b->name}</option>
-                                {/foreach}
-                            </select>
-                        {/if}
-                    </div>
-                    <div class="clear"></div>
-                </div>
-            {/foreach}
-        </div>
-
-        <div id="action">
-            <label id="check_all" class="dash_link">Выбрать все</label>
-			<span id="select">
-			<select name="action">
-                <option value="enable">Сделать видимыми</option>
-                <option value="disable">Сделать невидимыми</option>
-                <option value="duplicate">Создать дубликат</option>
-                {if $banners|count>1}
-                    <option value="move_to_banner">Переместить в группу</option>
-                {/if}
-                <option value="delete">Удалить</option>
-            </select>
-			</span>
-			<span id="move_to_banner">
-			<select name="target_banner">
-                {foreach $banners as $b}
-                    <option value="{$b->id}"{if $b->id == $banners_image->banner_id} selected{/if}>{$b->name}</option>
                 {/foreach}
-            </select>
-			</span>
-            <input id="apply_action" class="button_green" type="submit" value="Применить">
-        </div>
-        {/if}
-    </form>
+            </div>
+
+            <div id="action">
+                <label id="check_all" class="dash_link">Выбрать все</label>
+                <span id="select">
+                    <select name="action">
+                        <option value="enable">Сделать видимыми</option>
+                        <option value="disable">Сделать невидимыми</option>
+                        <option value="duplicate">Создать дубликат</option>
+                        {if $banners|count>1}
+                            <option value="move_to_banner">Переместить в группу</option>
+                        {/if}
+                        <option value="delete">Удалить</option>
+                    </select>
+                </span>
+                <span id="move_to_banner">
+                    <select name="target_banner">
+                        {foreach $banners as $b}
+                            <option value="{$b->id}"{if $b->id == $banners_image->banner_id} selected{/if}>{$b->name}</option>
+                        {/foreach}
+                    </select>
+                </span>
+                <input id="apply_action" class="button_green" type="submit" value="Применить">
+            </div>
+        </form>
+    {/if}
 
     {include file='pagination.tpl'}
 </div>

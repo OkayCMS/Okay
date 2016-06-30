@@ -20,7 +20,14 @@ class FeedbacksAdmin extends Okay {
                 }
             }
         }
-        
+        if($this->request->method('post')) {
+            if ($this->request->post('feedback_answer', 'boolean') && ($feedback_id = $this->feedbacks->get_feedback($this->request->post('feedback_id', 'integer')))) {
+                $txt = $this->request->post('text');
+                if (!empty($feedback_id)) {
+                    $this->notify->email_feedback_answer_to_user($feedback_id->id,$txt);
+                }
+            }
+        }
         // Отображение
         $filter = array();
         $filter['page'] = max(1, $this->request->get('page', 'integer'));

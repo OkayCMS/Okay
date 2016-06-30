@@ -1,12 +1,28 @@
 {capture name=tabs}
-	<li><a href="index.php?module=ThemeAdmin">Тема</a></li>
-	<li><a href="index.php?module=TemplatesAdmin">Шаблоны</a></li>		
-	<li class="active"><a href="index.php?module=StylesAdmin">Стили</a></li>		
-	<li><a href="index.php?module=ImagesAdmin">Изображения</a></li>
+	<li>
+        <a href="index.php?module=ThemeAdmin">Тема</a>
+    </li>
+	<li>
+        <a href="index.php?module=TemplatesAdmin">Шаблоны</a>
+    </li>
+	<li class="active">
+        <a href="index.php?module=StylesAdmin">Стили</a>
+    </li>
+    <li>
+        <a href="index.php?module=ScriptsAdmin">Скрипты</a>
+    </li>
+	<li>
+        <a href="index.php?module=ImagesAdmin">Изображения</a>
+    </li>
+    {if in_array('robots', $manager->permissions)}
+        <li>
+            <a href="index.php?module=RobotsAdmin">Robots.txt</a>
+        </li>
+    {/if}
 {/capture}
 
 {if $style_file}
-{$meta_title = "Стиль $style_file" scope=parent}
+    {$meta_title = "Стиль $style_file" scope=parent}
 {/if}
 
 {* Подключаем редактор кода *}
@@ -81,15 +97,15 @@ $(function() {
 <h1>Тема {$theme}, стиль {$style_file}</h1>
 
 {if $message_error}
-<!-- Системное сообщение -->
-<div class="message message_error">
-	<span class="text">
-	{if $message_error == 'permissions'}Установите права на запись для файла {$style_file}
-	{elseif $message_error == 'theme_locked'}Текущая тема защищена от изменений. Создайте копию темы.
-	{else}{$message_error}{/if}
-	</span>
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_error">
+        <span class="text">
+        {if $message_error == 'permissions'}Установите права на запись для файла {$style_file}
+        {elseif $message_error == 'theme_locked'}Текущая тема защищена от изменений. Создайте копию темы.
+        {else}{$message_error}{/if}
+        </span>
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 <!-- Список файлов для выбора -->

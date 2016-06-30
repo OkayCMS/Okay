@@ -19,9 +19,6 @@
 
 		{* Форма обратной связи *}
 		<div class="col-lg-6 m-b-2">
-			{if $message_sent}
-				<div class="h3 m-b-0 bg-info ">{$name|escape}, <span data-language="{$translate_id['feedback_message_sent']}">{$lang->feedback_message_sent}</span>.</div>
-			{else}
 				<form class="bg-info p-a-1" method="post">
 					{* Заголовок формы *}
 					<div class="h3 text-xs-center" data-language="{$translate_id['feedback_feedback']}">{$lang->feedback_feedback}</div>
@@ -44,12 +41,12 @@
 					<div class="row">
 						{* Имя отправителя *}
 						<div class="col-lg-6 form-group">
-							<input class="form-control" data-format=".+" data-notice="{$lang->form_enter_name}" value="{$name|escape}" name="name" type="text" data-language="{$translate_id['form_name']}" placeholder="{$lang->form_name}*"/>
+							<input class="form-control" data-format=".+" data-notice="{$lang->form_enter_name}" value="{if $user->name}{$user->name}{else}{$name|escape}{/if}" name="name" type="text" data-language="{$translate_id['form_name']}" placeholder="{$lang->form_name}*"/>
 						</div>
 
 						{* Почта отправителя *}
 						<div class="col-lg-6 form-group">
-							<input class="form-control" data-format="email" data-notice="{$lang->form_enter_email}" value="{$email|escape}" name="email" type="text" data-language="{$translate_id['form_email']}" placeholder="{$lang->form_email}*"/>
+							<input class="form-control" data-format="email" data-notice="{$lang->form_enter_email}" value="{if $user->email}{$user->email}{else}{$email|escape}{/if}" name="email" type="text" data-language="{$translate_id['form_email']}" placeholder="{$lang->form_email}*"/>
 						</div>
 
 					</div>
@@ -77,9 +74,12 @@
 						</div>
 					</div>
 				</form>
-			{/if}
 		</div>
 	</div>
+    {if $message_sent}
+        <div class="h3 m-b-1 text-success text-center clearfix">{$name|escape}, <span data-language="{$translate_id['feedback_message_sent']}">{$lang->feedback_message_sent}</span>.</div>
+    {/if}
+
 	{* yandex карта *}
 	<div id="fn-map" class="m-b-2">
         <script type="text/javascript" charset="utf-8" src="https://api-maps.yandex.ru/services/constructor/1.0/js/?sid=33OLs0Ell3u6mHqRQPSPPzVoGoVJGLmo&width=100%&height=400&lang={$lang->yandex_map_lang}&sourceType=constructor"></script>

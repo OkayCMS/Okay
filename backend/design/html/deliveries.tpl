@@ -1,23 +1,37 @@
 {* Вкладки *}
 {capture name=tabs}
     {if in_array('settings', $manager->permissions)}
-        <li><a href="index.php?module=SettingsAdmin">Настройки</a></li>
+        <li>
+            <a href="index.php?module=SettingsAdmin">Настройки</a>
+        </li>
     {/if}
     {if in_array('currency', $manager->permissions)}
-        <li><a href="index.php?module=CurrencyAdmin">Валюты</a></li>
+        <li>
+            <a href="index.php?module=CurrencyAdmin">Валюты</a>
+        </li>
     {/if}
-    <li class="active"><a href="index.php?module=DeliveriesAdmin">Доставка</a></li>
+    <li class="active">
+        <a href="index.php?module=DeliveriesAdmin">Доставка</a>
+    </li>
     {if in_array('payment', $manager->permissions)}
-        <li><a href="index.php?module=PaymentMethodsAdmin">Оплата</a></li>
+        <li>
+            <a href="index.php?module=PaymentMethodsAdmin">Оплата</a>
+        </li>
     {/if}
     {if in_array('managers', $manager->permissions)}
-        <li><a href="index.php?module=ManagersAdmin">Менеджеры</a></li>
+        <li>
+            <a href="index.php?module=ManagersAdmin">Менеджеры</a>
+        </li>
     {/if}
     {if in_array('languages', $manager->permissions)}
-        <li><a href="index.php?module=LanguagesAdmin">Языки</a></li>
+        <li>
+            <a href="index.php?module=LanguagesAdmin">Языки</a>
+        </li>
     {/if}
     {if in_array('languages', $manager->permissions)}
-        <li><a href="index.php?module=TranslationsAdmin">Переводы</a></li>
+        <li>
+            <a href="index.php?module=TranslationsAdmin">Переводы</a>
+        </li>
     {/if}
 {/capture}
 
@@ -36,13 +50,21 @@
             {foreach $deliveries as $delivery}
                 <div class="{if !$delivery->enabled}invisible{/if} row">
                     <input type="hidden" name="positions[{$delivery->id}]" value="{$delivery->position}">
-
                     <div class="move cell">
                         <div class="move_zone"></div>
                     </div>
                     <div class="checkbox cell">
                         <input type="checkbox" id="{$delivery->id}" name="check[]" value="{$delivery->id}"/>
                         <label for="{$delivery->id}"></label>
+                    </div>
+                    <div class="image cell">
+                        {if $delivery->image}
+                            <a href="{url module=DeliveryAdmin id=$delivery->id return=$smarty.server.REQUEST_URI}">
+                                <img src="{$delivery->image|escape|resize:35:35:false:$config->resized_deliveries_dir}"/>
+                            </a>
+                        {else}
+                            <img height="35" width="35" src="../design/{$settings->theme|escape}/images/no_image.png"/>
+                        {/if}
                     </div>
                     <div class="name cell">
                         <a href="{url module=DeliveryAdmin id=$delivery->id return=$smarty.server.REQUEST_URI}">{$delivery->name|escape}</a>
@@ -59,16 +81,15 @@
         <div id="action">
             <label id="check_all" class='dash_link'>Выбрать все</label>
             <span id="select">
-            <select name="action">
-                <option value="enable">Включить</option>
-                <option value="disable">Выключить</option>
-                <option value="delete">Удалить</option>
-            </select>
+                <select name="action">
+                    <option value="enable">Включить</option>
+                    <option value="disable">Выключить</option>
+                    <option value="delete">Удалить</option>
+                </select>
             </span>
             <input id="apply_action" class="button_green" type="submit" value="Применить">
         </div>
     </form>
-
 </div>
 
 {literal}
@@ -173,8 +194,6 @@ $(function() {
 		if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
 			return false;	
 	});
-
-
 });
 
 </script>

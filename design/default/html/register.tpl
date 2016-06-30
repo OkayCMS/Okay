@@ -43,6 +43,13 @@
 				<input class="form-control" type="text" name="email" data-format="email" data-notice="{$lang->form_enter_email}" value="{$email|escape}" data-language="{$translate_id['form_email']}" placeholder="{$lang->form_email}*"/>
 			</div>
 
+            <div class="form-group">
+                <input class="form-control" type="text" name="phone" value="{$phone|escape}" data-language="{$translate_id['form_phone']}" placeholder="{$lang->form_phone}"/>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" name="address" value="{$address|escape}" data-language="{$translate_id['form_address']}" placeholder="{$lang->form_address}"/>
+            </div>
+
 			{* Пароль пользователя *}
 			<div class="form-group">
 				<input class="form-control" type="password" name="password" data-format=".+" data-notice="{$lang->form_enter_password}" value="" data-language="{$translate_id['form_password']}" placeholder="{$lang->form_password}*"/>

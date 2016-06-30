@@ -53,7 +53,7 @@ class OrderView extends View {
             $variants_ids[] = $purchase->variant_id;
         }
         $products = array();
-        foreach($this->products->get_products(array('id'=>$products_ids)) as $p) {
+        foreach($this->products->get_products(array('id'=>$products_ids,'limit' => count($products_ids))) as $p) {
             $products[$p->id] = $p;
         }
         

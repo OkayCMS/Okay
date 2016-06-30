@@ -17,9 +17,7 @@ class IndexView extends View {
             $callback->phone        = $this->request->post('phone');
             $callback->name         = $this->request->post('name');
             $callback->url          = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-            //$callback->message      = $this->request->post('message');
-            $callback->message      = "___";
-            //$callback->name         = "no_name";
+            $callback->message      = $this->request->post('message');
             
             $this->design->assign('callname',  $callback->name);
             $this->design->assign('callemail', $callback->phone);
@@ -72,7 +70,6 @@ class IndexView extends View {
         if(empty($module)) {
             return false;
         }
-        //$module = $this->settings->main_module;
         
         // Создаем соответствующий класс
         if (is_file($this->modules_dir."$module.php")) {
@@ -105,6 +102,9 @@ class IndexView extends View {
 
         if(empty($_SESSION['admin'])) {
             if ($this->settings->site_work == "off") {
+                header('HTTP/1.0 503 Service Temporarily Unavailable');
+                header('Status: 503 Service Temporarily Unavailable');
+                header('Retry-After: 300');//300 seconds
                 return $this->design->fetch('tech.tpl');
             }
         }

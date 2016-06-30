@@ -1,13 +1,17 @@
 {* Вкладки *}
 {capture name=tabs}	
-	<li class="active"><a href="index.php?module=BannersImagesAdmin">Баннеры</a></li>
-    <li><a href="index.php?module=BannersAdmin">Группы баннеров</a></li>
+	<li class="active">
+        <a href="index.php?module=BannersImagesAdmin">Баннеры</a>
+    </li>
+    <li>
+        <a href="index.php?module=BannersAdmin">Группы баннеров</a>
+    </li>
 {/capture}
 
 {if $banners_image->id}
-{$meta_title = $banners_image->name scope=parent}
+    {$meta_title = $banners_image->name scope=parent}
 {else}
-{$meta_title = 'Добавить баннер' scope=parent}
+    {$meta_title = 'Добавить баннер' scope=parent}
 {/if}
 
 {* On document load *}
@@ -30,22 +34,22 @@ $(function() {
 {if $languages}{include file='include_languages.tpl' id=$banners_image->id}{/if}
 
 {if $message_success}
-<!-- Системное сообщение -->
-<div class="message message_success">
-	<span class="text">{if $message_success=='added'}Баннер добавлен{elseif $message_success=='updated'}Баннер обновлен{else}{$message_success}{/if}</span>
-	{if $smarty.get.return}
-	<a class="button" href="{$smarty.get.return}">Вернуться</a>
-	{/if}
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_success">
+        <span class="text">{if $message_success=='added'}Баннер добавлен{elseif $message_success=='updated'}Баннер обновлен{else}{$message_success}{/if}</span>
+        {if $smarty.get.return}
+        <a class="button" href="{$smarty.get.return}">Вернуться</a>
+        {/if}
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 {if $message_error}
-<!-- Системное сообщение -->
-<div class="message message_error">
-	<a class="button" href="">Вернуться</a>
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_error">
+        <a class="button" href="">Вернуться</a>
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 <!-- Основная форма -->
@@ -73,7 +77,6 @@ $(function() {
 		
 	<!-- Левая колонка -->
 	<div id="column_left">
-			
 		<!-- Параметры страницы -->
 		<div class="block layer">
 			<h2>Параметры баннера</h2>
@@ -81,11 +84,10 @@ $(function() {
 				<li><label class=property>Адрес (URL)</label><input name="url" class="okay_inp" type="text" value="{$banners_image->url|escape}" /></li>
 				<li><label class=property>Alt изображения</label><input name="alt" class="okay_inp" type="text" value="{$banners_image->alt|escape}" /></li>
 				<li><label class=property>Title изображения</label><input name="title" class="okay_inp" type="text" value="{$banners_image->title|escape}" /></li>
-				<li><label class=property>Описание</label><textarea name="description" class="okay_inp" />{$banners_image->description|escape}</textarea></li>
+				<li><label class=property>Описание</label><textarea name="description" class="okay_inp" >{$banners_image->description|escape}</textarea></li>
 			</ul>
 		</div>
 		<!-- Параметры страницы (The End)-->
-			
 	</div>
 	<!-- Левая колонка свойств товара (The End)--> 
 	

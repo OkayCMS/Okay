@@ -1,80 +1,8 @@
 {* Подключаем формы всех модулей оплаты *}
 {* Все переменные берутся в модуле оплаты и потом подключаются в tpl *}
 {* payment_module - название модуля оплаты(по сути папка модуля оплаты) *}
-{if $payment_module == "Acquiropay"}
-    {* Способ оплаты Acquiropay *}
-    <div class="row">
-	    <form class="col-lg-7 m-b-2" accept-charset="UTF-8" name="payment_form" method="post" action="https://secure.acquiropay.com">
-		    <input type="hidden" name="product_id" value="{$settings_pay['acquiropay_product']|escape}"/>
-		    <input type="hidden" name="product_name" value="{$desc|escape}" />
-		    <input type="hidden" name="token" value="{$token|escape}" />
-		    <input type="hidden" name="amount" value="{$price|escape}" />
-		    <input type="hidden" name="cf" value="{$order_id|escape}" />
-		    <input type="hidden" name="cf2" value="" />
-		    <input type="hidden" name="cf3" value="" />
-		    <input type="hidden" name="first_name" value="{$order->name|escape}" />
-		    <input type="hidden" name="last_name" value="" />
-		    <input type="hidden" name="email" value="{$order->email|escape|escape}" />
-		    <input type="hidden" name="phone" value="{$order->phone|escape|escape}" />
-		    <input type="hidden" name="cb_url" value="{$cb_url|escape}"/>
-		    <input type="hidden" name="ok_url" value="{$ok_url|escape}"/>
-		    <input type="hidden" name="ko_url" value="{$settings_pay['acquiropay_uerror']|escape}"/>
-		    <input type="submit" class="btn btn-warning btn-block" value="{$lang->form_to_pay}"/>
-	    </form>
-    </div>
-{elseif $payment_module == "Best2Pay"}
-    {* Способ оплаты Best2Pay *}
-    <div class="row">
-	    <form class="col-lg-7 m-b-2" accept-charset="utf8" action="{$best2pay_url}/webapi/Purchase" method="post">
-		    <input type="hidden" name="sector"    value="{$sector|escape}">
-		    <input type="hidden" name="id"        value="{$best2pay_id|escape}">
-		    <input type="hidden" name="signature" value="{$signature|escape}">
-		    <input type="submit" class="btn btn-warning btn-block" value="{$lang->form_to_pay}">
-	    </form>
-    </div>
-{elseif $payment_module == "DeltaKey" }
-    {* Способ оплаты DeltaKey *}
-    <div class="row">
-	    <form class="col-lg-7 m-b-2" method="post" action="{$payment_url}">
-		    <input type="hidden" name="keyt_shop"    value="{$settings_pay['keyt_shop']|escape}">
-		    <input type="hidden" name="sum"          value="{$price|escape}">
-		    <input type="hidden" name="num_shop"     value="{$settings_pay['num_shop']|escape}">
-		    <input type="hidden" name="ext_transact" value="{$order->id|escape}">
-		    <input type="hidden" name="comment"      value="Order {$order->id|escape}">
-		    <input type="hidden" name="identified"   value="1">
-		    <input type="hidden" name="sign"         value="{$sign|escape}">
-		    <input type="submit" name="submit-button" value="{$lang->form_to_pay}" class="btn btn-warning btn-block">
-	    </form>
-    </div>
-{elseif $payment_module == "IntellectMoney"}
-    {* Способ оплаты IntellectMoney *}
-    <div class="row">
-	    <form class="col-lg-7 m-b-2" action="https://merchant.intellectmoney.ru" method="post">
-		    <input type="hidden" name="eshopId"           value="{$shop_id|escape}">
-		    <input type="hidden" name="orderId"           value="{$order_id|escape}">
-		    <input type="hidden" name="serviceName"       value="{$order_description|escape}">
-		    <input type="hidden" name="recipientAmount"   value="{$amount|escape}">
-		    <input type="hidden" name="recipientCurrency" value="{$currency_code|escape}">
-		    <input type="hidden" name="successUrl"        value="{$redirect_url_ok|escape}">
-		    <input type="hidden" name="failUrl"           value={$redirect_url_failed|escape}>
-		    <input type="hidden" name="user_email"        value="{$user_email|escape}">
-		    <input type="hidden" name="hash"              value="{$pre_hash|escape}">
-		    <input type="submit" class="btn btn-warning btn-block" value="{$lang->form_to_pay}">
-	    </form>
-    </div>
-{elseif $payment_module == "Interkassa"}
+{if $payment_module == "Interkassa"}
     {* Способ оплаты Interkassa *}
-    <div class="row">
-	    <form class="col-lg-7 m-b-2" name="payment" action="https://interkassa.com/lib/payment.php" method="post" enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">
-		    <input type="hidden" name="ik_shop_id"        value="{$shop_id|escape}">
-		    <input type="hidden" name="ik_payment_amount" value="{$price|escape}">
-		    <input type="hidden" name="ik_payment_id"     value="{$order->id|escape}">
-		    <input type="hidden" name="ik_payment_desc"   value="{$desc|escape}">
-		    <input type="submit" name="process"           value="{$lang->form_to_pay}"  class="btn btn-warning btn-block">
-	    </form>
-    </div>
-{elseif $payment_module == "Interkassa2"}
-    {* Способ оплаты Interkassa2 *}
     <div class="row">
 	    <form class="col-lg-7 m-b-2" name="payment" method="post" action="https://sci.interkassa.com/" accept-charset="UTF-8">
 		    <input type="hidden" name="ik_co_id" value="{$settings_pay['ik_co_id']|escape}">
@@ -85,29 +13,6 @@
 		    <input type="hidden" name="ik_suc_u" value="{$success_url|escape}">
 		    <input type="hidden" name="ik_ia_u"  value="{$callback_url|escape}">
 		    <input type="submit" name="process"  value="{$lang->form_to_pay}" class="btn btn-warning btn-block">
-	    </form>
-    </div>
-{elseif $payment_module == "InvoiceBox"}
-    {* Способ оплаты InvoiceBox *}
-    <div class="row">
-	    <form class="col-lg-7 m-b-2" action="https://go.invoicebox.ru/module_inbox_auto.u" method="post">
-		    <input type="hidden" name="itransfer_participant_id"       value="{$participant_id|escape}"/>
-		    <input type="hidden" name="itransfer_participant_ident"    value="{$participant_ident|escape}"/>
-		    <input type="hidden" name="itransfer_participant_sign" 	   value="{$participant_sign|escape}"/>
-		    <input type="hidden" name="itransfer_order_id"             value="{$participant_order_id|escape}"/>
-		    <input type="hidden" name="itransfer_order_amount"         value="{$itransfer_order_amount|escape}"/>
-		    <input type="hidden" name="itransfer_order_quantity"       value="{$itransfer_order_quantity|escape}"/>
-		    <input type="hidden" name="itransfer_order_description"	   value="{$participant_description|escape}"/>
-		    <input type="hidden" name="itransfer_person_name"          value="{$personName|escape}"/>
-		    <input type="hidden" name="itransfer_person_email"         value="{$personEmail|escape}"/>
-		    <input type="hidden" name="itransfer_person_phone"         value="{$personPhone|escape}"/>
-		    <input type="hidden" name="itransfer_order_currency_ident" value="RUR"/>
-		    <input type="hidden" name="itransfer_scheme_id"	           value="DEFAULT"/>
-		    <input type="hidden" name="itransfer_language_ident"       value="{$itransfer_language|escape}"/>
-		    <input type="hidden" name="itransfer_encoding"             value="utf-8"/>
-		    <input type="hidden" name="itransfer_url_return"            value="{$itransfer_url_success|escape}"/>
-		    <input type="hidden" name="itransfer_url_cancel"           value="{$itransfer_url_fail|escape}"/>
-		    <input type="submit" class="btn btn-warning btn-block" value="{$lang->form_to_pay}"/>
 	    </form>
     </div>
 {elseif $payment_module == "Liqpay"}
@@ -199,18 +104,6 @@
     {/if}
         <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_xpressCheckout.gif" value="{$lang->form_to_pay}">
     </form>
-{elseif $payment_module == "Paysto"}
-    {* Способ оплаты Paysto *}
-    <div class="row">
-	    <form class="col-lg-7 m-b-2" accept-charset="UTF-8" method="post" action="https://paysto.com/ru/pay">
-		    <input type="hidden" name="PAYSTO_SHOP_ID"    value="{$payment_settings['paysto_shop_id']|escape}">
-		    <input type="hidden" name="PAYSTO_SUM"        value="{$amount|escape}">
-		    <input type="hidden" name="PAYSTO_INVOICE_ID" value="{$order->id|escape}">
-		    <input type="hidden" name="PAYSTO_DESC"       value="Заказ № {$order->id}">
-		    <input type="hidden" name="PayerEMail"        value="{htmlentities($order->email)}">
-		    <input type="submit" class="btn btn-warning btn-block" value="{$lang->form_to_pay}"/>
-	    </form>
-    </div>
 {elseif $payment_module == "Platon"}
     {* Способ оплаты Platon *}
     <div class="row">
@@ -240,21 +133,6 @@
 		    <input type="submit" class="btn btn-warning btn-block" value="{$lang->form_to_pay}">
 	    </div>
     </form>
-{elseif $payment_module == "RBKMoney"}
-    {* Способ оплаты RBKMoney *}
-    <div class="row">
-	    <form class="col-lg-7 m-b-2" action="https://rbkmoney.ru/acceptpurchase.aspx" method="post">
-		    <input type="hidden" name="eshopId"           value="{$shop_id|escape}">
-		    <input type="hidden" name="orderId"           value="{$order_id|escape}">
-		    <input type="hidden" name="serviceName"       value="{$order_description|escape}">
-		    <input type="hidden" name="recipientAmount"   value="{$amount|escape}">
-		    <input type="hidden" name="recipientCurrency" value="{$currency_code|escape}">
-		    <input type="hidden" name="successUrl"        value="{$redirect_url_ok|escape}">
-		    <input type="hidden" name="failUrl"           value="{$redirect_url_failed|escape}">
-		    <input type="hidden" name="user_email"        value="{$user_email|escape}">
-		    <input type="submit" class="btn btn-warning btn-block" value="{$lang->form_to_pay}">
-	    </form>
-    </div>
 {elseif $payment_module == "Receipt"}
     {* Способ оплаты Квитанция *}
     <form class="bg-info col-lg-7 p-y-1 m-b-2" action="payment/Receipt/callback.php" method="post">
@@ -308,6 +186,7 @@
     {* Способ оплаты Yandex *}
     <div class="row">
 	    <form class="col-lg-7 m-b-2" method="post" action="https://money.yandex.ru/quickpay/confirm.xml">
+            <input name="receiver" type="hidden" value="{$settings_pay['yandex_id']}">
             <input type="hidden" name="short-dest"    value="{$desc|escape}">
             <input name="targets" type="hidden" value="{$desc|escape}">
             <input type="hidden" name="comment"       value="{$desc|escape}"/>

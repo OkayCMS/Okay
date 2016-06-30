@@ -1,17 +1,27 @@
 {* Вкладки *}
 {capture name=tabs}
     {if in_array('products', $manager->permissions)}
-        <li><a href="index.php?module=ProductsAdmin">Товары</a></li>
+        <li>
+            <a href="index.php?module=ProductsAdmin">Товары</a>
+        </li>
     {/if}
     {if in_array('categories', $manager->permissions)}
-        <li><a href="index.php?module=CategoriesAdmin">Категории</a></li>
+        <li>
+            <a href="index.php?module=CategoriesAdmin">Категории</a>
+        </li>
     {/if}
     {if in_array('brands', $manager->permissions)}
-        <li><a href="index.php?module=BrandsAdmin">Бренды</a></li>
+        <li>
+            <a href="index.php?module=BrandsAdmin">Бренды</a>
+        </li>
     {/if}
-    <li class="active"><a href="index.php?module=FeaturesAdmin">Свойства</a></li>
+    <li class="active">
+        <a href="index.php?module=FeaturesAdmin">Свойства</a>
+    </li>
     {if in_array('special', $manager->permissions)}
-        <li><a href="index.php?module=SpecialAdmin">Промо-изображения</a></li>
+        <li>
+            <a href="index.php?module=SpecialAdmin">Промо-изображения</a>
+        </li>
     {/if}
 {/capture}
 
@@ -37,7 +47,6 @@
                 {foreach $features as $feature}
                     <div class="{if $feature->in_filter}in_filter{/if} row">
                         <input type="hidden" name="positions[{$feature->id}]" value="{$feature->position}">
-
                         <div class="move cell">
                             <div class="move_zone"></div>
                         </div>
@@ -102,9 +111,6 @@
     {/function}
     {categories_tree categories=$categories level=1}
 </div>
-
-
-
 {literal}
 <script>
 $(function() {
@@ -238,9 +244,9 @@ $(function() {
             $(this).addClass('open');
         }
         $(this).parent().next().slideToggle(500);
-    })
-    $('.cats_right li.selected').parents().removeClass('sub_menu');
-    $('.cats_right li.selected').parents().prev().find('span').addClass('open');
+    });
+    $('.cats_right li.selected').parents('.cats_right.sub_menu').removeClass('sub_menu');
+    $('.cats_right li.selected').parents('.cats_right').prev('li').find('span').addClass('open');
 	
 });
 </script>

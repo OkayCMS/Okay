@@ -1,41 +1,59 @@
 {capture name=tabs}
-    <li class="active"><a href="index.php?module=SettingsAdmin">Настройки</a></li>
+    <li class="active">
+        <a href="index.php?module=SettingsAdmin">Настройки</a>
+    </li>
     {if in_array('currency', $manager->permissions)}
-        <li><a href="index.php?module=CurrencyAdmin">Валюты</a></li>
+        <li>
+            <a href="index.php?module=CurrencyAdmin">Валюты</a>
+        </li>
     {/if}
     {if in_array('delivery', $manager->permissions)}
-        <li><a href="index.php?module=DeliveriesAdmin">Доставка</a></li>
+        <li>
+            <a href="index.php?module=DeliveriesAdmin">Доставка</a>
+        </li>
     {/if}
     {if in_array('payment', $manager->permissions)}
-        <li><a href="index.php?module=PaymentMethodsAdmin">Оплата</a></li>
+        <li>
+            <a href="index.php?module=PaymentMethodsAdmin">Оплата</a>
+        </li>
     {/if}
     {if in_array('managers', $manager->permissions)}
-        <li><a href="index.php?module=ManagersAdmin">Менеджеры</a></li>
+        <li>
+            <a href="index.php?module=ManagersAdmin">Менеджеры</a>
+        </li>
     {/if}
     {if in_array('languages', $manager->permissions)}
-        <li><a href="index.php?module=LanguagesAdmin">Языки</a></li>
+        <li>
+            <a href="index.php?module=LanguagesAdmin">Языки</a>
+        </li>
     {/if}
     {if in_array('languages', $manager->permissions)}
-        <li><a href="index.php?module=TranslationsAdmin">Переводы</a></li>
+        <li>
+            <a href="index.php?module=TranslationsAdmin">Переводы</a>
+        </li>
     {/if}
 {/capture}
  
 {$meta_title = "Настройки" scope=parent}
 
 {if $message_success}
-<div class="message message_success">
-	<span class="text">{if $message_success == 'saved'}Настройки сохранены{/if}</span>
-	{if $smarty.get.return}
-	<a class="button" href="{$smarty.get.return}">Вернуться</a>
-	{/if}
-</div>
+    <div class="message message_success">
+        <span class="text">{if $message_success == 'saved'}Настройки сохранены{/if}</span>
+        {if $smarty.get.return}
+        <a class="button" href="{$smarty.get.return}">Вернуться</a>
+        {/if}
+    </div>
 {/if}
 
 {if $message_error}
-<div class="message message_error">
-	<span class="text">{if $message_error == 'watermark_is_not_writable'}Установите права на запись для файла {$config->watermark_file}{/if}</span>
-	<a class="button" href="">Вернуться</a>
-</div>
+    <div class="message message_error">
+        <span class="text">
+            {if $message_error == 'watermark_is_not_writable'}
+                Установите права на запись для файла {$config->watermark_file}
+            {/if}
+        </span>
+        <a class="button" href="">Вернуться</a>
+    </div>
 {/if}
 
 <form method=post id=product enctype="multipart/form-data">
@@ -66,6 +84,7 @@
             <li><label class=property>Оповещение о заказах</label><input name="order_email" class="okay_inp" type="text" value="{$settings->order_email|escape}" /></li>
             <li><label class=property>Оповещение о комментариях</label><input name="comment_email" class="okay_inp" type="text" value="{$settings->comment_email|escape}" /></li>
             <li><label class=property>Обратный адрес оповещений</label><input name="notify_from_email" class="okay_inp" type="text" value="{$settings->notify_from_email|escape}" /></li>
+            <li><label class=property>Имя отправителя письма</label><input name="notify_from_name" class="okay_inp" type="text" value="{$settings->notify_from_name|escape}" /></li>
         </ul>
     </div>
     <div class="block layer">
@@ -209,19 +228,15 @@
 
 
     <div class="block layer">
-        <h2>Настройка аналитики
+        <h2>Настройка Google аналитики
             <div class="helper_wrap">
                 <a href="javascript:;" id="show_help_search" class="helper_link"></a>
                 <div class="right helper_bottom helper_block" style="width: 446px;">
-                            <span>
-                                <b>Google Analytics ID</b> - прописывается ID счетчика, в формате (UA-xxxxxxxx-x)
-                                <b>Google Webmaster</b> - прописывается только содержимое атрибута content (786f3d0f736b732c)
-                                <br>пример: <br>meta name='google-site-verification' content='<i style="font-weight: bold">786f3d0f736b732c</i>'
-                                <b>Yandex метрика</b> - прописывается числовой код метрики (ID)
-                                <b>Yandex вебмастер</b> - прописывается только содержимое атрибута content (786f3d0f736b732c)
-                                <br>пример: <br>meta name='yandex-verification' content='<i style="font-weight: bold">786f3d0f736b732c</i>'
-
-                            </span>
+                    <span>
+                        <b>Google Analytics ID</b> - прописывается ID счетчика, в формате (UA-xxxxxxxx-x)
+                        <b>Google Webmaster</b> - прописывается только содержимое атрибута content (786f3d0f736b732c)
+                        <br>пример: <br>meta name='google-site-verification' content='<i style="font-weight: bold">786f3d0f736b732c</i>'
+                    </span>
                 </div>
             </div>
         </h2>
@@ -234,16 +249,112 @@
                 <label class="property">Google Webmaster</label>
                 <input type="text" name="g_webmaster" value="{$settings->g_webmaster}" class="okay_inp">
             </li>
+        </ul>
+    </div>
+
+    <div class="block layer">
+        <h2>Яндекс метрика
+            <div class="helper_wrap">
+                <a href="javascript:;" id="show_help_search" class="helper_link"></a>
+                <div class="right helper_bottom helper_block" style="width: 446px;">
+                    <span>
+                        <b>Yandex метрика</b> - прописывается числовой код метрики (ID)
+                        <b>Yandex вебмастер</b> - прописывается только содержимое атрибута content (786f3d0f736b732c)
+                        <br>пример: <br>meta name='yandex-verification' content='<i style="font-weight: bold">786f3d0f736b732c</i>'
+
+                    </span>
+                </div>
+            </div>
+            <div class="helper_wrap" style="margin-left: 5px; margin-top: -8px;">
+                <a class="top_help" id="show_help_search" href="https://www.youtube.com/watch?v=8IVMhLKSMKA" target="_blank"></a>
+                <div class="right helper_block topvisor_help">
+                    <p>Видеоинструкция по данному функционалу</p>
+                </div>
+            </div>
+        </h2>
+        <ul>
             <li>
-                <label class="property">Yandex метрика</label>
-                <input type="text" name="y_metric" value="{$settings->y_metric}" class="okay_inp">
+                <label class=property>ID приложения</label>
+                <input name="yandex_metrika_app_id" class="okay_inp" type="text" value="{$settings->yandex_metrika_app_id|escape}" />
+            </li>
+            <li>
+                <label class=property>Токен</label>
+                <input name="yandex_metrika_token" class="okay_inp" type="text" value="{$settings->yandex_metrika_token|escape}" />
+            </li>
+            <li>
+                <label class=property>ID счётчика</label>
+                <input name="yandex_metrika_counter_id" class="okay_inp" type="text" value="{$settings->yandex_metrika_counter_id|escape}" />
             </li>
             <li>
                 <label class="property">Yandex вебмастер</label>
                 <input type="text" name="y_webmaster" value="{$settings->y_webmaster}" class="okay_inp">
             </li>
         </ul>
+        <div>
+            <h4 class="fn-helper">Инструкция по настройке поключения Я.Метрики &#8659;</h4>
+            <div class="ya_metrica_helper" style="display: none;">
+                <p>Подключение статистики яндекс метрики к административной части OkayCMS</p>
+                <ul>
+                    <li>
+                        Шаг 1. Необходимо зайти на ссылку <a target="_blank" href="https://oauth.yandex.ru">https://oauth.yandex.ru</a>
+                    </li>
+                    <li>
+                        Шаг 2. Нажать кнопку «Зарегистрировать приложение»
+                    </li>
+
+                    <li>
+                        Шаг 3. Ввести следующие данные:<br>
+                        <b>Название:</b> YandexMetrikaAPI<br>
+                        <b>Описание:</b> Приложение для доступа к API метрики с OkayCMS<br>
+                        <b>Иконка:</b> Пусто<br>
+                        <b>Ссылка на сайт приложения:</b> Пусто<br>
+                        <b>Права:</b> Выбираем пункт Яндекс.Метрика и отмечаем галочкой
+                        Получение статистики, чтение параметров своих и доверенных счётчиков<br>
+                        <b>Callback URL:</b> https://oauth.yandex.ru/verification_code
+                    </li>
+                    <li>
+                        Шаг 4. Нажимаем «Сохранить»
+                    </li>
+                    <li>
+                        Шаг 5. На открывшейся странице копируем ID приложения и сохраняем его в настройках Яндекс
+                        Метрики в административной части
+                    </li>
+                    <li>
+                        Шаг 6. Авторизуемся на Яндексе под учетной записью пользователя, от имени которого будет
+                        работать приложение
+                    </li>
+                    <li>
+                        Шаг 7. Переходим по URL:
+                        <a target="_blank" href="https://oauth.yandex.ru/authorize?response_type=token&client_id=<идентификатор приложения>">https://oauth.yandex.ru/authorize?response_type=token&client_id=
+                            <идентификатор приложения>
+                        </a>
+                         ,где   <b><идентификатор приложения></b> - ранее полученный ID
+                        <br>
+                        <i><b>
+                            Пример:
+                            https://oauth.yandex.ru/authorize?response_type=token&client_id=
+                            a4e35e82346a4264abdaa54aff04a143
+                        </b></i>
+                    </li>
+                    <li>
+                        Шаг 8. Приложение запросит разрешение на доступ, которое нужно предоставить, нажав «Разрешить»
+                    </li>
+                    <li>
+                        Шаг 9 . Сохранить полученный токен в настройки Яндекс Метрики, в административную часть на
+                        сайте.
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 
     <input class="button_green button_save" type="submit" name="save" value="Сохранить" />
 </form>
+
+<script>
+    $(window).on('load',function(){
+        $('.fn-helper').on('click',function(){
+           $(this).next().slideToggle(500);
+        });
+    })
+</script>

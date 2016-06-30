@@ -80,15 +80,14 @@ class Cart extends Okay {
     }
     
     public function add_item($variant_id, $amount = 1) {
-        $amount = max(1, $amount);
-        if(isset($_SESSION['shopping_cart'][$variant_id])) {
-            $amount = max(1, $amount+$_SESSION['shopping_cart'][$variant_id]);
-        }
-        
         // Выберем товар из базы, заодно убедившись в его существовании
         $variant = $this->variants->get_variant($variant_id);
         // Если товар существует, добавим его в корзину
         if(!empty($variant) && ($variant->stock>0 || $this->settings->is_preorder)) {
+            $amount = max(1, $amount);
+            if(isset($_SESSION['shopping_cart'][$variant_id])) {
+                $amount = max(1, $amount+$_SESSION['shopping_cart'][$variant_id]);
+            }
             // Не дадим больше чем на складе
             $amount = min($amount, ($variant->stock ? $variant->stock : min($this->settings->max_order_amount, $amount)));
             $_SESSION['shopping_cart'][$variant_id] = intval($amount);
@@ -96,12 +95,11 @@ class Cart extends Okay {
     }
     
     public function update_item($variant_id, $amount = 1) {
-        $amount = max(1, $amount);
-        
         // Выберем товар из базы, заодно убедившись в его существовании
         $variant = $this->variants->get_variant($variant_id);
         // Если товар существует, добавим его в корзину
         if(!empty($variant) && ($variant->stock>0 || $this->settings->is_preorder)) {
+            $amount = max(1, $amount);
             // Не дадим больше чем на складе
             $amount = min($amount, ($variant->stock ? $variant->stock : min($this->settings->max_order_amount, $amount)));
             $_SESSION['shopping_cart'][$variant_id] = intval($amount);

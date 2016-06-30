@@ -1,14 +1,22 @@
 {* Вкладки *}
 {capture name=tabs}
-    <li class="active"><a href="index.php?module=UsersAdmin">Пользователи</a></li>
+    <li class="active">
+        <a href="index.php?module=UsersAdmin">Пользователи</a>
+    </li>
     {if in_array('groups', $manager->permissions)}
-        <li><a href="index.php?module=GroupsAdmin">Группы</a></li>
+        <li>
+            <a href="index.php?module=GroupsAdmin">Группы</a>
+        </li>
     {/if}
     {if in_array('coupons', $manager->permissions)}
-        <li><a href="index.php?module=CouponsAdmin">Купоны</a></li>
+        <li>
+            <a href="index.php?module=CouponsAdmin">Купоны</a>
+        </li>
     {/if}
     {if in_array('users', $manager->permissions)}
-        <li><a href="index.php?module=SubscribeMailingAdmin">Подписчики</a></li>
+        <li>
+            <a href="index.php?module=SubscribeMailingAdmin">Подписчики</a>
+        </li>
     {/if}
 {/capture}
 
@@ -17,30 +25,29 @@
 
 {* Поиск *}
 {if $users || $keyword}
-<form method="get">
-<div id="search">
-	<input type="hidden" name="module" value='UsersAdmin'>
-	<input class="search" type="text" name="keyword" value="{$keyword|escape}" />
-	<input class="search_button" type="submit" value=""/>
-</div>
-</form>
+    <form method="get">
+    <div id="search">
+        <input type="hidden" name="module" value='UsersAdmin'>
+        <input class="search" type="text" name="keyword" value="{$keyword|escape}" />
+        <input class="search_button" type="submit" value=""/>
+    </div>
+    </form>
 {/if}
 
 <div id="header">
 	{if $keyword && $users_count>0}
-	<h1>{$users_count|plural:'Нашелся':'Нашлось':'Нашлись'} {$users_count} {$users_count|plural:'покупатель':'покупателей':'покупателя'}</h1>
+	    <h1>{$users_count|plural:'Нашелся':'Нашлось':'Нашлись'} {$users_count} {$users_count|plural:'покупатель':'покупателей':'покупателя'}</h1>
 	{elseif $users_count>0}
-	<h1>{$users_count} {$users_count|plural:'покупатель':'покупателей':'покупателя'}</h1> 	
+	    <h1>{$users_count} {$users_count|plural:'покупатель':'покупателей':'покупателя'}</h1>
 	{else}
-	<h1>Нет покупателей</h1> 	
+	    <h1>Нет покупателей</h1>
 	{/if}
 	{if $users_count>0}
-	<form method="post" action="{url module=ExportUsersAdmin}" target="_blank">
-	<input type="hidden" name="session_id" value="{$smarty.session.id}">
-	<input type="image" src="./design/images/export_excel.png" name="export" title="Экспортировать этих покупателей">
-	</form>
+        <form method="post" action="{url module=ExportUsersAdmin}" target="_blank">
+            <input type="hidden" name="session_id" value="{$smarty.session.id}">
+            <input type="image" src="./design/images/export_excel.png" name="export" title="Экспортировать этих покупателей">
+        </form>
 	{/if}
-	
 </div>
 
 {if $users}

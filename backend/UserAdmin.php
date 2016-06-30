@@ -11,6 +11,8 @@ class UserAdmin extends Okay {
             $user->enabled = $this->request->post('enabled');
             $user->name = $this->request->post('name');
             $user->email = $this->request->post('email');
+            $user->phone = $this->request->post('phone');
+            $user->address = $this->request->post('address');
             $user->group_id = $this->request->post('group_id');
             
             ## Не допустить одинаковые email пользователей.

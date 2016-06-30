@@ -20,7 +20,9 @@
         {/if}
     {/if}
     {if in_array('labels', $manager->permissions)}
-        <li><a href="{url module=OrdersLabelsAdmin keyword=null id=null page=null label=null from_date=null to_date=null}">Метки</a></li>
+        <li>
+            <a href="{url module=OrdersLabelsAdmin keyword=null id=null page=null label=null from_date=null to_date=null}">Метки</a>
+        </li>
     {/if}
 {/capture}
 
@@ -61,20 +63,18 @@
 </div>	
 
 {if $message_error}
-<!-- Системное сообщение -->
-<div class="message message_error">
-	<span class="text">{if $message_error=='error_closing'}Нехватка некоторых товаров на складе{else}{$message_error|escape}{/if}</span>
-	{if $smarty.get.return}
-	<a class="button" href="{$smarty.get.return}">Вернуться</a>
-	{/if}
-</div>
+    <!-- Системное сообщение -->
+    <div class="message message_error">
+        <span class="text">{if $message_error=='error_closing'}Нехватка некоторых товаров на складе{else}{$message_error|escape}{/if}</span>
+        {if $smarty.get.return}
+        <a class="button" href="{$smarty.get.return}">Вернуться</a>
+        {/if}
+    </div>
 {/if}
 
 {if $orders}
     <div id="main_list">
-
         {include file='pagination.tpl'}
-
         <form id="form_list" method="post">
             <input type="hidden" name="session_id" value="{$smarty.session.id}">
 
@@ -114,15 +114,11 @@
                                 </div>
                             </div>
 
-                           
                             <a href="{url module=OrderAdmin id=$order->id return=$smarty.server.REQUEST_URI}">Заказ №{$order->id}</a> 
                             <span>{$order->name|escape}</span>
-
                             {if $order->note}
                                 <div class="note">{$order->note|escape}</div>
                             {/if}
-                            
-                            
                         </div>
 
                         <div class="name cell" style='white-space:nowrap;'>
@@ -159,7 +155,6 @@
                                 {/if}
                             </div>
                         {/if}
-
                         <div class="clear"></div>
                     </div>
                 {/foreach}
@@ -168,40 +163,37 @@
             <div id="action">
                 <label id='check_all' class="dash_link">Выбрать все</label>
                 <span id="select">
-                <select name="action">
-                    {if $status!==0}
-                        <option value="set_status_0">В новые</option>
-                    {/if}
-                    {if $status!==1}
-                        <option value="set_status_1">В принятые</option>
-                    {/if}
-                    {if $status!==2}
-                        <option value="set_status_2">В выполненные</option>
-                    {/if}
-                    {foreach $labels as $l}
-                        <option value="set_label_{$l->id}">Отметить &laquo;{$l->name}&raquo;</option>
-                    {/foreach}
-                    {foreach $labels as $l}
-                        <option value="unset_label_{$l->id}">Снять &laquo;{$l->name}&raquo;</option>
-                    {/foreach}
-                    <option value="delete">Удалить выбранные заказы</option>
-                </select>
+                    <select name="action">
+                        {if $status!==0}
+                            <option value="set_status_0">В новые</option>
+                        {/if}
+                        {if $status!==1}
+                            <option value="set_status_1">В принятые</option>
+                        {/if}
+                        {if $status!==2}
+                            <option value="set_status_2">В выполненные</option>
+                        {/if}
+                        {foreach $labels as $l}
+                            <option value="set_label_{$l->id}">Отметить &laquo;{$l->name}&raquo;</option>
+                        {/foreach}
+                        {foreach $labels as $l}
+                            <option value="unset_label_{$l->id}">Снять &laquo;{$l->name}&raquo;</option>
+                        {/foreach}
+                        <option value="delete">Удалить выбранные заказы</option>
+                    </select>
                 </span>
                 <input id="apply_action" class="button_green" type="submit" value="Применить">
             </div>
         </form>
-
         {include file='pagination.tpl'}
     </div>
 {/if}
-
 
 <div id="right_menu">
 
     <form class="date_filter" method="get">
         <input type="hidden" name="module" value="OrdersAdmin">
         <input type="hidden" name="status" value="{$status}">
-
         <div class="date_filter_title">
             <span>Заказы за период</span>
             <div class="helper_wrap">
@@ -212,17 +204,14 @@
                 </div>
             </div>
         </div>
-            
         <div class="form_group">
            <label for="from_date">C</label>
             <input class="okay_inp" type="text" id="from_date" name="from_date" value="{$from_date}" autocomplete="off"> 
         </div>
-
          <div class="form_group">
             <label for="to_date">По</label>
             <input class="okay_inp" type="text" id="to_date" name="to_date" value="{$to_date}" autocomplete="off">
          </div>
-            
         <input class="button" type="submit" value="Показать"/>
     </form>
 
@@ -234,17 +223,14 @@
             </li>
             {foreach $labels as $l}
                 <li data-label-id="{$l->id}" {if $label->id==$l->id}class="selected"{/if}>
-                    
-                    <a href="{url label=$l->id}"><span style="background-color:#{$l->color};" class="order_label"></span>{$l->name}</a></li>
+                    <a href="{url label=$l->id}">
+                        <span style="background-color:#{$l->color};" class="order_label"></span>{$l->name}
+                    </a>
+                </li>
             {/foreach}
         </ul>
     {/if}
-	
 </div>
-
-
-
-
 {* On document load *}
 {literal}
 <script>

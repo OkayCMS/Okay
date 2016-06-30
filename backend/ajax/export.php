@@ -65,10 +65,18 @@ class ExportAjax extends Okay {
         if($page == 1) {
             fputcsv($f, $this->columns_names, $this->column_delimiter);
         }
-        
+
+        $filter = array('page'=>$page, 'limit'=>$this->products_count);
+        if (($cid = $this->request->get('category_id', 'integer')) && ($category = $this->categories->get_category($cid))) {
+            $filter['category_id'] = $category->children;
+        }
+        if ($brand_id = $this->request->get('brand_id', 'integer')) {
+            $filter['brand_id'] = $brand_id;
+        }
+
         // Все товары
         $products = array();
-        foreach($this->products->get_products(array('page'=>$page, 'limit'=>$this->products_count)) as $p) {
+        foreach($this->products->get_products($filter) as $p) {
             $products[$p->id] = (array)$p;
             
             // Свойства товаров
@@ -164,7 +172,7 @@ class ExportAjax extends Okay {
             }
         }
         
-        $total_products = $this->products->count_products();
+        $total_products = $this->products->count_products($filter);
         fclose($f);
         if($this->products_count*$page < $total_products) {
             return array('end'=>false, 'page'=>$page, 'totalpages'=>$total_products/$this->products_count);

@@ -1,19 +1,27 @@
 {* Вкладки *}
 {capture name=tabs}
     {if in_array('products', $manager->permissions)}
-        <li><a href="index.php?module=ProductsAdmin">Товары</a></li>
+        <li>
+            <a href="index.php?module=ProductsAdmin">Товары</a>
+        </li>
     {/if}
     <li class="active">
         <a href="index.php?module=CategoriesAdmin">Категории</a>
     </li>
     {if in_array('brands', $manager->permissions)}
-        <li><a href="index.php?module=BrandsAdmin">Бренды</a></li>
+        <li>
+            <a href="index.php?module=BrandsAdmin">Бренды</a>
+        </li>
     {/if}
     {if in_array('features', $manager->permissions)}
-        <li><a href="index.php?module=FeaturesAdmin">Свойства</a></li>
+        <li>
+            <a href="index.php?module=FeaturesAdmin">Свойства</a>
+        </li>
     {/if}
     {if in_array('special', $manager->permissions)}
-        <li><a href="index.php?module=SpecialAdmin">Промо-изображения</a></li>
+        <li>
+            <a href="index.php?module=SpecialAdmin">Промо-изображения</a>
+        </li>
     {/if}
 {/capture}
 
@@ -95,11 +103,11 @@
             <div id="action">
                 <label id="check_all" class="dash_link">Выбрать все</label>
                 <span id="select">
-                <select name="action">
-                    <option value="enable">Сделать видимыми</option>
-                    <option value="disable">Сделать невидимыми</option>
-                    <option value="delete">Удалить</option>
-                </select>
+                    <select name="action">
+                        <option value="enable">Сделать видимыми</option>
+                        <option value="disable">Сделать невидимыми</option>
+                        <option value="delete">Удалить</option>
+                    </select>
                 </span>
                 <input id="apply_action" class="button_green" type="submit" value="Применить">
             </div>

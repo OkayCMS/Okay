@@ -109,8 +109,8 @@
 		<a href="index.php?module=CommentsAdmin">
 			<i class="icon_comments"></i>
 			<span>Комментарии</span>
-			{if $new_comments_counter || $new_callbacks_counter}
-				<span class="comments_num">{$new_comments_counter + $new_callbacks_counter}</span>
+			{if $new_comments_counter || $new_callbacks_counter || $new_feedbacks_counter}
+				<span class="comments_num">{$new_comments_counter + $new_callbacks_counter + $new_feedbacks_counter}</span>
 			{/if}
 		</a>
 		
@@ -120,8 +120,8 @@
 		<a href="index.php?module=FeedbacksAdmin">
 			<i class="icon_comments"></i>
 			<span>Комментарии</span>
-            {if $new_comments_counter || $new_callbacks_counter}
-    			<span class="comments_num">{$new_comments_counter + $new_callbacks_counter}</span>
+            {if $new_comments_counter || $new_callbacks_counter || $new_feedbacks_counter}
+    			<span class="comments_num">{$new_comments_counter + $new_callbacks_counter + $new_feedbacks_counter}</span>
     		{/if}
 		</a>
     </li>
@@ -130,8 +130,8 @@
 		<a href="index.php?module=CallbacksAdmin">
 			<i class="icon_comments"></i>
 			<span>Комментарии</span>
-            {if $new_comments_counter || $new_callbacks_counter}
-    			<span class="comments_num">{$new_comments_counter + $new_callbacks_counter}</span>
+            {if $new_comments_counter || $new_callbacks_counter || $new_feedbacks_counter}
+    			<span class="comments_num">{$new_comments_counter + $new_callbacks_counter + $new_feedbacks_counter}</span>
     		{/if}
 		</a>
     </li>
@@ -141,14 +141,14 @@
 	<li class="{if $menu_selected == 'auto'}active{/if}">
 		<a href="index.php?module=ImportAdmin">
 			<i class="icon_automatic"></i>
-			<span>Автоматизация</span>
+			<span>Импорт/экспорт</span>
 		</a>
 	</li>
 	{elseif in_array('export', $manager->permissions)}
 	<li class="{if $menu_selected == 'auto'}active{/if}">
 		<a href="index.php?module=ExportAdmin">
 			<i class="icon_automatic"></i>
-			<span>Автоматизация</span>
+			<span>Импорт/экспорт</span>
 		</a>
 	</li>
 	{/if}
@@ -175,7 +175,7 @@
 		<li class="{if $menu_selected == 'design'}active{/if}">
 			<a href="index.php?module=ThemeAdmin">
 				<i class="icon_design"></i>
-				<span>Дизайн</span>
+				<span>Шаблоны</span>
 			</a>
 		</li>
 	{/if}

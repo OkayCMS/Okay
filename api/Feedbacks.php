@@ -14,7 +14,8 @@ class Feedbacks extends Okay {
                 f.name, 
                 f.email, 
                 f.ip, 
-                f.message, 
+                f.message,
+                f.processed,
                 f.date 
             FROM __feedbacks f 
             WHERE 
@@ -31,14 +32,18 @@ class Feedbacks extends Okay {
     
     public function get_feedbacks($filter = array(), $new_on_top = false) {
         // По умолчанию
-        $limit = 0;
+        $limit = 100;
         $page = 1;
         $keyword_filter = '';
-        
+        $processed = '';
         if(isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));
         }
-        
+
+        if(isset($filter['processed'])) {
+            $processed = $this->db->placehold('AND f.processed=?',$filter['processed']);
+        }
+
         if(isset($filter['page'])) {
             $page = max(1, intval($filter['page']));
         }
@@ -64,16 +69,17 @@ class Feedbacks extends Okay {
                 f.name, 
                 f.email, 
                 f.ip, 
-                f.message, 
+                f.message,
+                f.processed,
                 f.date
             FROM __feedbacks f 
             WHERE 
                 1 
-                $keyword_filter 
+                $keyword_filter
+                $processed
             ORDER BY f.id 
             $sort $sql_limit
         ");
-        
         $this->db->query($query);
         return $this->db->results();
     }

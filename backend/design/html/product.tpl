@@ -3,23 +3,31 @@
         <a href="{url module=ProductsAdmin category_id=$product->category_id return=null brand_id=null id=null}">Товары</a>
     </li>
     {if in_array('categories', $manager->permissions)}
-        <li><a href="index.php?module=CategoriesAdmin">Категории</a></li>
+        <li>
+            <a href="index.php?module=CategoriesAdmin">Категории</a>
+        </li>
     {/if}
     {if in_array('brands', $manager->permissions)}
-        <li><a href="index.php?module=BrandsAdmin">Бренды</a></li>
+        <li>
+            <a href="index.php?module=BrandsAdmin">Бренды</a>
+        </li>
     {/if}
     {if in_array('features', $manager->permissions)}
-        <li><a href="index.php?module=FeaturesAdmin">Свойства</a></li>
+        <li>
+            <a href="index.php?module=FeaturesAdmin">Свойства</a>
+        </li>
     {/if}
     {if in_array('special', $manager->permissions)}
-        <li><a href="index.php?module=SpecialAdmin">Промо-изображения</a></li>
+        <li>
+            <a href="index.php?module=SpecialAdmin">Промо-изображения</a>
+        </li>
     {/if}
 {/capture}
 
 {if $product->id}
-{$meta_title = $product->name scope=parent}
+    {$meta_title = $product->name scope=parent}
 {else}
-{$meta_title = 'Новый товар' scope=parent}
+    {$meta_title = 'Новый товар' scope=parent}
 {/if}
 
 {* Подключаем Tiny MCE *}
@@ -218,7 +226,7 @@
 				{
 					feature = data[i];
 					
-					line = $("<li><label class=property></label><input class='okay_inp option_value' type='text'/><input style='margin-left:170px;margin-top:2px;' readonly class='okay_inp' type='text'/></li>");
+					line = $("<li><label class=property></label><input class='okay_inp option_value' type='text'/><input style='margin-left:175px;margin-top:2px;' readonly class='okay_inp grey_translit' type='text'/></li>");
 					var new_line = line.clone(true);
 					new_line.find("label.property").text(feature.name);
 					new_line.find("input.option_value").attr('name', "options["+feature.id+"][value]").val(feature.value);
@@ -427,34 +435,44 @@ $(function(){
 </script>
 {/literal}
 
+
+<h2>
+    <div class="helper_wrap" style="margin-left: -6px">
+        <a class="top_help" id="show_help_search" href="https://www.youtube.com/watch?v=5vO7uMwM9VA" target="_blank"></a>
+        <div class="right helper_block topvisor_help">
+            <p>Видеоинструкция по разделу</p>
+        </div>
+    </div>
+</h2>
+<br>
 {if $languages}{include file='include_languages.tpl'}{/if}
 
 {if $message_success}
-<div class="message message_success">
-    <span class="text">{if $message_success=='added'}Товар добавлен{elseif $message_success=='updated'}Товар изменен{else}{$message_success|escape}{/if}</span>
-    <a class="link" target="_blank" href="../{$lang_link}products/{$product->url}">Открыть товар на сайте</a>
-	{if $smarty.get.return}
-	<a class="button" href="{$smarty.get.return}">Вернуться</a>
-	{/if}
-    
-    <span class="share">		
-		<a href="#" onClick='window.open("http://vkontakte.ru/share.php?url={$config->root_url|urlencode}/products/{$product->url|urlencode}&title={$product->name|urlencode}&description={$product->annotation|urlencode}&image={$product_images.0->filename|resize:1000:1000|urlencode}&noparse=true","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
-  		<img src="{$config->root_url}/backend/design/images/vk_icon.png" /></a>
-		<a href="#" onClick='window.open("http://www.facebook.com/sharer.php?u={$config->root_url|urlencode}/products/{$product->url|urlencode}","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
-  		<img src="{$config->root_url}/backend/design/images/facebook_icon.png" /></a>
-		<a href="#" onClick='window.open("http://twitter.com/share?text={$product->name|urlencode}&url={$config->root_url|urlencode}/products/{$product->url|urlencode}&hashtags={$product->meta_keywords|replace:' ':''|urlencode}","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
-  		<img src="{$config->root_url}/backend/design/images/twitter_icon.png" /></a>
-	</span>
-</div>
+    <div class="message message_success">
+        <span class="text">{if $message_success=='added'}Товар добавлен{elseif $message_success=='updated'}Товар изменен{else}{$message_success|escape}{/if}</span>
+        <a class="link" target="_blank" href="../{$lang_link}products/{$product->url}">Открыть товар на сайте</a>
+        {if $smarty.get.return}
+        <a class="button" href="{$smarty.get.return}">Вернуться</a>
+        {/if}
+
+        <span class="share">
+            <a href="#" onClick='window.open("http://vkontakte.ru/share.php?url={$config->root_url|urlencode}/products/{$product->url|urlencode}&title={$product->name|urlencode}&description={$product->annotation|urlencode}&image={$product_images.0->filename|resize:1000:1000|urlencode}&noparse=true","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
+            <img src="{$config->root_url}/backend/design/images/vk_icon.png" /></a>
+            <a href="#" onClick='window.open("http://www.facebook.com/sharer.php?u={$config->root_url|urlencode}/products/{$product->url|urlencode}","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
+            <img src="{$config->root_url}/backend/design/images/facebook_icon.png" /></a>
+            <a href="#" onClick='window.open("http://twitter.com/share?text={$product->name|urlencode}&url={$config->root_url|urlencode}/products/{$product->url|urlencode}&hashtags={$product->meta_keywords|replace:' ':''|urlencode}","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
+            <img src="{$config->root_url}/backend/design/images/twitter_icon.png" /></a>
+        </span>
+    </div>
 {/if}
 
 {if $message_error}
-<div class="message message_error">
-	<span class="text">{if $message_error=='url_exists'}Товар с таким адресом уже существует{elseif $message_error=='empty_name'}Введите название{elseif $message_error == 'empty_url'}Введите адрес{elseif $message_error == 'url_wrong'}Адрес не должен начинаться или заканчиваться символом '-'{else}{$message_error|escape}{/if}</span>
-	{if $smarty.get.return}
-	<a class="button" href="{$smarty.get.return}">Вернуться</a>
-	{/if}
-</div>
+    <div class="message message_error">
+        <span class="text">{if $message_error=='url_exists'}Товар с таким адресом уже существует{elseif $message_error=='empty_name'}Введите название{elseif $message_error == 'empty_url'}Введите адрес{elseif $message_error == 'url_wrong'}Адрес не должен начинаться или заканчиваться символом '-'{else}{$message_error|escape}{/if}</span>
+        {if $smarty.get.return}
+        <a class="button" href="{$smarty.get.return}">Вернуться</a>
+        {/if}
+    </div>
 {/if}
 <form method=post id=product enctype="multipart/form-data">
     <input type=hidden name="session_id" value="{$smarty.session.id}">
@@ -477,8 +495,7 @@ $(function(){
         <select name="brand_id">
             <option value='0' {if !$product->brand_id}selected{/if} brand_name=''>Не указан</option>
             {foreach $brands as $brand}
-                <option value='{$brand->id}' {if $product->brand_id == $brand->id}selected{/if}
-                        brand_name='{$brand->name|escape}'>{$brand->name|escape}</option>
+                <option value='{$brand->id}' {if $product->brand_id == $brand->id}selected{/if} brand_name='{$brand->name|escape}'>{$brand->name|escape}</option>
             {/foreach}
         </select>
     </div>

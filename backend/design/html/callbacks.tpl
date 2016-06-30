@@ -1,12 +1,18 @@
 {* Вкладки *}
 {capture name=tabs}
     {if in_array('comments', $manager->permissions)}
-        <li><a href="index.php?module=CommentsAdmin">Комментарии</a></li>
+        <li>
+            <a href="index.php?module=CommentsAdmin">Комментарии</a>
+        </li>
     {/if}
     {if in_array('feedbacks', $manager->permissions)}
-        <li><a href="index.php?module=FeedbacksAdmin">Обратная связь</a></li>
+        <li>
+            <a href="index.php?module=FeedbacksAdmin">Обратная связь</a>
+        </li>
     {/if}
-    <li class="active"><a href="index.php?module=CallbacksAdmin">Заказ обратного звонка</a></li>
+    <li class="active">
+        <a href="index.php?module=CallbacksAdmin">Заказ обратного звонка</a>
+    </li>
 {/capture}
 
 {* Title *}
@@ -14,9 +20,9 @@
 
 <div id="header">
 	{if $callbacks|count>0}
-	<h1>{$callbacks|count} {$callbacks|count|plural:'заказ':'заказов':'заказа'}</h1>
+	    <h1>{$callbacks|count} {$callbacks|count|plural:'заказ':'заказов':'заказа'}</h1>
 	{else}
-	<h1>Нет заказов</h1> 
+	    <h1>Нет заказов</h1>
 	{/if}
 </div>
 
@@ -40,9 +46,11 @@
                             <div class='comment_text'>
                                 Телефон: {$callback->phone|escape|nl2br}
                             </div>
-                            <div class='comment_text'>
-                                Сообщение: {$callback->message|escape|nl2br}
-                            </div>
+                            {if $callback->message}
+                                <div class='comment_text'>
+                                    Сообщение: {$callback->message|escape|nl2br}
+                                </div>
+                            {/if}
                             <div class='comment_text'>
                                 <a href="{$callback->url|escape}" target="_blank">Страница с которой было отправлено</a>
                             </div>
@@ -61,10 +69,10 @@
             <div id="action">
                 <label id='check_all' class='dash_link'>Выбрать все</label>
                 <span id=select>
-                <select name="action">
-                    <option value="processed">Отметить как обработанные</option>
-                    <option value="delete">Удалить</option>
-                </select>
+                    <select name="action">
+                        <option value="processed">Отметить как обработанные</option>
+                        <option value="delete">Удалить</option>
+                    </select>
                 </span>
                 <input id='apply_action' class="button_green" type=submit value="Применить">
             </div>

@@ -1,15 +1,23 @@
 {* Вкладки *}
 {capture name=tabs}
     {if in_array('users', $manager->permissions)}
-        <li><a href="index.php?module=UsersAdmin">Пользователи</a></li>
+        <li>
+            <a href="index.php?module=UsersAdmin">Пользователи</a>
+        </li>
     {/if}
     {if in_array('groups', $manager->permissions)}
-        <li><a href="index.php?module=GroupsAdmin">Группы</a></li>
+        <li>
+            <a href="index.php?module=GroupsAdmin">Группы</a>
+        </li>
     {/if}
     {if in_array('coupons', $manager->permissions)}
-        <li><a href="index.php?module=CouponsAdmin">Купоны</a></li>
+        <li>
+            <a href="index.php?module=CouponsAdmin">Купоны</a>
+        </li>
     {/if}
-        <li class="active"><a href="index.php?module=SubscribeMailingAdmin">Подписчики</a></li>
+    <li class="active">
+        <a href="index.php?module=SubscribeMailingAdmin">Подписчики</a>
+    </li>
 
 {/capture}
 {$meta_title='Экспорт подписчиков' scope=parent}
@@ -80,22 +88,22 @@ $(function() {
 
 
 {if $message_error}
-<!-- Системное сообщение -->
-<div class="message message_error">
-	<span>
-	{if $message_error == 'no_permission'}Установите права на запись в папку {$export_files_dir}
-	{else}{$message_error}{/if}
-	</span>
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_error">
+        <span>
+        {if $message_error == 'no_permission'}Установите права на запись в папку {$export_files_dir}
+        {else}{$message_error}{/if}
+        </span>
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 
 <div>
 	<h1>Экспорт подписчиков</h1>
 	{if $message_error != 'no_permission'}
-	<div id='progressbar'></div>
-	<input class="button_green" id="start" type="button" name="" value="Экспортировать" />
+	    <div id='progressbar'></div>
+	    <input class="button_green" id="start" type="button" name="" value="Экспортировать" />
 	{/if}
 </div>
  

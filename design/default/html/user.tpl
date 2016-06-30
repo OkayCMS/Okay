@@ -41,6 +41,13 @@
 					<input class="form-control" data-format="email" data-notice="{$lang->form_enter_email}" value="{$email|escape}" name="email" type="text" data-language="{$translate_id['form_email']}" placeholder="{$lang->form_email}*"/>
 				</div>
 
+                <div class="form-group">
+                    <input class="form-control" value="{$phone|escape}" name="phone" type="text" data-language="{$translate_id['form_phone']}" placeholder="{$lang->form_phone}"/>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" value="{$address|escape}" name="address" type="text" data-language="{$translate_id['form_address']}" placeholder="{$lang->form_address}"/>
+                </div>
+
 				{* Пароль пользователя *}
 				<div class="input-group m-b-1">
 				<span class="input-group-btn">

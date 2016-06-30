@@ -1,6 +1,8 @@
 {* Вкладки *}
 {capture name=tabs}
-    <li class="active"><a href="index.php?module=TopvisorProjectsAdmin">Топвизор</a></li>
+    <li class="active">
+        <a href="index.php?module=TopvisorProjectsAdmin">Топвизор</a>
+    </li>
 {/capture}
 
 {* Title *}
@@ -122,7 +124,6 @@
                     <div class="cell">
                         <label>Введите сайт: </label>
                         <input class="okay_inp" type="text" name="new_site" value=""/>
-                        {*<input type="text" name="new_name" value="" />*}
                     </div>
                     <div class="icons cell brand">
                         <input class="button" type="submit" name="add_project" value="Добавить проект"/>

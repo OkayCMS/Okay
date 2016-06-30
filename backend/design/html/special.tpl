@@ -1,9 +1,29 @@
 {capture name=tabs}
-		{if in_array('products', $manager->permissions)}<li><a href="{url module=ProductsAdmin category_id=$product->category_id return=null brand_id=null id=null}">Товары</a></li>{/if}
-		{if in_array('categories', $manager->permissions)}<li><a href="index.php?module=CategoriesAdmin">Категории</a></li>{/if}
-		{if in_array('brands', $manager->permissions)}<li><a href="index.php?module=BrandsAdmin">Бренды</a></li>{/if}
-		{if in_array('features', $manager->permissions)}<li><a href="index.php?module=FeaturesAdmin">Свойства</a></li>{/if}
-        {if in_array('special', $manager->permissions)}<li class="active"><a href="index.php?module=SpecialAdmin">Промо-изображения</a></li>{/if}
+    {if in_array('products', $manager->permissions)}
+        <li>
+        <a href="{url module=ProductsAdmin category_id=$product->category_id return=null brand_id=null id=null}">Товары</a>
+        </li>
+    {/if}
+    {if in_array('categories', $manager->permissions)}
+        <li>
+            <a href="index.php?module=CategoriesAdmin">Категории</a>
+        </li>
+    {/if}
+    {if in_array('brands', $manager->permissions)}
+        <li>
+            <a href="index.php?module=BrandsAdmin">Бренды</a>
+        </li>
+    {/if}
+    {if in_array('features', $manager->permissions)}
+        <li>
+            <a href="index.php?module=FeaturesAdmin">Свойства</a>
+        </li>
+    {/if}
+    {if in_array('special', $manager->permissions)}
+        <li class="active">
+            <a href="index.php?module=SpecialAdmin">Промо-изображения</a>
+        </li>
+    {/if}
 {/capture}
 
 {$meta_title = 'Промо-изображения' scope=parent}
@@ -39,25 +59,15 @@
 				<div class="clear"></div>
 			</div>
 			{/foreach}
-            {*<div class="row" style="display: none;" id="new_special">
-				<div class="cell">
-                    <input type="text" name="new_special[name][]" />
-				</div>
-                <div class="cell">
-                    <input class="upload" name="special_files[]" type="file" />
-				</div>
-				<div class="clear"></div>
-			</div>
-            <a href="javascript:;" class="add_special">Добавить промо-изображение</a>*}
 		</div>
 		
 		<div id="action">
 			<label id="check_all" class="dash_link">Выбрать все</label>
 			
 			<span id="select">
-			<select name="action">
-				<option value="delete">Удалить</option>
-			</select>
+                <select name="action">
+                    <option value="delete">Удалить</option>
+                </select>
 			</span>
 			<input id="apply_action" class="button_green" type="submit" value="Применить"/>
 		</div>

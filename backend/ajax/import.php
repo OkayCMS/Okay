@@ -60,6 +60,20 @@ class ImportAjax extends Okay {
                 $column = $internal_name;
             }
         }
+
+        $required_fields = array_keys($this->columns_names);
+        $import_fields = array_values($this->internal_columns_names);
+        $diff = array_diff($required_fields, $import_fields);
+        if (count($diff)) {
+            fclose($f);
+            $result = new stdClass();
+            $result->error = 1;
+            $result->missing_fields = array();
+            foreach ($diff as $field) {
+                $result->missing_fields[] = $this->columns_names[$field][count($this->columns_names[$field])-1];
+            }
+            return $result;
+        }
         
         // Если нет названия товара - не будем импортировать
         if(!in_array('name', $this->columns) && !in_array('sku', $this->columns)) {

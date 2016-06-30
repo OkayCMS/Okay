@@ -1,9 +1,20 @@
 {capture name=tabs}
-		<li class="active"><a href="{url module=StatsAdmin}">Статистика</a></li>
+		<li class="active">
+            <a href="{url module=StatsAdmin}">Статистика</a>
+        </li>
         {*statistic*}
-        <li><a href="{url module=ReportStatsAdmin filter=null status=null}">Отчет о продажах</a></li>
-        <li><a href="{url module=CategoryStatsAdmin category=null brand=null supplier=null date_from=null date_to=null}">Категоризация продаж</a></li>
+        <li>
+            <a href="{url module=ReportStatsAdmin filter=null status=null}">Отчет о продажах</a>
+        </li>
+        <li>
+            <a href="{url module=CategoryStatsAdmin category=null brand=null supplier=null date_from=null date_to=null}">Категоризация продаж</a>
+        </li>
         {*statistic*}
+        {if in_array('yametrika', $manager->permissions)}
+            <li>
+                <a href="index.php?module=YametrikaAdmin">Яндекс.Метрика</a>
+            </li>
+        {/if}
 {/capture}
 {$meta_title='Статистика' scope=parent}
 

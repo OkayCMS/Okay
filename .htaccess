@@ -26,6 +26,18 @@ RewriteEngine on
     </ifmodule>
 </ifmodule>
 
+# Google PageSpeed Insights модуль PageSpeed,есть не на всех хостингах и не везде может работать, нужно уточнять у хостеров
+<IfModule pagespeed_module>
+ModPagespeed on
+ModPagespeedRewriteLevel CoreFilters
+ModPagespeedEnableFilters make_google_analytics_async
+ModPagespeedEnableFilters prioritize_critical_css
+ModPagespeedEnableFilters defer_javascript
+ModPagespeedEnableFilters sprite_images
+ModPagespeedEnableFilters convert_png_to_jpeg,convert_jpeg_to_webp
+ModPagespeedEnableFilters collapse_whitespace,remove_comments
+</IfModule>
+
 # Админка теперь по адресу /backend
 RewriteRule	^admin/?$  backend [L]
 

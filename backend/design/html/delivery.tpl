@@ -1,41 +1,84 @@
 {* Вкладки *}
 {capture name=tabs}
-	{if in_array('settings', $manager->permissions)}<li><a href="index.php?module=SettingsAdmin">Настройки</a></li>{/if}
-	{if in_array('currency', $manager->permissions)}<li><a href="index.php?module=CurrencyAdmin">Валюты</a></li>{/if}
-	<li class="active"><a href="index.php?module=DeliveriesAdmin">Доставка</a></li>
-	{if in_array('payment', $manager->permissions)}<li><a href="index.php?module=PaymentMethodsAdmin">Оплата</a></li>{/if}
-	{if in_array('managers', $manager->permissions)}<li><a href="index.php?module=ManagersAdmin">Менеджеры</a></li>{/if}
-    {if in_array('languages', $manager->permissions)}<li><a href="index.php?module=LanguagesAdmin">Языки</a></li>{/if}
-    {if in_array('languages', $manager->permissions)}<li><a href="index.php?module=TranslationsAdmin">Переводы</a></li>{/if}
+	{if in_array('settings', $manager->permissions)}
+        <li>
+            <a href="index.php?module=SettingsAdmin">Настройки</a>
+        </li>
+    {/if}
+	{if in_array('currency', $manager->permissions)}
+        <li>
+            <a href="index.php?module=CurrencyAdmin">Валюты</a>
+        </li>
+    {/if}
+	<li class="active">
+        <a href="index.php?module=DeliveriesAdmin">Доставка</a>
+    </li>
+	{if in_array('payment', $manager->permissions)}
+        <li>
+            <a href="index.php?module=PaymentMethodsAdmin">Оплата</a>
+        </li>
+    {/if}
+	{if in_array('managers', $manager->permissions)}
+        <li>
+            <a href="index.php?module=ManagersAdmin">Менеджеры</a>
+        </li>
+    {/if}
+    {if in_array('languages', $manager->permissions)}
+        <li>
+            <a href="index.php?module=LanguagesAdmin">Языки</a>
+        </li>
+    {/if}
+    {if in_array('languages', $manager->permissions)}
+        <li>
+            <a href="index.php?module=TranslationsAdmin">Переводы</a>
+        </li>
+    {/if}
 {/capture}
 
 {if $delivery->id}
-{$meta_title = $delivery->name scope=parent}
+    {$meta_title = $delivery->name scope=parent}
 {else}
-{$meta_title = 'Новый способ доставки' scope=parent}
+    {$meta_title = 'Новый способ доставки' scope=parent}
 {/if}
 {* Подключаем Tiny MCE *}
 {include file='tinymce_init.tpl'}
+
+{literal}
+<script>
+    $(window).on("load", function() {
+
+        // Удаление изображений
+        $(".images a.delete").click(function () {
+            $("input[name='delete_image']").val('1');
+            $(this).closest("ul").fadeOut(200, function () {
+                $(this).remove();
+            });
+            return false;
+        });
+    });
+</script>
+{/literal}
+
 {if $languages}{include file='include_languages.tpl'}{/if}
 
 {if $message_success}
-<!-- Системное сообщение -->
-<div class="message message_success">
-	<span class="text">{if $message_success == 'added'}Способ доставки добавлен{elseif $message_success == 'updated'}Способ доставки изменен{/if}</span>
-	{if $smarty.get.return}
-	<a class="button" href="{$smarty.get.return}">Вернуться</a>
-	{/if}
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_success">
+        <span class="text">{if $message_success == 'added'}Способ доставки добавлен{elseif $message_success == 'updated'}Способ доставки изменен{/if}</span>
+        {if $smarty.get.return}
+        <a class="button" href="{$smarty.get.return}">Вернуться</a>
+        {/if}
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 {if $message_error}
-<!-- Системное сообщение -->
-<div class="message message_error">
-	<span class="text">{if $message_error=='empty_name'}Введите название{else}{$message_error}{/if}</span>
-	<a class="button" href="">Вернуться</a>
-</div>
-<!-- Системное сообщение (The End)-->
+    <!-- Системное сообщение -->
+    <div class="message message_error">
+        <span class="text">{if $message_error=='empty_name'}Введите название{else}{$message_error}{/if}</span>
+        <a class="button" href="">Вернуться</a>
+    </div>
+    <!-- Системное сообщение (The End)-->
 {/if}
 
 
@@ -70,6 +113,20 @@
 	
 	<!-- Левая колонка свойств товара -->
 	<div id="column_right">
+        <div class="block layer images">
+            <h2>Изображение</h2>
+            <input class='upload_image' name="image" type="file"/>
+            <input type="hidden" name="delete_image" value=""/>
+            {if $delivery->image}
+                <ul>
+                    <li>
+                        <a href='#' class="delete"></a>
+                        <img src="{$delivery->image|resize:100:100:false:$config->resized_deliveries_dir}" alt="" />
+                    </li>
+                </ul>
+            {/if}
+        </div>
+
 		<div class="block layer">
 		<h2>Возможные способы оплаты</h2>
 		<ul>

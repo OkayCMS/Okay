@@ -6,6 +6,9 @@
             <div class="m-l-2">
                 <label class="font-weight-bold{if $delivery@first} active{/if}">
 	                <input onclick="change_payment_method({$delivery->id})" type="radio" name="delivery_id" value="{$delivery->id}"{if $delivery_id==$delivery->id || $delivery@first} checked{/if} id="deliveries_{$delivery->id}"/>
+                    {if $delivery->image}
+                        <img src="{$delivery->image|resize:50:50:false:$config->resized_deliveries_dir}"/>
+                    {/if}
 	                {$delivery->name}
 	                {if $cart->total_price < $delivery->free_from && $delivery->price>0}
 	                    ({$delivery->price|convert}&nbsp;{$currency->sign})
@@ -29,6 +32,9 @@
 					<div class="m-l-2">
 						<label class="font-weight-bold{if $payment_method@first} active{/if}">
 							<input type="radio" name="payment_method_id" value="{$payment_method->id}"{if $delivery@first && $payment_method@first} checked{/if} id="payment_{$delivery->id}_{$payment_method->id}"/>
+                            {if $payment_method->image}
+                                <img src="{$payment_method->image|resize:50:50:false:$config->resized_payments_dir}"/>
+                            {/if}
 							{$total_price_with_delivery = $cart->total_price}
 							{if !$delivery->separate_payment && $cart->total_price < $delivery->free_from}
 								{$total_price_with_delivery = $cart->total_price + $delivery->price}

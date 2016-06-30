@@ -31,9 +31,20 @@
 
 {* Вкладки *}
 {capture name=tabs}
-    <li><a href="{url module=StatsAdmin}">Статистика</a></li>
-    <li class="active"><a href="{url module=ReportStatsAdmin filter=null status=null}">Отчет о продажах</a></li>
-    <li><a href="{url module=CategoryStatsAdmin category=null brand=null supplier=null date_from=null date_to=null}">Категоризация продаж</a></li>
+    <li>
+        <a href="{url module=StatsAdmin}">Статистика</a>
+    </li>
+    <li class="active">
+        <a href="{url module=ReportStatsAdmin filter=null status=null}">Отчет о продажах</a>
+    </li>
+    <li>
+        <a href="{url module=CategoryStatsAdmin category=null brand=null supplier=null date_from=null date_to=null}">Категоризация продаж</a>
+    </li>
+    {if in_array('yametrika', $manager->permissions)}
+        <li>
+            <a href="index.php?module=YametrikaAdmin">Яндекс.Метрика</a>
+        </li>
+    {/if}
 
 {/capture}
 <script>
@@ -54,6 +65,9 @@
     {/if}
     {if $page}
         var page = '{$page}';
+    {/if}
+    {if $category}
+    var category = '{$category}';
     {/if}
 </script>
 
@@ -76,6 +90,7 @@
                     url: "ajax/export_stat_products.php",
                     data: {
                         page: page,
+                        category: category,
                         date_filter: date_filter,
                         date_from: date_from,
                         date_to: date_to,

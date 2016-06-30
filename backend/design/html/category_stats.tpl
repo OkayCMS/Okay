@@ -1,23 +1,34 @@
 {capture name=tabs}
-    <li><a href="{url module=StatsAdmin}">Статистика</a></li>
-    <li><a href="{url module=ReportStatsAdmin filter=null status=null}">Отчет о продажах</a></li>
-    <li class="active"><a href="{url module=CategoryStatsAdmin category=null brand=null date_from=null date_to=null}">Категоризация продаж</a></li>
+    <li>
+        <a href="{url module=StatsAdmin}">Статистика</a>
+    </li>
+    <li>
+        <a href="{url module=ReportStatsAdmin filter=null status=null}">Отчет о продажах</a>
+    </li>
+    <li class="active">
+        <a href="{url module=CategoryStatsAdmin category=null brand=null date_from=null date_to=null}">Категоризация продаж</a>
+    </li>
+    {if in_array('yametrika', $manager->permissions)}
+        <li>
+            <a href="index.php?module=YametrikaAdmin">Яндекс.Метрика</a>
+        </li>
+    {/if}
 {/capture}
 {$meta_title='Категоризация продаж' scope=parent}
 
 {* On document load *}
 <script>
     {if $category}
-    var category = {$category->id};
+        var category = {$category->id};
     {/if}
     {if $brand}
-    var brand = {$brand->id};
+        var brand = {$brand->id};
     {/if}
     {if $date_from}
-    var date_from = '{$date_from}';
+        var date_from = '{$date_from}';
     {/if}
     {if $date_to}
-    var date_to = '{$date_to}';
+        var date_to = '{$date_to}';
     {/if}
 </script>
 {literal}
@@ -25,8 +36,13 @@
     <script type="text/javascript">
 
         $(function() {
-            $('input[name="date_from"]').datepicker({regional: 'ru'});
-            $('input[name="date_to"]').datepicker({regional: 'ru'});
+            $('input[name="date_from"]').datepicker({
+                regional:'ru'
+            });
+
+            $('input[name="date_to"]').datepicker({
+                regional:'ru'
+            });
 
             $('input#start').click(function () {
                 do_export();
@@ -72,7 +88,6 @@
         <input class="button_green" id="start" type="button" name="" value="Скачать" />
     </div>
 
-
     <div id="main_list">
         <div id="list">
             <table class="table_blue" width="100%">
@@ -88,13 +103,9 @@
                     {if $categories}
                         {foreach $categories as $category}
                             <tr>
-
                                 <td style="padding-left:{($level+1)*15}px">{$category->name|escape}</td>
-
                                 <td class="stats_amount">{if $category->amount}<b>{$category->amount}</b>{else}{$category->amount}{/if} {$settings->units}</td>
-
                                 <td class="stats_price">{if $category->price}<b>{$category->price}</b>{else}{$category->price}{/if} {$currency->sign}</td>
-                                
                                 {categories_list_tree categories=$category->subcategories level=$level+1}
                             </tr>
                         {/foreach}
@@ -116,17 +127,12 @@
         </div>
           
     </div>
-        
-
-    </div>
-
+</div>
     <div id="right_menu">
         {* Фильтр *}
-       
             <form class="date_filter" method="get">
                 <div class="date_filter_title">
                     <span>Выбрать период</span>
-
                     <div class="helper_wrap">
                         <a id="show_help_filter" class="helper_link" href="javascript:;"></a>
                         <div id="help_date_filter" class="helper_block">
@@ -135,24 +141,19 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="form_group">
                     <label for="from_date">C</label>
-                    <input id="to_date" class="okay_inp" type=text name=date_from value='{$date_from}' />
+                    <input id="from_date" class="okay_inp" type=text name=date_from value='{$date_from}' />
                 </div>
-
-                <input type="hidden" name="module" value="CategoryStatsAdmin" />
 
                 <div class="form_group">
                     <label for="to_date">По</label>
                     <input id="to_date" class="okay_inp" type=text name=date_to value='{$date_to}' />
                 </div>
 
+                <input type="hidden" name="module" value="CategoryStatsAdmin" />
                 <input id="apply_action" class="button_green" type="submit" value="Применить" />
-                
             </form>
-        
-
         <h4>Категории</h4>
         {function name=categories_tree}
             {if $categories}
@@ -177,7 +178,9 @@
         <h4>Бренды</h4>
         {if $brands}
             <ul>
-                <li {if !$brand->id}class="selected"{/if}><a href="{url brand=null}">Все бренды</a></li>
+                <li {if !$brand->id}class="selected"{/if}>
+                    <a href="{url brand=null}">Все бренды</a>
+                </li>
                 {foreach $brands as $b}
                     <li brand_id="{$b->id}" {if $brand->id == $b->id}class="selected"{else}class="droppable brand"{/if}>
                         <a href="{url brand=$b->id}">{$b->name}</a>

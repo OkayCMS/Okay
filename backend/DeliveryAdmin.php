@@ -29,6 +29,17 @@ class DeliveryAdmin extends Okay {
                     $this->delivery->update_delivery($delivery->id, $delivery);
                     $this->design->assign('message_success', 'updated');
                 }
+
+                // Удаление изображения
+                if ($this->request->post('delete_image')) {
+                    $this->image->delete_image($delivery->id, 'image', 'delivery', $this->config->original_deliveries_dir, $this->config->resized_deliveries_dir);
+                }
+                // Загрузка изображения
+                $image = $this->request->files('image');
+                if (!empty($image['name']) && ($filename = $this->image->upload_image($image['tmp_name'], $image['name'], $this->config->original_deliveries_dir))) {
+                    $this->image->delete_image($delivery->id, 'image', 'delivery', $this->config->original_deliveries_dir, $this->config->resized_deliveries_dir);
+                    $this->delivery->update_delivery($delivery->id, array('image'=>$filename));
+                }
                 $this->delivery->update_delivery_payments($delivery->id, $delivery_payments);
                 $delivery = $this->delivery->get_delivery($delivery->id);
             }
