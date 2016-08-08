@@ -48,6 +48,7 @@ class IndexAdmin extends Okay {
         'StatsAdmin'          => 'stats',
         'ReportStatsAdmin'    => 'stats',
         'CategoryStatsAdmin'  => 'stats',
+        'YametrikaAdmin'      => 'stats',
         'TopvisorProjectsAdmin'=> 'topvisor',
         'TopvisorProjectAdmin'=> 'topvisor',
         
@@ -56,7 +57,7 @@ class IndexAdmin extends Okay {
         'TemplatesAdmin'      => 'design',
         'ImagesAdmin'         => 'design',
         'ScriptsAdmin'        => 'design',
-        'RobotsAdmin'         => 'robots',
+        'RobotsAdmin'         => 'design',
         
         'BannersAdmin'		  => 'banners',
 		'BannerAdmin'		  => 'banners',
@@ -75,7 +76,7 @@ class IndexAdmin extends Okay {
         'LanguagesAdmin'      => 'settings',
         'TranslationAdmin'    => 'settings',
         'TranslationsAdmin'   => 'settings',
-        'LicenseAdmin'        => 'license'
+        'LicenseAdmin'        => 'license',
         
     );
     
@@ -218,6 +219,7 @@ class IndexAdmin extends Okay {
                 $l = reset($languages);
                 $_SESSION['admin_lang_id'] = $l->id;
             }
+            $this->design->assign('current_language', $languages[$_SESSION['admin_lang_id']]);
             $this->languages->set_lang_id($_SESSION['admin_lang_id']);
         }
         

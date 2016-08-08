@@ -4,6 +4,8 @@
         </li>
 {/capture}
 
+{$meta_title = 'Лицензия' scope=parent}
+
 <!-- Основная форма -->
 <form method=post id=product enctype="multipart/form-data">
 <input type=hidden name="session_id" value="{$smarty.session.id}">

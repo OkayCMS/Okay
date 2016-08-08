@@ -202,7 +202,7 @@ $(function(){
 	});
 
 	/* Инициализация баннера */
-	$('.fn-slick-banner.okaycms').slick({
+    $('.fn-slick-banner_group1.okaycms').slick({
 		infinite: true,
 		speed: 500,
 		slidesToShow: 1,

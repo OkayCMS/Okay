@@ -16,8 +16,9 @@ class Feedbacks extends Okay {
                 f.ip, 
                 f.message,
                 f.processed,
-                f.date 
-            FROM __feedbacks f 
+                f.date,
+                f.lang_id
+            FROM __feedbacks f
             WHERE 
                 1
                 $feedback_id_filter 
@@ -71,7 +72,8 @@ class Feedbacks extends Okay {
                 f.ip, 
                 f.message,
                 f.processed,
-                f.date
+                f.date,
+                f.lang_id
             FROM __feedbacks f 
             WHERE 
                 1 

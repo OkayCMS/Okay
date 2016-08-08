@@ -1733,6 +1733,17 @@ ul.seo_notice li {
     left: 30px;
     width: 195px;
 }
+#compact_languages_block .helper_wrap{
+    margin-right: 5px;
+    margin-bottom: 10px;
+}
+#compact_languages_block .languages{
+    margin-bottom: 10px;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 10px;
+    width: auto;
+}
 .date_filter .helper_block {
     width: 240px;
 }

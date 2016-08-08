@@ -1,18 +1,20 @@
 {* Каталог товаров *}
 {* Канонический адрес страницы *}
-	{if $category && !$smarty.get.page}
+{if $set_canonical}
+	{if $category}
 		{$canonical="/catalog/{$category->url}" scope=parent}
-	{elseif $brand && !$smarty.get.page}
+	{elseif $brand}
 		{$canonical="/brands/{$brand->url}" scope=parent}
-    {elseif $category && $smarty.get.page}
-        {$canonical="/catalog/{$category->url}/page-{$smarty.get.page}" scope=parent}
-    {elseif $brand && $smarty.get.page}
-        {$canonical="/brands/{$brand->url}/page-{$smarty.get.page}" scope=parent}
+    {elseif $page->url=='discounted'}
+        {$canonical="/discounted" scope=parent}
+    {elseif $page->url=='bestsellers'}
+        {$canonical="/bestsellers" scope=parent}
 	{elseif $keyword}
 		{$canonical="/all-products" scope=parent}
 	{else}
 		{$canonical="/all-products" scope=parent}
 	{/if}
+{/if}
 
 <div class="container">
 	<div class="row">

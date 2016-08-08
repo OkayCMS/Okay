@@ -29,7 +29,8 @@ class Brands extends Okay {
                 DISTINCT b.id, 
                 b.url, 
                 b.image, 
-                b.last_modify, 
+                b.last_modify,
+                b.position,
                 $lang_sql->fields 
             FROM __brands b
             $lang_sql->join
@@ -39,7 +40,7 @@ class Brands extends Okay {
                 1 
                 $category_id_filter
                 $product_id_filter
-            ORDER BY b.name
+            ORDER BY b.position
         ");
         $this->db->query($query);
         return $this->db->results();
@@ -60,7 +61,8 @@ class Brands extends Okay {
                 b.id, 
                 b.url, 
                 b.image, 
-                b.last_modify, 
+                b.last_modify,
+                b.position,
                 $lang_sql->fields                
             FROM __brands b
             $lang_sql->join
@@ -95,6 +97,7 @@ class Brands extends Okay {
         $brand->last_modify = date("Y-m-d H:i:s");
         $this->db->query("INSERT INTO __brands SET ?%", $brand);
         $id = $this->db->insert_id();
+        $this->db->query("UPDATE __brands SET position=id WHERE id=? LIMIT 1", $id);
         
         // Если есть описание для перевода. Указываем язык для обновления
         if(!empty($result->description)) {

@@ -47,8 +47,10 @@ class FeatureAdmin extends Okay {
         $feature_categories = array();
         if($feature) {
             $feature_categories = $this->features->get_feature_categories($feature->id);
+        } elseif ($category_id = $this->request->get('category_id')) {
+            $feature_categories[] = $category_id;
         }
-        
+
         $categories = $this->categories->get_categories_tree();
         $this->design->assign('categories', $categories);
         $this->design->assign('feature', $feature);

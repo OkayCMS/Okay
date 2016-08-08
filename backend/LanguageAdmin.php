@@ -5,36 +5,40 @@ require_once('api/Okay.php');
 class LanguageAdmin extends Okay {
     
     public function fetch() {
+        $languages = $this->languages->get_languages();
         $lang_list = $this->languages->lang_list();
         $language = new stdClass();
         if($this->request->method('post')) {
-            $lang = $lang_list[$this->request->post('lang')];
-            
-            $language->id      = $this->request->post('id', 'intgeger');
-            $language->name    = $lang->name;
-            $language->label   = $lang->label;
+            $language->id      = $this->request->post('id', 'integer');
             $language->enabled = $this->request->post('enabled', 'boolean');
-            
-            /*
-            $language->name  = $this->request->post('name');
-            $language->label = trim($this->request->post('label'));
-            */
-            
-            $this->db->query("SELECT * FROM __languages WHERE label=? LIMIT 1", $language->label);
-            $exist_label = $this->db->result();
-            
-            if(!$language->label) {
-                $this->design->assign('message_error', 'label_empty');
-            } elseif($exist_label && $exist_label->id!=$language->id) {
-                $this->design->assign('message_error', 'label_exists');
-            } else {
-                if(empty($language->id)) {
-                    $language->id = $this->languages->add_language($language);
-                    $this->design->assign('message_success', 'added');
+            if (empty($language->id)) {
+                $lang = $lang_list[$this->request->post('lang')];
+                $language->name    = $lang->name;
+                $language->label   = $lang->label;
+
+                $this->db->query("SELECT * FROM __languages WHERE label=? LIMIT 1", $language->label);
+                $exist_label = $this->db->result();
+
+                if(!$language->label) {
+                    $this->design->assign('message_error', 'label_empty');
+                } elseif($exist_label && $exist_label->id!=$language->id) {
+                    $this->design->assign('message_error', 'label_exists');
                 } else {
+                    $language->id = $this->languages->add_language($language);
+                    $languages = $this->languages->get_languages();
+                    foreach($languages as $l) {
+                        $language->{'name_'.$l->label} = $language->name;
+                    }
                     $this->languages->update_language($language->id, $language);
-                    $this->design->assign('message_success', 'updated');
+                    $this->design->assign('message_success', 'added');
                 }
+            } elseif (!empty($languages)) {
+                foreach($languages as $l) {
+                    $field = 'name_'.$l->label;
+                    $language->$field = $this->request->post($field);
+                }
+                $this->languages->update_language($language->id, $language);
+                $this->design->assign('message_success', 'updated');
             }
         } else {
             $language->id = $this->request->get('id', 'integer');
@@ -46,6 +50,7 @@ class LanguageAdmin extends Okay {
         $this->design->assign('lang_list', $lang_list);
         
         $this->design->assign('language', $language);
+        $this->design->assign('languages', $languages);
         return $this->design->fetch('language.tpl');
     }
     

@@ -195,6 +195,22 @@ class Notify extends Okay {
             return false;
         }
 
+        /*lang_modify...*/
+        $languages = $this->languages->languages();
+        if (!empty($parent_comment->lang_id) && isset($languages[$parent_comment->lang_id])) {
+            $cur_lang_id = $this->languages->lang_id();
+            $this->languages->set_lang_id($parent_comment->lang_id);
+            $lang_link = '';
+            $f_lang = reset($languages);
+            if ($parent_comment->lang_id != $f_lang->id) {
+                $lang_link = $languages[$parent_comment->lang_id]->label . '/';
+            }
+            $this->design->assign('lang_link', $lang_link);
+            $this->translations->init_translations();
+            $this->design->assign('lang', $this->translations);
+        }
+        /*/lang_modify...*/
+
         if($comment->type == 'product') {
             $comment->product = $parent_comment->product = $this->products->get_product(intval($comment->object_id));
         }
@@ -210,6 +226,20 @@ class Notify extends Okay {
         $subject = $this->design->get_var('subject');
         $from = ($this->settings->notify_from_name ? $this->settings->notify_from_name." <".$this->settings->notify_from_email.">" : $this->settings->notify_from_email);
         $this->email($parent_comment->email, $subject, $email_template, $from, $from);
+
+        /*lang_modify...*/
+        if (!empty($parent_comment->lang_id) && isset($languages[$parent_comment->lang_id])) {
+            $this->languages->set_lang_id($cur_lang_id);
+            $lang_link = '';
+            $f_lang = reset($languages);
+            if ($parent_comment->lang_id != $f_lang->id) {
+                $lang_link = $languages[$parent_comment->lang_id]->label . '/';
+            }
+            $this->design->assign('lang_link', $lang_link);
+            $this->translations->init_translations();
+            $this->design->assign('lang', $this->translations);
+        }
+        /*/lang_modify...*/
     }
     
     public function email_password_remind($user_id, $code) {
@@ -248,6 +278,24 @@ class Notify extends Okay {
             return false;
         }
 
+        /*lang_modify...*/
+        $languages = $this->languages->languages();
+        if (!empty($feedback->lang_id) && isset($languages[$feedback->lang_id])) {
+            $cur_lang_id = $this->languages->lang_id();
+            $this->languages->set_lang_id($feedback->lang_id);
+            $lang_link = '';
+            $f_lang = reset($languages);
+            if ($feedback->lang_id != $f_lang->id) {
+                $lang_link = $languages[$feedback->lang_id]->label . '/';
+            }
+            $this->design->assign('lang_link', $lang_link);
+            $this->money->init_currencies();
+            $this->design->assign("currency", $this->money->get_currency());
+            $this->translations->init_translations();
+            $this->design->assign('lang', $this->translations);
+        }
+        /*/lang_modify...*/
+
         $this->design->assign('feedback', $feedback);
         $this->design->assign('text', $text);
 
@@ -256,6 +304,22 @@ class Notify extends Okay {
         $subject = $this->design->get_var('subject');
         $from = ($this->settings->notify_from_name ? $this->settings->notify_from_name." <".$this->settings->notify_from_email.">" : $this->settings->notify_from_email);
         $this->email($feedback->email, $subject, $email_template, $from, $from);
+
+        /*lang_modify...*/
+        if (!empty($feedback->lang_id) && isset($languages[$feedback->lang_id])) {
+            $this->languages->set_lang_id($cur_lang_id);
+            $lang_link = '';
+            $f_lang = reset($languages);
+            if ($feedback->lang_id != $f_lang->id) {
+                $lang_link = $languages[$feedback->lang_id]->label . '/';
+            }
+            $this->design->assign('lang_link', $lang_link);
+            $this->money->init_currencies();
+            $this->design->assign("currency", $this->money->get_currency());
+            $this->translations->init_translations();
+            $this->design->assign('lang', $this->translations);
+        }
+        /*/lang_modify...*/
     }
     
 }

@@ -38,23 +38,18 @@
 {* Title *}
 {$meta_title='Языки' scope=parent}
 
-{if !$exist}
-    <div id="header">
-        <h1>Языки не установлены</h1>
-        <a class="add" href="{url module=LanguagesAdmin install=1}">Установить</a>
-    </div>
-{else}
-    <div id="header">
-        <h1>Языки</h1>
-        <a class="add" href="{url module=LanguageAdmin}">Добавить язык</a>
-    </div>
-    <div id="main_list">
+<div id="header">
+    <h1>Языки</h1>
+    <a class="add" href="{url module=LanguageAdmin}">Добавить язык</a>
+</div>
 
+{if $languages}
+    <div id="main_list">
         <form id="list_form" method="post">
             <input type="hidden" name="session_id" value="{$smarty.session.id}">
             <div id="list">
                 {foreach $languages as $language}
-                    <div class="{if !$language->enabled}invisible{/if} row {if $language->is_default}default{/if}">
+                    <div class="{if !$language->enabled}invisible{/if} row">
                         <input type="hidden" name="positions[]" value="{$language->id}">
 
                         <div class="move cell">
@@ -65,12 +60,13 @@
                             <label for="{$language->id}">
                         </div>
                         <div class="name cell">
-                            {$language->name|escape} [{$language->label|escape}]
+                            <a href="{url module=LanguageAdmin id=$language->id return=$smarty.server.REQUEST_URI}">
+                                {$language->{'name_'|cat:$current_language->label}|escape} [{$language->label|escape}]
+                            </a>
                         </div>
                         <div class="icons cell lang">
-                            <a class="default" title="По умолчанию" href="#"></a>
                             <a class="enable" title="Активен" href="#"></a>
-                            <a class="delete" title="Удалить" href="#" {if $language->is_default}style='display:none;'{/if}></a>
+                            <a class="delete" title="Удалить" href="#"></a>
                         </div>
                         <div class="clear"></div>
                     </div>
@@ -89,18 +85,13 @@
             </div>
         </form>
     </div>
-    <div id="right_menu">
-        
-    </div>
-    <style type="text/css">
-        .icons a.default {
-            background-image: url(/backend/design/images/tick_grey.png);
-            margin-right: 5px;
-        }
-        .default .icons a.default {
-            background-image: url(/backend/design/images/tick.png);
-        }
-    </style>
+{else}
+    Нет языков
+{/if}
+
+<div id="right_menu">
+
+</div>
 {literal}
     <script>
         $(function () {
@@ -179,31 +170,6 @@
                     return false;
             });
 
-            $("a.default").click(function () {
-                var icon = $(this);
-                var line = icon.closest(".row");
-                var id = line.find('input[type="checkbox"][name*="check"]').val();
-                var state = 1;
-                icon.addClass('loading_icon');
-                $.ajax({
-                    type: 'POST',
-                    url: 'ajax/update_object.php',
-                    data: {
-                        'object': 'language',
-                        'id': id,
-                        'values': {'is_default': state},
-                        'session_id': '{/literal}{$smarty.session.id}{literal}'
-                    },
-                    success: function (data) {
-                        icon.removeClass('loading_icon');
-                        $('div.default').removeClass('default').find('.delete').show();
-                        line.addClass('default').find('.delete').hide();
-                    },
-                    dataType: 'json'
-                });
-                return false;
-            });
-
             // Скрыт/Видим
             $("a.enable").click(function () {
                 var icon = $(this);
@@ -235,4 +201,3 @@
 
     </script>
 {/literal}
-{/if}

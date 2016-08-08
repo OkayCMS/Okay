@@ -8,7 +8,7 @@ ALTER TABLE `s_payment_methods` ADD `image` VARCHAR(255) NOT NULL DEFAULT '' AFT
 ALTER TABLE `s_comments` ADD `email` VARCHAR(255) NOT NULL DEFAULT '' AFTER `name`;
 ALTER TABLE `s_comments` ADD `parent_id` INT(11) NOT NULL DEFAULT '0' AFTER `id`,
     ADD INDEX `parent_id` (`parent_id`);
-	ADD COLUMN `processed` TINYINT(1) NOT NULL DEFAULT '0' AFTER `message`;
+ALTER TABLE `s_feedbacks`ADD COLUMN `processed` TINYINT(1) NOT NULL DEFAULT '0' AFTER `message`;
 CREATE TABLE `s_related_blogs` (
   `post_id` INT(11) NOT NULL,
   `related_id` INT(11) NOT NULL,

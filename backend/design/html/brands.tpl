@@ -47,6 +47,10 @@
             <div id="list" class="brands">
                 {foreach $brands as $brand}
                     <div class="row">
+                        <input type="hidden" name="positions[{$brand->id}]" value="{$brand->position}">
+                        <div class="move cell">
+                            <div class="move_zone"></div>
+                        </div>
                         <div class="checkbox cell">
                             <input type="checkbox" id="{$brand->id}" name="check[]" value="{$brand->id}"/>
                             <label for="{$brand->id}"></label>
@@ -126,7 +130,55 @@ $(function() {
 		$("#list div.row:odd").removeClass('even');
 	}
 	// Раскрасить строки сразу
-	colorize();	
+	colorize();
+
+    // Сортировка списка
+    $("#list").sortable({
+        items:             ".row",
+        tolerance:         "pointer",
+        handle:            ".move_zone",
+        axis: 'y',
+        scrollSensitivity: 40,
+        opacity:           0.7,
+        forcePlaceholderSize: true,
+
+        helper: function(event, ui){
+            if($('input[type="checkbox"][name*="check"]:checked').size()<1) return ui;
+            var helper = $('<div/>');
+            $('input[type="checkbox"][name*="check"]:checked').each(function(){
+                var item = $(this).closest('.row');
+                helper.height(helper.height()+item.innerHeight());
+                if(item[0]!=ui[0]) {
+                    helper.append(item.clone());
+                    $(this).closest('.row').remove();
+                }
+                else {
+                    helper.append(ui.clone());
+                    item.find('input[type="checkbox"][name*="check"]').attr('checked', false);
+                }
+            });
+            return helper;
+        },
+        start: function(event, ui) {
+            if(ui.helper.children('.row').size()>0)
+                $('.ui-sortable-placeholder').height(ui.helper.height());
+        },
+        beforeStop:function(event, ui){
+            if(ui.helper.children('.row').size()>0){
+                ui.helper.children('.row').each(function(){
+                    $(this).insertBefore(ui.item);
+                });
+                ui.item.remove();
+            }
+        },
+        update:function(event, ui)
+        {
+            $("#list_form input[name*='check']").attr('checked', false);
+            $("#list_form").ajaxSubmit(function() {
+                colorize();
+            });
+        }
+    });
 	
 	// Выделить все
 	$("#check_all").click(function() {

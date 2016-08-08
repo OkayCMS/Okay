@@ -120,7 +120,7 @@ class View extends Okay {
                 $strlen = $first_lang->id == $this->language->id ? "" : $first_lang->label;
                 $page_url = trim(substr($page_url, strlen($strlen)),"/");
             }
-            if($_GET['page_url'] == 'all-products'){
+            if (in_array($_GET['page_url'], array('all-products', 'discounted', 'bestsellers'))) {
                 $page_url = $_GET['page_url'];
             }
             $this->design->assign('language', $this->language);
@@ -128,10 +128,6 @@ class View extends Okay {
             $this->design->assign('lang', $this->translations);
             $this->design->assign('translate_id', $this->translations->get_labels_ids());
 
-            
-            if (preg_match('~all-products/page-[0-9]+/?$~', $page_url)) {
-                $page_url = preg_replace('~/page-[0-9]+/?$~', '', $page_url);
-            }
             $this->page = $this->pages->get_page((string)$page_url);
             $this->design->assign('page', $this->page);
             
@@ -355,7 +351,7 @@ class View extends Okay {
     }
     
     public function get_banner_plugin($params, &$smarty){
-        if(!isset($params['group']) || !is_int($params['group'])) {
+        if(!isset($params['group']) || empty($params['group'])) {
             return false;
         }
         
@@ -365,7 +361,7 @@ class View extends Okay {
         @$page = $this->design->smarty->getTemplateVars('page');
         
         $show_filter_array = array('products'=>$product->id,'categories'=>$category->id,'brands'=>$brand->id,'pages'=>$page->id);
-        $banner = $this->banners->get_banner(intval($params['group']), true, $show_filter_array);
+        $banner = $this->banners->get_banner($params['group'], true, $show_filter_array);
         if(!empty($banner)) {
             if($items = $this->banners->get_banners_images(array('banner_id'=>$banner->id, 'visible'=>1))) {
                 $banner->items = $items;

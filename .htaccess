@@ -1,5 +1,6 @@
 # php_flag display_errors on
 # php_flag display_startup_errors on
+#php_value session.cookie_httponly true
 AddDefaultCharset UTF-8
 ErrorDocument 404 /404
 ErrorDocument 401 /password.php
@@ -43,15 +44,18 @@ RewriteRule	^admin/?$  backend [L]
 
 # Каталог товаров
 RewriteRule ^([a-z]{2}/)?catalog/([^/]+)/?$	index.php?module=ProductsView&category=$2&lang_label=$1 [L,QSA]
-#RewriteRule ^([a-z]{2}/)?catalog/([^/]+)/([^/]+)/?$	index.php?module=ProductsView&category=$2&brand=$3&lang_label=$1 [L,QSA]
 RewriteRule ^([a-z]{2}/)?catalog/([^/]+)	index.php?module=ProductsView&category=$2&lang_label=$1 [L,QSA]
 
 RewriteRule ^([a-z]{2}/)?products/([^/]+)/?$	index.php?module=ProductView&product_url=$2&lang_label=$1 [L,QSA]
-RewriteRule ^([a-z]{2}/)?all-products/([^/]+)/?$	index.php?module=ProductsView&lang_label=$1&page_url=all-products [L,QSA]
-RewriteRule ^([a-z]{2}/)?all-products/?	index.php?module=ProductsView&lang_label=$1 [L,QSA]
+RewriteRule ^([a-z]{2}/)?all-products/?$	    index.php?module=ProductsView&lang_label=$1 [L,QSA]
+RewriteRule ^([a-z]{2}/)?all-products/([^/]+)	index.php?module=ProductsView&lang_label=$1&page_url=all-products [L,QSA]
+
+RewriteRule ^([a-z]{2}/)?discounted/?$	        index.php?module=ProductsView&lang_label=$1&mode=discounted [L,QSA]
+RewriteRule ^([a-z]{2}/)?discounted/([^/]+)	    index.php?module=ProductsView&lang_label=$1&page_url=discounted&mode=discounted [L,QSA]
+RewriteRule ^([a-z]{2}/)?bestsellers/?$	        index.php?module=ProductsView&lang_label=$1&mode=bestsellers [L,QSA]
+RewriteRule ^([a-z]{2}/)?bestsellers/([^/]+)    index.php?module=ProductsView&lang_label=$1&page_url=bestsellers&mode=bestsellers [L,QSA]
 
 RewriteRule ^([a-z]{2}/)?brands/?$	index.php?module=BrandsView&lang_label=$1 [L,QSA]
-#RewriteRule ^([a-z]{2}/)?brands/([^/]+)/?$	index.php?module=ProductsView&brand=$2&lang_label=$1 [L,QSA]
 RewriteRule ^([a-z]{2}/)?brands/([^/]+) index.php?module=ProductsView&brand=$2&lang_label=$1 [L,QSA]
 
 # Поиск товаров

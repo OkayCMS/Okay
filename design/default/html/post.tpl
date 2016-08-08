@@ -133,7 +133,7 @@
 			<div class="form-group">
 				<textarea class="form-control" rows="3" name="text" data-format=".+" data-notice="{$lang->form_enter_comment}" data-language="{$translate_id['form_enter_comment']}" placeholder="{$lang->form_enter_comment}*">{$comment_text}</textarea>
 			</div>
-            {if $settings->captcha_product}
+            {if $settings->captcha_post}
                 <div class="col-xs-12 col-lg-7 form-inline m-b-1-md_down p-l-0">
                     {* Изображение капчи *}
                     <div class="form-group">

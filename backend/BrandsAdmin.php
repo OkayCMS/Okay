@@ -20,6 +20,14 @@ class BrandsAdmin extends Okay {
                     }
                 }
             }
+
+            // Сортировка
+            $positions = $this->request->post('positions');
+            $ids = array_keys($positions);
+            sort($positions);
+            foreach($positions as $i=>$position) {
+                $this->brands->update_brand($ids[$i], array('position'=>$position));
+            }
         }
         
         $brands = $this->brands->get_brands();

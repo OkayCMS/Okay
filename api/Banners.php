@@ -234,7 +234,7 @@ class Banners extends Okay {
     }
     
     public function get_banner($id, $visible = false, $show_filter_array = array()) {
-        if(!is_int($id)) {
+        if (empty($id)) {
             return false;
         }
         
@@ -243,6 +243,12 @@ class Banners extends Okay {
         
         if($visible) {
             $is_visible = 'AND visible=1';
+        }
+
+        if(is_int($id)) {
+            $banner_id_filter = $this->db->placehold('AND id=? ', intval($id));
+        } else {
+            $banner_id_filter = $this->db->placehold('AND group_id=? ', $id);
         }
         
         if(!empty($show_filter_array)) {
@@ -257,7 +263,7 @@ class Banners extends Okay {
             $show_filter = 'AND (' . implode(' OR ',$show_filter_array) . ')';
         }
         
-        $query = $this->db->placehold("SELECT * FROM __banners WHERE id=? $is_visible $show_filter LIMIT 1", $id);
+        $query = $this->db->placehold("SELECT * FROM __banners WHERE 1 $banner_id_filter $is_visible $show_filter LIMIT 1");
         $this->db->query($query);
         $banner = $this->db->result();
         return $banner;

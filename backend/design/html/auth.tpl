@@ -15,7 +15,7 @@
             }
             #system_logo {
                 height: 120px;
-                background-color: #56b9ff;
+                background-color: #091A33;
             }
             .heading {
                 display: block;

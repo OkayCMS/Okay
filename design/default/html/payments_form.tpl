@@ -187,6 +187,7 @@
     <div class="row">
 	    <form class="col-lg-7 m-b-2" method="post" action="https://money.yandex.ru/quickpay/confirm.xml">
             <input name="receiver" type="hidden" value="{$settings_pay['yandex_id']}">
+            <input name="formcomment" type="hidden" value="{$desc|escape}">
             <input type="hidden" name="short-dest"    value="{$desc|escape}">
             <input name="targets" type="hidden" value="{$desc|escape}">
             <input type="hidden" name="comment"       value="{$desc|escape}"/>
@@ -195,23 +196,6 @@
             <input type="hidden" name="label"         value="{$order->id|escape}">
             <input name="paymentType" type="hidden" value="PC">
             <input type="submit" name="submit-button" value="{$lang->form_to_pay}" class="btn btn-warning btn-block">
-	    </form>
-    </div>
-{elseif $payment_module == "YandexMoney"}
-    {* Способ оплаты YandexMoney *}
-    <div class="row">
-	    <form class="col-lg-7 m-b-2" method="post" action="{$payment_url}">
-		    <input type="hidden" name="shopid"         value="{$settings_pay['yandex_shopid']|escape}">
-		    <input type="hidden" name="sum"            value="{$price|escape}">
-		    <input type="hidden" name="scid"           value="{$settings_pay['yandex_scid']|escape}">
-		    <input type="hidden" name="shopSuccessURL" value="{$success_url|escape}">
-		    <input type="hidden" name="shopFailURL"    value="{$fail_url|escape}">
-		    <input type="hidden" name="cps_email"      value="{$order->email|escape}">
-		    <input type="hidden" name="cps_phone"      value="{$order->phone|escape}">
-		    <input type="hidden" name="customerNumber" value="{$order->id}">
-            {$payment_type}
-		    <input type="hidden" name="cms_name"       value="okaycms"/>
-		    <input type="submit" name="submit-button"  value="{$lang->form_to_pay}" class="btn btn-warning btn-block">
 	    </form>
     </div>
 {/if}

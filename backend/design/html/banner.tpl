@@ -27,7 +27,15 @@
 {if $message_error}
     <!-- Системное сообщение -->
     <div class="message message_error">
-        <span class="text">{if $message_error == 'url_exists'}Страница с таким адресом уже существует{/if}</span>
+        <span class="text">
+            {if $message_error == 'group_id_exists'}
+                Страница с таким ID группы уже существует
+            {elseif $message_error == 'empty_group_id'}
+                Введите ID группы
+            {else}
+                {$message_error}
+            {/if}
+        </span>
         <a class="button" href="">Вернуться</a>
     </div>
     <!-- Системное сообщение (The End)-->
@@ -54,6 +62,15 @@
 				<li><textarea name="description" class="okay_inp">{$banner->description|escape}</textarea></li>
 			</ul>
 		</div>
+
+        <div class="block layer">
+            <h2>ID группы баннеров</h2>
+            <ul>
+                <li>
+                    <input name="group_id" class="okay_inp" type="text" value="{$banner->group_id|escape}" />
+                </li>
+            </ul>
+        </div>
 		<!-- Параметры страницы (The End)-->
 	</div>
 	<!-- Левая колонка свойств товара (The End)-->
@@ -129,41 +146,53 @@
 			{$otstup3 = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"}
 			{$otstup4 = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"}
 			{$otstup5 = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"}
+            {$otstup6 = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"}
+            {$otstup7 = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"}
 			Для того, чтобы вставить эту группу баннеров &mdash;<br>
 			вставьте этот код в нужное Вам место в шаблоне<br><br>
-			{ldelim}get_banner var=banner{$banner->id} group={$banner->id}{rdelim}<br>
-			{ldelim}if $banner{$banner->id}->items{rdelim}<br>
-				{$otstup1}&lt;div class="banner banner{$banner->id}"&gt;<br>
-					{$otstup2}{ldelim}foreach $banner{$banner->id}->items as $bi{rdelim}<br>
-						{$otstup3}&lt;div&gt;<br>
-							{$otstup4}{ldelim}if $bi->url{rdelim}<br>
-								{$otstup5}&lt;a href="{ldelim}$bi->url{rdelim}" target="_blank"&gt;<br>
-							{$otstup4}{ldelim}/if{rdelim}<br>
-							{$otstup4}{ldelim}if $bi->image{rdelim}<br>
-								{$otstup5}&lt;img src="{ldelim}$config->banners_images_dir{rdelim}{ldelim}$bi->image{rdelim}" alt="{ldelim}$bi->alt{rdelim}" title="{ldelim}$bi->title{rdelim}"&gt;<br>
-							{$otstup4}{ldelim}else{rdelim}<br>
-								{$otstup5}{ldelim}$bi->description{rdelim}<br>
-							{$otstup4}{ldelim}/if{rdelim}<br>
-							{$otstup4}{ldelim}if $bi->url{rdelim}<br>
-								{$otstup5}&lt;/a&gt;<br>
-							{$otstup4}{ldelim}/if{rdelim}<br>
-						{$otstup3}&lt;/div&gt;<br>
-					{$otstup2}{ldelim}/foreach{rdelim}<br>
-				{$otstup1}&lt;/div&gt;<br>
-			{ldelim}/if{rdelim}<br>
+            {ldelim}get_banner var=banner_{$banner->group_id} group='{$banner->group_id}'{rdelim}<br>
+            {ldelim}if $banner_{$banner->group_id}->items{rdelim}<br>
+                {$otstup1}&lt;div class="container hidden-md-down"&gt;<br>
+                    {$otstup2}&lt;div class="fn-slick-banner_{$banner->group_id} okaycms slick-banner"&gt;<br>
+                        {$otstup3}{ldelim}foreach $banner_{$banner->group_id}->items as $bi{rdelim}<br>
+                            {$otstup4}&lt;div&gt;<br>
+                                {$otstup5}{ldelim}if $bi->url{rdelim}<br>
+                                    {$otstup6}&lt;a href="{ldelim}$bi->url{rdelim}" target="_blank"&gt;<br>
+                                {$otstup5}{ldelim}/if{rdelim}<br>
+                                {$otstup5}{ldelim}if $bi->image{rdelim}<br>
+                                    {$otstup6}&lt;img src="{ldelim}$config->banners_images_dir{rdelim}{ldelim}$bi->image{rdelim}" alt="{ldelim}$bi->alt{rdelim}" title="{ldelim}$bi->title{rdelim}"/&gt;<br>
+                                {$otstup5}{ldelim}/if{rdelim}<br>
+                                {$otstup5}&lt;span class="slick-name"&gt;<br>
+                                    {$otstup6}{ldelim}$bi->title{rdelim}<br>
+                                {$otstup5}&lt;/span&gt;<br>
+                                {$otstup5}{ldelim}if $bi->description{rdelim}<br>
+                                    {$otstup6}&lt;span class="slick-description"&gt;<br>
+                                        {$otstup7}{ldelim}$bi->description{rdelim}<br>
+                                    {$otstup6}&lt;/span&gt;<br>
+                                {$otstup5}{ldelim}/if{rdelim}<br>
+                                {$otstup5}{ldelim}if $bi->url{rdelim}<br>
+                                    {$otstup6}&lt;/a&gt;<br>
+                                {$otstup5}{ldelim}/if{rdelim}<br>
+                            {$otstup4}&lt;/div&gt;<br>
+                        {$otstup3}{ldelim}/foreach{rdelim}<br>
+                    {$otstup2}&lt;/div&gt;<br>
+                {$otstup1}&lt;/div&gt;<br>
+            {ldelim}/if{rdelim}<br>
 		</div>
 		<div class="block layer">
 			Для того, чтобы баннеры сменялись &mdash; можно определить для группы слайдер<br>
 			Для этого в папке с шаблоном в папке js в файле okay.js нужно вставить следующий скрипт:<br><br>
-            $('.banner{$banner->id}').slick({ldelim}<br />
+            $('.fn-slick-banner_{$banner->group_id}.okaycms').slick({ldelim}<br />
                 {$otstup1}infinite: true,<br />
                 {$otstup1}speed: 500,<br />
                 {$otstup1}slidesToShow: 1,<br />
                 {$otstup1}slidesToScroll: 1,<br />
-                {$otstup1}dots:true,<br />
-                {$otstup1}arrows:true,<br />
-                {$otstup1}autoplay:true,<br />
-                {$otstup1}autoplaySpeed:3000<br />
+                {$otstup1}swipeToSlide : true,<br />
+                {$otstup1}dots: true,<br />
+                {$otstup1}arrows: false,<br />
+                {$otstup1}adaptiveHeight: true,<br />
+                {$otstup1}autoplaySpeed: 8000,<br />
+                {$otstup1}autoplay: true<br />
             {rdelim});<br /><br />
 			*В самом файле есть пример скрипта с описанием настроек
 		</div>

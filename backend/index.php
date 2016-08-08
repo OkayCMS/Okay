@@ -4,6 +4,9 @@ chdir('..');
 
 // Засекаем время
 $time_start = microtime(true);
+if(!empty($_SERVER['HTTP_USER_AGENT'])){
+    session_name(md5($_SERVER['HTTP_USER_AGENT']));
+}
 session_start();
 $_SESSION['id'] = session_id();
 

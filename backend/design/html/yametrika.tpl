@@ -237,6 +237,7 @@
         {if !$settings->yandex_metrika_app_id || !$settings->yandex_metrika_token}
             <h2 style="color: red;">Заполните поля (ID приложения) и/или (Токен) в настройках магазина</h2>
         {/if}
+        {if $settings->yandex_metrika_app_id && $settings->yandex_metrika_token}
             <h2>Статистика</h2>
                 <select id="period_selector" name="period">
                       <option value="{$smarty.now|date_format:"%Y%m%d"}">За сегодня</option> <!-- today -->
@@ -251,6 +252,7 @@
         <div>
             <div id="container" style="width: 100%; height: 800px;"></div>
         </div>
+        {/if}
     </div>
 <!-- @Счетчики -->
 		

@@ -113,10 +113,7 @@ class Languages extends Okay {
         if(empty($this->lang_id) && !empty($_SESSION['lang_id']) && !empty($this->languages[$_SESSION['lang_id']])) {
             $this->lang_id  = $_SESSION['lang_id'];
         }
-        /*if(empty($this->lang_id) && $this->settings->lang_default) {
-            $this->lang_id = $this->settings->lang_default;
-        }*/
-        
+
         if(empty($this->lang_id)) {
             $first_lang = reset($this->languages);
             $this->lang_id = $first_lang->id;
@@ -168,16 +165,7 @@ class Languages extends Okay {
     }
     
     public function get_languages($filter = array()) {
-        $this->db->query("SHOW TABLES LIKE '%__languages%'");
-        if(!$this->db->result()) {
-            return false;
-        }
-        
-        $not_default = '';
-        if(!empty($filter['not_default'])) {
-            $not_default = 'AND `is_default` != 1';
-        }
-        $query = "SELECT * FROM __languages WHERE 1 $not_default ORDER BY position";
+        $query = "SELECT * FROM __languages WHERE 1 ORDER BY position";
         if($this->db->query($query)) {
             return $this->db->results();
         } else {
@@ -187,14 +175,8 @@ class Languages extends Okay {
     
     public function update_language($id, $data) {
         $data = (object)$data;
-        
         $language = $this->get_language($id);
-        
-        if($data->is_default) {
-            $this->db->query("UPDATE __languages SET is_default=0 WHERE is_default=1");
-            $this->settings->lang_default = $id;
-        }
-        
+
         $query = $this->db->placehold("UPDATE __languages SET ?% WHERE id in(?@)", $data, (array)$id);
         $this->db->query($query);
         
@@ -208,18 +190,17 @@ class Languages extends Okay {
     
     public function add_language($data) {
         $data = (object)$data;
-        
         $languages = $this->get_languages();
-        $data->position = 1;
         if(!empty($languages)) {
             $languag = reset($languages);
-            $data->position = $languag->position+1;
         }
-        
+
         $query = $this->db->placehold('INSERT INTO __languages SET ?%', $data);
         if(!$this->db->query($query)) {
             return false;
         }
+        $last_id = $this->db->insert_id();
+        $this->db->query("UPDATE __languages SET position=id WHERE id=? LIMIT 1", $last_id);
 
         // если нету поля в переводах добавим его
         $this->db->query("SHOW FIELDS FROM __translations WHERE field=?", 'lang_'.$data->label);
@@ -227,11 +208,14 @@ class Languages extends Okay {
             $this->db->query("ALTER TABLE __translations ADD COLUMN `lang_$data->label` VARCHAR(255) NOT NULL DEFAULT ''");
         }
         
-        $last_id = $this->db->insert_id();
-        
         if($last_id) {
+            $this->db->query("SHOW FIELDS FROM __languages WHERE field=?", 'name_'.$data->label);
+            if (!$this->db->result()) {
+                $this->db->query("ALTER TABLE __languages ADD COLUMN `name_$data->label` VARCHAR(255) NOT NULL DEFAULT ''");
+            }
+            $this->db->query("UPDATE __languages SET name_$data->label=name");
+
             $description_fields = $this->get_fields();
-            
             foreach($this->tables as $object => $tab) {
                 $this->db->query('INSERT INTO __lang_'.$tab.' ('.implode(',', $description_fields[$tab]).', '.$object.'_id, lang_id, lang_label)
                                     SELECT '.implode(',', $description_fields[$tab]).', id, ?, ?
@@ -255,20 +239,17 @@ class Languages extends Okay {
     
     public function delete_language($id, $save_main = false) {
         if(!empty($id)) {
-            $lang = $this->get_language($id);
-            if(!$lang->is_default) {
-            	$query = $this->db->placehold("DELETE FROM __languages WHERE id=? LIMIT 1", intval($id));
-            	$this->db->query($query);
-                
-                foreach($this->tables as $table) {
-                    $this->db->query("DELETE FROM  __lang_".$table." WHERE lang_id=?", intval($id));
-                }
-                
-                if (!$save_main) {
-                    $this->db->query("DELETE FROM  __options WHERE lang_id=?", intval($id));
-                } else {
-                    $this->db->query("UPDATE __options set lang_id=0 where lang_id=?", intval($id));
-                }
+            $query = $this->db->placehold("DELETE FROM __languages WHERE id=? LIMIT 1", intval($id));
+            $this->db->query($query);
+
+            foreach($this->tables as $table) {
+                $this->db->query("DELETE FROM  __lang_".$table." WHERE lang_id=?", intval($id));
+            }
+
+            if (!$save_main) {
+                $this->db->query("DELETE FROM  __options WHERE lang_id=?", intval($id));
+            } else {
+                $this->db->query("UPDATE __options set lang_id=0 where lang_id=?", intval($id));
             }
         }
     }

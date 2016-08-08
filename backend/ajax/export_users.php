@@ -5,7 +5,9 @@ class ExportAjax extends Okay {
     private $columns_names = array(
         'name'=>             'Имя',
         'email'=>            'Email',
-        'group_name'=>            'Группа',
+        'phone'=>            'Телефон',
+        'address'=>          'Адрес',
+        'group_name'=>       'Группа',
         'discount'=>         'Скидка',
         'enabled'=>          'Активен',
         'created'=>          'Дата',

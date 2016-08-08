@@ -21,8 +21,12 @@
         {else}
             <meta name="robots" content="index,follow"/>
         {/if}
+    {elseif $smarty.get.module == "RegisterView" || $smarty.get.module == "LoginView" || $smarty.get.module == "UserView" || $smarty.get.module == "CartView"}
+        <meta name="robots" content="noindex,follow"/>
+    {elseif $smarty.get.module == "OrderView"}
+        <meta name="robots" content="noindex,nofollow"/>
     {else}
-    	<meta name="robots" content="index,follow"/>
+        <meta name="robots" content="index,follow"/>
 	{/if}
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
     <meta name="generator" content="OkayCMS {$config->version}"/>
@@ -40,23 +44,44 @@
 	{$rel_prev_next}
 
 	{* Изображения товара и поста для соц. сетей *}
-	{if $module == 'ProductView'}
-		<meta property="og:url" content="{$config->root_url}{if $lang_link}/{str_replace('/', '', $lang_link)}{/if}{$canonical}"/>
-		<meta property="og:type" content="article"/>
-		<meta property="og:title" content="{$product->name|escape}"/>
-		<meta property="og:image" content="{$product->image->filename|resize:330:300}"/>
-		<meta property="og:description" content='{$product->annotation}'/>
-		<link rel="image_src" href="{$product->image->filename|resize:330:300}"/>
-	{elseif $module == 'BlogView'}
-		<meta property="og:url" content="{$config->root_url}{if $lang_link}/{str_replace('/', '', $lang_link)}{/if}{$canonical}"/>
-		<meta property="og:type" content="article"/>
-		<meta property="og:title" content="{$post->name|escape}"/>
+    {if $module == 'ProductView'}
+        <meta property="og:url" content="{$config->root_url}{if $lang_link}/{str_replace('/', '', $lang_link)}{/if}{$canonical}"/>
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="{$product->name|escape}"/>
+        <meta property="og:image" content="{$product->image->filename|resize:330:300}"/>
+        <meta property="og:description" content='{$product->annotation}'/>
+        <link rel="image_src" href="{$product->image->filename|resize:330:300}"/>
+        {if $product->images}
+            {foreach $product->images|cut as $i=>$image}
+                {*for vk*}
+                <link rel="image_src" href="{$image->filename|resize:330:300}"/>
+                {*for fb*}
+                <meta property="og:image" content="{$image->filename|resize:330:300}"/>
+            {/foreach}
+        {/if}
+        {*twitter*}
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="{$product->name|escape}">
+        <meta name="twitter:description" content="{$product->annotation}">
+        <meta name="twitter:image" content="{$product->image->filename|resize:330:300}">
+    {elseif $module == 'BlogView'}
+        <meta property="og:url" content="{$config->root_url}{if $lang_link}/{str_replace('/', '', $lang_link)}{/if}{$canonical}"/>
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="{$post->name|escape}"/>
         {if $post->image}
             <meta property="og:image" content="{$post->image|resize:400:300:false:$config->resized_blog_dir}"/>
+            <link rel="image_src" href="{$post->image|resize:400:300:false:$config->resized_blog_dir}"/>
         {else}
             <meta property="og:image" content="{$config->root_url}/design/{$settings->theme}/images/logo_ru.png" />
+            <meta name="twitter:image" content="{$config->root_url}/design/{$settings->theme}/images/logo_ru.png">
         {/if}
-		<meta property="og:description" content='{$post->annotation}'/>
+        <meta property="og:description" content='{$post->annotation}'/>
+
+        {*twitter*}
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="{$post->name|escape}">
+        <meta name="twitter:description" content="{$post->annotation|escape}">
+        <meta name="twitter:image" content="{$post->image|resize:400:300:false:$config->resized_blog_dir}">
     {else}
         <meta property="og:title" content="{$settings->site_name}" />
         <meta property="og:type" content="website"/>
@@ -64,6 +89,12 @@
         <meta property="og:image" content="{$config->root_url}/design/{$settings->theme}/images/logo_ru.png" />
         <meta property="og:site_name" content="{$settings->site_name}"/>
         <meta property="og:description" content="{$meta_description|escape}"/>
+        <link rel="image_src" href="{$config->root_url}/design/{$settings->theme}/images/logo_ru.png"/>
+        {*twitter*}
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="{$settings->site_name}">
+        <meta name="twitter:description" content="{$meta_description|escape}">
+        <meta name="twitter:image" content="{$config->root_url}/design/{$settings->theme}/images/logo_ru.png">
     {/if}
 
 	{* Канонический адрес страницы *}
@@ -193,13 +224,13 @@
                         <div class="btn-group">
                             <a data-languages="true" class="nav-link link-black i-lang" href="#" data-toggle="dropdown" aria-haspopup="true"
                                aria-expanded="false"><span class="lang-label">{$language->label}</span><span
-                                        class="lang-name">{$language->name}</span></a>
+                                        class="lang-name">{$language->{'name_'|cat:$language->label}}</span></a>
                             <div class="dropdown-menu">
                                 {foreach $languages as $l}
                                     {if $l->enabled}
                                         <a class="dropdown-item{if $language->id == $l->id} active{/if}"
                                            href="{$l->url}"><span class="lang-label">{$l->label}</span><span
-                                                    class="lang-name">{$l->name}</span></a>
+                                                    class="lang-name">{$l->{'name_'|cat:$language->label}}</span></a>
                                     {/if}
                                 {/foreach}
                             </div>
@@ -320,33 +351,33 @@
 {categories_tree categories=$categories level=1}
 
 {* Баннер *}
-{get_banner var=banner1 group=1}
-{if $banner1->items}
-	<div class="container hidden-md-down">
-		<div class="fn-slick-banner okaycms slick-banner">
-			{foreach $banner1->items as $bi}
-				<div>
-					{if $bi->url}
-						<a href="{$bi->url}" target="_blank">
-					{/if}
-					{if $bi->image}
-						<img src="{$config->banners_images_dir}{$bi->image}" alt="{$bi->alt}" title="{$bi->title}"/>
-					{/if}
-					<span class="slick-name">
-						{$bi->title}
-					</span>
-					{if $bi->description}
-						<span class="slick-description">
-							{$bi->description}
-						</span>
-					{/if}
-					{if $bi->url}
-						</a>
-					{/if}
-				</div>
-			{/foreach}
-		</div>
-	</div>
+{get_banner var=banner_group1 group='group1'}
+{if $banner_group1->items}
+    <div class="container hidden-md-down">
+        <div class="fn-slick-banner_group1 okaycms slick-banner">
+            {foreach $banner_group1->items as $bi}
+                <div>
+                    {if $bi->url}
+                    <a href="{$bi->url}" target="_blank">
+                        {/if}
+                        {if $bi->image}
+                            <img src="{$config->banners_images_dir}{$bi->image}" alt="{$bi->alt}" title="{$bi->title}"/>
+                        {/if}
+                        <span class="slick-name">
+                        {$bi->title}
+                    </span>
+                        {if $bi->description}
+                            <span class="slick-description">
+                            {$bi->description}
+                        </span>
+                        {/if}
+                        {if $bi->url}
+                    </a>
+                    {/if}
+                </div>
+            {/foreach}
+        </div>
+    </div>
 {/if}
 {* Баннер *}
 {* Тело сайта *}
@@ -451,15 +482,15 @@
 {* Форма обратного звонка *}
 {include file='callback.tpl'}
 
-{if $settings->y_metric}
+{if $settings->yandex_metrika_counter_id}
     {literal}
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
         (function (d, w, c) {
             (w[c] = w[c] || []).push(function() {
                 try {
-                    w.yaCounter{/literal}{$settings->y_metric}{literal} = new Ya.Metrika({
-                        id:{/literal}{$settings->y_metric}{literal},
+                    w.yaCounter{/literal}{$settings->yandex_metrika_counter_id}{literal} = new Ya.Metrika({
+                        id:{/literal}{$settings->yandex_metrika_counter_id}{literal},
                         clickmap:true,
                         trackLinks:true,
                         accurateTrackBounce:true,

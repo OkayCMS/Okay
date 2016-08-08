@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS `s_banners`;
 CREATE TABLE IF NOT EXISTS `s_banners` (
   `id` int(4) NOT NULL AUTO_INCREMENT,
+  `group_id` varchar(32) NOT NULL DEFAULT '',
   `name` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `position` int(4) NOT NULL DEFAULT '0',
@@ -19,8 +20,8 @@ CREATE TABLE IF NOT EXISTS `s_banners` (
   KEY `brands` (`brands`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-INSERT INTO `s_banners` (`id`, `name`, `description`, `position`, `visible`, `show_all_pages`, `categories`, `pages`, `brands`, `products`) VALUES
-(1, 'Главный баннер', '', 1, 1, 0, '0', '1', '0', '0');
+INSERT INTO `s_banners` (`id`, `group_id`, `name`, `description`, `position`, `visible`, `show_all_pages`, `categories`, `pages`, `brands`, `products`) VALUES
+(1, 'group1', 'Главный баннер', '', 1, 1, 0, '0', '1', '0', '0');
 
 DROP TABLE IF EXISTS `s_banners_images`;
 CREATE TABLE IF NOT EXISTS `s_banners_images` (
@@ -79,20 +80,21 @@ CREATE TABLE IF NOT EXISTS `s_brands` (
   `description` text NOT NULL,
   `image` varchar(255) NOT NULL,
   `last_modify` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `position` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `url` (`url`)
 ) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
-INSERT INTO `s_brands` (`id`, `name`, `url`, `meta_title`, `meta_keywords`, `meta_description`, `annotation`, `description`, `image`, `last_modify`) VALUES
-(1, 'Bosch', 'bosch', 'Bosch', 'Bosch', 'Bosch', '', '', 'bosch_new.jpg', '2016-06-15 13:00:09'),
-(2, 'Linksys', 'linksys', 'Linksys', 'Linksys', 'Linksys', '', '', 'linksys.png', '2015-11-16 09:10:20'),
-(3, 'Porsche Design', 'porschedesign', 'Porsche Design', 'Porsche Design', 'Porsche Design', '', '', 'porsche-design.jpg', '2015-11-20 09:09:36'),
-(4, 'Nokia', 'nokia', 'Nokia', 'Nokia', 'Nokia', '', '', 'nokia.jpg', '2015-11-16 09:10:30'),
-(5, 'Connect', 'connect', 'Connect', 'Connect', 'Connect', '<p>1 ajshfdjaks hdkladsfhkfdshlk asdhfklasj hflkasjdhf klasjdhf klashdfkashdf kashdfhkjfdjh sdaklsjdfh sadlkhf kashdf ahsdflk jashdfkl hsadlkfha slkdjhffdsahasdfh askdfh asdf asdf asdf</p>', '<p>2 ajshfdjaks hdkladsfhkfdshlk asdhfklasj hflkasjdhf klasjdhf klashdfkashdf kashdfhkjfdjh sdaklsjdfh sadlkhf kashdf ahsdflk jashdfkl hsadlkfha slkdjhffdsahasdfh askdfh asdf asdf asdf</p>', 'connect_1.jpg', '2016-03-11 13:30:16'),
-(6, 'Jabra', 'jabra', 'Jabra', 'Jabra', 'Jabra', '', '', 'jabra.jpg', '2015-11-16 09:10:11'),
-(7, 'Panasonic', 'panasonic', 'Panasonic', 'Panasonic', 'Panasonic', '', '', 'panasonic_new.jpg', '2015-11-16 09:12:54'),
-(8, 'Siemens', 'siemens', 'Siemens', 'Siemens', 'Siemens', '', '', 'siemens.jpg', '2015-11-16 09:10:53');
+INSERT INTO `s_brands` (`id`, `name`, `url`, `meta_title`, `meta_keywords`, `meta_description`, `annotation`, `description`, `image`, `last_modify`, `position`) VALUES
+(1, 'Bosch', 'bosch', 'Bosch', 'Bosch', 'Bosch', '', '', 'bosch_new.jpg', '2016-06-15 13:00:09', 1),
+(2, 'Linksys', 'linksys', 'Linksys', 'Linksys', 'Linksys', '', '', 'linksys.png', '2015-11-16 09:10:20', 2),
+(3, 'Porsche Design', 'porschedesign', 'Porsche Design', 'Porsche Design', 'Porsche Design', '', '', 'porsche-design.jpg', '2015-11-20 09:09:36', 3),
+(4, 'Nokia', 'nokia', 'Nokia', 'Nokia', 'Nokia', '', '', 'nokia.jpg', '2015-11-16 09:10:30', 4),
+(5, 'Connect', 'connect', 'Connect', 'Connect', 'Connect', '<p>1 ajshfdjaks hdkladsfhkfdshlk asdhfklasj hflkasjdhf klasjdhf klashdfkashdf kashdfhkjfdjh sdaklsjdfh sadlkhf kashdf ahsdflk jashdfkl hsadlkfha slkdjhffdsahasdfh askdfh asdf asdf asdf</p>', '<p>2 ajshfdjaks hdkladsfhkfdshlk asdhfklasj hflkasjdhf klasjdhf klashdfkashdf kashdfhkjfdjh sdaklsjdfh sadlkhf kashdf ahsdflk jashdfkl hsadlkfha slkdjhffdsahasdfh askdfh asdf asdf asdf</p>', 'connect_1.jpg', '2016-03-11 13:30:16', 5),
+(6, 'Jabra', 'jabra', 'Jabra', 'Jabra', 'Jabra', '', '', 'jabra.jpg', '2015-11-16 09:10:11', 6),
+(7, 'Panasonic', 'panasonic', 'Panasonic', 'Panasonic', 'Panasonic', '', '', 'panasonic_new.jpg', '2015-11-16 09:12:54', 7),
+(8, 'Siemens', 'siemens', 'Siemens', 'Siemens', 'Siemens', '', '', 'siemens.jpg', '2015-11-16 09:10:53', 8);
 
 DROP TABLE IF EXISTS `s_callbacks`;
 CREATE TABLE IF NOT EXISTS `s_callbacks` (
@@ -217,16 +219,19 @@ CREATE TABLE IF NOT EXISTS `s_comments` (
   `text` text NOT NULL,
   `type` enum('product','blog') NOT NULL,
   `approved` int(1) NOT NULL DEFAULT '0',
+  `lang_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `product_id` (`object_id`),
   KEY `type` (`type`),
   KEY `parent_id` (`parent_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
-INSERT INTO `s_comments` (`id`, `parent_id`, `date`, `ip`, `object_id`, `name`, `email`, `text`, `type`, `approved`) VALUES
-(1, 0, '2015-11-16 16:29:00', '178.215.175.49', 1, 'Сергей', '', 'Пользуюсь уже два года. Никаких замечаний.', 'product', 1),
-(19, 0, '2016-06-28 11:56:49', '127.0.0.1', 146, 'Александр', 'info@okay-cms.com', 'Подскажите, есть ли данный товар в наличии?', 'product', 1),
-(20, 19, '2016-06-28 11:57:17', '', 146, 'Администратор', '', 'Александр,Добрый день. Да, данный товар есть на складе.', 'product', 1);
+INSERT INTO `s_comments` (`id`, `parent_id`, `date`, `ip`, `object_id`, `name`, `email`, `text`, `type`, `approved`, `lang_id`) VALUES
+(1, 0, '2015-11-16 16:29:00', '178.215.175.49', 1, 'Сергей', '', 'Пользуюсь уже два года. Никаких замечаний.', 'product', 1, 0),
+(19, 0, '2016-06-28 11:56:49', '127.0.0.1', 146, 'Александр', 'info@okay-cms.com', 'Подскажите, есть ли данный товар в наличии?', 'product', 1, 0),
+(20, 19, '2016-06-28 11:57:17', '', 146, 'Администратор', '', 'Александр,Добрый день. Да, данный товар есть на складе.', 'product', 1, 0),
+(21, 0, '2016-08-02 16:51:56', '127.0.0.1', 130, 'Okay user', 'info@okay-cms.com', 'good product, thank you', 'product', 1, 2),
+(22, 21, '2016-08-02 16:52:21', '', 130, 'Администратор', '', 'Okay user, thank you for order', 'product', 1, 0);
 
 DROP TABLE IF EXISTS `s_coupons`;
 CREATE TABLE IF NOT EXISTS `s_coupons` (
@@ -343,9 +348,13 @@ CREATE TABLE IF NOT EXISTS `s_feedbacks` (
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `message` text NOT NULL,
-  `processed` tinyint(4) NOT NULL DEFAULT '0',
+  `processed` tinyint(1) NOT NULL DEFAULT '0',
+  `lang_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+
+INSERT INTO `s_feedbacks` (`id`, `date`, `ip`, `name`, `email`, `message`, `processed`, `lang_id`) VALUES
+(11, '2016-08-02 17:05:06', '127.0.0.1', 'Okay user', 'info@okay-cms.com', 'Please, call me back', 1, 2);
 
 DROP TABLE IF EXISTS `s_groups`;
 CREATE TABLE IF NOT EXISTS `s_groups` (
@@ -652,16 +661,22 @@ CREATE TABLE IF NOT EXISTS `s_languages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `label` varchar(10) NOT NULL,
-  `is_default` tinyint(1) NOT NULL,
   `enabled` tinyint(4) NOT NULL DEFAULT '0',
   `position` int(11) NOT NULL,
+  `name_ru` varchar(255) NOT NULL DEFAULT '',
+  `name_uk` varchar(255) NOT NULL DEFAULT '',
+  `name_by` varchar(255) NOT NULL DEFAULT '',
+  `name_en` varchar(255) NOT NULL DEFAULT '',
+  `name_ch` varchar(255) NOT NULL DEFAULT '',
+  `name_de` varchar(255) NOT NULL DEFAULT '',
+  `name_fr` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
-INSERT INTO `s_languages` (`id`, `name`, `label`, `is_default`, `enabled`, `position`) VALUES
-(1, 'Русский', 'ru', 0, 1, 1),
-(2, 'Английский', 'en', 0, 1, 2),
-(3, 'Украинский', 'uk', 0, 0, 3);
+INSERT INTO `s_languages` (`id`, `name`, `label`, `enabled`, `position`, `name_ru`, `name_uk`, `name_by`, `name_en`, `name_ch`, `name_de`, `name_fr`) VALUES
+(1, 'Русский', 'ru', 1, 1, 'Русский', 'Росийська', 'Русский', 'Russian', 'Русский', 'Русский', 'Русский'),
+(2, 'Английский', 'en', 1, 2, 'Английский', 'Английська', 'Английский', 'English', 'Английский', 'Английский', 'Английский'),
+(3, 'Украинский', 'uk', 0, 3, 'Украинский', 'Украинська', 'Украинский', 'Ukrainian', 'Украинский', 'Украинский', 'Украинский');
 
 DROP TABLE IF EXISTS `s_lang_banners_images`;
 CREATE TABLE IF NOT EXISTS `s_lang_banners_images` (
@@ -910,7 +925,13 @@ INSERT INTO `s_lang_pages` (`lang_id`, `lang_label`, `page_id`, `name`, `meta_ti
 (3, 'uk', 7, 'Все товары', 'Все товары', '', 'Все товары', '', 'Все товары'),
 (1, '', 8, 'Бренды', 'Бренды', '', 'Бренды', '', 'Бренды'),
 (2, '', 8, 'Brands', 'Brands', '', 'Brands', '', 'Brands'),
-(3, '', 8, 'Бренды', 'Бренды', '', 'Бренды', '', 'Бренды');
+(3, '', 8, 'Бренды', 'Бренды', '', 'Бренды', '', 'Бренды'),
+(1, '', 10, 'Акционные товары', 'Акционные товары', '', 'Акционные товары', '', 'Акционные товары'),
+(2, '', 10, 'Action goods', 'Action goods', '', 'Action goods', '', 'Action goods'),
+(3, '', 10, 'Акционные товары', 'Акционные товары', '', 'Акционные товары', '', 'Акционные товары'),
+(1, '', 11, 'Хиты продаж', 'Хиты продаж', '', 'Хиты продаж', '', 'Хиты продаж'),
+(2, '', 11, 'Bestsellers', 'Bestsellers', '', 'Bestsellers', '', 'Bestsellers'),
+(3, '', 11, 'Хиты продаж', 'Хиты продаж', '', 'Хиты продаж', '', 'Хиты продаж');
 
 DROP TABLE IF EXISTS `s_lang_payment_methods`;
 CREATE TABLE IF NOT EXISTS `s_lang_payment_methods` (
@@ -1994,7 +2015,7 @@ INSERT INTO `s_orders` (`id`, `delivery_id`, `delivery_price`, `payment_method_i
 (9, 2, '0.00', 13, 1, '0000-00-00 00:00:00', 1, '2016-06-20 12:34:20', 0, 'Иван Сергеев', 'ул. Красночечеловская', '+7 123 321 563 56', 'ivan@ivansergeev.ru', 'Перезвонить для уточнения заказа', 2, 'ba123d092a142f4afa7ee4951b99147a', '', '127.0.0.1', '255383.80', '', '5.00', '0.00', '', 0, '2016-06-28 11:50:46', 1),
 (10, 1, '0.00', 13, 1, '0000-00-00 00:00:00', 1, '2016-06-21 12:36:06', 0, 'Сергей Иванов', '', '', 'test@gmail.com', '', 2, 'dae53009f1889ac11adc894d7fc0f4d7', '', '', '498.94', '', '5.00', '0.00', '', 0, '2016-06-28 11:48:44', 1),
 (7, 1, '260.00', 2, 0, '0000-00-00 00:00:00', 1, '2016-06-19 12:39:04', 1, 'Okay user', '', '+38(097) 161-58-66', 'info@okay-cms.com', '', 1, '91db0c08b97132010bd55f7117edc26e', '', '127.0.0.1', '3124.55', '', '0.00', '0.00', '', 0, '2016-06-21 12:35:28', 1),
-(13, 2, '0.00', 9, 0, '0000-00-00 00:00:00', 0, '2016-06-27 14:15:53', 1, 'Okay user', '', '+38(097) 161-58-66', 'info@okay-cms.com', '', 0, '55a2abcd8aea9b3a5d0ae99b56ac658a', '', '127.0.0.1', '287.95', '', '0.00', '0.00', '', 0, '2016-06-27 15:28:39', 1);
+(13, 2, '0.00', 9, 0, '0000-00-00 00:00:00', 0, '2016-06-27 14:15:53', 1, 'Okay user', '', '+38(097) 161-58-66', 'info@okay-cms.com', '', 0, '55a2abcd8aea9b3a5d0ae99b56ac658a', '', '127.0.0.1', '287.95', '', '0.00', '0.00', '', 0, '2016-08-02 16:34:09', 2);
 
 DROP TABLE IF EXISTS `s_orders_labels`;
 CREATE TABLE IF NOT EXISTS `s_orders_labels` (
@@ -2023,7 +2044,7 @@ CREATE TABLE IF NOT EXISTS `s_pages` (
   PRIMARY KEY (`id`),
   KEY `order_num` (`position`),
   KEY `url` (`url`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 INSERT INTO `s_pages` (`id`, `url`, `name`, `meta_title`, `meta_description`, `meta_keywords`, `body`, `menu_id`, `position`, `visible`, `header`, `last_modify`) VALUES
 (3, 'dostavka', 'Доставка', 'Доставка', 'Доставка', 'Доставка', '<h2>Курьерская доставка по&nbsp;Москве</h2><p>Курьерская доставка осуществляется на следующий день после оформления заказа<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>если товар есть в&nbsp;наличии. Курьерская доставка осуществляется в&nbsp;пределах Томска и&nbsp;Северска ежедневно с&nbsp;10.00 до&nbsp;21.00. Заказ на&nbsp;сумму свыше 300 рублей доставляется бесплатно. <br /><br />Стоимость бесплатной доставки раcсчитывается от&nbsp;суммы заказа с&nbsp;учтенной скидкой. В&nbsp;случае если сумма заказа после применения скидки менее 300р<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>осуществляется платная доставка. <br /><br />При сумме заказа менее 300 рублей стоимость доставки составляет от 50 рублей.</p><h2>Самовывоз</h2><p>Удобный<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>бесплатный и быстрый способ получения заказа.<br />Адрес офиса: Москва<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>ул. Арбат<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>1/3<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>офис 419.</p><h2>Доставка с&nbsp;помощью предприятия<span style="margin-right: 0.44em;"> </span><span style="margin-left: -0.44em;">&laquo;</span>Автотрейдинг&raquo;</h2><p>Удобный и быстрый способ доставки в крупные города России. Посылка доставляется в офис<span style="margin-right: 0.44em;"> </span><span style="margin-left: -0.44em;">&laquo;</span>Автотрейдинг&raquo; в&nbsp;Вашем городе. Для получения необходимо предъявить паспорт и&nbsp;номер грузовой декларации<span style="margin-right: 0.3em;"> </span><span style="margin-left: -0.3em;">(</span>сообщит наш менеджер после отправки). Посылку желательно получить в&nbsp;течение 24 часов с&nbsp;момента прихода груза<span style="margin-right: -0.2em;">,</span><span style="margin-left: 0.2em;"> </span>иначе компания<span style="margin-right: 0.44em;"> </span><span style="margin-left: -0.44em;">&laquo;</span>Автотрейдинг&raquo; может взыскать с Вас дополнительную оплату за хранение. Срок доставки и стоимость Вы можете рассчитать на сайте компании.</p><h2>Наложенным платежом</h2><p>При доставке заказа наложенным платежом с помощью<span style="margin-right: 0.44em;"> </span><span style="margin-left: -0.44em;">&laquo;</span>Почты России&raquo;, вы&nbsp;сможете оплатить заказ непосредственно в&nbsp;момент получения товаров.</p>', 1, 3, 1, 'Способы доставки', '2016-06-16 10:08:09'),
@@ -2033,7 +2054,9 @@ INSERT INTO `s_pages` (`id`, `url`, `name`, `meta_title`, `meta_description`, `m
 (5, '404', 'Страница не найдена', 'Страница не найдена', '404  \r\n  Страница не найдена  \r\n \r\n \r\n  Попробуйте посмотреть еще:  \r\n   Главная   \r\n   Блог   \r\n   Оплата   \r\n   Доставка   \r\n   Контакты', 'Страница не найдена', '<div class="col-sm-12 col-md-6 text-center">\r\n<div><span style="color: #56b9ff; font-size: 150px;">404</span></div>\r\n<div><span style="font-size: 36pt;">Страница не найдена</span></div>\r\n</div>\r\n<div class="col-sm-12 col-md-6">\r\n<div style="text-align: center;"><span style="font-size: 18pt;">Попробуйте посмотреть еще:</span></div>\r\n<div style="text-align: center;"><span style="font-size: 24pt;"><a href="../">Главная</a></span></div>\r\n<div style="text-align: center;"><span style="font-size: 24pt;"><a href="../blog">Блог</a></span></div>\r\n<div style="text-align: center;"><span style="font-size: 24pt;"><a href="oplata">Оплата</a></span></div>\r\n<div style="text-align: center;"><span style="font-size: 24pt;"><a href="../dostavka">Доставка</a></span></div>\r\n<div style="text-align: center;"><span style="font-size: 24pt;"><a href="../contact">Контакты</a></span></div>\r\n<div style="text-align: center;">&nbsp;</div>\r\n</div>\r\n<div class="clearfix">&nbsp;</div>', 2, 5, 1, 'Страница не найдена', '2016-06-27 14:05:14'),
 (6, 'contact', 'Контакты', 'Контакты', 'Контакты', 'Контакты', '<p>Москва, ул. Космонавта Волкова 14.</p>\r\n\r\n<p><a href="https://maps.yandex.ua/213/moscow/?um=vCDuUwJDQl85sAd1Lkm9gIjgoKMho6oE&amp;ll=37.645371%2C55.735740&amp;spn=0.010085%2C0.003845&amp;z=13&amp;l=map&amp;ncrnd=909&amp;text=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0%2C%20%D1%83%D0%BB.%20%D0%90%D1%80%D0%B1%D0%B0%D1%82%D0%B5%D1%86%D0%BA%D0%B0%D1%8F%2C%20%20%D0%B4%D0%BE%D0%BC%202c3.&amp;sll=37.632916%2C55.729438&amp;sspn=0.163422%2C0.049113&amp;ol=geo&amp;ouri=ymapsbm1%3A%2F%2Fgeo%3Fll%3D37.661%252C55.727%26spn%3D0.001%252C0.001%26text%3D%25D0%25A0%25D0%25BE%25D1%2581%25D1%2581%25D0%25B8%25D1%258F%252C%2520%25D0%259C%25D0%25BE%25D1%2581%25D0%25BA%25D0%25B2%25D0%25B0%252C%2520%25D0%2590%25D1%2580%25D0%25B1%25D0%25B0%25D1%2582%25D0%25B5%25D1%2586%25D0%25BA%25D0%25B0%25D1%258F%2520%25D1%2583%25D0%25BB%25D0%25B8%25D1%2586%25D0%25B0%252C%25202%25D1%25813">Посмотреть на&nbsp;Яндекс.Картах</a></p>\r\n\r\n<p>Телефон 777-15-51</p>\r\n', 1, 8, 1, 'Контакты', '2016-06-16 10:08:09'),
 (7, 'all-products', 'Все товары', 'Все товары', '', 'Все товары', '', 2, 7, 1, 'Все товары', '2015-11-18 10:32:22'),
-(8, 'brands', 'Бренды', 'Бренды', '', 'Бренды', '', 1, 6, 1, 'Бренды', '2016-06-16 10:08:09');
+(8, 'brands', 'Бренды', 'Бренды', '', 'Бренды', '', 1, 6, 1, 'Бренды', '2016-06-16 10:08:09'),
+(10, 'discounted', 'Акционные товары', 'Акционные товары', '', 'Акционные товары', '', 2, 10, 1, 'Акционные товары', '2016-07-12 17:11:51'),
+(11, 'bestsellers', 'Хиты продаж', 'Хиты продаж', '', 'Хиты продаж', '', 2, 11, 1, 'Хиты продаж', '2016-07-12 17:10:22');
 
 DROP TABLE IF EXISTS `s_payment_methods`;
 CREATE TABLE IF NOT EXISTS `s_payment_methods` (
@@ -2226,7 +2249,7 @@ INSERT INTO `s_products` (`id`, `url`, `brand_id`, `name`, `annotation`, `body`,
 (127, 'vspyshka-canon-speedlite-580ex-ii', NULL, 'Вспышка Canon Speedlite 580EX II', '<p>Вспышка для любых погодных условий.</p>', '<p>Вспышка для любых погодных условий. Управление с помощью меню фотокамеры. Надёжная конструкция защищает детали вспышки от попадания пыли и влаги при съёмке с выносной колодкой. Бесшумный и быстрый перезаряд.</p>', 1, 127, 'Вспышка Canon Speedlite 580EX II', '', '', '2015-11-16 07:17:44', 0, '', 0.0, 0, NULL, '2016-06-27 13:11:24'),
 (128, 'vspyshka-nikon-speedlight-sb-900', NULL, 'Вспышка Nikon Speedlight SB-900', '<p>Профессиональная вспышка i-TTL, совместимая с зеркальными фотокамерами.</p>', '<p>Профессиональная вспышка i-TTL, совместимая с зеркальными фотокамерами. Три шаблона освещения: центрально-взвешенный, равномерный и стандартный. Набор усовершенствованных функций. Система термальной защиты, автоматическое определение фильтра.</p>', 1, 128, 'Вспышка Nikon Speedlight SB-900', '', '', '2015-11-16 07:17:44', 1, '', 0.0, 0, 'hit.png', '2016-06-27 13:11:24'),
 (129, 'tsifrovaya-fotoramka-sony-dpf-a710', NULL, 'Цифровая фоторамка Sony DPF-A710', '<p>Цифровая фоторамка с 7-дюймовым широкоформатным ЖК-экраном со светодиодной подсветкой обеспечивает четкое и детализированное отображение фотографий.</p>', '<p>Цифровая фоторамка с 7-дюймовым широкоформатным ЖК-экраном со светодиодной подсветкой обеспечивает четкое и детализированное отображение фотографий. Встроенная память 128 МБ позволяет хранить до 200 фотографий. Большой выбор настроек слайд-шоу, разные варианты оформления часов и календаря, функции поиска фотографий по папкам, событиям и тегам пользователя. Интеллектуальный сенсор поворачивает изображение при изменении положения рамки. Оснащена пультом дистанционного управления.</p>', 1, 129, 'Цифровая фоторамка Sony DPF-A710', '', '', '2015-11-16 07:17:44', 0, '', 0.0, 0, NULL, '2016-06-27 13:11:24'),
-(130, 'tsifrovaya-fotoramka-transcend-pf705', 1, 'Цифровая фоторамка Transcend PF705', '<p>Широкоэкранная цветная TFT LCD панель с диагональю 7 дюймов и отношением сторон 16:9.</p>', '<p>Широкоэкранная цветная TFT LCD панель с диагональю 7 дюймов и отношением сторон 16:9. Поддержка USB флэш-накопителей и карт памяти SD/SDHC/MMC/MS Полная совместимость с интерфейсом Hi-Speed USB 2.0 и обратная совместимость с USB 1.1. Прямое подключение к ПК с помощью USB для простого обмена файлами. Выбор различных фотографий для создания слайдшоу. Возможность просмотра изображений в режиме слайд-шоу, в режиме пиктограмм, в обычномрежиме, а также возможность увеличения изображения. Функция напоминаний о важных датах/событиях. Функции календаря и часов. Автоматическое выключение и таймер для перехода в неактивный режим. Возможность выбора цветовых режимов. Цвета: белый, черный.</p>', 1, 130, 'Цифровая фоторамка Transcend PF705', 'Цифровая фоторамка Transcend PF705, Bosch, Пятый уровень вложенности', 'Широкоэкранная цветная TFT LCD панель с диагональю 7 дюймов и отношением сторон 16:9.', '2015-11-16 07:17:44', 1, '', 0.0, 0, 'hit.png', '2016-06-27 13:43:14'),
+(130, 'tsifrovaya-fotoramka-transcend-pf705', 1, 'Цифровая фоторамка Transcend PF705', '<p>Широкоэкранная цветная TFT LCD панель с диагональю 7 дюймов и отношением сторон 16:9.</p>', '<p>Широкоэкранная цветная TFT LCD панель с диагональю 7 дюймов и отношением сторон 16:9. Поддержка USB флэш-накопителей и карт памяти SD/SDHC/MMC/MS Полная совместимость с интерфейсом Hi-Speed USB 2.0 и обратная совместимость с USB 1.1. Прямое подключение к ПК с помощью USB для простого обмена файлами. Выбор различных фотографий для создания слайдшоу. Возможность просмотра изображений в режиме слайд-шоу, в режиме пиктограмм, в обычномрежиме, а также возможность увеличения изображения. Функция напоминаний о важных датах/событиях. Функции календаря и часов. Автоматическое выключение и таймер для перехода в неактивный режим. Возможность выбора цветовых режимов. Цвета: белый, черный.</p>', 1, 130, 'Цифровая фоторамка Transcend PF705', 'Цифровая фоторамка Transcend PF705, Bosch, Пятый уровень вложенности', 'Широкоэкранная цветная TFT LCD панель с диагональю 7 дюймов и отношением сторон 16:9.', '2015-11-16 07:17:44', 1, '', 0.0, 0, 'hit.png', '2016-08-02 16:52:21'),
 (131, 'koktejlnoe-plate-tulpan', NULL, 'Коктейльное платье Tulpan', '<p>97% полиэстер, 5% эластан</p>', '<p>97% полиэстер, 5% эластан</p>', 1, 131, 'Коктейльное платье Tulpan', '', '', '2015-11-16 07:17:44', 0, '', 0.0, 0, NULL, '2016-06-27 13:11:24'),
 (132, 'koktejlnoe-plate-strass-buck', NULL, 'Коктейльное платье Strass Buck', '<p>95% полиэстер, 5% спандекс</p>', '<p>95% полиэстер, 5% спандекс</p>', 1, 132, 'Коктейльное платье Strass Buck', '', '', '2015-11-16 07:17:44', 0, '', 0.0, 0, NULL, '2016-06-27 13:11:24'),
 (133, 'plate-zebra-s-originalnym-remnem', NULL, 'Платье Зебра с оригинальным ремнем', '<p>Красивое платье для работы и отдыха из плотного стрейч-трикотажа.</p><p>Высококачественный плотный трикотаж с добавлением эластана делает платье комфортным и удобным в носке.</p>', '<p>Красивое платье для работы и отдыха из плотного стрейч-трикотажа.</p><p>Высококачественный плотный трикотаж с добавлением эластана делает платье комфортным и удобным в носке.</p><p>Оригинальный ремень и необычная расцветка покажут Вашу индивидуальность и стиль.</p><p>Параметры модели: рост 176см, ОГ - 88см, ОТ -65 см, ОБ-94 см.</p>', 1, 133, 'Платье Зебра с оригинальным ремнем', '', '', '2015-11-16 07:17:44', 0, '', 0.0, 0, NULL, '2016-06-27 13:11:24'),
@@ -2559,9 +2582,10 @@ CREATE TABLE IF NOT EXISTS `s_translations` (
   `lang_ch` varchar(255) NOT NULL DEFAULT '',
   `lang_by` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=275 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=313 DEFAULT CHARSET=utf8;
 
 INSERT INTO `s_translations` (`id`, `template`, `in_config`, `label`, `lang_ru`, `lang_en`, `lang_uk`, `lang_ch`, `lang_by`) VALUES
+(275, '', 0, 'products_brand', 'Бренд', 'Brand', 'Бренд', '', ''),
 (133, '', 0, 'breadcrumb_brands', 'Бренды', 'Brands', 'Бренди', '', ''),
 (132, '', 0, 'breadcrumb_cart', 'Корзина', 'Cart', 'Кошик', '', ''),
 (246, '', 0, 'breadcrumb_comparison', 'Сравнение', 'Comparison', 'Порівняння', '', ''),
@@ -2758,7 +2782,44 @@ INSERT INTO `s_translations` (`id`, `template`, `in_config`, `label`, `lang_ru`,
 (271, '', 0, 'wishlist_info_wishlist', 'Избранное', 'Wishlist', 'Вибране', '', ''),
 (272, '', 0, 'wishlist_title', 'Избранные товары', 'Favorites', 'Вибрані товари', '', ''),
 (273, '', 0, 'yandex_map_lang', 'ru_RU', 'en_US', 'uk_UA', '', ''),
-(274, '', 0, 'product_related_post', 'Рекомендуемые статьи', 'Related articles', 'Рекомендовані статті', '', '');
+(274, '', 0, 'product_related_post', 'Рекомендуемые статьи', 'Related articles', 'Рекомендовані статті', '', ''),
+(276, '', 0, 'email_order_title', 'Ваш заказ №', 'Your order №', 'Ваше замовлення №', '', ''),
+(277, '', 0, 'email_order_on_total', 'На сумму', 'On total', 'На суму', '', ''),
+(278, '', 0, 'email_order_paid', 'Оплачен', 'Paid', 'Сплочено', '', ''),
+(279, '', 0, 'email_order_not_paid', 'Еще не оплачен', 'Not paid', 'ще не сплачено', '', ''),
+(280, '', 0, 'email_order_status_0', 'Ждет обработки', 'wait', 'Чекає обробки', '', ''),
+(281, '', 0, 'email_order_status_1', 'в обработке', 'in process', 'в обробці', '', ''),
+(282, '', 0, 'email_order_status_2', 'выполнен', 'done', 'виконано', '', ''),
+(283, '', 0, 'email_order_status_3', 'отменен', 'cancel', 'скасовано', '', ''),
+(284, '', 0, 'email_order_status', 'Статус', 'Status', 'Статус', '', ''),
+(285, '', 0, 'email_order_payment', 'Оплата', 'Payment', 'Оплата', '', ''),
+(286, '', 0, 'email_order_name', 'Имя, фамилия', 'Name, surname', 'Ім\'я, прізвище', '', ''),
+(287, '', 0, 'email_order_email', 'Email', 'Email', 'Email', '', ''),
+(288, '', 0, 'email_order_phone', 'Телефон', 'Phone', 'Телефон', '', ''),
+(289, '', 0, 'email_order_address', 'Адрес доставки', 'Address', 'Адреса', '', ''),
+(290, '', 0, 'email_order_comment', 'Комментарий', 'Comments', 'Коментарі', '', ''),
+(291, '', 0, 'email_order_date', 'Дата', 'Date', 'Дата', '', ''),
+(292, '', 0, 'email_order_purchases', 'Вы заказали:', 'You ordered', 'Ви замовили', '', ''),
+(293, '', 0, 'email_order_coupon', 'Купон', 'Coupon', 'Купон', '', ''),
+(294, '', 0, 'email_order_total', 'Итого', 'Total', 'Всього', '', ''),
+(295, '', 0, 'email_order_info', 'Вы всегда можете проверить состояние заказа по ссылке:', 'You can always check your order status on the link:', 'Ви можете перевірити статус замовлення по посиланню:', '', ''),
+(296, '', 0, 'email_order_discount', 'Скидка', 'discount', 'знижка', '', ''),
+(297, '', 0, 'email_order_download', 'Скачать', 'download', 'Завантажити', '', ''),
+(298, '', 0, 'email_comment_theme', 'Ответ на комментарий', 'Answer on comment', 'Відповідь на відгук', '', ''),
+(299, '', 0, 'email_comment_title', 'Вы оставили комментарий', 'You sent a commnet', 'Ви залишили відгук', '', ''),
+(300, '', 0, 'email_comment_on_site', 'на сайте', 'on website', 'на сайтi', '', ''),
+(301, '', 0, 'email_comment_product', 'Товар:', 'Product:', 'Товар:', '', ''),
+(302, '', 0, 'email_comment_artilcle', 'Статья:', 'Article:', 'Стаття:', '', ''),
+(303, '', 0, 'email_comment_answer', 'Ответ', 'Answer', 'Відповідь', '', ''),
+(304, '', 0, 'email_feedback_subject', 'Ответ на заявку', 'Replying to a request', 'Відповідь на заявку', '', ''),
+(305, '', 0, 'email_feedback_title', 'Вы оставили заявку', 'You have left the application', 'Ви залишили заявку', '', ''),
+(306, '', 0, 'email_feedback_answer', 'Ответ:', 'Answer:', 'Відповідь:', '', ''),
+(307, '', 0, 'email_password_subject', 'Новый пароль', 'New password', 'Новий пароль', '', ''),
+(308, '', 0, 'email_password_on_site', ', на сайте ', 'on site', ', на сайтi', '', ''),
+(309, '', 0, 'email_password_was_reply', 'был сделан запрос на восстановление вашего пароля.', 'a request was made to restore your password.', 'був зроблений запит на відновлення вашого пароля.', '', ''),
+(310, '', 0, 'email_password_change_pass', 'Вы можете изменить пароль, перейдя по следующей ссылке:', 'You can change your password by clicking on the following link:', 'Ви можете змінити пароль, перейшовши за наступним посиланням:', '', ''),
+(311, '', 0, 'email_password_change_link', 'Изменить пароль', 'Change a password', 'Змінити пароль', '', ''),
+(312, '', 0, 'email_password_text', '<p>Эта ссылка действует в течение нескольких минут.</p>\r\n		<p>Если это письмо пришло вам по ошибке, проигнорируйте его.</p>', '<p> This link is valid for a few minutes. </p>\r\n<p> If this letter has come to you in error, please ignore it. </p>', '<p> Це посилання діє протягом декількох хвилин. </p>\r\n<p> Якщо цей лист прийшло вам помилково, ігноруйте його. </p>', '', '');
 
 DROP TABLE IF EXISTS `s_users`;
 CREATE TABLE IF NOT EXISTS `s_users` (

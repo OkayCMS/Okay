@@ -5,7 +5,7 @@ require_once('api/Okay.php');
 class SettingsAdmin extends Okay {
     
     private $allowed_image_extentions = array('png', 'gif', 'jpg', 'jpeg', 'ico');
-    public $passwd_file_1c = "backend/cml/.passwd";
+    public $passwd_file_1c = "cml/.passwd";
 
     public function fetch() {
         $managers = $this->managers->get_managers();

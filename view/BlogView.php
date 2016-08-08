@@ -56,6 +56,7 @@ class BlogView extends View {
                 $comment->object_id = $post->id;
                 $comment->type      = 'blog';
                 $comment->ip        = $_SERVER['REMOTE_ADDR'];
+                $comment->lang_id   = $_SESSION['lang_id'];
                 
                 // Если были одобренные комментарии от текущего ip, одобряем сразу
                 $this->db->query("SELECT 1 FROM __comments WHERE approved=1 AND ip=? LIMIT 1", $comment->ip);

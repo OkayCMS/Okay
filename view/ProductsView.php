@@ -12,7 +12,10 @@ class ProductsView extends View {
     private $subdir = '';
     private $lang_label = '';
     private $catalog_type = '';
+    private $uri_array = array();
     private $is_wrong_params = 0;
+    private $features_urls = array();
+    private $category_brands = array();
         
     public function __construct() {
         parent::__construct();
@@ -32,16 +35,8 @@ class ProductsView extends View {
          */
         
         //определение текущего положения и выставленных параметров
-        $uri = @parse_url($_SERVER["REQUEST_URI"]);
-        preg_match("~$this->subdir(/?$this->lang_label)?/?(catalog|all-products|brands)/?~",$uri['path'], $this->catalog_type);
-        $this->catalog_type = $this->catalog_type[2];
-        //убираем модификатор каталога
-        $uri = preg_replace("~$this->subdir(/?$this->lang_label)?/?(catalog|all-products|brands)/?~",'',$uri['path']);
-        $uri_array = (empty($uri) ? array() : explode('/',$uri));
-        if ($this->catalog_type == 'catalog' || $this->catalog_type == 'brands') {
-            array_shift($uri_array);
-        }
-        foreach($uri_array as $k=>$v) {
+        $this->uri_array = $this->filter_chpu_parse_url();
+        foreach($this->uri_array as $k=>$v) {
             if(empty($v)) {
                 continue;
             }
@@ -50,13 +45,18 @@ class ProductsView extends View {
                 $this->is_wrong_params = 1;
             } else {
                 @list($param_name, $param_values) = explode('-',$v);
+                if (in_array($this->page->url, array('all-products', 'discounted', 'bestsellers'))
+                        && !in_array($param_name, array('page', 'sort'))) {
+                    $this->is_wrong_params = 1;
+                    break;
+                }
                 switch($param_name) {
                     case 'brand': {
                         $_GET['b'] = array();
                         foreach(explode('_',$param_values) as $bv) {
                             if(($brand = $this->brands->get_brand((string)$bv)) && !in_array($brand->id, $_GET['b'])) {
                                 $_GET['b'][] = $brand->id;
-                                $this->meta_array['brand'][] = 'Бренд '. $brand->name;
+                                $this->meta_array['brand'][] = $this->translations->products_brand.' '. $brand->name;
                             } else {
                                 $this->is_wrong_params = 1;
                             }
@@ -158,16 +158,10 @@ class ProductsView extends View {
         if(is_array(reset($params))) {
             $params = reset($params);
         }
-        
+
         $result_array = array('brand'=>array(),'features'=>array(),'sort'=>null,'page'=>null);
         //Определяем, что у нас уже есть в строке
-        $uri = @parse_url($_SERVER["REQUEST_URI"]);
-        $uri = preg_replace("~$this->subdir(/?$this->lang_label)?/?(catalog|all-products|brands)/?~",'',$uri['path']);
-        $uri_array = (empty($uri) ? array() : explode('/',$uri));
-        if ($this->catalog_type == 'catalog' || $this->catalog_type == 'brands') {
-            array_shift($uri_array);
-        }
-        foreach($uri_array as $k=>$v) {
+        foreach($this->uri_array as $k=>$v) {
             if($k>0 || !($brand=$this->brands->get_brand((string)$v))) {
                 list($param_name, $param_values) = explode('-',$v);
                 switch($param_name) {
@@ -261,21 +255,37 @@ class ProductsView extends View {
         if(empty($brands_urls)) {
             return false;
         }
-        $this->db->query("SELECT url FROM __brands WHERE url in(?@) ORDER BY name", (array)$brands_urls);
-        return $this->db->results('url');
+        $result = array();
+        foreach ($this->category_brands as $b) {
+            if (in_array($b->url, $brands_urls)) {
+                $result[] = $b->url;
+            }
+        }
+        return $result;
     }
     private function filter_chpu_sort_features($features = array()) {
         if(empty($features)) {
             return false;
         }
-        $this->db->query("SELECT url FROM __features WHERE url in(?@) ORDER BY position", (array)array_keys($features));
         $result_string = '';
-        foreach($this->db->results('url') as $v) {
-            if(in_array($v,array_keys($features))) {
-                $result_string .= '/' . $v . '-' . implode('_',$features[$v]);
+        foreach ($this->features_urls as $furl) {
+            if (in_array($furl, array_keys($features))) {
+                $result_string .= '/'.$furl.'-'.implode('_', $features[$furl]);
             }
         }
         return $result_string;
+    }
+    private function filter_chpu_parse_url() {
+        $uri = @parse_url($_SERVER["REQUEST_URI"]);
+        preg_match("~$this->subdir(/?$this->lang_label)?/?(catalog|all-products|brands|discounted|bestsellers)/?~", $uri['path'], $this->catalog_type);
+        $this->catalog_type = $this->catalog_type[2];
+        //убираем модификатор каталога
+        $uri = preg_replace("~$this->subdir(/?$this->lang_label)?/?(catalog|all-products|brands|discounted|bestsellers)/?~",'',$uri['path']);
+        $this->uri_array = (empty($uri) ? array() : explode('/',$uri));
+        if ($this->catalog_type == 'catalog' || $this->catalog_type == 'brands') {
+            array_shift($this->uri_array);
+        }
+        return $this->uri_array;
     }
     // ЧПУ END
 
@@ -320,38 +330,20 @@ class ProductsView extends View {
             $filter['category_id'] = $category->children;
         }
         
-        //lastModify
-        $last_modify = array();
-        $brand_id_filter = '';
-        $category_id_filter = '';
-        if(!empty($filter['brand_id'])) {
-            $brand_id_filter = $this->db->placehold('AND p.brand_id in(?@)', (array)$filter['brand_id']);
-            $last_modify[] = $brand->last_modify;
-        }
-        if(!empty($filter['category_id'])) {
-			$category_id_filter = $this->db->placehold('INNER JOIN __products_categories pc ON pc.product_id = p.id AND pc.category_id in(?@)', (array)$filter['category_id']);
-            $last_modify[] = $category->last_modify;
-		}
-        $this->db->query("SELECT p.last_modify
-			FROM __products p
-			$category_id_filter
-			WHERE 1 $brand_id_filter
-			GROUP BY p.id");
-        $res = $this->db->results('last_modify');
-        if (!empty($res)) {
-            $last_modify = array_merge($last_modify, $res);
-        }
-        if ($this->page) {
-            $last_modify[] = $this->page->last_modify;
-        }
-        $this->setHeaderLastModify(max($last_modify));
-        //lastModify END
-        
         // Если задано ключевое слово
         $keyword = $this->request->get('keyword');
         if (!empty($keyword)) {
             $this->design->assign('keyword', $keyword);
             $filter['keyword'] = $keyword;
+        }
+
+        $mode = $this->request->get('mode');
+        if (!empty($mode)) {
+            if ($mode == 'bestsellers') {
+                $filter['featured'] = 1;
+            } elseif ($mode == 'discounted') {
+                $filter['discounted'] = 1;
+            }
         }
         
         // Сортировка товаров, сохраняем в сесси, чтобы текущая сортировка оставалась для всего сайта
@@ -370,6 +362,7 @@ class ProductsView extends View {
             $features = array();
             foreach($this->features->get_features(array('category_id'=>$category->id, 'in_filter'=>1)) as $feature) {
                 $features[$feature->id] = $feature;
+                $this->features_urls[] = $feature->url;
                 if($val = $this->request->get($feature->id)) {
                     $filter['features'][$feature->id] = $val;
                 }
@@ -428,6 +421,36 @@ class ProductsView extends View {
         
         $filter['page'] = $current_page;
         $filter['limit'] = $items_per_page;
+
+        if ($this->request->get('page') != 'all' && $current_page > 1 && $current_page > $pages_num) {
+            return false;
+        }
+        //lastModify
+        $last_modify = array();
+        $brand_id_filter = '';
+        $category_id_filter = '';
+        if(!empty($filter['brand_id'])) {
+            $brand_id_filter = $this->db->placehold('AND p.brand_id in(?@)', (array)$filter['brand_id']);
+            $last_modify[] = $brand->last_modify;
+        }
+        if(!empty($filter['category_id'])) {
+            $category_id_filter = $this->db->placehold('INNER JOIN __products_categories pc ON pc.product_id = p.id AND pc.category_id in(?@)', (array)$filter['category_id']);
+            $last_modify[] = $category->last_modify;
+        }
+        $this->db->query("SELECT p.last_modify
+			FROM __products p
+			$category_id_filter
+			WHERE 1 $brand_id_filter
+			GROUP BY p.id");
+        $res = $this->db->results('last_modify');
+        if (!empty($res)) {
+            $last_modify = array_merge($last_modify, $res);
+        }
+        if ($this->page) {
+            $last_modify[] = $this->page->last_modify;
+        }
+        $this->setHeaderLastModify(max($last_modify));
+        //lastModify END
         
         ///////////////////////////////////////////////
         // Постраничная навигация END
@@ -476,8 +499,8 @@ class ProductsView extends View {
         
         // Выбираем бренды, они нужны нам в шаблоне
         if(!empty($category)) {
-            $brands = $this->brands->get_brands(array('category_id'=>$category->children, 'visible'=>1));
-            $category->brands = $brands;
+            $this->category_brands = $this->brands->get_brands(array('category_id'=>$category->children, 'visible'=>1));
+            $category->brands = $this->category_brands;
         }
         
         if(isset($prices['current'])) {

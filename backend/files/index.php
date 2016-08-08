@@ -1,4 +1,7 @@
 <?php
+    if(!empty($_SERVER['HTTP_USER_AGENT'])){
+        session_name(md5($_SERVER['HTTP_USER_AGENT']));
+    }
 	session_start();
 	require_once('../../api/Okay.php');
 	$okay = new Okay();

@@ -129,17 +129,16 @@
 </script>
 {/literal}
 
-<h2>
+<div id="compact_languages_block">
     <div class="helper_wrap" style="margin-left: -6px">
         <a class="top_help" id="show_help_search" href="https://www.youtube.com/watch?v=pAgDKW7lqmM" target="_blank"></a>
         <div class="right helper_block topvisor_help">
             <p>Видеоинструкция по разделу</p>
         </div>
     </div>
-</h2>
-<br>
 
-{if $languages}{include file='include_languages.tpl'}{/if}
+    {if $languages}{include file='include_languages.tpl'}{/if}
+</div>
 
 {if $message_success}
     <!-- Системное сообщение -->

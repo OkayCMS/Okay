@@ -1,7 +1,7 @@
 <?php
 
 // Папка для хранения временных файлов синхронизации
-$dir = 'backend/cml/temp/';
+$dir = 'cml/temp/';
 
 // Обновлять все данные при каждой синхронизации
 $full_update = true;
@@ -14,9 +14,11 @@ $max_exec_time = min(30, @ini_get("max_execution_time"));
 if(empty($max_exec_time)) {
     $max_exec_time = 30;
 }
-
+if(!empty($_SERVER['HTTP_USER_AGENT'])){
+    session_name(md5($_SERVER['HTTP_USER_AGENT']));
+}
 session_start();
-chdir('../..');
+chdir('..');
 include_once('api/Okay.php');
 $okay = new Okay();
 

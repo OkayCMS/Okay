@@ -2,7 +2,7 @@
 
 require_once('api/Okay.php');
 
-class Interkassa extends Okay
+class Interkassa2 extends Okay
 {	
 	public function checkout_form($order_id, $button_text = null)
 	{
@@ -21,7 +21,7 @@ class Interkassa extends Okay
 		$desc = 'Оплата заказа №'.$order->id;
 		
 		$success_url = $this->config->root_url.'/order/'.$order->url;
-		$callback_url = $this->config->root_url.'/payment/Interkassa/callback.php';
+		$callback_url = $this->config->root_url.'/payment/Interkassa2/callback.php';
 
 
         $res['settings_pay'] = $settings;

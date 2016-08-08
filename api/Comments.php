@@ -19,7 +19,8 @@ class Comments extends Okay {
                 c.type, 
                 c.text, 
                 c.date, 
-                c.approved 
+                c.approved,
+                c.lang_id
             FROM __comments c 
             WHERE 
                 1 
@@ -96,7 +97,8 @@ class Comments extends Okay {
                 c.text, 
                 c.type, 
                 c.date, 
-                c.approved
+                c.approved,
+                c.lang_id
             FROM __comments c 
             WHERE 
                 1 
