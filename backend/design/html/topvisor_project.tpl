@@ -138,9 +138,9 @@
                                 {/foreach}
                             </select>
                             <label>С</label>
-                            <input type="text" value="{date('d.m.Y', time()-2419200)}" class="frequency_date_from ajax_freeze" readonly="" style="width: 100px; margin-right: 4px;" />
+                            <input type="text" value="{date('d.m.Y', time()-2419200)}" class="frequency_date_from ajax_freeze" readonly style="width: 100px; margin-right: 4px;" />
                             <label>По</label>
-                            <input type="text" value="{date('d.m.Y', time()+86400)}" class="frequency_date_to ajax_freeze" readonly="" style="width: 100px;" />
+                            <input type="text" value="{date('d.m.Y', time()+86400)}" class="frequency_date_to ajax_freeze" readonly style="width: 100px;" />
                             <br />
                             <a href="javascript:;" class="button frequency_date ajax_freeze">Применить</a>
                         </div>

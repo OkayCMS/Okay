@@ -431,7 +431,9 @@ class ProductsView extends View {
         $category_id_filter = '';
         if(!empty($filter['brand_id'])) {
             $brand_id_filter = $this->db->placehold('AND p.brand_id in(?@)', (array)$filter['brand_id']);
-            $last_modify[] = $brand->last_modify;
+            if(!empty($brand)){
+                $last_modify[] = $brand->last_modify;
+            }
         }
         if(!empty($filter['category_id'])) {
             $category_id_filter = $this->db->placehold('INNER JOIN __products_categories pc ON pc.product_id = p.id AND pc.category_id in(?@)', (array)$filter['category_id']);

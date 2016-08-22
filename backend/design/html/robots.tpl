@@ -21,6 +21,7 @@
 
 
 {$meta_title = "Robots.txt $style_file" scope=parent}
+
 {if $message_error}
     <!-- Системное сообщение -->
     <div class="message message_error">
@@ -29,6 +30,14 @@
             Установите права на запись файла robots.txt
         {/if}
         </span>
+    </div>
+    <!-- Системное сообщение (The End)-->
+{/if}
+
+{if $message_success}
+    <!-- Системное сообщение -->
+    <div class="message message_success">
+        <span class="text">{if $message_success == 'updated'}Robots обновлен{/if}</span>
     </div>
     <!-- Системное сообщение (The End)-->
 {/if}

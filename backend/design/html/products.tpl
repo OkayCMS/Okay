@@ -111,8 +111,7 @@
                         <a href="{url module=ProductAdmin id=$product->id return=$smarty.server.REQUEST_URI}">
                             <img src="{$image->filename|escape|resize:35:35}"/></a>
                     {else}
-                        <img height="35" width="35" src="../design/{$settings->theme|escape}/images/no_image.png"/>
-
+                        <img height="35" width="35" src="/backend/design/images/no_image.png"/>
                     {/if}
                 </div>
 			<div class="name product_name cell">
@@ -146,7 +145,7 @@
 			</div>
 			<div class="icons cell products">
 				<a class="preview"   title="Предпросмотр в новом окне" href="../{$lang_link}products/{$product->url}" target="_blank"></a>
-				<a class="enable"    title="Активен"                 href="#"></a>
+				<a class="enable"    title="Активность"                 href="#"></a>
 				<a class="featured"  title="Хит продаж"           href="#"></a>
 				<a class="duplicate" title="Дублировать"             href="#"></a>
 				<a class="delete"    title="Удалить"                 href="#"></a>

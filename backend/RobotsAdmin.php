@@ -26,6 +26,7 @@ class RobotsAdmin extends Okay {
             $perms = is_writable('robots.txt');
             if($perms) {
                 file_put_contents('robots.txt', strip_tags($data), LOCK_EX);
+                $this->design->assign('message_success', 'updated');
             }
             else{
                 $this->design->assign('message_error','write_error');

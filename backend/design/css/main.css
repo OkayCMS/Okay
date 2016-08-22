@@ -668,3 +668,10 @@ input[name*="check"]:checked + label{
 .dash_link:hover{
     border-bottom: none;
 }
+.id_currency{
+    width: 80px;
+}
+.id_currency input{
+    width: 30px;
+    text-align: center;
+}

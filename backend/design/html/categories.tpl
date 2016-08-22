@@ -68,7 +68,7 @@
                                                 <a href="{url module=CategoryAdmin id=$category->id return=$smarty.server.REQUEST_URI}">
                                                     <img src="{$category->image|resize:35:35:false:$config->resized_categories_dir}" alt="" /></a>
                                                 {else}
-                                                    <img height="35" width="35" src="../design/{$settings->theme|escape}/images/no_image.png"/>
+                                                    <img height="35" width="35" src="/backend/design/images/no_image.png"/>
                                             {/if}
                                         </div>
                                         <div class="cell categ_name">
@@ -76,7 +76,7 @@
                                         </div>
                                         <div class="icons cell cat">
                                             <a class="preview" title="Предпросмотр в новом окне" href="../{$lang_link}catalog/{$category->url}" target="_blank"></a>
-                                            <a class="enable" title="Активна" href="#"></a>
+                                            <a class="enable" title="Активность" href="#"></a>
                                             <a class="delete" title="Удалить" href="#"></a>
                                         </div>
                                         <div class="icons cell">

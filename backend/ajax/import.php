@@ -33,7 +33,7 @@ class ImportAjax extends Okay {
     private $category_delimiter = ',,';                       // Разделитель каегорий в файле
     private $subcategory_delimiter = '/';                    // Разделитель подкаегорий в файле
     private $column_delimiter      = ';';
-    private $products_count        = 10;
+    private $products_count        = 100;
     private $columns               = array();
     
     public function import() {

@@ -16,7 +16,7 @@ class ExportAjax extends Okay {
     );
     
     private $column_delimiter = ';';
-    private $users_count = 10;
+    private $users_count = 100;
     private $export_files_dir = 'backend/files/export_users/';
     private $filename = 'users.csv';
     

@@ -153,7 +153,8 @@ class ProductsAdmin extends Okay {
                         $temp_filter = $filter;
                         $temp_filter['page'] = $limit+1;
                         $temp_filter['limit'] = 1;
-                        $target_product = array_pop($this->products->get_products($temp_filter));
+                        $tmp = $this->products->get_products($temp_filter);
+                        $target_product = array_pop($tmp);
                         $target_position = $target_product->position;
                         
                         // Если вылезли за последний товар - берем позицию последнего товара в качестве цели перемещения

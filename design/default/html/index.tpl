@@ -48,9 +48,7 @@
         <meta property="og:url" content="{$config->root_url}{if $lang_link}/{str_replace('/', '', $lang_link)}{/if}{$canonical}"/>
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="{$product->name|escape}"/>
-        <meta property="og:image" content="{$product->image->filename|resize:330:300}"/>
         <meta property="og:description" content='{$product->annotation}'/>
-        <link rel="image_src" href="{$product->image->filename|resize:330:300}"/>
         {if $product->images}
             {foreach $product->images|cut as $i=>$image}
                 {*for vk*}
@@ -59,6 +57,8 @@
                 <meta property="og:image" content="{$image->filename|resize:330:300}"/>
             {/foreach}
         {/if}
+        <meta property="og:image" content="{$product->image->filename|resize:330:300}"/>
+        <link rel="image_src" href="{$product->image->filename|resize:330:300}"/>
         {*twitter*}
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="{$product->name|escape}">

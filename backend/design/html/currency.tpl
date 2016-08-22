@@ -140,6 +140,7 @@ $(function() {
     <div id="currencies_block">
         <ul id="header">
             <li class="move"></li>
+            <li class="id_currency">ID Валюты</li>
             <li class="name">Название валюты</li>
             <li class="icons"></li>
             <li class="sign">Знак</li>
@@ -150,6 +151,9 @@ $(function() {
                 <ul class="sortable {if !$c->enabled}invisible{/if} {if $c->cents == 2}cents{/if}">
                     <li class="move">
                         <div class="move_zone"></div>
+                    </li>
+                    <li class="id_currency">
+                        <input type="text" disabled value="{$c->id}">
                     </li>
                     <li class="name {if $c@first}main_curr{/if}">
                         <input name="currency[id][{$c->id}]" type="hidden" value="{$c->id|escape}"/>

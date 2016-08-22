@@ -141,7 +141,7 @@ $(function() {
                     'callbacks'  =>'Заказ обратного звонка',
                     'special'    =>'Промо-изображения',
                     'topvisor'   =>'Топвизор',
-                    'yametrika'  =>'Яндекс Мектрика',
+                    'yametrika'  =>'Яндекс Метрика',
                     'robots'     =>'Файл robots.txt'
 				]}
 				

@@ -9,7 +9,7 @@
 
 		{* Заголовок страницы *}
 		<h1 class="m-b-1">
-			<span data-product="{$product->id}" itemprop="name">{$product->name|escape}</span>
+			<span data-product="{$product->id}" itemprop="name">{$product->name|escape} {if $product->variants|count == 1 && !empty($product->variant->name)}({$product->variant->name|escape}){/if}</span>
 		</h1>
 
 		<div class="row fn-transfer">
@@ -83,7 +83,6 @@
 
 						{* Артикул товара *}
 						<div{if !$product->variant->sku} class="hidden-xs-up"{/if}><span data-language="{$translate_id['product_sku']}">{$lang->product_sku}</span>: <span class="fn-sku">{$product->variant->sku}</span></div>
-
 						{* Варианты товара *}
 						<select name="variant" class="fn-variant okaycms form-control c-select m-t-1 m-b-1-md_down{if $product->variants|count < 2} hidden-xs-up{/if}">
 							{foreach $product->variants as $v}
@@ -276,7 +275,7 @@
                             {comments_tree comments=$comments}
 						{else}
 							<div class="text-muted m-b-1">
-								<span data-language="{$translate_id['cart_header']}">{$lang->product_no_comments}</span>
+								<span data-language="{$translate_id['product_no_comments']}">{$lang->product_no_comments}</span>
 							</div>
 						{/if}
 					</div>

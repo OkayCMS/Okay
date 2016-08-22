@@ -24,7 +24,7 @@ class ImportAjax extends Okay {
     private $import_files_dir      = 'backend/files/import/'; // Временная папка
     private $import_file           = 'multi_import.csv';           // Временный файл
     private $column_delimiter      = ';';
-    private $products_count        = 10;
+    private $products_count        = 100;
     private $columns               = array();
 
     public function import() {

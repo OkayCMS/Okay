@@ -9,7 +9,9 @@
 		<div class="container">
 			{* Заголовок блока *}
 			<div class="h1 m-b-1">
-				<span data-language="{$translate_id['main_recommended_products']}">{$lang->main_recommended_products}</span>
+                <a class="link-black" href="{$lang_link}bestsellers">
+				    <span data-language="{$translate_id['main_recommended_products']}">{$lang->main_recommended_products}</span>
+                </a>
 			</div>
 			<div class="row">
 				{foreach $featured_products as $product}
@@ -52,7 +54,9 @@
 		<div class="container">
 			{* Заголовок блока *}
 			<div class="h1 m-b-1">
-				<span data-language="{$translate_id['main_action_goods']}">{$lang->main_action_goods}</span>
+                <a class="link-black" href="{$lang_link}discounted">
+				    <span data-language="{$translate_id['main_action_goods']}">{$lang->main_action_goods}</span>
+                </a>
 			</div>
 			<div class="row">
 				{foreach $discounted_products as $product}

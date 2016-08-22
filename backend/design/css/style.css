@@ -1011,7 +1011,7 @@ textarea.editor_small{
     display: block;
     padding-top: 6px;
 }
-#currencies_block li.icons { width: 80px; padding-top: 5px;}
+#currencies_block li.icons { width: 70px; padding-top: 5px;}
 #currencies_block li.sign { width: 120px; }
 #currencies_block li.sign input { width: 95px; }
 #currencies_block li.iso { width: 120px; }

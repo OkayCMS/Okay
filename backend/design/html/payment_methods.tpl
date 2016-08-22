@@ -62,7 +62,7 @@
                                 <img src="{$payment_method->image|escape|resize:35:35:false:$config->resized_payments_dir}"/>
                             </a>
                         {else}
-                            <img height="35" width="35" src="../design/{$settings->theme|escape}/images/no_image.png"/>
+                            <img height="35" width="35" src="/backend/design/images/no_image.png"/>
                         {/if}
                     </div>
                     <div class="name cell">

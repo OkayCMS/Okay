@@ -720,7 +720,7 @@ $(function(){
                     <li feature_id="{$feature_id}">
                         <label class="property">{$feature->name}</label>
                         <input class="okay_inp option_value" type="text" name="options[{$feature_id}][value]" value="{$options.$feature_id->value|escape}"/>
-                        <input class="okay_inp grey_translit" style="margin-left:175px;margin-top:2px;" type="text" name="options[{$feature_id}][translit]" readonly="" value="{$options.$feature_id->translit|escape}"/>
+                        <input class="okay_inp grey_translit" style="margin-left:175px;margin-top:2px;" type="text" name="options[{$feature_id}][translit]" readonly value="{$options.$feature_id->translit|escape}"/>
                     </li>
                 {/foreach}
             </ul>
