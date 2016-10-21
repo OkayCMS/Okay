@@ -15,7 +15,7 @@
             ],
             toolbar_items_size : 'small',
             menubar:'file edit insert view format table tools',
-            toolbar1: "fontselect formatselect fontsizeselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | forecolor backcolor | table | link unlink anchor media image | fullscreen code",
+            toolbar1: "fontselect formatselect fontsizeselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | forecolor backcolor | table | link unlink anchor media image | fullscreen code",
             statusbar: true,
             font_formats: "Andale Mono=andale mono,times;"+
             "Arial=arial,helvetica,sans-serif;"+

@@ -47,7 +47,7 @@
                     {if $special->filename}
                         <img height="35" width="35" src="../{$config->special_images_dir}{$special->filename}" alt="{$special->name}" />
                     {else}
-                        <img height="35" width="35" src="../design/{$settings->theme|escape}/images/no_image.png"/>
+                        <img height="35" width="35" src="design/images/no_image.png"/>
                     {/if}
                 </div>
 				<div class="cell">

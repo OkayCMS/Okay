@@ -1258,32 +1258,16 @@ div.block_help li label
     float: left;
     width: 170px;
 }
-ul#import_result
-{
-    display: block;
-    clear: left;
-    padding-top: 10px;
-}
 
-ul#import_result li
-{
-    margin-bottom: 5px;
-}
-ul#import_result li .count
-{
-    width: 30px;
-    display: block;
-    float: left;
-}
-ul#import_result li .status
+.import_result .status
 {
     padding: 0 26px 16px 0;
     background-image: url(../images/exclamation.png);
     background-repeat: no-repeat;
 
 }
-ul#import_result li .added { background-image: url(../images/accept.png); }
-ul#import_result li .updated { background-image: url(../images/update.png); }
+.import_result .added { background-image: url(../images/accept.png); }
+.import_result .updated { background-image: url(../images/update.png); }
 
 /* Темы */
 ul.themes
@@ -2704,4 +2688,16 @@ input[type="checkbox"] {
 .ya_metrica_helper li{
     list-style: square;
     display: list-item!important;
+}
+.warning_icon{
+    margin-bottom: 5px;
+    background: url(../images/warning.png) no-repeat;
+    padding-left: 30px;
+}
+.admin_note{
+    background-color: #fffac4;
+    border: 1px dotted #ffc539;
+    margin-top: 3px;
+    padding: 3px;
+    width: 100%;
 }

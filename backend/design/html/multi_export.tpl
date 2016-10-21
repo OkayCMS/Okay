@@ -17,6 +17,11 @@
     <li class="active">
         <a href="index.php?module=MultiExportAdmin">Экспорт переводов</a>
     </li>
+    {if in_array('import', $manager->permissions)}
+        <li>
+            <a href="index.php?module=ImportLogAdmin">Лог импорта</a>
+        </li>
+    {/if}
 {/capture}
 {$meta_title='Мультиязычный експорт товаров' scope=parent}
 

@@ -6,12 +6,12 @@
             {if $product->image->filename}
                 <img class="fn-img" src="{$product->image->filename|resize:219:172}" alt="{$product->name|escape}" title="{$product->name|escape}"/>
                 {if $product->special}
-                    <img class="card-spec" src='files/special/{$product->special}' alt='{$product->sp_img}'/>
+                    <img class="card-spec" src='files/special/{$product->special}' alt='{$product->special}' title="{$product->special}"/>
                 {/if}
             {else}
                 <img class="fn-img" src="design/{$settings->theme}/images/no_image.png" width="200" height="180" alt="{$product->name|escape}"/>
                 {if $product->special}
-                    <img class="card-spec" src='files/special/{$product->special}' alt='{$product->sp_img}'/>
+                    <img class="card-spec" src='files/special/{$product->special}' alt='{$product->special}' title="{$product->special}"/>
                 {/if}
             {/if}
 		</a>

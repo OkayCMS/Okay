@@ -645,7 +645,7 @@ class Products extends Okay {
             // Удалить все ресайзы
             $rezised_images = glob($this->config->root_dir.$this->config->resized_images_dir.$file.".*x*.".$ext);
             if(is_array($rezised_images)) {
-                foreach (glob($this->config->root_dir.$this->config->resized_images_dir.$file.".*x*.".$ext) as $f) {
+                foreach ($rezised_images as $f) {
                     @unlink($f);
                 }
             }

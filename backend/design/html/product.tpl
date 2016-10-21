@@ -794,7 +794,7 @@ $(function(){
 								{if $related_product->images[0]}
                                 <img class=product_icon src='{$related_product->images[0]->filename|resize:35:35}'>
 								{else}
-								<img class=product_icon src="../design/{$settings->theme|escape}/images/no_image.png" width="22">
+								<img class=product_icon src="design/images/no_image.png" width="22">
 								{/if}
 							</a>
                         </div>

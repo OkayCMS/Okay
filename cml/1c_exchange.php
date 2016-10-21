@@ -635,7 +635,7 @@ function import_product($xml_product) {
             foreach($xml_product->Картинка as $img) {
                 $image = basename($img);
                 if(!empty($image) && is_file($dir.$image) && is_writable($okay->config->original_images_dir)) {
-                    $okay->db->query('SELECT id FROM __images WHERE product_id=? ORDER BY position LIMIT 1', $product_id);
+                    $okay->db->query('SELECT id, filename FROM __images WHERE product_id=? AND filename=? ORDER BY position LIMIT 1', $product_id, $image);
                     $img_id = $okay->db->result('id');
                     if(!empty($img_id)) {
                         $okay->products->delete_image($img_id);

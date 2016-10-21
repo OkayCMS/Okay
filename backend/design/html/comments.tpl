@@ -44,15 +44,15 @@
         {include file='pagination.tpl'}
         <form id="list_form" method="post">
             <input type="hidden" name="session_id" value="{$smarty.session.id}">
+            <div id="list" class="sortable">
             {function name=comments_tree level=0}
-                <div id="list" class="sortable">
                     {foreach $comments as $comment}
                         <div class="{if !$comment->approved}unapproved{/if} row">
                             <div class="checkbox cell" style="margin-left:{$level*20}px">
                                 <input type="checkbox" id="{$comment->id}" name="check[]" value="{$comment->id}"/>
                                 <label for="{$comment->id}"></label>
                             </div>
-                            <div class="name cell">
+                            <div class="name cell {if $level > 0}admin_note{/if}">
                                 <div class="comment_name" data-email_name="{$comment->name|escape}">
                                     {$comment->name|escape}{if $comment->email}&nbsp;({$comment->email|escape}){/if}
                                     {if !$comment->parent_id}
@@ -87,9 +87,9 @@
                             {/if}
                         </div>
                     {/foreach}
-                </div>
             {/function}
             {comments_tree comments=$comments}
+            </div>
 
             <div id="action">
                 Выбрать <label id="check_all" class="dash_link">все</label> или

@@ -18,7 +18,7 @@
 					<a class="fn-zoom okaycms btn-block relative border-a-1-info text-xs-center" href="{$product->image->filename|resize:800:600:w}" rel="group">
 						{* Промо изображение *}
 						{if $product->special}
-							<img class="card-spec" alt='{$product->sp_img}' title='{$product->sp_img}'  src='files/special/{$product->special}'/>
+							<img class="card-spec" alt='{$product->special}' title="{$product->special}"  src='files/special/{$product->special}'/>
 						{/if}
 
 						{* Большое фото товара *}
@@ -43,7 +43,7 @@
                     <a class="fn-zoom okaycms btn-block relative border-a-1-info text-xs-center" href="design/{$settings->theme}/images/no_image.png" rel="group">
                         {* Промо изображение *}
                         {if $product->special}
-                            <img class="card-spec" alt='{$product->sp_img}' title='{$product->sp_img}'  src='files/special/{$product->special}'/>
+                            <img class="card-spec" alt='{$product->special}' title='{$product->special}'  src='files/special/{$product->special}'/>
                         {/if}
                         {* Большое фото товара *}
                         <img class="fn-img" src="design/{$settings->theme}/images/no_image.png" height="300" alt="{$product->name|escape}"/>
@@ -55,7 +55,7 @@
 					<div class="col-lg-6">
 						{* Цена *}
 						<div class="h4 font-weight-bold">
-							<span class="fn-price" itemprop="price" content="{$product->variant->price|convert}">{$product->variant->price|convert}</span>
+							<span class="fn-price" itemprop="price" content="{$product->variant->price|convert:'':false}">{$product->variant->price|convert}</span>
                             <span itemprop="priceCurrency" content="{$currency->code|escape}">{$currency->sign|escape}</span>
                         </div>
 
@@ -249,7 +249,7 @@
                                     {* после добавления комментария кидает автоматически по якорю *}
                                     <a name="comment_{$comment->id}"></a>
 
-                                    <div class="m-b-1" style="margin-left:{$level*20}px">
+                                    <div class="m-b-1 {if $level > 0}admin_note{/if}" style="margin-left:{$level*20}px">
                                         {* Имя комментария *}
                                         <div>
                                             <span class="h5">{$comment->name|escape}</span>
@@ -430,7 +430,7 @@
 "aggregateRating": {
 "@type": "AggregateRating",
 "ratingValue": "{/literal}{$product->rating|string_format:'%.1f'}{literal}",
-"reviewCount": "{/literal}{$product->votes|string_format:'%.0f'}{literal}"
+"ratingCount": "{/literal}{$product->votes|string_format:'%.0f'}{literal}"
 },
 {/literal}
 {/if}
@@ -438,7 +438,7 @@
 "offers": {
 "@type": "Offer",
 "priceCurrency": "{/literal}{$currency->code|escape}{literal}",
-"price": "{/literal}{$product->variant->price|convert|replace:',':'.'}{literal}",
+"price": "{/literal}{$product->variant->price|convert:'':false}{literal}",
 "priceValidUntil": "{/literal}{$smarty.now|date_format:'%Y-%m-%d'}{literal}",
 "itemCondition": "http://schema.org/UsedCondition",
 "availability": "http://schema.org/InStock",

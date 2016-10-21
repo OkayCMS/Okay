@@ -61,6 +61,11 @@ class IndexView extends View {
         // Страницы
         $pages = $this->pages->get_pages(array('visible'=>1));
         $this->design->assign('pages', $pages);
+
+        $is_mobile = $this->design->is_mobile();
+        $is_tablet = $this->design->is_tablet();
+        $this->design->assign('is_mobile',$is_mobile);
+        $this->design->assign('is_tablet',$is_tablet);
         
         // Текущий модуль (для отображения центрального блока)
         $module = $this->request->get('module', 'string');

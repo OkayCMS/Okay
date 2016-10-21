@@ -142,6 +142,7 @@ function translit(str) {
                     </div>
                 </div>
             </h2>
+            <h3 class="warning_icon">При снятии отметки с категории все значения этого свойства в этой категории будут удалены безвозвратно!</h3>
             <select class=multiple_categories multiple name="feature_categories[]">
                 {function name=category_select selected_id=$product_category level=0}
                     {foreach $categories as $category}

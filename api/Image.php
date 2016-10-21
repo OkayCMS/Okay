@@ -139,12 +139,16 @@ class Image extends Okay {
                 $new_name = $base.'_1.'.$ext;
             }
         }
-        $this->db->query('UPDATE __images SET filename=? WHERE filename=?', $new_name, $filename);
         
         // Перед долгим копированием займем это имя
         fclose(fopen($this->config->root_dir.$this->config->original_images_dir.$new_name, 'w'));
-        copy($filename, $this->config->root_dir.$this->config->original_images_dir.$new_name);
-        return $new_name;
+        if (copy($filename, $this->config->root_dir.$this->config->original_images_dir.$new_name)) {
+            $this->db->query('UPDATE __images SET filename=? WHERE filename=?', $new_name, $filename);
+            return $new_name;
+        } else {
+            @unlink($this->config->root_dir.$this->config->original_images_dir.$new_name);
+            return false;
+        }
     }
     
     public function upload_image($filename, $name/*resizing_image*/, $original_dir = null/*/resizing_image*/) {
@@ -497,7 +501,7 @@ class Image extends Okay {
         			if (!empty($resized_dir)) {
                         $rezised_images = glob($this->config->root_dir.$resized_dir.$file.".*x*.".$ext);
                         if(is_array($rezised_images)) {
-                            foreach (glob($this->config->root_dir.$resized_dir.$file.".*x*.".$ext) as $f) {
+                            foreach ($rezised_images as $f) {
                                 @unlink($f);
                             }
                         }
@@ -526,7 +530,7 @@ class Image extends Okay {
         			if (!empty($resized_dir)) {
                         $rezised_images = glob($this->config->root_dir.$resized_dir.$file.".*x*.".$ext);
                         if(is_array($rezised_images)) {
-                            foreach (glob($this->config->root_dir.$resized_dir.$file.".*x*.".$ext) as $f) {
+                            foreach ($rezised_images as $f) {
                                 @unlink($f);
                             }
                         }

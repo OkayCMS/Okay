@@ -19,7 +19,7 @@
 
                         {* Изображение поста *}
                         {if $post->image}
-                            <img class="img-fluid" src="{$post->image|resize:162:77:false:$config->resized_blog_dir}" />
+                            <img class="img-fluid" alt="{$post->name|escape}" title="{$post->name|escape}" src="{$post->image|resize:162:77:false:$config->resized_blog_dir}" />
                         {/if}
                     </a>
                 </div>

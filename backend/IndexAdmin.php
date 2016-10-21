@@ -44,6 +44,7 @@ class IndexAdmin extends Okay {
         'ExportAdmin'         => 'auto',
         'MultiImportAdmin'    => 'auto',
         'MultiExportAdmin'    => 'auto',
+        'ImportLogAdmin'      => 'auto',
 
         'StatsAdmin'          => 'stats',
         'ReportStatsAdmin'    => 'stats',
@@ -111,6 +112,7 @@ class IndexAdmin extends Okay {
         'ExportAdmin'         => 'export',
         'MultiImportAdmin'    => 'import',
         'MultiExportAdmin'    => 'export',
+        'ImportLogAdmin'      => 'import',
         'StatsAdmin'          => 'stats',
         'ThemeAdmin'          => 'design',
         'StylesAdmin'         => 'design',

@@ -63,7 +63,7 @@
                                 <img src="{$delivery->image|escape|resize:35:35:false:$config->resized_deliveries_dir}"/>
                             </a>
                         {else}
-                            <img height="35" width="35" src="/backend/design/images/no_image.png"/>
+                            <img height="35" width="35" src="design/images/no_image.png"/>
                         {/if}
                     </div>
                     <div class="name cell">

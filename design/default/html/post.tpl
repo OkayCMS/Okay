@@ -74,7 +74,7 @@
                     {* после добавления комментария кидает автоматически по якорю *}
                     <a name="comment_{$comment->id}"></a>
 
-                    <div class="m-b-1" style="margin-left:{$level*20}px">
+                    <div class="m-b-1 {if $level > 0}admin_note{/if}" style="margin-left:{$level*20}px">
                         {* Имя комментария *}
                         <div>
                             <span class="h5">{$comment->name|escape}</span>

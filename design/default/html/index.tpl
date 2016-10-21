@@ -30,9 +30,6 @@
 	{/if}
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
     <meta name="generator" content="OkayCMS {$config->version}"/>
-    {if $language->label}
-    <meta http-equiv="Content-Language" content="{$language->label|escape}"/>
-    {/if}
     
     {if $settings->g_webmaster}
         <meta name="google-site-verification" content="{$settings->g_webmaster}" />
@@ -50,7 +47,7 @@
         <meta property="og:title" content="{$product->name|escape}"/>
         <meta property="og:description" content='{$product->annotation}'/>
         {if $product->images}
-            {foreach $product->images|cut as $i=>$image}
+            {foreach $product->images as $i=>$image}
                 {*for vk*}
                 <link rel="image_src" href="{$image->filename|resize:330:300}"/>
                 {*for fb*}

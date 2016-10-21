@@ -1269,9 +1269,10 @@ input[type="button"].btn-block {
   pointer-events: none; }
 
 .input-group {
-  position: relative;
-  display: table;
-  border-collapse: separate; }
+    z-index: 0;
+    position: relative;
+    display: table;
+    border-collapse: separate; }
   .input-group .form-control {
     position: relative;
     z-index: 2;
@@ -4362,4 +4363,9 @@ a.bg-pink:focus, a.bg-pink:hover {
 .logo_fix{
     position: relative;
     top: -4px;
+}
+.admin_note{
+    background-color: #fffac4;
+    border: 1px dotted #ffc539;
+    padding: 3px;
 }

@@ -83,6 +83,8 @@ class ImportAjax extends Okay {
         // Переходим на заданную позицию, если импортируем не сначала
         if($from = $this->request->get('from')) {
             fseek($f, $from);
+        } else {
+            $this->db->query("TRUNCATE __import_log");
         }
         
         // Массив импортированных товаров
@@ -124,7 +126,15 @@ class ImportAjax extends Okay {
         // Создаем объект результата
         $result->from = $from;          // На каком месте остановились
         $result->totalsize = $size;     // Размер всего файла
-        $result->items = $imported_items;   // Импортированные товары
+        foreach ($imported_items as $item) {
+            $res = array(
+                'product_id'    => $item->product->id,
+                'status'        => $item->status,
+                'product_name'  => $item->product->name,
+                'variant_name'  => $item->variant->name
+            );
+            $this->db->query("INSERT INTO __import_log SET ?%", $res);
+        }
         
         return $result;
     }

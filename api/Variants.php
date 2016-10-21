@@ -49,7 +49,7 @@ class Variants extends Okay {
                 $variant_id_filter
                 $instock_filter
             GROUP BY v.id
-            ORDER BY v.position
+            ORDER BY v.position, v.id
         ", $this->settings->max_order_amount);
         
         $this->db->query($query);

@@ -48,6 +48,8 @@
                                 <a href="{url module=PostAdmin id=$post->id return=$smarty.server.REQUEST_URI}">
                                     <img src="{$post->image|escape|resize:35:35:false:$config->resized_blog_dir}"/>
                                 </a>
+                            {else}
+                                <img height="35" width="35" src="design/images/no_image.png"/>
                             {/if}
                         </div>
                         <div class="name cell">
