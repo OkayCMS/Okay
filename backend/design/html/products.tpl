@@ -120,7 +120,7 @@
                 <ul>
                     {foreach $product->variants as $variant}
                         <li {if !$variant@first}class="variant" style="display:none;"{/if}>
-                            <i title="{$variant->name|escape}">{$variant->name|truncate:30:'..':true:true}</i>
+                            <i title="{$variant->name|escape}">{$variant->name|escape|truncate:30:'..':true:true}</i>
                             <label data-vid="{$variant->id}" class="yandex_icon {if $variant->yandex}active{/if}"></label>
                             <input class="price {if $variant->compare_price>0}compare_price{/if}" type="text" name="price[{$variant->id}]" value="{$variant->price}"
                             {if $variant->compare_price>0}title="Старая цена &mdash; {$variant->compare_price} {if $variant->currency_id}{$currencies[$variant->currency_id]->sign}{else}{$currency->sign}{/if}"{/if} />

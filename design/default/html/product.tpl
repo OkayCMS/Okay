@@ -55,7 +55,7 @@
 					<div class="col-lg-6">
 						{* Цена *}
 						<div class="h4 font-weight-bold">
-							<span class="fn-price" itemprop="price" content="{$product->variant->price|convert:'':false}">{$product->variant->price|convert}</span>
+							<span class="fn-price" itemprop="price" content="{$product->variant->price|convert:null:false}">{$product->variant->price|convert}</span>
                             <span itemprop="priceCurrency" content="{$currency->code|escape}">{$currency->sign|escape}</span>
                         </div>
 
@@ -82,11 +82,11 @@
                         </div>
 
 						{* Артикул товара *}
-						<div{if !$product->variant->sku} class="hidden-xs-up"{/if}><span data-language="{$translate_id['product_sku']}">{$lang->product_sku}</span>: <span class="fn-sku">{$product->variant->sku}</span></div>
+						<div{if !$product->variant->sku} class="hidden-xs-up"{/if}><span data-language="{$translate_id['product_sku']}">{$lang->product_sku}</span>: <span class="fn-sku">{$product->variant->sku|escape}</span></div>
 						{* Варианты товара *}
 						<select name="variant" class="fn-variant okaycms form-control c-select m-t-1 m-b-1-md_down{if $product->variants|count < 2} hidden-xs-up{/if}">
 							{foreach $product->variants as $v}
-								<option value="{$v->id}" data-price="{$v->price|convert}" data-stock="{$v->stock}"{if $v->compare_price > 0} data-cprice="{$v->compare_price|convert}"{/if}{if $v->sku} data-sku="{$v->sku}"{/if}>{if $v->name}{$v->name}{else}{$product->name|escape}{/if}</option>
+								<option value="{$v->id}" data-price="{$v->price|convert}" data-stock="{$v->stock}"{if $v->compare_price > 0} data-cprice="{$v->compare_price|convert}"{/if}{if $v->sku} data-sku="{$v->sku|escape}"{/if}>{if $v->name}{$v->name|escape}{else}{$product->name|escape}{/if}</option>
 							{/foreach}
 						</select>
 					</div>
@@ -226,8 +226,8 @@
 							<table class="table table-striped">
 								{foreach $product->features as $f}
 									<tr>
-										<td>{$f->name}</td>
-										<td>{$f->value}</td>
+										<td>{$f->name|escape}</td>
+										<td>{$f->value|escape}</td>
 									</tr>
 								{/foreach}
 							</table>
@@ -295,6 +295,8 @@
 										<span data-language="{$translate_id['form_enter_name']}">{$lang->form_enter_name}</span>
 									{elseif $error=='empty_comment'}
 										<span data-language="{$translate_id['form_enter_comment']}">{$lang->form_enter_comment}</span>
+                                    {elseif $error=='empty_email'}
+                                        <span data-language="{$translate_id['form_enter_email']}">{$lang->form_enter_email}</span>
 									{/if}
 								</div>
 							{/if}
@@ -415,7 +417,7 @@
 "name": "{/literal}{$product->name|escape}{literal}",
 "image": "{/literal}{$product->image->filename|resize:330:300}{literal}",
 "description": "{/literal}{$product->annotation|strip_tags}{literal}",
-"mpn": "{/literal}{if $product->variant->sku}{$product->variant->sku}{else}Не указано{/if}{literal}",
+"mpn": "{/literal}{if $product->variant->sku}{$product->variant->sku|escape}{else}Не указано{/if}{literal}",
 {/literal}
 {if $brand->name}
 {literal}
@@ -438,7 +440,7 @@
 "offers": {
 "@type": "Offer",
 "priceCurrency": "{/literal}{$currency->code|escape}{literal}",
-"price": "{/literal}{$product->variant->price|convert:'':false}{literal}",
+"price": "{/literal}{$product->variant->price|convert:null:false}{literal}",
 "priceValidUntil": "{/literal}{$smarty.now|date_format:'%Y-%m-%d'}{literal}",
 "itemCondition": "http://schema.org/UsedCondition",
 "availability": "http://schema.org/InStock",

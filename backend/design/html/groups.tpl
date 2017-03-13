@@ -39,7 +39,7 @@
                         <label for="{$group->id}"></label>
                     </div>
                     <div class="group_name cell">
-                        <a href="index.php?module=GroupAdmin&id={$group->id}">{$group->name}</a>
+                        <a href="index.php?module=GroupAdmin&id={$group->id}">{$group->name|escape}</a>
                     </div>
                     <div class="group_discount cell">
                         {$group->discount} %

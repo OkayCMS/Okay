@@ -2594,7 +2594,7 @@ CREATE TABLE IF NOT EXISTS `s_translations` (
   `lang_ch` varchar(255) NOT NULL DEFAULT '',
   `lang_by` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=313 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=314 DEFAULT CHARSET=utf8;
 
 INSERT INTO `s_translations` (`id`, `template`, `in_config`, `label`, `lang_ru`, `lang_en`, `lang_uk`, `lang_ch`, `lang_by`) VALUES
 (275, '', 0, 'products_brand', 'Бренд', 'Brand', 'Бренд', '', ''),
@@ -2831,7 +2831,8 @@ INSERT INTO `s_translations` (`id`, `template`, `in_config`, `label`, `lang_ru`,
 (309, '', 0, 'email_password_was_reply', 'был сделан запрос на восстановление вашего пароля.', 'a request was made to restore your password.', 'був зроблений запит на відновлення вашого пароля.', '', ''),
 (310, '', 0, 'email_password_change_pass', 'Вы можете изменить пароль, перейдя по следующей ссылке:', 'You can change your password by clicking on the following link:', 'Ви можете змінити пароль, перейшовши за наступним посиланням:', '', ''),
 (311, '', 0, 'email_password_change_link', 'Изменить пароль', 'Change a password', 'Змінити пароль', '', ''),
-(312, '', 0, 'email_password_text', '<p>Эта ссылка действует в течение нескольких минут.</p>\r\n		<p>Если это письмо пришло вам по ошибке, проигнорируйте его.</p>', '<p> This link is valid for a few minutes. </p>\r\n<p> If this letter has come to you in error, please ignore it. </p>', '<p> Це посилання діє протягом декількох хвилин. </p>\r\n<p> Якщо цей лист прийшло вам помилково, ігноруйте його. </p>', '', '');
+(312, '', 0, 'email_password_text', '<p>Эта ссылка действует в течение нескольких минут.</p>\r\n		<p>Если это письмо пришло вам по ошибке, проигнорируйте его.</p>', '<p> This link is valid for a few minutes. </p>\r\n<p> If this letter has come to you in error, please ignore it. </p>', '<p> Це посилання діє протягом декількох хвилин. </p>\r\n<p> Якщо цей лист прийшло вам помилково, ігноруйте його. </p>', '', ''),
+(313, '', 0, 'products_by_rating', 'рейтингу', 'rating', 'рейтингу', '', '');
 
 DROP TABLE IF EXISTS `s_users`;
 CREATE TABLE IF NOT EXISTS `s_users` (

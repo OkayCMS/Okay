@@ -22,10 +22,19 @@ class IndexView extends View {
             $this->design->assign('callname',  $callback->name);
             $this->design->assign('callemail', $callback->phone);
             $this->design->assign('callmessage', $callback->message);
-            $this->design->assign('call_sent', true);
-            $callback_id = $this->callbacks->add_callback($callback);
-            // Отправляем email
-            $this->callbacks->email_callback_admin($callback_id);
+            if (!$this->validate->is_name($callback->name, true)) {
+                $this->design->assign('call_error', 'empty_name');
+            } elseif(!$this->validate->is_phone($callback->phone, true)) {
+                $this->design->assign('call_error', 'empty_phone');
+            } elseif(!$this->validate->is_comment($callback->message, true)) {
+                $this->design->assign('call_error', 'empty_comment');
+            } elseif($callback_id = $this->callbacks->add_callback($callback)) {
+                $this->design->assign('call_sent', true);
+                // Отправляем email
+                $this->callbacks->email_callback_admin($callback_id);
+            } else {
+                $this->design->assign('call_error', 'unknown error');
+            }
         }
         
         // E-mail подписка
@@ -33,7 +42,7 @@ class IndexView extends View {
             $email = $this->request->post('subscribe_email');
             $this->db->query("select count(id) as cnt from __subscribe_mailing where email=?", $email);
             $cnt = $this->db->result('cnt');
-            if (empty($email)) {
+            if (!$this->validate->is_email($email, true)) {
                 $this->design->assign('subscribe_error', 'empty_email');
             } elseif ($cnt > 0) {
                 $this->design->assign('subscribe_error', 'email_exist');

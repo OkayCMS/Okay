@@ -76,7 +76,7 @@
                             <a href="mailto:{$user->name|escape}<{$user->email|escape}>">{$user->email|escape}</a>
                         </div>
                         <div class="user_group cell">
-                            {$groups[$user->group_id]->name}
+                            {$groups[$user->group_id]->name|escape}
                         </div>
                         <div class="icons cell user">
                             <a class="enable" title="Активен" href="#"></a>
@@ -112,7 +112,7 @@
         <ul>
             {foreach $groups as $g}
             <li {if $group->id == $g->id}class="selected"{/if}>
-                <a href="index.php?module=UsersAdmin&group_id={$g->id}">{$g->name}</a>
+                <a href="index.php?module=UsersAdmin&group_id={$g->id}">{$g->name|escape}</a>
             </li>
             {/foreach}
         </ul>

@@ -38,6 +38,15 @@
 								{if $error == 'empty_email'}
 									<span data-language="{$translate_id['form_enter_email']}">{$lang->form_enter_email}</span>
 								{/if}
+                                {if $error == 'empty_phone'}
+                                    <span data-language="{$translate_id['form_enter_phone']}">{$lang->form_enter_phone}</span>
+                                {/if}
+                                {if $error == 'empty_address'}
+                                    <span data-language="{$translate_id['form_enter_address']}">{$lang->form_enter_address}</span>
+                                {/if}
+                                {if $error == 'empty_comment'}
+                                    <span data-language="{$translate_id['form_enter_comment']}">{$lang->form_enter_comment}</span>
+                                {/if}
 								{if $error == 'captcha'}
 									<span data-language="{$translate_id['form_error_captcha']}">{$lang->form_error_captcha}</span>
 								{/if}

@@ -69,7 +69,7 @@
 
 				{* Цена за ед. *}
 				<div class="purchase-price hidden-md-down">
-					{($purchase->variant->price)|convert} {$currency->sign}
+					{($purchase->price)|convert} {$currency->sign}
 				</div>
 
 				<div class="purchase-column">

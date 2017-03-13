@@ -117,6 +117,8 @@
 						<span data-language="{$translate_id['form_enter_name']}">{$lang->form_enter_name}</span>
 					{elseif $error=='empty_comment'}
 						<span data-language="{$translate_id['form_enter_comment']}">{$lang->form_enter_comment}</span>
+                    {elseif $error=='empty_email'}
+                        <span data-language="{$translate_id['form_enter_email']}">{$lang->form_enter_email}</span>
 					{/if}
 				</div>
 			{/if}

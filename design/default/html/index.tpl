@@ -45,21 +45,13 @@
         <meta property="og:url" content="{$config->root_url}{if $lang_link}/{str_replace('/', '', $lang_link)}{/if}{$canonical}"/>
         <meta property="og:type" content="article"/>
         <meta property="og:title" content="{$product->name|escape}"/>
-        <meta property="og:description" content='{$product->annotation}'/>
-        {if $product->images}
-            {foreach $product->images as $i=>$image}
-                {*for vk*}
-                <link rel="image_src" href="{$image->filename|resize:330:300}"/>
-                {*for fb*}
-                <meta property="og:image" content="{$image->filename|resize:330:300}"/>
-            {/foreach}
-        {/if}
+        <meta property="og:description" content="{$product->annotation|strip_tags}" />
         <meta property="og:image" content="{$product->image->filename|resize:330:300}"/>
         <link rel="image_src" href="{$product->image->filename|resize:330:300}"/>
         {*twitter*}
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="{$product->name|escape}">
-        <meta name="twitter:description" content="{$product->annotation}">
+        <meta name="twitter:description" content="{$product->annotation|strip_tags}">
         <meta name="twitter:image" content="{$product->image->filename|resize:330:300}">
     {elseif $module == 'BlogView'}
         <meta property="og:url" content="{$config->root_url}{if $lang_link}/{str_replace('/', '', $lang_link)}{/if}{$canonical}"/>
@@ -72,12 +64,12 @@
             <meta property="og:image" content="{$config->root_url}/design/{$settings->theme}/images/logo_ru.png" />
             <meta name="twitter:image" content="{$config->root_url}/design/{$settings->theme}/images/logo_ru.png">
         {/if}
-        <meta property="og:description" content='{$post->annotation}'/>
+        <meta property="og:description" content="{$post->annotation|strip_tags}"/>
 
         {*twitter*}
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="{$post->name|escape}">
-        <meta name="twitter:description" content="{$post->annotation|escape}">
+        <meta name="twitter:description" content="{$post->annotation|strip_tags}">
         <meta name="twitter:image" content="{$post->image|resize:400:300:false:$config->resized_blog_dir}">
     {else}
         <meta property="og:title" content="{$settings->site_name}" />

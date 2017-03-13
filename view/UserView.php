@@ -10,7 +10,7 @@ class UserView extends View {
             exit();
         }
 
-        if($this->request->method('post') && $this->request->post('name')) {
+        if($this->request->method('post') && $this->request->post('user_save')) {
             $user = new stdClass();
             $user->name	    = $this->request->post('name');
             $user->email	= $this->request->post('email');
@@ -28,10 +28,14 @@ class UserView extends View {
             
             if($user_exists) {
                 $this->design->assign('error', 'user_exists');
-            } elseif(empty($user->name)) {
+            } elseif(!$this->validate->is_name($user->name, true)) {
                 $this->design->assign('error', 'empty_name');
-            } elseif(empty($user->email)) {
+            } elseif(!$this->validate->is_email($user->email, true)) {
                 $this->design->assign('error', 'empty_email');
+            } elseif(!$this->validate->is_phone($user->phone)) {
+                $this->design->assign('error', 'empty_phone');
+            } elseif(!$this->validate->is_address($user->address)) {
+                $this->design->assign('error', 'empty_address');
             } elseif($user_id = $this->users->update_user($this->user->id, $user)) {
                 $this->user = $this->users->get_user(intval($user_id));
                 $this->design->assign('user', $this->user);

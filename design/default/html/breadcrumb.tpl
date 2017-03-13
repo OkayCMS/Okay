@@ -86,7 +86,7 @@
 		        </a>
 	        </li>
 	        <li>
-		        {$post->name}
+		        {$post->name|escape}
 	        </li>
         {else}
 	        <li data-language="{$translate_id['breadcrumbs_blog']}">{$lang->breadcrumbs_blog}</li>

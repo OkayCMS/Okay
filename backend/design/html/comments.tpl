@@ -63,9 +63,7 @@
                                     {$comment->text|escape|nl2br}
                                 </div>
                                 {if !$comment->parent_id}
-                                    {if $comment->email}
-                                        <a href="#comment_answer" class="answer" data-parent_id="{$comment->id}">Ответить</a>
-                                    {/if}
+                                    <a href="#comment_answer" class="answer" data-parent_id="{$comment->id}">Ответить</a>
                                     <div class="comment_info">
                                         Комментарий оставлен {$comment->date|date} в {$comment->date|time}
                                         {if $comment->type == 'product'}
@@ -135,7 +133,7 @@ $(function() {
 
     $('.answer').click(function() {
         $('input[name="parent_id"]').val($(this).data('parent_id'));
-        $('#comment_answer textarea').html($(this).parent().find('.comment_name').data('email_name')+',');
+        $('#comment_answer textarea').text($(this).parent().find('.comment_name').data('email_name')+',');
     });
     $('.answer').fancybox();
 

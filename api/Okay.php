@@ -39,7 +39,7 @@ class Okay {
         ,'reportstat' => 'ReportStat'
         /*statistic*/
         ,'topvisor'  => 'Topvisor'
-        
+        ,'validate'  => 'Validate'
 	);
     
 	private static $objects = array();

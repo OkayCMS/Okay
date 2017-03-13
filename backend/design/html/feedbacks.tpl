@@ -106,7 +106,7 @@ $(function() {
 
     $('.answer').click(function() {
         $('input[name="feedback_id"]').val($(this).data('feedback_id'));
-        $('#feedback_answer textarea').html($(this).parent().data('email_name')+',');
+        $('#feedback_answer textarea').text($(this).parent().data('email_name')+',');
     });
     $('.answer').fancybox();
 

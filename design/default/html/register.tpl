@@ -22,6 +22,10 @@
 					<span data-language="{$translate_id['form_enter_name']}">{$lang->form_enter_name}</span>
 				{elseif $error == 'empty_email'}
 					<span data-language="{$translate_id['form_enter_email']}">{$lang->form_enter_email}</span>
+                {elseif $error == 'empty_phone'}
+                    <span data-language="{$translate_id['form_enter_phone']}">{$lang->form_enter_phone}</span>
+                {elseif $error == 'empty_address'}
+                    <span data-language="{$translate_id['form_enter_address']}">{$lang->form_enter_address}</span>
 				{elseif $error == 'empty_password'}
 					<span data-language="{$translate_id['form_enter_password']}">{$lang->form_enter_password}</span>
 				{elseif $error == 'user_exists'}

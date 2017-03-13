@@ -2,6 +2,7 @@
 	/* Глобальный обьект */
 	/* все глобальные переменные добавляем в оъект и работаем с ним!!! */
 	var okay = {literal}{}{/literal};
+    okay.max_order_amount = parseInt({$settings->max_order_amount});
 	{* Предзаказ *}
 	okay.is_preorder = {$settings->is_preorder};
 	{* Ошибка при отправке комментария в посте *}
@@ -22,6 +23,15 @@
 			} );
 		} );
 	{/if}
+    {if $call_error}
+        $(function() {
+            $.fancybox({
+                href: '#fn-callback',
+                padding: 0,
+                minHeight: 0
+            });
+        });
+    {/if}
 	{* Карточка товара, ошибка в форме *}
 	{if $smarty.get.module == 'ProductView' && $error}
 		$( window ).load( function() {

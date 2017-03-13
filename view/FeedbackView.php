@@ -16,11 +16,11 @@ class FeedbackView extends View {
             $this->design->assign('email', $feedback->email);
             $this->design->assign('message', $feedback->message);
             
-            if(empty($feedback->name)) {
+            if(!$this->validate->is_name($feedback->name, true)) {
                 $this->design->assign('error', 'empty_name');
-            } elseif(empty($feedback->email)) {
+            } elseif(!$this->validate->is_email($feedback->email, true)) {
                 $this->design->assign('error', 'empty_email');
-            } elseif(empty($feedback->message)) {
+            } elseif(!$this->validate->is_comment($feedback->message, true)) {
                 $this->design->assign('error', 'empty_text');
             } elseif($this->settings->captcha_feedback && ($_SESSION['captcha_code'] != $captcha_code || empty($captcha_code))) {
                 $this->design->assign('error', 'captcha');

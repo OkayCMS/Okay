@@ -72,7 +72,7 @@ class ProductsView extends View {
                     }
                     case 'sort': {
                         $_GET['sort'] = strval($param_values);
-                        if (!in_array($_GET['sort'], array('position', 'price', 'price_desc', 'name', 'name_desc'))) {
+                        if (!in_array($_GET['sort'], array('position', 'price', 'price_desc', 'name', 'name_desc', 'rating', 'rating_desc'))) {
                             $this->is_wrong_params = 1;
                         }
                         break;
@@ -133,16 +133,16 @@ class ProductsView extends View {
         }
         
         if(!empty($this->meta['h1'])) {
-            $this->meta['h1']           = ' '.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['h1'];
+            $this->meta['h1']           = !empty($this->translations->ceo_filter_s_harakteristikami) ? ' ' : ''.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['h1'];
         }
         if(!empty($this->meta['title'])) {
-            $this->meta['title']        = ' '.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['title'];
+            $this->meta['title']        = !empty($this->translations->ceo_filter_s_harakteristikami) ? ' ' : ''.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['title'];
         }
         if(!empty($this->meta['keywords'])) {
-            $this->meta['keywords']     = ' '.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['keywords'];
+            $this->meta['keywords']     = !empty($this->translations->ceo_filter_s_harakteristikami) ? ' ' : ''.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['keywords'];
         }
         if(!empty($this->meta['description'])) {
-            $this->meta['description']  = ' '.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['description'];
+            $this->meta['description']  = !empty($this->translations->ceo_filter_s_harakteristikami) ? ' ' : ''.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['description'];
         }
         
         if($this->set_canonical) {

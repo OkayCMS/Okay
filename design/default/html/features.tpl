@@ -87,21 +87,13 @@
     </div>
     <div class="m-b-2 p-x-05">
         {* Сброс всех брендов *}
-        <div>
-            <label class="c-input c-checkbox">
-                <input onchange="window.location.href='{furl params=[brand=>null, page=>null]}'" type="checkbox"{if !$brand->id && !$smarty.get.b} checked{/if}/>
-                <span class="c-indicator"></span>
-                <span data-language="{$translate_id['features_all']}">{$lang->features_all}</span>
-            </label>
+        <div class="c-checkbox clearfix">
+            <a class="c-indicator {if !$brand->id && !$smarty.get.b}selected{/if}" href="{furl params=[brand=>null, page=>null]}" data-language="{$translate_id['features_all']}" >{$lang->features_all}</a>
         </div>
         {* Список брендов *}
         {foreach $category->brands as $b}
-            <div>
-                <label class="c-input c-checkbox" data-brand="{$b->id}">
-                    <input onchange="window.location.href='{furl params=[brand=>$b->url, page=>null]}'" type="checkbox"{if $brand->id == $b->id || $smarty.get.b && in_array($b->id,$smarty.get.b)} checked{/if}/>
-                    <span class="c-indicator"></span>
-                    {$b->name|escape}
-                </label>
+            <div class="c-checkbox clearfix" data-brand="{$b->id}">
+                <a class="c-indicator {if $brand->id == $b->id || $smarty.get.b && in_array($b->id,$smarty.get.b)} selected{/if}" href="{furl params=[brand=>$b->url, page=>null]}" > {$b->name|escape}</a>
             </div>
         {/foreach}
     </div>
@@ -110,25 +102,17 @@
 {if $features}
     {foreach $features as $key=>$f}
 	    {* Название свойства *}
-	    <div class="h5 bg-info p-x-1 p-y-05" data-feature="{$f->id}">{$f->name}</div>
+	    <div class="h5 bg-info p-x-1 p-y-05" data-feature="{$f->id}">{$f->name|escape}</div>
         <div class="m-b-2 p-x-05">
 	        {* Сброс всех свойств *}
-	        <div>
-		        <label class="c-input c-checkbox">
-			        <input onchange="window.location.href='{furl params=[$f->url=>null, page=>null]}'" type="checkbox"{if !$smarty.get.$key} checked{/if}/>
-			        <span class="c-indicator"></span>
-			        <span data-language="{$translate_id['features_all']}">{$lang->features_all}</span>
-		        </label>
-	        </div>
+            <div class="c-checkbox clearfix">
+                <a class="c-indicator {if !$smarty.get.$key} selected{/if}" href="{furl params=[$f->url=>null, page=>null]}" data-language="{$translate_id['features_all']}" >{$lang->features_all}</a>
+            </div>
 	        {* Значения свойств *}
             {foreach $f->options as $o}
-	            <div>
-		            <label class="c-input c-checkbox">
-			            <input onchange="window.location.href='{furl params=[$f->url=>$o->translit, page=>null]}'" type="checkbox"{if $smarty.get.{$f@key} && in_array($o->translit,$smarty.get.{$f@key})} checked{/if}/>
-			            <span class="c-indicator"></span>
-			            {$o->value|escape}
-		            </label>
-	            </div>
+                <div class="c-checkbox clearfix">
+                    <a class="c-indicator {if $smarty.get.{$f@key} && in_array($o->translit,$smarty.get.{$f@key})} selected{/if}" href="{furl params=[$f->url=>$o->translit, page=>null]}">{$o->value|escape}</a>
+                </div>
             {/foreach}
         </div>
     {/foreach}

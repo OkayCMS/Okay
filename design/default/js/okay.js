@@ -437,7 +437,7 @@ function amount_change(input, action) {
 
 	/* Если включен предзаказ макс. кол-во товаров ставим 50 */
 	if ( input.parent().hasClass('fn-is_preorder')) {
-		max_val = 50;
+        max_val = okay.max_order_amount;
 	} else {
 		max_val = parseFloat( input.data( 'max' ) )
 	}

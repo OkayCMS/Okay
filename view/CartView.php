@@ -56,10 +56,16 @@ class CartView extends View {
                 $order->user_id = $this->user->id;
             }
 
-            if(empty($order->name)) {
+            if(!$this->validate->is_name($order->name, true)) {
                 $this->design->assign('error', 'empty_name');
-            } elseif(empty($order->email)) {
+            } elseif(!$this->validate->is_email($order->email, true)) {
                 $this->design->assign('error', 'empty_email');
+            } elseif(!$this->validate->is_phone($order->phone)) {
+                $this->design->assign('error', 'empty_phone');
+            } elseif(!$this->validate->is_address($order->address)) {
+                $this->design->assign('error', 'empty_address');
+            } elseif(!$this->validate->is_comment($order->comment)) {
+                $this->design->assign('error', 'empty_comment');
             } elseif($this->settings->captcha_cart && (($_SESSION['captcha_code'] != $captcha_code || empty($captcha_code)) || empty($_SESSION['captcha_code']))) {
                 $this->design->assign('error', 'captcha');
             } else {

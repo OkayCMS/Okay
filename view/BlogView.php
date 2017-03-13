@@ -47,10 +47,12 @@ class BlogView extends View {
             // Проверяем капчу и заполнение формы
             if ($this->settings->captcha_post && ($_SESSION['captcha_code'] != $captcha_code || empty($captcha_code))) {
                 $this->design->assign('error', 'captcha');
-            } elseif (empty($comment->name)) {
+            } elseif (!$this->validate->is_name($comment->name, true)) {
                 $this->design->assign('error', 'empty_name');
-            } elseif (empty($comment->text)) {
+            } elseif (!$this->validate->is_comment($comment->text, true)) {
                 $this->design->assign('error', 'empty_comment');
+            } elseif (!$this->validate->is_email($comment->email)) {
+                $this->design->assign('error', 'empty_email');
             } else {
                 // Создаем комментарий
                 $comment->object_id = $post->id;

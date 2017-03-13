@@ -31,9 +31,9 @@
 							{elseif $error=='empty_name'}
 								<span data-language="{$translate_id['form_enter_name']}">{$lang->form_enter_name}</span>
 							{elseif $error=='empty_email'}
-								<span data-language="{$translate_id['vvedite_email']}">{$lang->vvedite_email}</span>
+								<span data-language="{$translate_id['form_enter_email']}">{$lang->form_enter_email}</span>
 							{elseif $error=='empty_text'}
-								<span data-language="{$translate_id['vvedite_soobschenie']}">{$lang->vvedite_soobschenie}</span>
+								<span data-language="{$translate_id['form_enter_comment']}">{$lang->form_enter_comment}</span>
 							{/if}
 						</div>
 					{/if}
@@ -41,12 +41,12 @@
 					<div class="row">
 						{* Имя отправителя *}
 						<div class="col-lg-6 form-group">
-							<input class="form-control" data-format=".+" data-notice="{$lang->form_enter_name}" value="{if $user->name}{$user->name}{else}{$name|escape}{/if}" name="name" type="text" data-language="{$translate_id['form_name']}" placeholder="{$lang->form_name}*"/>
+							<input class="form-control" data-format=".+" data-notice="{$lang->form_enter_name}" value="{if $user->name}{$user->name|escape}{else}{$name|escape}{/if}" name="name" type="text" data-language="{$translate_id['form_name']}" placeholder="{$lang->form_name}*"/>
 						</div>
 
 						{* Почта отправителя *}
 						<div class="col-lg-6 form-group">
-							<input class="form-control" data-format="email" data-notice="{$lang->form_enter_email}" value="{if $user->email}{$user->email}{else}{$email|escape}{/if}" name="email" type="text" data-language="{$translate_id['form_email']}" placeholder="{$lang->form_email}*"/>
+							<input class="form-control" data-format="email" data-notice="{$lang->form_enter_email}" value="{if $user->email}{$user->email|escape}{else}{$email|escape}{/if}" name="email" type="text" data-language="{$translate_id['form_email']}" placeholder="{$lang->form_email}*"/>
 						</div>
 
 					</div>

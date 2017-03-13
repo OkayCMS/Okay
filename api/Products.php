@@ -106,6 +106,12 @@ class Products extends Okay {
                 case 'name_desc':
                     $order = 'p.name DESC';
                     break;
+                case 'rating':
+                    $order = 'p.rating ASC';
+                    break;
+                case 'rating_desc':
+                    $order = 'p.rating DESC';
+                    break;
                 case 'created':
                     $order = 'p.created DESC';
                     break;
@@ -514,8 +520,8 @@ class Products extends Okay {
         
         // Дублируем категории
         $categories = $this->categories->get_product_categories($id);
-        foreach($categories as $c) {
-            $this->categories->add_product_category($new_id, $c->category_id);
+        foreach($categories as $i=>$c) {
+            $this->categories->add_product_category($new_id, $c->category_id, $i);
         }
         
         // Дублируем изображения
