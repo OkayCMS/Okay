@@ -116,6 +116,21 @@ class CommentsAdmin extends Okay {
         $this->design->assign('comments', $comments);
         $this->design->assign('comments_count', $comments_count);
         
+        // счетчик новых сообщений
+        $new_orders_counter = $this->orders->count_orders(array('status'=>0));
+        $this->design->assign("new_orders_counter", $new_orders_counter);
+        
+        $new_comments_counter = $this->comments->count_comments(array('approved'=>0));
+        $this->design->assign("new_comments_counter", $new_comments_counter);
+
+        $new_feedbacks = $this->feedbacks->get_feedbacks(array('processed'=>0));
+        $new_feedbacks_counter = count($new_feedbacks);
+        $this->design->assign("new_feedbacks_counter", $new_feedbacks_counter);
+        
+        $new_callbacks = $this->callbacks->get_callbacks(array('processed'=>0));
+        $new_callbacks_counter = count($new_callbacks);
+        $this->design->assign("new_callbacks_counter", $new_callbacks_counter);
+        
         return $this->design->fetch('comments.tpl');
     }
     
