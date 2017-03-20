@@ -1,11 +1,28 @@
 {* Вкладки *}
 {capture name=tabs}
-    <li class="active"><a href="index.php?module=CommentsAdmin">Комментарии</a></li>
+    <li class="active">
+        <a href="index.php?module=CommentsAdmin">Комментарии
+        {if $new_comments_counter}
+            <span class="comments_num">{$new_comments_counter}</span>
+        {/if}
+        </a>
+    </li>
     {if in_array('feedbacks', $manager->permissions)}
-        <li><a href="index.php?module=FeedbacksAdmin">Обратная связь</a></li>
+        <li><a href="index.php?module=FeedbacksAdmin">Обратная связь
+            {if $new_feedbacks_counter}
+                <span class="comments_num">{$new_feedbacks_counter}</span>
+            {/if}
+            </a>
+        </li>
     {/if}
     {if in_array('callbacks', $manager->permissions)}
-        <li><a href="index.php?module=CallbacksAdmin">Заказ обратного звонка</a></li>
+        <li>
+            <a href="index.php?module=CallbacksAdmin">Заказ обратного звонка
+            {if $new_callbacks_counter}
+                <span class="comments_num">{$new_callbacks_counter}</span>
+            {/if}
+            </a>
+        </li>
     {/if}
 {/capture}
 
