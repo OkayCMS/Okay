@@ -1,28 +1,5 @@
-{capture name=tabs}
-    <li>
-        <a href="index.php?module=ThemeAdmin">Тема</a>
-    </li>
-    <li>
-        <a href="index.php?module=TemplatesAdmin">Шаблоны</a>
-    </li>
-    <li>
-        <a href="index.php?module=StylesAdmin">Стили</a>
-    </li>
-    <li class="active">
-        <a href="index.php?module=ScriptsAdmin">Скрипты</a>
-    </li>
-    <li>
-        <a href="index.php?module=ImagesAdmin">Изображения</a>
-    </li>
-    {if in_array('robots', $manager->permissions)}
-        <li>
-            <a href="index.php?module=RobotsAdmin">Robots.txt</a>
-        </li>
-    {/if}
-{/capture}
-
 {if $script_file}
-    {$meta_title = "Скрипт $script_file" scope=parent}
+    {$meta_title = "`$btr->scripts_scripts` $script_file" scope=parent}
 {/if}
 
 {* Подключаем редактор кода *}
@@ -49,7 +26,7 @@
             border:1px solid #c0c0c0;
             background-color: #ffffff;
             height: auto;
-            min-height: 300px;
+            min-height: 100px;
             width:100%;
         }
         .CodeMirror-scroll
@@ -70,79 +47,105 @@
 <script>
     $(function() {
         // Сохранение кода аяксом
-        function save()
-        {
+        function save() {
             $('.CodeMirror').css('background-color','#e0ffe0');
             content = editor.getValue();
-
             $.ajax({
                 type: 'POST',
                 url: 'ajax/save_script.php',
                 data: {'content': content, 'theme':'{/literal}{$theme}{literal}', 'script': '{/literal}{$script_file}{literal}', 'session_id': '{/literal}{$smarty.session.id}{literal}'},
                 success: function(data){
-                    $('.CodeMirror').animate({'background-color': '#272822'});
+                    $('.CodeMirror').animate({'background-color': '#fff'},500);
+                    $('.CodeMirror').animate({'background-color': '#272822'},500);
                 },
                 dataType: 'json'
             });
         }
 
-        // Нажали кнопку Сохранить
-        $('input[name="save"]').click(function() {
+        $('.fn_save').on('click',function(){
             save();
-        });
-
-        // Обработка ctrl+s
-        var isCtrl = false;
-        var isCmd = false;
-        $(document).keyup(function (e) {
-            if(e.which == 17) isCtrl=false;
-            if(e.which == 91) isCmd=false;
-        }).keydown(function (e) {
-            if(e.which == 17) isCtrl=true;
-            if(e.which == 91) isCmd=true;
-            if(e.which == 83 && (isCtrl || isCmd)) {
-                save();
-                e.preventDefault();
-            }
         });
     });
 </script>
 {/literal}
 
-<h1>Тема {$theme}, скрипт {$script_file}</h1>
+<div class="row">
+    <div class="col-lg-10 col-md-10">
+        <div class="wrap_heading">
+            <div class="box_heading heading_page">
+                {$btr->general_theme|escape} {$theme|escape}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-lg-2 col-sm-12 float-xs-right"></div>
+</div>
 
 {if $message_error}
-    <!-- Системное сообщение -->
-    <div class="message message_error">
-	<span class="text">
-	{if $message_error == 'permissions'}Установите права на запись для файла {$script_file}
-    {elseif $message_error == 'theme_locked'}Текущая тема защищена от изменений. Создайте копию темы.
-    {else}{$message_error}{/if}
-	</span>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="boxed boxed_warning">
+                <div class="">
+                    {if $message_error == 'permissions'}
+                        {$btr->general_permission|escape} {$template_file|escape}
+                    {elseif $message_error == 'theme_locked'}
+                        {$btr->general_protected|escape}
+                    {else}
+                        {$message_error|escape}
+                    {/if}
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- Системное сообщение (The End)-->
 {/if}
 
-<!-- Список файлов для выбора -->
-<div class="block layer">
-    <div class="templates_names">
-        {foreach $scripts as $s}
-            <a {if $script_file == $s}class="selected"{/if} href='index.php?module=ScriptsAdmin&file={$s}'>{$s}</a>
-        {/foreach}
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="boxed boxed_attention">
+            <div class="">
+                {$btr->general_design_message|escape}
+            </div>
+        </div>
     </div>
 </div>
 
-{if $script_file}
-    <div class="block">
-        <form>
-            <textarea id="script_content" name="script_content" style="width:700px;height:500px;">{$script_content|escape}</textarea>
-        </form>
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <div class="boxed match fn_toggle_wrap tabs">
+            <div class="design_tabs">
+                <div class="design_container">
+                    {foreach $scripts as $s}
+                        <a class="design_tab {if $script_file == $s}focus{/if}" href='{url module=ScriptsAdmin file=$s}'>{$s|escape}</a>
+                    {/foreach}
+                </div>
+            </div>
+        </div>
+	</div>
+</div>
 
-        <input class="button_green button_save" type="button" name="save" value="Сохранить" />
+
+{if $script_file}
+   <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="boxed fn_toggle_wrap min_height_230px">
+                <div class="heading_box">{$btr->general_template|escape} {$template_file|escape}</div>
+
+               <form>
+                    <textarea id="script_content" name="script_content" style="width:700px;height:500px;">{$script_content|escape}</textarea>
+                     <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <button type="submit" name="save" class="fn_save btn btn_small btn_blue float-md-right">
+                                {include file='svg_icon.tpl' svgId='checked'}
+                                <span>{$btr->general_apply|escape}</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     {* Подключение редактора *}
-{literal}
+    {literal}
     <script>
         var editor = CodeMirror.fromTextArea(document.getElementById("script_content"), {
             mode: "javascript",
@@ -156,6 +159,6 @@
             theme : 'monokai'
         });
     </script>
-{/literal}
+    {/literal}
 
 {/if}

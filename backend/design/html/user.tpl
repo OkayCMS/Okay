@@ -1,183 +1,203 @@
-{* Вкладки *}
-{capture name=tabs}
-	<li class="active">
-        <a href="index.php?module=UsersAdmin">Пользователи</a>
-    </li>
-	{if in_array('groups', $manager->permissions)}
-        <li>
-            <a href="index.php?module=GroupsAdmin">Группы</a>
-        </li>
-    {/if}
-	{if in_array('coupons', $manager->permissions)}
-        <li>
-            <a href="index.php?module=CouponsAdmin">Купоны</a>
-        </li>
-    {/if}
-    {if in_array('users', $manager->permissions)}
-        <li>
-            <a href="index.php?module=SubscribeMailingAdmin">Подписчики</a>
-        </li>
-    {/if}
-{/capture}
-
 {if $user->id}
-{$meta_title = $user->name|escape scope=parent}
+    {$meta_title = $user->name|escape scope=parent}
 {/if}
 
-{if $message_success}
-    <!-- Системное сообщение -->
-    <div class="message message_success">
-        <span class="text">{if $message_success=='updated'}Пользователь отредактирован{else}{$message_success|escape}{/if}</span>
-        {if $smarty.get.return}
-        <a class="button" href="{$smarty.get.return}">Вернуться</a>
-        {/if}
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <div class="wrap_heading">
+            <div class="box_heading heading_page">
+                {$btr->user_user|escape} {$user->name|escape}
+            </div>
+        </div>
     </div>
-    <!-- Системное сообщение (The End)-->
+    <div class="col-md-12 col-lg-12 col-sm-12 float-xs-right"></div>
+</div>
+
+{if $message_success}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="boxed boxed_success">
+                <div class="heading_box">
+                    {if $message_success=='updated'}
+                        {$btr->user_updated|escape}
+                    {else}
+                        {$message_success|escape}
+                    {/if}
+                    {if $smarty.get.return}
+                        <a class="btn btn_return float-xs-right" href="{$smarty.get.return}">
+                            {include file='svg_icon.tpl' svgId='return'}
+                            <span>{$btr->general_back|escape}</span>
+                        </a>
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
 {/if}
 
 {if $message_error}
-    <!-- Системное сообщение -->
-    <div class="message message_error">
-        <span class="text">{if $message_error=='login_exists'}Пользователь с таким email уже зарегистрирован
-        {elseif $message_error=='empty_name'}Введите имя пользователя
-        {elseif $message_error=='empty_email'}Введите email пользователя
-        {else}{$message_error|escape}{/if}</span>
-        {if $smarty.get.return}
-        <a class="button" href="{$smarty.get.return}">Вернуться</a>
-        {/if}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="boxed boxed_warning">
+                <div class="heading_box">
+                    {if $message_error=='login_exists'}
+                        {$btr->user_already_registered|escape}
+                    {elseif $message_error=='empty_name'}
+                        {$btr->user_name|escape}
+                    {elseif $message_error=='empty_email'}
+                        {$btr->user_email|escape}
+                    {else}
+                        {$message_error|escape}
+                    {/if}
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- Системное сообщение (The End)-->
 {/if}
 
+<form method="post" enctype="multipart/form-data" class="clearfix">
+    <input type=hidden name="session_id" value="{$smarty.session.id}">
+    <input type="hidden" name="lang_id" value="{$lang_id}" />
 
+    <div class="row">
+        <div class="col-md-12">
+            <div class="boxed fn_toggle_wrap min_height_230px">
+                <div class="heading_box">
+                     {$btr->user_options|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
+                    </div>
+                </div>
+                <div class="toggle_body_wrap on fn_card">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="mb-1">
+                                <div class="heading_label">{$btr->general_name|escape}</div>
+                                <div class="">
+                                    <input class="form-control mb-h" name="name" type="text" value="{$user->name|escape}"/>
+                                    <input name="id" type="hidden" value="{$user->id|escape}"/>
+                                </div>
+                            </div>
+                            <div class="mb-1">
+                                <div class="heading_label">{$btr->general_phone|escape}</div>
+                                <div class="">
+                                    <input class="form-control mb-h" name="phone" type="text" value="{$user->phone|escape}"/>
+                                    <input name="id" type="hidden" value="{$user->id|escape}"/>
+                                </div>
+                            </div>
+                            <div class="mb-1">
+                                <div class="heading_label">{$btr->general_adress|escape}</div>
+                                <div class="">
+                                    <input name="address" class="form-control" type="text" value="{$user->address|escape}" />
+                                </div>
+                            </div>
+                            <div class="mb-1">
+                                <div class="heading_label">{$btr->general_registration_date|escape}</div>
+                                <div class="">
+                                    <input name="" class="form-control" type="text" disabled value="{$user->created|date}" />
+                                </div>
+                            </div>
+                        </div>
 
-<!-- Основная форма -->
-<form method=post id=product>
-<input type=hidden name="session_id" value="{$smarty.session.id}">
-	<div id="name">
-		<input class="name" name=name type="text" value="{$user->name|escape}"/> 
-		<input name=id type="hidden" value="{$user->id|escape}"/> 
-		<div class="checkbox">
-			<input name="enabled" value='1' type="checkbox" id="active_checkbox" {if $user->enabled}checked{/if}/> <label class="visible_icon" for="active_checkbox">Активен</label>
-		</div>
-	</div> 
-	
-
-<div id=column_left>
-	<!-- Левая колонка свойств товара -->
-		<!-- Параметры страницы -->
-		<div class="block">
-			<ul>
-				{if $groups}
-				<li>
-					<label class=property>Группа</label>
-					<select name="group_id">
-						<option value='0'>Не входит в группу</option>
-				   		{foreach $groups as $g}
-				        	<option value='{$g->id}' {if $user->group_id == $g->id}selected{/if}>{$g->name|escape}</option>
-				    	{/foreach}
-					</select>
-				</li>
-				{/if}
-				<li><label class=property>Email</label><input name="email" class="okay_inp" type="text" value="{$user->email|escape}" /></li>
-                <li><label class=property>Телефон</label><input name="phone" class="okay_inp" type="text" value="{$user->phone|escape}" /></li>
-                <li><label class=property>Адрес</label><input name="address" class="okay_inp" type="text" value="{$user->address|escape}" /></li>
-				<li><label class=property>Дата регистрации</label><input name="email" class="okay_inp" type="text" disabled value="{$user->created|date}" /></li>
-				<li><label class=property>Последний IP</label><input name="email" class="okay_inp" type="text" disabled value="{$user->last_ip|escape}" /></li>
-			</ul>
-		</div>
-		<!-- Параметры страницы (The End)-->
-	<input class="button_green button_save" type="submit" name="user_info" value="Сохранить" />
-</div>
-	<!-- Левая колонка свойств товара (The End)-->
-</form>
-<!-- Основная форма (The End) -->
- 
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="mb-1">
+                                <div class="heading_label">{$btr->general_group|escape}</div>
+                                <div class="">
+                                    <select name="group_id" class="selectpicker">
+                                        <option value="0">{$btr->user_not_in_group|escape}</option>
+                                        {foreach $groups as $g}
+                                            <option value="{$g->id}" {if $user->group_id == $g->id}selected{/if}>{$g->name|escape}</option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-1">
+                                <div class="heading_label">E-mail</div>
+                                <div class="">
+                                    <input name="email" class="form-control" type="text" value="{$user->email|escape}" />
+                                </div>
+                            </div>
+                             <div class="mb-1">
+                                <div class="heading_label">{$btr->user_last_ip|escape}</div>
+                                <div class="">
+                                    <input name="" class="form-control" type="text" disabled value="{$user->last_ip|escape}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {if $orders}
-<div class="block" id=column_left>
-<form id="list" method="post">
-	<input type="hidden" name="session_id" value="{$smarty.session.id}">
-	<h2>Заказы пользователя</h2>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="boxed fn_toggle_wrap min_height_230px">
+                <div class="heading_box">
+                    {$btr->user_orders|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="icon-arrow-down"></i></a>
+                    </div>
+                </div>
+                <div class="toggle_body_wrap on fn_card">
+                    <div class="">
+                        <div class="okay_list products_list">
+                            <div class="okay_list_head">
+                                <div class="okay_list_heading okay_list_user_number">№ </div>
+                                <div class="okay_list_heading okay_list_user_name">{$btr->general_full_name|escape}</div>
+                                <div class="okay_list_heading okay_list_user_date">{$btr->general_date|escape}</div>
+                                <div class="okay_list_heading okay_list_user_price">{$btr->general_amount|escape}</div>
+                            </div>
+                            <div class="okay_list_body">
+                                {foreach $orders as $order}
+                                    <div class="fn_row okay_list_body_item">
+                                        <div class="okay_list_row">
+                                            <div class="okay_list_boding okay_list_user_number">
+                                                <a href="{url module=OrderAdmin id=$order->id return=$smarty.server.REQUEST_URI}">{$btr->general_order_number|escape} {$order->id}</a>
+                                            </div>
+                                            <div class="okay_list_boding okay_list_user_name">
+                                                <span>{$order->name|escape}</span>
+                                                {if $order->note}
+                                                    <div class="note">{$order->note|escape}</div>
+                                                {/if}
+                                                {if $order->paid}
+                                                    <div class="order_paid">
+                                                        <span class="tag tag-success">{$btr->general_paid|escape}</span>
+                                                    </div>
+                                                {/if}
+                                            </div>
+                                            <div class="okay_list_boding okay_list_user_date">
+                                                <div>{$order->date|date} | {$order->date|time}</div>
+                                            </div>
 
-	<div>		
-		{foreach $orders as $order}
-		<div class="{if $order->paid}green{/if} row">
-	 		<div class="checkbox cell">
-				<input type="checkbox" name="check[]" id="user_order_{$order->id}" value="{$order->id}" />
-                <label for="user_order_{$order->id}"></label>
-			</div>
-			<div class="order_date cell">
-				{$order->date|date} {$order->date|time}
-			</div>
-			<div class="name cell">
-				<a href="{url module=OrderAdmin id=$order->id return=$smarty.server.REQUEST_URI}">Заказ №{$order->id}</a>
-			</div>
-			<div class="name cell">
-				{$order->total_price}&nbsp;{$currency->sign}
-			</div>
-			<div class="icons cell">
-				{if $order->paid}
-                    <img src='design/images/moneybox_paid.png' height="16px" alt='Оплачен' title='Оплачен'>
-                {else}
-                    <img src='design/images/moneybox.png' height="16px" alt='Не оплачен' title='Не оплачен'>
-                {/if}	
-			</div>
-			<div class="icons cell">
-				<a href='#' class=delete></a>		 	
-			</div>
-			<div class="clear"></div>
-		</div>
-		{/foreach}
-	</div>
-
-	<div id="action">
-	<label id='check_all' class='dash_link'>Выбрать все</label>
-
-	<span id=select>
-        <select name="action">
-            <option value="delete">Удалить</option>
-        </select>
-	</span>
-	<input id="apply_action" class="button_green" name="user_orders" type="submit" value="Применить">
-	</form>
-	</div>
-</div>
+                                            <div class="okay_list_boding okay_list_user_price">
+                                                <div class="input-group">
+                                                    <span class="form-control">
+                                                        {$order->total_price|escape}
+                                                    </span>
+                                                    <span class="input-group-addon">
+                                                        {$currency->sign|escape}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {/foreach}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {/if}
-{* On document load *}
-{literal}
-
-<script>
-$(function() {
-
-	// Раскраска строк
-	function colorize()
-	{
-		$("#list div.row:even").addClass('even');
-		$("#list div.row:odd").removeClass('even');
-	}
-	// Раскрасить строки сразу
-	colorize();
-
-	// Выделить все
-	$("#check_all").click(function() {
-		$('#list input[type="checkbox"][name*="check"]').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:checked)').length>0);
-	});	
-
-	// Удалить 
-	$("a.delete").click(function() {
-		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
-		$(this).closest(".row").find('input[type="checkbox"][name*="check"]').attr('checked', true);
-		$(this).closest("form#list").find('select[name="action"] option[value=delete]').attr('selected', true);
-		$(this).closest("form#list").submit();
-	});
-
-	// Подтверждение удаления
-	$("#list").submit(function() {
-		if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-			return false;	
-	});
-});
-
-</script>
-{/literal}
+    <div class="row">
+       <div class="col-lg-12 col-md-12 mb-2">
+            <button type="submit" class="btn btn_small btn_blue float-md-right">
+                {include file='svg_icon.tpl' svgId='checked'}
+                <span>{$btr->general_apply|escape}</span>
+            </button>
+        </div>
+    </div>
+</form>

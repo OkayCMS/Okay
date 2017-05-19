@@ -1,11 +1,6 @@
 {if $pages_count>1}
-
-{* Скрипт для листания через ctrl → *}
-{* Ссылки на соседние страницы должны иметь id PrevLink и NextLink *}
-<script type="text/javascript" src="design/js/ctrlnavigate.js"></script>           
-
 <!-- Листалка страниц -->
-<div id="pagination">
+<ul class="pagination">
 	
 	{* Количество выводимых ссылок на страницы *}
 	{$visible_pages = 5}
@@ -26,28 +21,44 @@
 	{* До какой страницы выводить - выводим всё окно, но не более ощего количества страниц *}
 	{$page_to = min($page_from+$visible_pages, $pages_count-1)}
 
+    {if $current_page>1}
+    <li class="page-item">
+        <a id="PrevLink" href="{url page=$current_page-1}">&lt;</a>
+    </li>
+    {/if}
+
 	{* Ссылка на 1 страницу отображается всегда *}
-	<a class="{if $current_page==1}selected{else}droppable{/if}" href="{url page=1}">1</a>
-	
+    <li class="page-item {if $current_page==1}active{/if}">
+	    <a class="page-link {if $current_page==1}selected{else}droppable{/if}" href="{url page=1}">1</a>
+    </li>
 	{* Выводим страницы нашего "окна" *}	
 	{section name=pages loop=$page_to start=$page_from}
 		{* Номер текущей выводимой страницы *}	
 		{$p = $smarty.section.pages.index+1}	
-		{* Для крайних страниц "окна" выводим троеточие, если окно не возле границы навигации *}	
+		{* Для крайних страниц "окна" выводим троеточие, если окно не возле границы навигации *}
+    <li class="page-item {if $p==$current_page}active{/if}">
 		{if ($p == $page_from+1 && $p!=2) || ($p == $page_to && $p != $pages_count-1)}	
-		<a class="{if $p==$current_page}selected{/if}" href="{url page=$p}">...</a>
+		<a class="page-link" href="{url page=$p}">...</a>
 		{else}
-		<a class="{if $p==$current_page}selected{else}droppable{/if}" href="{url page=$p}">{$p}</a>
+		<a class="{if $p!=$current_page}droppable{/if}" href="{url page=$p}">{$p}</a>
 		{/if}
+    </li>
 	{/section}
 
 	{* Ссылка на последнююю страницу отображается всегда *}
-	<a class="{if $current_page==$pages_count}selected{else}droppable{/if}"  href="{url page=$pages_count}">{$pages_count}</a>
+    <li class="page-item {if $current_page == $pages_count}active{/if}">
+	    <a class="{if $current_page!=$pages_count}droppable{/if}"  href="{url page=$pages_count}">{$pages_count}</a>
+	</li>
+
+	{if $current_page<$pages_count}
+    <li class="page-item">
+        <a id="NextLink" href="{url page=$current_page+1}">&gt;</a>
+    </li>
+    {/if}
+    <li class="page-item">
+        <a href="{url page=all}">{$btr->pagination_show_all|escape}</a>
+    </li>
 	
-	<a href="{url page=all}">все сразу</a>
-	{if $current_page>1}<a id="PrevLink" href="{url page=$current_page-1}">←назад</a>{/if}
-	{if $current_page<$pages_count}<a id="NextLink" href="{url page=$current_page+1}">вперед→</a>{/if}	
-	
-</div>
+</ul>
 <!-- Листалка страниц (The End) -->
 {/if}

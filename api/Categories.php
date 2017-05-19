@@ -232,12 +232,7 @@ class Categories extends Okay {
             $lang_sql->join 
             ORDER BY c.parent_id, c.position
         ");
-        
-        // Выбор категорий с подсчетом количества товаров для каждой. Может тормозить при большом количестве товаров.
-        // $query = $this->db->placehold("SELECT c.id, c.parent_id, c.name, c.description, c.url, c.meta_title, c.meta_keywords, c.meta_description, c.image, c.visible, c.position, COUNT(p.id) as products_count
-        //                               FROM __categories c LEFT JOIN __products_categories pc ON pc.category_id=c.id LEFT JOIN __products p ON p.id=pc.product_id AND p.visible GROUP BY c.id ORDER BY c.parent_id, c.position");
-        
-        
+
         $this->db->query($query);
         $categories = $this->db->results();
         

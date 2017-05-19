@@ -1,139 +1,334 @@
-{* Вкладки *}
-{capture name=tabs}
-    {if in_array('users', $manager->permissions)}
-        <li>
-            <a href="index.php?module=UsersAdmin">Пользователи</a>
-        </li>
-    {/if}
-    {if in_array('groups', $manager->permissions)}
-        <li>
-            <a href="index.php?module=GroupsAdmin">Группы</a>
-        </li>
-    {/if}
-    <li class="active">
-        <a href="index.php?module=CouponsAdmin">Купоны</a>
-    </li>
-    {if in_array('users', $manager->permissions)}
-        <li>
-            <a href="index.php?module=SubscribeMailingAdmin">Подписчики</a>
-        </li>
-    {/if}
-{/capture}
-
 {* Title *}
-{$meta_title='Купоны' scope=parent}
-
-<div id="header">
-	{if $coupons_count}
-	    <h1>{$coupons_count} {$coupons_count|plural:'купон':'купонов':'купона'}</h1>
-	{else}
-	    <h1>Нет купонов</h1>
-	{/if}
-	<a class="add" href="{url module=CouponAdmin return=$smarty.server.REQUEST_URI}">Новый купон</a>
+{$meta_title = $btr->coupons_coupons scope=parent}
+<div class="row">
+    <div class="col-lg-7 col-md-7">
+        <div class="wrap_heading">
+            <div class="box_heading heading_page">
+                {if $coupons_count}
+                    {$btr->coupons_coupons} - {$coupons_count}
+                {/if}
+            </div>
+            <div class="box_btn_heading fn_add_coupon">
+                <button class="btn btn_small btn-info">
+                    {include file='svg_icon.tpl' svgId='plus'}
+                    <span>{$btr->coupons_add|escape}</span>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
-{if $coupons}
-    <div id="main_list">
-        {include file='pagination.tpl'}
-        <form id="form_list" method="post">
-            <input type="hidden" name="session_id" value="{$smarty.session.id}">
-            <div id="list">
-                {foreach $coupons as $coupon}
-                    <div class="{if $coupon->valid}green{/if} row">
-                        <div class="checkbox cell">
-                            <input type="checkbox" id="{$coupon->id}" name="check[]" value="{$coupon->id}"/>
-                            <label for="{$coupon->id}"></label>
-                        </div>
-                        <div class="coupon_name cell">
-                            <a href="{url module=CouponAdmin id=$coupon->id return=$smarty.server.REQUEST_URI}">{$coupon->code}</a>
-                        </div>
-                        <div class="coupon_discount cell">
-                            Скидка {$coupon->value*1} {if $coupon->type=='absolute'}{$currency->sign}{else}%{/if}<br>
-                            {if $coupon->min_order_price>0}
-                                <div class="detail">
-                                    Для заказов от {$coupon->min_order_price|escape} {$currency->sign}
-                                </div>
-                            {/if}
-                        </div>
-                        <div class="coupon_details cell">
-                            {if $coupon->single}
-                                <div class="detail">
-                                    Одноразовый
-                                </div>
-                            {/if}
-                            {if $coupon->usages>0}
-                                <div class="detail">
-                                    Использован {$coupon->usages|escape} {$coupon->usages|plural:'раз':'раз':'раза'}
-                                </div>
-                            {/if}
-                            {if $coupon->expire}
-                                <div class="detail">
-                                    {if $smarty.now|date_format:'%Y%m%d' <= $coupon->expire|date_format:'%Y%m%d'}
-                                        Действует до {$coupon->expire|date}
-                                    {else}
-                                        Истёк {$coupon->expire|date}
-                                    {/if}
-                                </div>
-                            {/if}
-                        </div>
-                        <div class="icons cell">
-                            <a href='#' class=delete></a>
-                        </div>
-                        <div class="name cell" style='white-space:nowrap;'>
-                        </div>
-                        <div class="clear"></div>
-                    </div>
-                {/foreach}
+{if $message_success}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="boxed boxed_success">
+                <div class="heading_box">
+                    {if $message_success == 'added'}
+                        {$btr->coupons_added|escape}
+                    {elseif $message_success == 'updated'}
+                        {$btr->coupons_update|escape}
+                    {/if}
+                    {if $smarty.get.return}
+                        <a class="btn btn_return float-xs-right" href="{$smarty.get.return}">
+                            {include file='svg_icon.tpl' svgId='return'}
+                            <span>{$btr->general_back|escape}</span>
+                        </a>
+                    {/if}
+                </div>
             </div>
-            <div id="action">
-                <label id="check_all" class="dash_link">Выбрать все</label>
-                <span id="select">
-                    <select name="action">
-                        <option value="delete">Удалить</option>
-                    </select>
-                </span>
-                <input id="apply_action" class="button_green" type="submit" value="Применить">
-            </div>
-        </form>
-        {include file='pagination.tpl'}
+        </div>
     </div>
 {/if}
 
-{* On document load *}
+{if $message_error}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="boxed boxed_warning">
+                <div class="heading_box">
+                    {if $message_error == 'code_exists'}
+                        {$btr->coupons_exists|escape}
+                    {elseif $message_error=='empty_code'}
+                        {$btr->coupons_enter_code|escape}
+
+                    {else}
+                        {$message_error|escape}
+                    {/if}
+                    {if $smarty.get.return}
+                        <a class="btn btn_return float-xs-right" href="{$smarty.get.return}">
+                            {include file='svg_icon.tpl' svgId='return'}
+                            <span>{$btr->general_back|escape}</span>
+                        </a>
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
+
+
+
+{if $coupons}
+    <div class="boxed fn_toggle_wrap">
+        <form class="fn_form_list" method="post">
+            <input type="hidden" name="session_id" value="{$smarty.session.id}">
+
+            <div class="okay_list products_list fn_sort_list">
+                <div class="okay_list_head">
+                    <div class="okay_list_heading okay_list_check">
+                        <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value=""/>
+                        <label class="okay_ckeckbox" for="check_all_1"></label>
+                    </div>
+                    <div class="okay_list_heading okay_list_coupon_name">{$btr->coupons_name|escape}</div>
+                    <div class="okay_list_heading okay_list_coupon_sale">{$btr->general_discount|escape}</div>
+                    <div class="okay_list_heading okay_list_coupon_condit">{$btr->general_conditions|escape}</div>
+                    <div class="okay_list_heading okay_list_coupon_validity">{$btr->coupons_terms|escape}</div>
+                    <div class="okay_list_heading okay_list_coupon_disposable">{$btr->coupons_one_off|escape}</div>
+                    <div class="okay_list_heading okay_list_coupon_count">{$btr->coupons_qty_uses|escape}</div>
+                    <div class="okay_list_heading okay_list_close"></div>
+                </div>
+                <div class="okay_list_body fn_new_coupon">
+                    <div class="okay_list_body_item">
+                        <div class="okay_list_row ">
+                            <div class="okay_list_heading okay_list_check"></div>
+                            <div class="okay_list_boding okay_list_coupon_name">
+                                <input class="form-control" name="new_code" type="text" value="" placeholder="{$btr->coupons_enter_name|escape}"/>
+                                <input name="new_id" type="hidden" value=""/>
+                            </div>
+                            <div class="okay_list_boding okay_list_coupon_sale">
+                                <div class="input-group">
+                                    <input class="form-control" name="new_value" type="text" value="" />
+                                    <select class="selectpicker form-control" name="new_type">
+                                        <option value="percentage">%</option>
+                                        <option value="absolute">{$currency->sign}</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="okay_list_boding okay_list_coupon_condit">
+                                <input class="form-control" type="text" name="new_min_order_price" value="" placeholder="{$btr->coupons_order_price|escape}">
+                            </div>
+                            <div class="okay_list_boding okay_list_coupon_validity">
+
+                                <div class="input-group">
+                                    <input class="form-control" type=text name="new_expire" value="">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="okay_list_boding okay_list_coupon_disposable">
+                                <input class="hidden_check" type="checkbox" name="new_single" id="single" value="1" />
+                                <label class="okay_ckeckbox" for="single"></label>
+                            </div>
+                            <div class="okay_list_heading okay_list_coupon_count"></div>
+                            <div class="okay_list_heading okay_list_close"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="okay_list_body fn_coupon_wrap">
+                    {foreach $coupons as $coupon}
+                        <div class="fn_row okay_list_body_item">
+                            <div class="okay_list_row ">
+                                <div class="okay_list_boding okay_list_check">
+                                    <input class="hidden_check" type="checkbox" id="id_{$coupon->id}" name="check[]" value="{$coupon->id}"/>
+                                    <label class="okay_ckeckbox" for="id_{$coupon->id}"></label>
+                                </div>
+                                <div class="okay_list_boding okay_list_coupon_name">
+                                    <span class="text_dark">
+                                        {$coupon->code}
+                                    </span>
+                                    <div class="hidden-lg-up mt-q">
+                                        {if $coupon->expire}
+                                            {if $smarty.now|date_format:'%Y%m%d' <= $coupon->expire|date_format:'%Y%m%d'}
+                                                <span class="tag tag-primary">
+                                                    {$btr->coupons_valid_until|escape} {$coupon->expire|date}
+                                                </span>
+                                            {else}
+                                                <span class="tag tag-danger">
+                                                    {$btr->coupons_expired|escape} {$coupon->expire|date}
+                                                </span>
+                                            {/if}
+                                        {else}
+                                            <span class="tag tag-warning">
+                                                {include file='svg_icon.tpl' svgId='infinity'}
+                                            </span>
+                                        {/if}
+                                        {if $coupon->min_order_price>0}
+                                            <span class="tag tag-success">
+                                                {$btr->coupons_order_from|escape} {$coupon->min_order_price|escape} {$currency->sign|escape}
+                                            </span>
+                                        {/if}
+                                        <div class="mt-q">
+                                            {if $coupon->single}
+                                                {$btr->coupons_one_off|escape}
+                                            {else}
+                                                {$btr->coupons_many|escape}
+                                            {/if}
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="okay_list_boding okay_list_coupon_sale">
+                                    {$coupon->value*1}
+                                    {if $coupon->type=='absolute'}
+                                        {$currency->sign|escape}
+                                    {else}
+                                        %
+                                    {/if}
+                                </div>
+                                <div class="okay_list_boding okay_list_coupon_condit">
+                                    {if $coupon->min_order_price>0}
+                                        <div class="">
+                                            {$btr->coupons_order_from|escape} {$coupon->min_order_price|escape} {$currency->sign|escape}
+                                        </div>
+                                    {/if}
+                                </div>
+                                <div class="okay_list_boding okay_list_coupon_validity">
+                                    <div class="">
+                                        {if $coupon->expire}
+                                            {if $smarty.now|date_format:'%Y%m%d' <= $coupon->expire|date_format:'%Y%m%d'}
+                                                {$btr->coupons_valid_until|escape} {$coupon->expire|date}
+                                            {else}
+                                                {$btr->coupons_expired|escape} {$coupon->expire|date}
+                                            {/if}
+                                        {else}
+                                            {include file='svg_icon.tpl' svgId='infinity'}
+                                        {/if}
+                                    </div>
+                                </div>
+                                <div class="okay_list_boding okay_list_coupon_disposable">
+                                    {if $coupon->single}
+                                        {$btr->coupons_yes|escape}
+                                    {else}
+                                        {$btr->coupons_no|escape}
+                                    {/if}
+                                </div>
+                                <div class="okay_list_boding okay_list_coupon_count">
+                                    {if $coupon->usages>0}
+                                         {$coupon->usages|escape}
+                                    {else}
+                                         0
+                                    {/if}
+                                </div>
+                                <div class="okay_list_boding okay_list_close">
+                                    {*delete*}
+                                    <button data-hint="{$btr->coupons_delete|escape}" type="button" class="btn_close fn_remove hint-bottom-right-t-info-s-small-mobile  hint-anim" data-toggle="modal" data-target="#fn_action_modal" onclick="success_action($(this));">
+                                        {include file='svg_icon.tpl' svgId='delete'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {/foreach}
+                </div>
+                <div class="okay_list_footer fn_action_block">
+                    <div class="okay_list_foot_left">
+                        <div class="okay_list_heading okay_list_check">
+                            <input class="hidden_check fn_check_all" type="checkbox" id="check_all_2" name="" value=""/>
+                            <label class="okay_ckeckbox" for="check_all_2"></label>
+                        </div>
+                        <div class="okay_list_option">
+                            <select name="action" class="selectpicker">
+                                <option value="delete">{$btr->general_delete|escape}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn_small btn_blue">
+                        {include file='svg_icon.tpl' svgId='checked'}
+                        <span>{$btr->general_apply|escape}</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+{else}
+    <div class="boxed fn_toggle_wrap">
+        <form method="post" class="clearfix">
+            <input type="hidden" name="session_id" value="{$smarty.session.id}">
+
+            <div class="okay_list products_list fn_sort_list">
+                <div class="okay_list_head">
+                    <div class="okay_list_heading okay_list_check"></div>
+                    <div class="okay_list_heading okay_list_coupon_name">{$btr->coupons_name|escape}</div>
+                    <div class="okay_list_heading okay_list_coupon_sale">{$btr->general_discount|escape}</div>
+                    <div class="okay_list_heading okay_list_coupon_condit">{$btr->general_conditions|escape}</div>
+                    <div class="okay_list_heading okay_list_coupon_validity">{$btr->coupons_terms|escape}</div>
+                    <div class="okay_list_heading okay_list_coupon_disposable">{$btr->coupons_one_off|escape}</div>
+                    <div class="okay_list_heading okay_list_coupon_count">{$btr->coupons_qty_uses|escape}</div>
+                    <div class="okay_list_heading okay_list_close"></div>
+                </div>
+                <div class="okay_list_body">
+                    <div class="okay_list_body_item">
+                        <div class="okay_list_row ">
+                            <div class="okay_list_heading okay_list_check"></div>
+                            <div class="okay_list_boding okay_list_coupon_name">
+                                <input class="form-control" name="new_code" type="text" value="" placeholder="{$btr->coupons_enter_name|escape}"/>
+                                <input name="new_id" type="hidden" value=""/>
+                            </div>
+                            <div class="okay_list_boding okay_list_coupon_sale">
+                                <div class="input-group">
+                                    <input class="form-control" name="new_value" type="text" value="" />
+                                    <select class="selectpicker form-control" name="new_type">
+                                        <option value="percentage">%</option>
+                                        <option value="absolute">{$currency->sign}</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="okay_list_boding okay_list_coupon_condit">
+                                <input class="form-control" type="text" name="new_min_order_price" value="" placeholder="{$btr->coupons_order_price|escape}">
+                            </div>
+                            <div class="okay_list_boding okay_list_coupon_validity">
+
+                                <div class="input-group">
+                                    <input class="form-control" type=text name="new_expire" value="">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="okay_list_boding okay_list_coupon_disposable">
+                                <input class="hidden_check" type="checkbox" name="new_single" id="single" value="1" />
+                                <label class="okay_ckeckbox" for="single"></label>
+                            </div>
+                            <div class="okay_list_heading okay_list_coupon_count"></div>
+                            <div class="okay_list_heading okay_list_close"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+               <div class="col-lg-12 col-md-12 mt-1">
+                    <button type="submit" class="btn btn_small btn_blue float-md-right">
+                        {include file='svg_icon.tpl' svgId='checked'}
+                        <span>{$btr->general_apply|escape}</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+       <script>
+           $('input[name="new_expire"]').datepicker({
+               regional:'ru'
+           });
+       </script>
+    </div>
+{/if}
+
+
+<script src="design/js/jquery/datepicker/jquery.ui.datepicker-ru.js"></script>
 {literal}
+    <script>
+        $(function() {
+            var new_coupon = $(".fn_new_coupon").clone(true);
+            $(".fn_new_coupon").remove();
 
-<script>
-$(function() {
-
-	// Раскраска строк
-	function colorize()
-	{
-		$("#list div.row:even").addClass('even');
-		$("#list div.row:odd").removeClass('even');
-	}
-	// Раскрасить строки сразу
-	colorize();
-
-	// Выделить все
-	$("#check_all").click(function() {
-		$('#list input[type="checkbox"][name*="check"]').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:checked)').length>0);
-	});	
-
-	// Удалить 
-	$("a.delete").click(function() {
-		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
-		$(this).closest(".row").find('input[type="checkbox"][name*="check"]').attr('checked', true);
-		$(this).closest("form").find('select[name="action"] option[value=delete]').attr('selected', true);
-		$(this).closest("form").submit();
-	});
-		
-	// Подтверждение удаления
-	$("form").submit(function() {
-		if($('#list input[type="checkbox"][name*="check"]:checked').length>0)
-			if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-				return false;	
-	});
-});
-
-</script>
+            $(document).on("click", ".fn_add_coupon", function () {
+                $(this).remove();
+                new_coupon.find("select").selectpicker();
+                new_coupon.find('input[name="new_expire"]').datepicker({
+                    regional:'ru'
+                });
+                $(".fn_coupon_wrap").prepend(new_coupon);
+            })
+        });
+    </script>
 {/literal}

@@ -168,7 +168,7 @@ class ImportAjax extends Okay {
         }
         
         if(isset($item['description'])) {
-            $product['body'] = trim($item['description']);
+            $product['description'] = trim($item['description']);
         }
         
         if(isset($item['visible'])) {

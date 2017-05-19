@@ -41,6 +41,7 @@ class Design extends Okay {
         $this->smarty->registerPlugin('modifier', 'cut',		array($this, 'cut_modifier'));
         $this->smarty->registerPlugin('modifier', 'date',		array($this, 'date_modifier'));
         $this->smarty->registerPlugin('modifier', 'time',		array($this, 'time_modifier'));
+        $this->smarty->registerPlugin('modifier', 'balance',    array($this, 'balance_modifier'));
         $this->smarty->registerPlugin('function', 'api',		array($this, 'api_plugin'));
         
         if($this->config->smarty_html_minify) {
@@ -165,6 +166,14 @@ class Design extends Okay {
     
     public function time_modifier($date, $format = null) {
         return date(empty($format)?'H:i':$format, strtotime($date));
+    }
+
+    public function balance_modifier($minutes = 0, $sign = true) {
+        $sign = ($minutes < 0 && $sign ? '+' : '');
+        $minutes = abs($minutes);
+        $hours = intval(floor($minutes/60));
+        $minutes -= $hours*60;
+        return $sign.($hours < 10 ? '0' : '').$hours.':'.($minutes < 10 ? '0' : '').$minutes;
     }
     
     public function api_plugin($params, &$smarty) {

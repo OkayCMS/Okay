@@ -1,166 +1,195 @@
-{* Вкладки *}
-{capture name=tabs}
-	{if in_array('settings', $manager->permissions)}
-        <li>
-            <a href="index.php?module=SettingsAdmin">Настройки</a>
-        </li>
-    {/if}
-	{if in_array('currency', $manager->permissions)}
-        <li>
-            <a href="index.php?module=CurrencyAdmin">Валюты</a>
-        </li>
-    {/if}
-	{if in_array('delivery', $manager->permissions)}
-        <li>
-            <a href="index.php?module=DeliveriesAdmin">Доставка</a>
-        </li>
-    {/if}
-	{if in_array('payment', $manager->permissions)}
-        <li>
-            <a href="index.php?module=PaymentMethodsAdmin">Оплата</a>
-        </li>
-    {/if}
-	<li class="active">
-        <a href="index.php?module=ManagersAdmin">Менеджеры</a>
-    </li>
-    {if in_array('languages', $manager->permissions)}
-        <li>
-            <a href="index.php?module=LanguagesAdmin">Языки</a>
-        </li>
-    {/if}
-    {if in_array('languages', $manager->permissions)}
-        <li>
-            <a href="index.php?module=TranslationsAdmin">Переводы</a>
-        </li>
-    {/if}
-{/capture}
-
 {if $m->login}
     {$meta_title = $m->login scope=parent}
 {else}
-    {$meta_title = 'Новый менеджер' scope=parent}
+    {$meta_title = $btr->manager_new scope=parent}
 {/if}
-
-{* On document load *}
-<script>
-{literal}
-$(function() {
-	// Выделить все
-	$("#check_all").click(function() {
-		$('input[type="checkbox"][name*="permissions"]:not(:disabled)').attr('checked', $('input[type="checkbox"][name*="permissions"]:not(:disabled):not(:checked)').length>0);
-	});
-
-	{/literal}{if $m->id}$('#password_input').hide();{/if}{literal}
-	$('#change_password').click(function() {
-		$('#password_input').show();
-	});
-		
-});
-{/literal}
-</script>
+<div class="row">
+    <div class="col-lg-7 col-md-7">
+        {if !$m->id}
+            <div class="heading_page">{$btr->manager_add|escape}</div>
+        {else}
+            <div class="heading_page">{$m->name|escape}</div>
+        {/if}
+    </div>
+    <div class="col-lg-4 col-md-3 text-xs-right float-xs-right"></div>
+</div>
 
 
 {if $message_success}
-    <!-- Системное сообщение -->
-    <div class="message message_success">
-        <span class="text">{if $message_success=='added'}Менеджер добавлен{elseif $message_success=='updated'}Менеджер обновлен{else}{$message_success|escape}{/if}</span>
-        {if $smarty.get.return}
-        <a class="button" href="{$smarty.get.return}">Вернуться</a>
-        {/if}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="boxed boxed_success">
+                <div class="heading_box">
+                    {if $message_success=='added'}
+                        {$btr->manager_added|escape}
+                    {elseif $message_success=='updated'}
+                        {$btr->manager_updated|escape}
+                    {else}
+                        {$message_success|escape}
+                    {/if}
+                    {if $smarty.get.return}
+                        <a class="btn btn_return float-xs-right" href="{$smarty.get.return}">
+                            {include file='svg_icon.tpl' svgId='return'}
+                            <span>{$btr->general_back|escape}</span>
+                        </a>
+                    {/if}
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- Системное сообщение (The End)-->
 {/if}
 
 {if $message_error}
-    <!-- Системное сообщение -->
-    <div class="message message_error">
-        <span class="text">
-            {if $message_error=='login_exists'}
-                Менеджер с таким логином уже существует
-            {elseif $message_error=='empty_login'}
-                Введите логин
-            {elseif $message_error=='not_writable'}
-                Установите права на запись для файла /backend/.passwd
-            {else}
-                {$message_error|escape}
-            {/if}
-        </span>
-        <a class="button" href="">Вернуться</a>
+   <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="boxed boxed_warning">
+                <div class="heading_box">
+                     {if $message_error=='login_exists'}
+                        {$btr->manager_exists|escape}
+                    {elseif $message_error=='empty_login'}
+                        {$btr->manager_enter_login|escape}
+                    {elseif $message_error == "password_wrong"}
+                        {$btr->manager_pass_not_match|escape}
+                    {else}
+                        {$message_error|escape}
+                    {/if}
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- Системное сообщение (The End)-->
 {/if}
 
+<form method="post" enctype="multipart/form-data" class="fn_fast_button">
+    <input type="hidden" name="session_id" value="{$smarty.session.id}">
+    <div class="row">
+        <div class="col-lg-6 col-md-12 pr-0">
+            <div class="boxed fn_toggle_wrap min_height_335px">
+                <div class="heading_box">
+                    {$btr->manager_basic|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
+                    </div>
+                </div>
+                <div class="toggle_body_wrap on fn_card">
+                    <div class="mb-1">
+                        <div class="heading_label" >{$btr->manager_login|escape}</div>
+                        <div class="">
+                            <input class="form-control" name="login" autocomplete="off" type="text" value="{$m->login|escape}"/>
+                            <input name="id" type="hidden" value="{$m->id|escape}"/>
+                        </div>
+                    </div>
 
-<!-- Основная форма -->
-<form method=post id=product enctype="multipart/form-data">
-<input type=hidden name="session_id" value="{$smarty.session.id}">
-	<div id="name">
-		Логин:
-		<input class="name" name="login" type="text" value="{$m->login|escape}" maxlength="32"/>
-		<input name=id type="hidden" value="{$m->id|escape}"/>
-		Пароль:
-		{if $m->id}<a class="dash_link"id="change_password">изменить</a>{/if}
-		<input id="password_input" class="name" name="password" type="password" value=""/> 
-	</div>
+                    <div class="mb-1">
+                        <div class="heading_label" >{$btr->manager_pass|escape}</div>
+                        <div class="">
+                            <input class="form-control" autocomplete="off" name="password" type="password" value="" placeholder="xxxxxxxx" />
+                        </div>
+                    </div>
 
-	<!-- Левая колонка -->
-	<div id="column_left">
-		
-		<h2>Права доступа: </h2>
-		<div class="block"><label id="check_all" class="dash_link">Выбрать все</label></div>
+                    <div class="mb-1">
+                        <div class="heading_label">{$btr->manager_pass_repeat|escape}</div>
+                        <div class="">
+                            <input class="form-control" autocomplete="off" name="password_check" type="password" value="" placeholder="xxxxxxxx" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div class="boxed fn_toggle_wrap min_height_335px">
+                <div class="heading_box">
+                    {$btr->manager_settings|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
+                    </div>
+                </div>
+                <div class="toggle_body_wrap fn_card on">
+                    <div class="mb-1">
+                        <div class="heading_label" for="block_translit">{$btr->manager_language|escape}</div>
+                        <select name="manager_lang" class="selectpicker">
+                            {foreach $btr_languages as $name=>$label}
+                                <option value="{$label}" {if $m->lang==$label}selected{/if}>
+                                    <img src="../files/lang/{$label}.png"/>
+                                    {$name|escape}
+                                </option>
+                            {/foreach}
+                        </select>
+                    </div>
 
-		<!-- Параметры  -->
-		<div class="block">
-			<ul>
-				{$perms = [
-					'products'   =>'Товары',
-					'categories' =>'Категории',
-					'brands'     =>'Бренды',
-					'features'   =>'Свойства товаров',
-					'orders'     =>'Заказы',
-					'labels'     =>'Метки заказов',
-					'users'      =>'Покупатели',
-					'groups'     =>'Группы покупателей',
-					'coupons'    =>'Купоны',
-					'pages'      =>'Страницы',
-					'blog'       =>'Блог',
-					'comments'   =>'Комментарии',
-					'feedbacks'  =>'Обратная связь',
-					'import'     =>'Импорт',
-					'export'     =>'Экспорт',
-					'stats'      =>'Статистика',
-					'design'     =>'Шаблоны',
-					'settings'   =>'Настройки',
-					'currency'   =>'Валюты',
-					'delivery'   =>'Способы доставки',
-					'payment'    =>'Способы оплаты',
-					'managers'   =>'Менеджеры',
-					'languages'  =>'Языки',
-					'license'    =>'Управление лицензией',
-                    'banners'	 =>'Управление баннерами',
-                    'callbacks'  =>'Заказ обратного звонка',
-                    'special'    =>'Промо-изображения',
-                    'topvisor'   =>'Топвизор',
-                    'yametrika'  =>'Яндекс Метрика',
-                    'robots'     =>'Файл robots.txt'
-				]}
-				
-				{foreach $perms as $p=>$name}
-				    <li>
-                        <label class=property for="{$p}">{$name}</label>
-				    <input id="{$p}" name="permissions[]" class="okay_inp" type="checkbox" value="{$p}" {if $m->permissions && in_array($p, $m->permissions)}checked{/if} {if $m->id==$manager->id}disabled{/if}/>
-                    </li>
-				{/foreach}
-			</ul>
-			
-		</div>
-		<!-- Параметры (The End)-->
-	</div>
-	<!-- Левая колонка (The End)-->
-	<input class="button_green button_save" type="submit" name="" value="Сохранить" />
-	{if $m->cnt_try >= 10}
-		<input class="button_green button_save" type="submit" name="unlock_manager" value="Разблокировать" />
-	{/if}
-	
+                    <div class="mb-1">
+                        <div class="heading_label" for="block_translit">{$btr->general_comment|escape}</div>
+                        <div class="">
+                            <input class="form-control" autocomplete="off" name="comment" type="text" value="{$m->comment|escape}" placeholder="{$btr->manager_example|escape}"/>
+                        </div>
+                    </div>
+
+                    <div class="mb-1">
+                        <div class="heading_label" for="block_translit">{$btr->manager_date|escape}</div>
+                        <div class="">
+                            <input class="form-control" autocomplete="off" name="" type="text" value="" placeholder="19.01.17|14:02"/>
+                        </div>
+                    </div>
+
+                    <div class="mb-1">
+                        <div class="heading_label">{$btr->manager_sidebar|escape}</div>
+                        <div class="">
+                            <select name="menu_status" class="selectpicker">
+                                <option value="1" {if $m->menu_status == 1}selected=""{/if}>{$btr->manager_open|escape}</option>
+                                <option value="0" {if $m->menu_status == 0}selected=""{/if}>{$btr->manager_closed|escape}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="boxed fn_toggle_wrap min_height_230px">
+                <div class="heading_box">
+                    {$btr->manager_rights|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
+                    </div>
+                </div>
+                <div class="toggle_body_wrap on fn_card">
+                    {foreach $permission as $title=>$items}
+                        <div class="permission_block">
+                            <div class="heading_box">{$btr->{$title}}</div>
+                            <div class="permission_boxes row">
+                                {foreach $items as $key=>$item}
+                                    <div class="col-xl-3 col-lg-4 col-md-6 {if $m->id==$manager->id}text-muted{/if}">
+                                        <div class="permission_box">
+                                            <span>{$item|escape}</span>
+                                            <label class="switch switch-default">
+                                                <input class="switch-input fn_item_perm" name="permissions[]" value="{$key}" type="checkbox" {if $m->permissions && in_array($key, $m->permissions)}checked{/if} {if $m->id==$manager->id}disabled{/if}  />
+                                                <span class="switch-label"></span>
+                                                <span class="switch-handle"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                {/foreach}
+                            </div>
+                        </div>
+                        <div class="col-xs-12 clearfix"></div>
+                    {/foreach}
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 ">
+                        <button type="submit" class="btn btn_small btn_blue float-md-right">
+                            {include file='svg_icon.tpl' svgId='checked'}
+                            <span>{$btr->general_apply|escape}</span>
+                        </button>
+                        {if $m->cnt_try >= 10}
+                            <button type="submit" name="unlock_manager" class="btn btn_small btn_blue">
+                                <i class="fa fa-magic"></i>
+                                &nbsp; {$btr->manager_unlock|escape}
+                            </button>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        </div>
+   </div>
 </form>
-<!-- Основная форма (The End) -->

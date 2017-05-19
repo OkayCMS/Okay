@@ -7,19 +7,8 @@ header("Content-type: text/xml; charset=UTF-8");
 print '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 print '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
 
-$languages = $okay->languages->languages();
-$lang_link = '';
-if (!empty($languages)) {
-    $first_lang = reset($languages);
-    if($_GET['lang_label']) {
-        $language = $okay->languages->languages(array('id'=>$okay->languages->lang_id()));
-    } else {
-        $okay->languages->set_lang_id($first_lang->id);
-    }
-    if(!empty($language) && is_object($language) && $language->id != $first_lang->id) {
-        $lang_link = $language->label.'/';
-    }
-}
+// если стартануть сессию то будет не верно брать префикс ссылки для языка
+$lang_link = $okay->languages->get_lang_link();
 
 // Главная страница
 $url = $okay->config->root_url.'/'.$lang_link;
@@ -55,7 +44,7 @@ foreach($okay->pages->get_pages() as $p) {
 
 // Блог
 foreach($okay->blog->get_posts(array('visible'=>1)) as $p) {
-    $url = $okay->config->root_url.'/'.$lang_link.'blog/'.esc($p->url);
+    $url = $okay->config->root_url.'/'.$lang_link.$p->type_post.'/'.esc($p->url);
     print "\t<url>"."\n";
     print "\t\t<loc>$url</loc>"."\n";
     //lastModify

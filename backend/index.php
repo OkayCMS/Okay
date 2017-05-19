@@ -13,12 +13,12 @@ $_SESSION['id'] = session_id();
 @ini_set('session.gc_maxlifetime', 86400); // 86400 = 24 часа
 @ini_set('session.cookie_lifetime', 0); // 0 - пока браузер не закрыт
 
-require_once('backend/IndexAdmin.php');
+require_once('backend/core/IndexAdmin.php');
 
 // Кеширование в админке нам не нужно
-Header("Cache-Control: no-cache, must-revalidate");
+header("Cache-Control: no-cache, must-revalidate");
 header("Expires: -1");
-Header("Pragma: no-cache");
+header("Pragma: no-cache");
 
 $backend = new IndexAdmin();
 
@@ -32,16 +32,8 @@ if(!$backend->request->check_session()) {
 print $backend->fetch();
 
 // Отладочная информация
-if($backend->config->debug) {
+if(1) {
     print "<!--\r\n";
-    $i = 0;
-    $sql_time = 0;
-    foreach($page->db->queries as $q) {
-        $i++;
-        print "$i.\t$q->exec_time sec\r\n$q->sql\r\n\r\n";
-        $sql_time += $q->exec_time;
-    }
-    
     $time_end = microtime(true);
     $exec_time = $time_end-$time_start;
     
@@ -49,7 +41,6 @@ if($backend->config->debug) {
         print "memory peak usage: ".memory_get_peak_usage()." bytes\r\n";
     }
     print "page generation time: ".$exec_time." seconds\r\n";
-    print "sql queries time: ".$sql_time." seconds\r\n";
     print "php run time: ".($exec_time-$sql_time)." seconds\r\n";
     print "-->";
 }

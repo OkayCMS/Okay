@@ -10,9 +10,14 @@ class Brands extends Okay {
         $visible_filter = '';
         $product_id_filter = '';
         $product_join = '';
+        $visible_brand_filter = '';
         if(isset($filter['visible'])) {
             $visible_filter = $this->db->placehold('AND p.visible=?', intval($filter['visible']));
         }
+        if(isset($filter['visible_brand'])) {
+            $visible_brand_filter = $this->db->placehold('AND b.visible=?', intval($filter['visible_brand']));
+        }
+
 
         if(isset($filter['product_id'])) {
             $product_id_filter = $this->db->placehold('AND p.id in (?@)', (array)$filter['product_id']);
@@ -30,6 +35,7 @@ class Brands extends Okay {
                 b.url, 
                 b.image, 
                 b.last_modify,
+                b.visible,
                 b.position,
                 $lang_sql->fields 
             FROM __brands b
@@ -39,6 +45,7 @@ class Brands extends Okay {
             WHERE 
                 1 
                 $category_id_filter
+                $visible_brand_filter
                 $product_id_filter
             ORDER BY b.position
         ");
@@ -62,6 +69,7 @@ class Brands extends Okay {
                 b.url, 
                 b.image, 
                 b.last_modify,
+                b.visible,
                 b.position,
                 $lang_sql->fields                
             FROM __brands b

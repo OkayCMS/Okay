@@ -1,52 +1,168 @@
-{capture name=tabs}
-    <li>
-        <a href="{url module=StatsAdmin}">Статистика</a>
-    </li>
-    <li>
-        <a href="{url module=ReportStatsAdmin filter=null status=null}">Отчет о продажах</a>
-    </li>
-    <li class="active">
-        <a href="{url module=CategoryStatsAdmin category=null brand=null date_from=null date_to=null}">Категоризация продаж</a>
-    </li>
-    {if in_array('yametrika', $manager->permissions)}
-        <li>
-            <a href="index.php?module=YametrikaAdmin">Яндекс.Метрика</a>
-        </li>
-    {/if}
-{/capture}
-{$meta_title='Категоризация продаж' scope=parent}
 
+{$meta_title=$btr->category_stats_sales scope=parent}
+
+
+<div class="row">
+    <div class="col-lg-7 col-md-7">
+        <div class="wrap_heading">
+            <div class="box_heading heading_page">
+                {$btr->category_stats_sales|escape} {$category->name|escape} {$brand->name|escape}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="boxed fn_toggle_wrap">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 ">
+            <div class="boxed_sorting">
+                <div class="row">
+                    <div class="col-xs-12 mb-1">
+                        <div class="row">
+                            <div class="col-md-11 col-lg-11 col-xl-7 col-sm-12">
+                                <div class="date">
+                                    <form class="date_filter row" method="get">
+                                        <input type="hidden" name="module" value="CategoryStatsAdmin" />
+                                        <div class="col-md-5 col-lg-5 pr-0 pl-0">
+                                            <div class="input-group">
+                                                <span class=" input-group-addon-date">{$btr->general_from|escape}</span>
+                                                <input class="fn_from_date form-control" name="date_from" value="{$date_from}" autocomplete="off">
+                                                <div class="input-group-addon">
+                                                    <i class="fa fa-calendar"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5 col-lg-5 pr-0 pl-0">
+                                            <div class="input-group">
+                                                <span class=" input-group-addon-date">{$btr->general_to|escape}</span>
+                                                <input class="fn_to_date form-control" name="date_to" value="{$date_to}" autocomplete="off">
+                                                <div class="input-group-addon">
+                                                    <i class="fa fa-calendar"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 pr-0">
+                                            <button class="btn btn_blue" type="submit">{$btr->general_apply|escape}</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4 col-sm-12">
+                        <select id="id_categories" name="categories_filter" title="{$btr->general_category_filter|escape}" class="selectpicker form-control" data-live-search="true" data-size="10" onchange="location = this.value;">
+                            <option value="{url brand=null category=null}" {if !$category}selected{/if}>{$btr->general_all_categories|escape}</option>
+                            {function name=category_select level=0}
+                                {foreach $categories as $c}
+                                    <option value='{url brand=null category=$c->id}' {if $smarty.get.category == $c->id}selected{/if}>
+                                        {section sp $level}-{/section}{$c->name|escape}
+                                    </option>
+                                    {category_select categories=$c->subcategories level=$level+1}
+                                {/foreach}
+                            {/function}
+                            {category_select categories=$categories}
+                        </select>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm 12">
+                        <select onchange="location = this.value;" class="selectpicker">
+                            <option value="{url brand=null}" {if !$brand}selected{/if}>{$btr->general_all_brands|escape}</option>
+                            {foreach $brands as $b}
+                                <option value="{url brand=$b->id}" {if $brand->id == $b->id}selected{/if}>{$b->name|escape}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+
+                    <div class="col-md-4 col-lg-4 col-sm-12">
+                        <button id="fn_start" type="submit" class="btn btn_small btn_blue float-md-right">
+                            {include file='svg_icon.tpl' svgId='magic'}
+                            <span>{$btr->general_export|escape}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" class="fn_form_list">
+        <input type="hidden" name="session_id" value="{$smarty.session.id}" />
+        <div class="okay_list products_list fn_sort_list">
+            <div class="okay_list_head">
+                <div class="okay_list_heading okay_list_categorystats_categories">{$btr->general_category|escape}</div>
+                <div class="okay_list_heading okay_list_categorystats_total">{$btr->general_sales_amount|escape}</div>
+                <div class="okay_list_heading okay_list_categorystats_setting">{$btr->general_amount|escape}</div>
+            </div>
+            <div class="okay_list_body">
+                {function name=categories_list_tree level=0}
+                    {foreach $categories as $category}
+                        {if $categories}
+                            <div class="okay_list_body_item">
+                                <div class="okay_list_row ">
+                                    <div class="okay_list_boding okay_list_categorystats_categories">
+                                        {$category->name|escape}
+                                        <div class="hidden-md-up mt-q">
+                                            <span class="text_dark text_600">
+                                                <span class="hidden-xs-down">{$btr->general_sales_amount|escape} </span>
+                                                <span class="{if $category->price}text_primary {else}text_dark {/if}">
+                                                    {$category->price} {$currency->sign}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="okay_list_boding okay_list_categorystats_total">
+                                        {if $category->price}<span class="text_dark">{$category->price} {$currency->sign}</span>{else}{$category->price} {$currency->sign}{/if}
+                                    </div>
+                                    <div class="okay_list_boding okay_list_categorystats_setting">
+                                        {if $category->amount}<span class="text_dark">{$category->amount} {$settings->units}</span>{else}{$category->amount} {$settings->units}{/if}
+                                    </div>
+                                </div>
+                            </div>
+                        {/if}
+                        {categories_list_tree categories=$category->subcategories level=$level+1}
+                    {/foreach}
+                {/function}
+                {categories_list_tree categories=$categories_list}
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-lg-12 col-md-12">
+                <div class="text_dark text_500 text-xs-right mr-1 mt-h">
+                    <div class="h5">{$btr->general_total|escape} {$total_price} {$currency->sign|escape} <span class="text_grey">({$total_amount} {$settings->units|escape})</span></div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="col-lg-12 col-md-12 col-sm 12 txt_center">
+        {include file='pagination.tpl'}
+    </div>
+</div>
 {* On document load *}
 <script>
     {if $category}
-        var category = {$category->id};
+    var category = {$category->id};
     {/if}
     {if $brand}
-        var brand = {$brand->id};
+    var brand = {$brand->id};
     {/if}
     {if $date_from}
-        var date_from = '{$date_from}';
+    var date_from = '{$date_from}';
     {/if}
     {if $date_to}
-        var date_to = '{$date_to}';
+    var date_to = '{$date_to}';
     {/if}
 </script>
 {literal}
     <script src="design/js/jquery/datepicker/jquery.ui.datepicker-ru.js"></script>
     <script type="text/javascript">
-
         $(function() {
             $('input[name="date_from"]').datepicker({
                 regional:'ru'
             });
-
             $('input[name="date_to"]').datepicker({
                 regional:'ru'
             });
-
-            $('input#start').click(function () {
+            $('button#fn_start').click(function() {
                 do_export();
-
             });
             function do_export(page) {
                 page = typeof(page) != 'undefined' ? page : 1;
@@ -66,10 +182,10 @@
                     dataType: 'json',
                     success: function () {
 
-                            window.location.href = 'files/export/export_stat.csv';
+                        window.location.href = 'files/export/export_stat.csv';
                     },
                     error: function (xhr, status, errorThrown) {
-                        alert(errorThrown + '\n' + xhr.responseText);
+                        alert(errorThrown + '\n' + xhr.responseText + 'asdasd');
                     }
 
                 });
@@ -77,129 +193,4 @@
             }
         });
     </script>
-
 {/literal}
-<div>
-    <div id="header">
-        <h1>
-            Категоризация продаж<br />
-            {$category->name} {$brand->name}
-        </h1>
-        <input class="button_green" id="start" type="button" name="" value="Скачать" />
-    </div>
-
-    <div id="main_list">
-        <div id="list">
-            <table class="table_blue" width="100%">
-                <thead class="thead">
-                    <tr>
-                        <td>Категория</td>
-                        <td class="stats_amount">Количество, {$settings->units}</td>
-                        <td class="stats_price">Сумма, {$currency->sign}</td>
-                    </tr>
-                </thead>
-                <tbody>
-                {function name=categories_list_tree level=0}
-                    {if $categories}
-                        {foreach $categories as $category}
-                            <tr>
-                                <td style="padding-left:{($level+1)*15}px">{$category->name|escape}</td>
-                                <td class="stats_amount">{if $category->amount}<b>{$category->amount}</b>{else}{$category->amount}{/if} {$settings->units}</td>
-                                <td class="stats_price">{if $category->price}<b>{$category->price}</b>{else}{$category->price}{/if} {$currency->sign}</td>
-                                {categories_list_tree categories=$category->subcategories level=$level+1}
-                            </tr>
-                        {/foreach}
-                    {/if}
-                {/function}
-                {categories_list_tree categories=$categories_list}
-                </tbody>
-                <tfoot>
-                    <tr class="top_row">
-                        <td  colspan="3"></td>
-                    </tr>
-                    <tr>
-                        <th style="text-align: right">Итого</th>
-                        <th>{$total_amount} {$settings->units}</th>
-                        <th style="text-align: right">{$total_price} {$currency->sign}</th>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-          
-    </div>
-</div>
-    <div id="right_menu">
-        {* Фильтр *}
-            <form class="date_filter" method="get">
-                <div class="date_filter_title">
-                    <span>Выбрать период</span>
-                    <div class="helper_wrap">
-                        <a id="show_help_filter" class="helper_link" href="javascript:;"></a>
-                        <div id="help_date_filter" class="helper_block">
-                            <span> Если не указана дата «С», то выбираются продажи начиная с самой первой.</span>
-                            <span> Если не указана конечная дата «По», то автоматом подставляется текущая дата.</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form_group">
-                    <label for="from_date">C</label>
-                    <input id="from_date" class="okay_inp" type=text name=date_from value='{$date_from}' />
-                </div>
-
-                <div class="form_group">
-                    <label for="to_date">По</label>
-                    <input id="to_date" class="okay_inp" type=text name=date_to value='{$date_to}' />
-                </div>
-
-                <input type="hidden" name="module" value="CategoryStatsAdmin" />
-                <input id="apply_action" class="button_green" type="submit" value="Применить" />
-            </form>
-        <h4>Категории</h4>
-        {function name=categories_tree}
-            {if $categories}
-                <ul class="cats_right{if $level > 1} sub_menu{/if}" >
-                    {if $categories[0]->parent_id == 0}
-                        <li {if !$category->id}class="selected"{/if}>
-                            <a href="{url category=null brand=null}">Все категории</a>
-                        </li>
-                    {/if}
-                    {foreach $categories as $c}
-                        <li {if $category->id == $c->id}class="selected"{/if}>
-                            <a href="{url brand=null supplier=null category={$c->id}}">{$c->name}</a>
-                            {if $c->subcategories}<span class="slide_menu"></span>{/if}
-                        </li>
-                        {categories_tree categories=$c->subcategories level=$level+1}
-                    {/foreach}
-                </ul>
-            {/if}
-        {/function}
-        {categories_tree categories=$categories level=1}
-
-        <h4>Бренды</h4>
-        {if $brands}
-            <ul>
-                <li {if !$brand->id}class="selected"{/if}>
-                    <a href="{url brand=null}">Все бренды</a>
-                </li>
-                {foreach $brands as $b}
-                    <li brand_id="{$b->id}" {if $brand->id == $b->id}class="selected"{else}class="droppable brand"{/if}>
-                        <a href="{url brand=$b->id}">{$b->name}</a>
-                    </li>
-                {/foreach}
-            </ul>
-        {/if}
-    </div>
-    <!-- Меню  (The End) -->
-<script>
-    $(function(){
-        $('.slide_menu').on('click',function(){
-            if($(this).hasClass('open')){
-                $(this).removeClass('open');
-            }
-            else{
-                $(this).addClass('open');
-            }
-            $(this).parent().next().slideToggle(500);
-        })
-    });
-</script>

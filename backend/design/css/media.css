@@ -1,0 +1,408 @@
+/*==========  Media  ==========*/
+
+/* Large Devices, Wide Screens */
+@media only screen and (min-width : 1200px) {
+    .mobile_header{display: none;}
+    #fix_logo {
+        width: 50px;
+        height: 55px;
+        display: block;
+        position: fixed;
+        z-index: 1200;
+        text-align: center;
+        line-height: 84px;
+        background-color: #272b35;
+        padding-left: 15px;
+    }
+    #fix_logo:before {
+        content: "";
+        width: 30px;
+        height: 40px;
+        display: inline-block;
+        background: url(../images/logo_img.png) no-repeat center center;
+        background-size: cover;
+        z-index: 1200;
+        background-color: #272b35;
+    }
+    body.menu-pin .page-container {padding-left: 280px;}
+    body.menu-pin .admin_switches{margin-left: 0px;}
+    #admin_catalog.fixed_menu,
+    #admin_catalog:hover {
+        transform: translate(210px, 0px);
+    }
+    div.mce-fullscreen {
+        position: fixed;
+        left: 76px!important;
+        width: calc(100% - 84px)!important;
+    }
+    body.menu-pin div.mce-fullscreen {
+        left: 287px !important;
+        width: calc(100% - 295px) !important;
+    }
+
+}
+@media only screen and (max-width : 1199px) {
+    #admin_catalog {left: -280px;}
+/*    header.navbar .container-fluid {overflow: hidden;}*/
+    body.menu-pin #admin_catalog {
+        width: 280px;
+        transform: translate(280px,0) !important;
+        -webkit-transform: translate(280px,0) !important;
+        -ms-transform: translate(280px,0) !important;
+    }
+
+    .page-container {padding-left: 0px;}
+    .admin_notification .notification_title,
+    .admin_techsupport a,
+    .admin_exit a {padding: 10px 20px;}
+    #quickview .sidebar_header,
+    #admin_catalog .sidebar_header {padding-left: 15px;}
+    .admin_languages .languages_inner{padding: 0px 20px;}
+    #mobile_menu_right,
+    #mobile_menu {
+        display: block;
+        position: relative;
+        cursor: pointer;
+        float: left;
+        margin-top: 13px;
+    }
+    #okay_logo {
+        position: relative;
+        display: block;
+        margin-left: 20px;
+        float: left;
+        margin-top: 5px;
+    }
+    #okay_logo img{max-width: 180px;}
+    .admin_switches { margin-left: 20px;}
+    .admin_switches svg{
+        width: 20px!important;
+        height: 20px!important;
+        margin-right: 0px!important;
+    }
+    .admin_switches span{margin-left: 5px!important;}
+    #mobile_menu_right svg,
+    #mobile_menu svg{width: 30px;height: 30px;}
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (min-width : 992px) {
+    .toggle_arrow_wrap{display: none;}
+    .cur_settings .setting_icon_yandex:hover,
+    .okay_list_setting .setting_icon_yandex:hover{
+        background: #10CFBD;
+        border-color: #10CFBD;
+        color: #fff;
+        font-weight: 600;
+    }
+
+
+    }
+@media only screen and (max-width : 991px) {
+    .pr-0 {padding-right: 15px !important;}
+    .pl-0{padding-left: 15px !important;}
+    .boxed_search{padding: 0px 0px 20px;}
+    .product_images_list li{height: 140px;width: 140px;line-height: 140px;}
+    .variants_listadd{min-width: 900px;}
+    .admin_switches {margin-left: 15px;}
+    .okay_list.variants_list{overflow-x: auto !important;overflow-y: visible !important;}
+    .quickview_hidden{display: none!important;}
+
+
+    /* Скрытые блоки списков */
+    .variants_toggle,
+    .okay_list_name_brand,
+    .okay_list_price,
+    .okay_list_users_email,
+    .okay_list_users_date,
+    .okay_list_order_status,
+    .okay_list_order_marker,
+    .okay_list_price,
+    .okay_list_delivery_condit,
+    .okay_list_blog_type,
+    .okay_list_currency_sign,
+    .okay_list_currency_iso,
+    .okay_list_coupon_disposable,
+    .okay_list_coupon_condit,
+    .okay_list_coupon_validity,
+    .okay_list_coupon_count,
+    .okay_list_order_product_count,
+    .okay_list_setting,
+    .okay_list_products_setting{display: none;}
+
+    /* Переопределение размеров списков */
+    .okay_list .okay_list_currency_exchange {width: calc(100% - 380px);}
+    .okay_list .okay_list_brands_tag {width: 260px;}
+    .okay_list .okay_list_delivery_name {width: calc(100% - 390px);}
+    .okay_list .okay_list_blog_name {width: calc(100% - 300px);}
+    .okay_list .okay_list_page_name {width: calc(100% - 435px);}
+    .okay_list .okay_list_coupon_name {width: calc(100% - 220px);}
+    .okay_list .okay_list_users_name {width: calc(100% - 260px);}
+    .okay_list .okay_list_order_name {width: calc(100% - 395px);}
+    .okay_list .okay_list_orders_name {width: calc(100% - 360px);}
+    .okay_list .okay_list_features_tag {width: 250px;}
+    .okay_list .okay_list_features_name {width: calc(100% - 500px);}
+    .okay_list .okay_list_brands_name {width: calc(100% - 330px);}
+    .okay_list .subcategories_level_1 .okay_list_categories_name{width: calc(100% - 390px);}
+    .okay_list .subcategories_level_2 .okay_list_categories_name{width: calc(100% - 420px);}
+    .okay_list .okay_list_categories_name {width: calc(100% - 360px);}
+    .okay_list .okay_list_name {width: calc(100% - 320px);}
+
+    .min_height_335px,
+    .min_height_250px,
+    .min_height_230px,
+    .min_height_210px{min-height: inherit;}
+
+}
+
+/* Small Devices, Tablets */
+@media only screen and (min-width : 768px) {
+    #quickview{float: right;}
+}
+@media only screen and (max-width : 767px) {
+    .heading_page {font-size: 22px;line-height: 26px;margin: 10px 0px;}
+    #okay_logo {margin-left: 25%;}
+    .boxed_success .heading_box,
+    .boxed_warning .heading_box,
+    .boxed_attention .heading_box {font-weight: 600;font-size: 16px;line-height: 20px;}
+    .d_flex{display: block!important;}
+    .admin_switches {margin-left: 0px;}
+    .okay_switch{margin-right: 10px;}
+    .feature_row {height: auto;}
+    .tab_navigation_link {display: block;margin: 0px 0px 10px;}
+    .new_feature_row .new_feature_name,
+    .new_feature_row .new_feature_value,
+    .feature_name,
+    .feature_value{float: none;width: 100%}
+    header.navbar .container-fluid {text-align: center;}
+    .product_images_list .dropzone_block{display: none;}
+    .okay_list .okay_list_ordfig_price {width: auto;display: block; margin-top: 7px;}
+    .okay_list .okay_list_ordfig_val {display: block;}
+    .okay_list .okay_list_ordfig_name{display: block;float: none;width: 100%}
+
+    /* Скрытые блоки списков */
+    .okay_list .okay_list_features_tag,
+    .boxed_sorting,
+    .okay_list_status,
+    .okay_list_translations_num,
+    .okay_list .okay_list_option,
+    .okay_list_reportstats_categories,
+    .okay_list_close,
+    .okay_list_comments_btn,
+    .okay_list_usergroups_sale,
+    .okay_list_reportstats_total,
+    .okay_list_currency_exchange,
+    .okay_list_usergroups_counts,
+    .okay_list_brands_tag,
+    .okay_list_categorystats_total,
+    .okay_list_orders_price,
+    .okay_list_count,
+    .okay_list .okay_list_footer,
+    .okay_list_check,
+    .variants_item_drag,
+    .okay_list_drag{display: none;}
+
+    /* Переопределение размеров списков */
+    .okay_list .okay_list_currency_name {width: calc(100% - 130px);}
+    .okay_list .okay_list_categorystats_categories {width: calc(100% - 100px);}
+    .okay_list .okay_list_reportstats_products { width: calc(100% - 100px);}
+    .okay_list .okay_list_bransimages_name {width: calc(100% - 320px);}
+    .okay_list .okay_list_log_name {width: calc(100% - 200px);}
+    .okay_list .okay_list_order_stg_lbl_name {width: calc(100% - 80px);}
+    .okay_list .okay_list_order_stg_sts_name {width: calc(100% - 210px);}
+    .okay_list .okay_list_translations_variable {width: calc((100% - 200px) / 2);}
+    .okay_list .okay_list_translations_name {width: calc((100% - 0px) / 2);}
+    .okay_list .okay_list_languages_name {width: calc(100% - 80px);}
+    .okay_list .okay_list_manager_name {width: calc(100% - 0px);}
+    .okay_list .okay_list_delivery_name {width: calc(100% - 140px);}
+    .okay_list .okay_list_comments_name {width: calc(100% - 0px);}
+    .okay_list .okay_list_blog_name {width: calc(100% - 80px);}
+    .okay_list .okay_list_page_name {width: calc(100% - 200px);}
+    .okay_list .okay_list_subscribe_name {width: calc(100% - 0px);}
+    .okay_list .okay_list_coupon_name {width: calc(100% - 110px);}
+    .okay_list .okay_list_usergroups_name {width: calc(100% - 0px);}
+    .okay_list .okay_list_users_name {width: calc(100% - 140px);}
+    .okay_list .okay_list_order_name {width: calc(100% - 140px);}
+    .okay_list .okay_list_orders_name {width: calc(100% - 100px);}
+    .okay_list .okay_list_features_name {width: calc(100% - 0px);}
+    .okay_list .okay_list_brands_name {width: calc(100% - 80px);}
+    .okay_list .subcategories_level_1 .okay_list_categories_name{width: calc(100% - 90px);}
+    .okay_list .subcategories_level_2 .okay_list_categories_name{width: calc(100% - 120px);}
+    .okay_list .okay_list_categories_name {width: calc(100% - 60px);}
+    .okay_list .okay_list_related_name {width: calc(100% - 50px);}
+    .okay_list .okay_list_name {width: calc(100% - 80px);}
+
+    .activity_of_switch {
+        flex-direction: row;
+        -webkit-box-orient: inherit;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: inherit;
+        -ms-flex-direction: row;
+        margin-top: 20px;
+    }
+
+    /* Дополнительное (с правой стороны) меню */
+    #quickview {
+        position: fixed;
+        right: -285px;
+        top: 0;
+        width: 285px;
+        background: #fff;
+        bottom: 0;
+        z-index: 1000;
+        box-shadow: 0 0 9px rgba(191,191,191,0.36);
+        -webkit-transition: -webkit-transform 400ms cubic-bezier(0.05,0.74,0.27,0.99);
+        transition: transform 400ms cubic-bezier(0.05,0.74,0.27,0.99);
+        -webkit-backface-visibility: hidden;
+        -ms-backface-visibility: hidden;
+        -webkit-perspective: 1000;
+    }
+    #quickview.open {
+        -webkit-transform: translate3d(-100%,0,0);
+        transform: translate3d(-100%,0,0);
+        -ms-transform: translate(-100%,0);
+    }
+    .admin_languages,
+    .admin_notification,
+    .admin_techsupport,
+    .admin_exit {
+        float: none;
+        width: 100%;
+        margin-top: 0px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        text-align: left;
+    }
+    .admin_languages a,
+    .admin_notification .notification_title,
+    .admin_techsupport a,
+    .admin_languages .languages_title,
+    .admin_exit a {
+        background: rgb(250, 250, 250);
+        color: rgb(35, 40, 48);
+        border-bottom: 1px solid rgba(0,0,0,0.07);
+        border-top: 1px solid rgba(0,0,0,0.07);
+        text-transform: uppercase;
+        font-size: 12px;
+    }
+    .admin_languages .languages_title{
+        padding: 10px 20px;
+        height: 40px;
+        font-weight: 500;
+        position: relative;
+        display: block;
+        margin-bottom: 10px;
+    }
+    .admin_languages .languages_inner{padding: 0px;}
+
+    .admin_languages a svg,
+    .admin_notification .notification_title svg,
+    .admin_techsupport a svg{display: none;}
+    .admin_techsupport a{border-top: none;}
+
+    .admin_languages .quickview_hidden,
+    .admin_notification .quickview_hidden,
+    .admin_techsupport .quickview_hidden,
+    .admin_exit .quickview_hidden {display: inline-block!important;}
+    .notification_toggle{
+        opacity: 1;
+        top: inherit;
+        position: static;
+        visibility: visible;
+        width: 100%;
+        border-radius: 0px;
+        left: 0px;
+        display: block;
+        box-shadow: none;
+        border: none;
+        transition: none;
+        -webkit-transform: translateX(0%);
+        -ms-transform: translateX(0%);
+        padding: 10px 15px 0px 10px;
+        z-index: 200;
+
+    }
+    .admin_notification .counter,
+    .admin_techsupport .counter {top: 10px;right: 20px;}
+    .techsupport_toggle span {
+        padding: 0px 15px 0px 10px;
+        margin-top: 10px;
+        display: block;
+    }
+    .main .container-fluid {padding-bottom: 60px;}
+    #quickview .sidebar_header{padding-left: 10px;}
+    #quickview .sidebar_header .logo_box{float: left;}
+    .admin_notification .notification_title,
+    .admin_techsupport a,
+    .admin_exit a {padding: 10px;}
+    #footer {line-height: 24px;bottom: 10px;}
+}
+
+/* Extra Small Devices, Phones */
+@media (min-width : 576px) {
+    .card-group {
+        display: block;
+        width: 100%;
+        table-layout: inherit;
+    }
+    .card-group .card {
+        display: block;
+        vertical-align: top;
+    }
+    .card-group .card + .card {
+        margin-left: 0;
+        border-left: 0;
+    }
+
+}
+@media only screen and (max-width : 575px) {
+    .page-link, .pagination-datatables li a, .pagination li a {padding: 3px 12px;margin: 4px 1px;}
+    .okay_list .okay_list_delivery_photo {width: 80px;}
+    .boxed_search .btn{width: 100%;}
+    .box_adswitch .btn{padding: 8px 18px;}
+    .wrap_head_mob{padding: 0px 0px 20px ;}
+    .btn_small {padding: 12px 18px;width: 100%;}
+    .okay_list .okay_list_footer .btn {margin-right: 10px;margin-left: 10px;}
+    .box_btn_heading, .boxes_inline, .box_heading {display: block;}
+    .heading_normal {font-size: 14px;line-height: 18px;margin-bottom: 10px;}
+    .heading_box .box_btn_heading,
+    .wrap_heading .boxes_inline,
+    .wrap_heading .box_heading {display: inline-block;}
+    .okay_list .okay_list_delivery_photo a {
+        width: 60px;
+        height: auto;
+        line-height: inherit;
+        padding: 5px;
+    }
+    .translations_scrolls{min-width: 570px;}
+    .delivery_type{display: block;margin-bottom: 10px;}
+    .delivery_inline_block {display: block;margin-right: 0px;}
+
+    /* Переопределение размеров списков */
+    .okay_list .okay_list_currency_name {width: calc(100% - 0px);}
+    .okay_list .okay_list_bransimages_name {width: calc(100% - 140px);}
+    .okay_list .okay_list_log_status {width: 80px;}
+    .okay_list .okay_list_order_stg_sts_name {width: 100%;}
+    .okay_list .okay_list_log_name {width: calc(100% - 160px);}
+    .okay_list .okay_list_delivery_name {width: calc(100% - 80px);}
+    .okay_list .okay_list_page_name {width: calc(100% - 0px);}
+    .okay_list .okay_list_users_name {width: calc(100% - 0px);}
+    .okay_list .okay_list_order_name {width: calc(100% - 80px);}
+
+    /* Скрытые блоки списков */
+    .okay_list_users_group,
+    .okay_list_brands_group,
+    .cur_settings,
+    .okay_list_currency_num,
+    .okay_list_pages_group,
+    .okay_list_order_stg_sts_status,
+    .okay_list_heading.okay_list_delivery_photo,
+    .okay_list_order_amount_price{display: none;}
+
+}
+
+/* Custom, iPhone Retina */
+@media only screen and (max-width : 382px) {
+
+}
+

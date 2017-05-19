@@ -13,11 +13,7 @@ $l = '';
 $lang_link = '';
 if (!empty($language)) {
     $l = '_'.$language->label;
-    $languages = $okay->languages->languages();
-    $first = reset($languages);
-    if ($first->id != $language->id) {
-        $lang_link = $language->label.'/';
-    }
+    $lang_link = $okay->languages->get_lang_link();
 }
 
 $sub_sitemaps = glob($okay->config->root_dir."/sitemap".$l."_*.xml");
@@ -77,7 +73,7 @@ foreach($okay->pages->get_pages() as $p) {
 
 // Блог
 foreach($okay->blog->get_posts(array('visible'=>1)) as $p) {
-    $url = $okay->config->root_url.'/'.$lang_link.'blog/'.esc($p->url);
+    $url = $okay->config->root_url.'/'.$lang_link.$p->type_post.'/'.esc($p->url);
     $last_modify = substr($p->last_modify, 0, 10);
     file_put_contents('sitemap'.$l.'_'.$sitemap_index.'.xml', "\t<url>"."\n", FILE_APPEND);
     file_put_contents('sitemap'.$l.'_'.$sitemap_index.'.xml', "\t\t<loc>$url</loc>"."\n", FILE_APPEND);

@@ -26,10 +26,18 @@ class  MetrikaAjax extends Okay
 	
 	private function get_traffic($date1, $date2)
 	{
+	    if($date1 == $date2){
+	        $group = "hours";
+        } else {
+            $group = "days";
+        }
 		return $this->get_data(
 				$this->url_api.
-				"stat/traffic/summary.json?id=".
+				"stat/v1/data?id=".
 				$this->yandex_metrika_counter_id.
+                "&preset=traffic&group=".$group.
+                "&metrics=ym:s:users,ym:s:visits,ys:s:pageviews",
+                "ym:s:bounceRate,ym:s:newUsers".
 				"&pretty=1".
 				"&date1=".$date1.
 				"&date2=".$date2.

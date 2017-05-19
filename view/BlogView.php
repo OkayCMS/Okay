@@ -15,7 +15,8 @@ class BlogView extends View {
     
     private function fetch_post($url) {
         // Выбираем пост из базы
-        $post = $this->blog->get_post($url);
+        $type_post = $this->request->get('type_post');
+        $post = $this->blog->get_post($url, $type_post);
         
         // Если не найден - ошибка
         if(!$post || (!$post->visible && empty($_SESSION['admin']))) {
@@ -45,7 +46,7 @@ class BlogView extends View {
             $this->design->assign('comment_email', $comment->email);
             
             // Проверяем капчу и заполнение формы
-            if ($this->settings->captcha_post && ($_SESSION['captcha_code'] != $captcha_code || empty($captcha_code))) {
+            if ($this->settings->captcha_post && ($_SESSION['captcha_post'] != $captcha_code || empty($captcha_code))) {
                 $this->design->assign('error', 'captcha');
             } elseif (!$this->validate->is_name($comment->name, true)) {
                 $this->design->assign('error', 'empty_name');
@@ -56,23 +57,14 @@ class BlogView extends View {
             } else {
                 // Создаем комментарий
                 $comment->object_id = $post->id;
-                $comment->type      = 'blog';
+                $comment->type      = $post->type_post;
                 $comment->ip        = $_SERVER['REMOTE_ADDR'];
                 $comment->lang_id   = $_SESSION['lang_id'];
-                
-                // Если были одобренные комментарии от текущего ip, одобряем сразу
-                $this->db->query("SELECT 1 FROM __comments WHERE approved=1 AND ip=? LIMIT 1", $comment->ip);
-                if($this->db->num_rows()>0)
-                	$comment->approved = 1;
-                
                 // Добавляем комментарий в базу
                 $comment_id = $this->comments->add_comment($comment);
-                
                 // Отправляем email
                 $this->notify->email_comment_admin($comment_id);
-                
-                // Приберем сохраненную капчу, иначе можно отключить загрузку рисунков и постить старую
-                unset($_SESSION['captcha_code']);
+
                 header('location: '.$_SERVER['REQUEST_URI'].'#comment_'.$comment_id);
             }
         }
@@ -113,9 +105,9 @@ class BlogView extends View {
         }
         
         // Комментарии к посту
-        $comments = $this->comments->get_comments(array('has_parent'=>false, 'type'=>'blog', 'object_id'=>$post->id, 'approved'=>1, 'ip'=>$_SERVER['REMOTE_ADDR']));
+        $comments = $this->comments->get_comments(array('has_parent'=>false, 'type'=>$post->type_post, 'object_id'=>$post->id, 'approved'=>1, 'ip'=>$_SERVER['REMOTE_ADDR']));
         $children = array();
-        foreach ($this->comments->get_comments(array('has_parent'=>true, 'type'=>'blog', 'object_id'=>$post->id, 'approved'=>1, 'ip'=>$_SERVER['REMOTE_ADDR'])) as $c) {
+        foreach ($this->comments->get_comments(array('has_parent'=>true, 'type'=>$post->type_post, 'object_id'=>$post->id, 'approved'=>1, 'ip'=>$_SERVER['REMOTE_ADDR'])) as $c) {
             $children[$c->parent_id][] = $c;
         }
         $this->design->assign('comments', $comments);
@@ -151,6 +143,9 @@ class BlogView extends View {
         
         // Выбираем только видимые посты
         $filter['visible'] = 1;
+        if($this->request->get('type_post')) {
+            $filter['type_post'] = $this->request->get('type_post');
+        }
         
         // Текущая страница в постраничном выводе
         $current_page = $this->request->get('page', 'integer');

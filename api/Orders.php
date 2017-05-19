@@ -33,7 +33,7 @@ class Orders extends Okay {
                 o.phone, 
                 o.email, 
                 o.comment, 
-                o.status, 
+                o.status_id, 
                 o.url, 
                 o.total_price, 
                 o.note, 
@@ -75,8 +75,8 @@ class Orders extends Okay {
         
         $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
         
-        if(isset($filter['status'])) {
-            $status_filter = $this->db->placehold('AND o.status = ?', intval($filter['status']));
+        if(!empty($filter['status'])) {
+            $status_filter = $this->db->placehold('AND o.status_id = ?', intval($filter['status']));
         }
         
         if(isset($filter['id'])) {
@@ -143,7 +143,7 @@ class Orders extends Okay {
                 o.phone, 
                 o.email, 
                 o.comment, 
-                o.status, 
+                o.status_id, 
                 o.url, 
                 o.total_price, 
                 o.note, 
@@ -160,7 +160,7 @@ class Orders extends Okay {
                 $modified_since_filter
                 $date_filter
             GROUP BY o.id 
-            ORDER BY status, id DESC 
+            ORDER BY o.id DESC
             $sql_limit
         ", "%Y-%m-%d");
         $this->db->query($query);
@@ -178,8 +178,8 @@ class Orders extends Okay {
         $user_filter = '';
         $date_filter = '';
         
-        if(isset($filter['status'])) {
-            $status_filter = $this->db->placehold('AND o.status = ?', intval($filter['status']));
+        if(!empty($filter['status'])) {
+            $status_filter = $this->db->placehold('AND o.status_id = ?', intval($filter['status']));
         }
         
         if(isset($filter['user_id'])) {
@@ -235,6 +235,8 @@ class Orders extends Okay {
     }
     
     public function update_order($id, $order) {
+        $order = (object)$order;
+
         $query = $this->db->placehold("UPDATE __orders SET ?%, modified=now() WHERE id=? LIMIT 1", $order, intval($id));
         $this->db->query($query);
         $this->update_total_price(intval($id));
@@ -261,106 +263,20 @@ class Orders extends Okay {
         if(empty($order->date)) {
             $set_curr_date = ', date=now()';
         }
+        $all_status = $this->orderstatus->get_status();
+        $order->status_id = reset($all_status)->id;
         $query = $this->db->placehold("INSERT INTO __orders SET ?%$set_curr_date", $order);
         $this->db->query($query);
         $id = $this->db->insert_id();
+        if(reset($all_status)->is_close == 1){
+            $this->orders->close(intval($id));
+        } else {
+            $this->orders->open(intval($id));
+        }
+
         return $id;
     }
-    
-    public function get_label($id) {
-        $query = $this->db->placehold("SELECT * FROM __labels WHERE id=? LIMIT 1", intval($id));
-        $this->db->query($query);
-        return $this->db->result();
-    }
-    
-    public function get_labels() {
-        $query = $this->db->placehold("SELECT * FROM __labels ORDER BY position");
-        $this->db->query($query);
-        return $this->db->results();
-    }
-    
-    public function add_label($label) {
-        $query = $this->db->placehold('INSERT INTO __labels SET ?%', $label);
-        if(!$this->db->query($query)) {
-            return false;
-        }
-        
-        $id = $this->db->insert_id();
-        $this->db->query("UPDATE __labels SET position=id WHERE id=?", $id);
-        return $id;
-    }
-    
-    public function update_label($id, $label) {
-        $query = $this->db->placehold("UPDATE __labels SET ?% WHERE id in(?@) LIMIT ?", $label, (array)$id, count((array)$id));
-        $this->db->query($query);
-        return $id;
-    }
-    
-    public function delete_label($id) {
-        if(!empty($id)) {
-            $query = $this->db->placehold("DELETE FROM __orders_labels WHERE label_id=?", intval($id));
-            if($this->db->query($query)) {
-                $query = $this->db->placehold("DELETE FROM __labels WHERE id=? LIMIT 1", intval($id));
-                return $this->db->query($query);
-            } else {
-                return false;
-            }
-        }
-    }
-    
-    public function get_order_labels($order_id = array()) {
-        if(empty($order_id)) {
-            return array();
-        }
-        
-        $label_id_filter = $this->db->placehold('AND order_id in(?@)', (array)$order_id);
-        
-        $query = $this->db->placehold("SELECT 
-                ol.order_id, 
-                l.id, 
-                l.name, 
-                l.color, 
-                l.position
-            FROM __labels l 
-            LEFT JOIN __orders_labels ol ON ol.label_id = l.id
-            WHERE
-                1
-                $label_id_filter
-            ORDER BY position
-        ");
-        
-        $this->db->query($query);
-        return $this->db->results();
-    }
-    
-    public function update_order_labels($id, $labels_ids) {
-        $labels_ids = (array)$labels_ids;
-        $query = $this->db->placehold("DELETE FROM __orders_labels WHERE order_id=?", intval($id));
-        $this->db->query($query);
-        if(is_array($labels_ids)) {
-            foreach($labels_ids as $l_id) {
-                $this->db->query("INSERT INTO __orders_labels SET order_id=?, label_id=?", $id, $l_id);
-            }
-        }
-    }
-    
-    public function add_order_labels($id, $labels_ids) {
-        $labels_ids = (array)$labels_ids;
-        if(is_array($labels_ids))
-        foreach($labels_ids as $l_id) {
-            $this->db->query("INSERT IGNORE INTO __orders_labels SET order_id=?, label_id=?", $id, $l_id);
-        }
-    }
-    
-    public function delete_order_labels($id, $labels_ids) {
-        $labels_ids = (array)$labels_ids;
-        if(is_array($labels_ids)) {
-            foreach($labels_ids as $l_id) {
-                $this->db->query("DELETE FROM __orders_labels WHERE order_id=? AND label_id=?", $id, $l_id);
-            }
-        }
-    }
-    
+
     public function get_purchase($id) {
         $query = $this->db->placehold("SELECT * FROM __purchases WHERE id=? LIMIT 1", intval($id));
         $this->db->query($query);
@@ -572,33 +488,4 @@ class Orders extends Okay {
         $this->db->query($query);
         return $order->id;
     }
-    
-    public function get_next_order($id, $status = null) {
-        $f = '';
-        if($status!==null) {
-            $f = $this->db->placehold('AND status=?', $status);
-        }
-        $this->db->query("SELECT MIN(id) as id FROM __orders WHERE id>? $f LIMIT 1", $id);
-        $next_id = $this->db->result('id');
-        if($next_id) {
-            return $this->get_order(intval($next_id));
-        } else {
-            return false;
-        }
-    }
-    
-    public function get_prev_order($id, $status = null) {
-        $f = '';
-        if($status !== null) {
-            $f = $this->db->placehold('AND status=?', $status);
-        }
-        $this->db->query("SELECT MAX(id) as id FROM __orders WHERE id<? $f LIMIT 1", $id);
-        $prev_id = $this->db->result('id');
-        if($prev_id) {
-            return $this->get_order(intval($prev_id));
-        } else {
-            return false;
-        }
-    }
-    
 }

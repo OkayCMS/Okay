@@ -13,6 +13,7 @@ class ImportAjax extends Okay {
         'variant'=>          array('variant', 'вариант'),
         'price'=>            array('price', 'цена'),
         'currency'=>         array('currency_id', 'currency', 'ID валюты'),
+        'weight'=>           array('weight', 'вес варианта'),
         'compare_price'=>    array('compare price', 'старая цена'),
         'sku'=>              array('sku', 'артикул'),
         'stock'=>            array('stock', 'склад', 'на складе'),
@@ -107,7 +108,6 @@ class ImportAjax extends Okay {
                     }
                 }
             }
-            
             // Импортируем этот товар
             if($imported_item = $this->import_item($product)) {
                 $imported_items[] = $imported_item;
@@ -178,7 +178,7 @@ class ImportAjax extends Okay {
         }
         
         if(isset($item['description'])) {
-            $product['body'] = trim($item['description']);
+            $product['description'] = trim($item['description']);
         }
         
         if(isset($item['visible'])) {
@@ -249,6 +249,9 @@ class ImportAjax extends Okay {
         
         if (isset($item['currency'])) {
             $variant['currency_id'] = intval($item['currency']);
+        }
+        if (isset($item['weight'])) {
+            $variant['weight'] = floatval($item['weight']);
         }
         
         // Если задан артикул варианта, найдем этот вариант и соответствующий товар

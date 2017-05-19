@@ -17,7 +17,7 @@ db_password = ""
 db_name = "okaycms-git"
 
 ;Префикс для таблиц
-db_prefix = s_;
+db_prefix = ok_;
 
 ;Кодировка базы данных
 db_charset = UTF8;
@@ -38,8 +38,6 @@ php_locale_monetary = ru_RU;
 php_locale_numeric = ru_RU;
 php_locale_time = ru_RU;
 ;php_timezone = Europe/Moscow;
-
-logfile = admin/log/log.txt;
 
 [smarty]
 

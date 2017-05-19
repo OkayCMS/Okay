@@ -4,9 +4,13 @@ require_once('Okay.php');
 
 class Blog extends Okay {
     
-    public function get_post($id) {
-        if (empty($id)) {
+    public function get_post($id,$type_post = null) {
+        if (empty($id) && empty($type_post)) {
             return false;
+        }
+        $type = '';
+        if($type_post) {
+            $type = $this->db->placehold('AND b.type_post=? ', $type_post);
         }
         if(is_int($id)) {
             $where = $this->db->placehold('AND b.id=? ', intval($id));
@@ -20,7 +24,8 @@ class Blog extends Okay {
                 b.url, 
                 b.visible, 
                 b.date, 
-                b.image, 
+                b.image,
+                b.type_post,
                 b.last_modify, 
                 $lang_sql->fields 
             FROM __blog b 
@@ -28,6 +33,7 @@ class Blog extends Okay {
             WHERE
                 1 
                 $where 
+                $type
             LIMIT 1
         ");
         if($this->db->query($query)) {
@@ -44,6 +50,7 @@ class Blog extends Okay {
     	$post_id_filter = '';
     	$visible_filter = '';
     	$keyword_filter = '';
+    	$type_filter = '';
     	$posts = array();
         $lang_id  = $this->languages->lang_id();
         $px = ($lang_id ? 'l' : 'b');
@@ -57,6 +64,10 @@ class Blog extends Okay {
         
         if(!empty($filter['id'])) {
             $post_id_filter = $this->db->placehold('AND b.id in(?@)', (array)$filter['id']);
+        }
+
+        if(!empty($filter['type_post'])) {
+            $type_filter = $this->db->placehold('AND b.type_post = ?', $filter['type_post']);
         }
         
         if(isset($filter['visible'])) {
@@ -77,6 +88,7 @@ class Blog extends Okay {
                 b.visible, 
                 b.date, 
                 b.image, 
+                b.type_post,
                 b.last_modify, 
                 $lang_sql->fields
             FROM __blog b 
@@ -86,6 +98,7 @@ class Blog extends Okay {
                 $post_id_filter 
                 $visible_filter 
                 $keyword_filter
+                $type_filter
             ORDER BY date DESC, id DESC 
             $sql_limit
         ");
@@ -97,13 +110,18 @@ class Blog extends Okay {
     	$post_id_filter = '';
     	$visible_filter = '';
     	$keyword_filter = '';
+        $type_filter = '';
         $lang_id  = $this->languages->lang_id();
         $px = ($lang_id ? 'l' : 'b');
 
         if(!empty($filter['id'])) {
             $post_id_filter = $this->db->placehold('AND b.id in(?@)', (array)$filter['id']);
         }
-    		
+
+        if(!empty($filter['type_post'])) {
+            $type_filter = $this->db->placehold('AND b.type_post = ?', $filter['type_post']);
+        }
+
         if(isset($filter['visible'])) {
             $visible_filter = $this->db->placehold('AND b.visible = ?', intval($filter['visible']));
         }		
@@ -122,6 +140,7 @@ class Blog extends Okay {
                 $post_id_filter 
                 $visible_filter 
                 $keyword_filter
+                $type_filter
         ";
         
         if($this->db->query($query)) {
@@ -187,32 +206,31 @@ class Blog extends Okay {
     }	
     
     public function get_next_post($id) {
-    	$this->db->query("SELECT date FROM __blog WHERE id=? LIMIT 1", $id);
-    	$date = $this->db->result('date');
-        
-    	$this->db->query("(SELECT id FROM __blog WHERE date=? AND id>? AND visible  ORDER BY id limit 1)
+    	$this->db->query("SELECT date,type_post FROM __blog WHERE id=? LIMIT 1", $id);
+    	$res = $this->db->results();
+        $this->db->query("(SELECT id, type_post FROM __blog WHERE date=? AND id>? AND visible AND type_post = ?  ORDER BY id limit 1)
     	                   UNION
-    	                  (SELECT id FROM __blog WHERE date>? AND visible ORDER BY date, id limit 1)",
-    	                  $date, $id, $date);
-    	$next_id = $this->db->result('id');
-        if($next_id) {
-            return $this->get_post(intval($next_id));
+    	                  (SELECT id, type_post FROM __blog WHERE date>? AND visible AND type_post = ? ORDER BY date, id limit 1)",
+            reset($res)->date, $id, reset($res)->type_post,reset($res)->date, reset($res)->type_post);
+    	$next = $this->db->results();
+        if($next) {
+            return $this->get_post(intval(reset($next)->id), reset($next)->type_post);
         } else {
             return false;
         }
     }
     
     public function get_prev_post($id) {
-    	$this->db->query("SELECT date FROM __blog WHERE id=? LIMIT 1", $id);
-    	$date = $this->db->result('date');
+        $this->db->query("SELECT date,type_post FROM __blog WHERE id=? LIMIT 1", $id);
+        $res = $this->db->results();
         
-    	$this->db->query("(SELECT id FROM __blog WHERE date=? AND id<? AND visible ORDER BY id DESC limit 1)
+    	$this->db->query("(SELECT id,type_post FROM __blog WHERE date=? AND id<? AND visible AND type_post = ? ORDER BY id DESC limit 1)
     	                   UNION
-    	                  (SELECT id FROM __blog WHERE date<? AND visible ORDER BY date DESC, id DESC limit 1)",
-    	                  $date, $id, $date);
-    	$prev_id = $this->db->result('id');
-        if($prev_id) {
-            return $this->get_post(intval($prev_id));
+    	                  (SELECT id,type_post FROM __blog WHERE date<? AND visible AND type_post = ? ORDER BY date DESC, id DESC limit 1)",
+            reset($res)->date, $id, reset($res)->type_post,reset($res)->date, reset($res)->type_post );
+    	$prev = $this->db->results();
+        if($prev) {
+            return $this->get_post(intval(reset($prev)->id), reset($prev)->type_post);
         } else {
             return false;
         }

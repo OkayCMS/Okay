@@ -10,7 +10,6 @@ class Banners extends Okay {
         $page = 1;
         $banner_id_filter = '';
         $banners_images_id_filter = '';
-        $keyword_filter = '';
         $visible_filter = '';
         $group_by = '';
         $order = 'bi.position DESC';
@@ -48,14 +47,6 @@ class Banners extends Okay {
             }
         }
         
-        if(!empty($filter['keyword'])) {
-            $keywords = explode(' ', $filter['keyword']);
-            foreach($keywords as $keyword) {
-                $kw = $this->db->escape(trim($keyword));
-                $keyword_filter .= $this->db->placehold("AND bi.name LIKE '%$kw%' OR bi.alt LIKE '%$kw%' OR bi.title LIKE '%$kw%' OR bi.description LIKE '%$kw%'");
-            }
-        }
-        
         $lang_sql = $this->languages->get_query(array('object'=>'banner_image', 'px'=>'bi'));
         $query = "SELECT 
                 bi.id, 
@@ -71,7 +62,6 @@ class Banners extends Okay {
                 $banners_images_id_filter 
                 $banner_id_filter 
                 $visible_filter 
-                $keyword_filter
             $group_by
             ORDER BY $order 
             $sql_limit
@@ -84,7 +74,6 @@ class Banners extends Okay {
     public function count_banners_images($filter = array()) {
         $banner_id_filter = '';
         $banners_images_id_filter = '';
-        $keyword_filter = '';
         $visible_filter = '';
         
         if(!empty($filter['banner_id'])) {
@@ -94,15 +83,7 @@ class Banners extends Okay {
         if(!empty($filter['id'])) {
             $banners_images_id_filter = $this->db->placehold('AND bi.id in(?@)', (array)$filter['id']);
         }
-        
-        if(!empty($filter['keyword'])) {
-            $keywords = explode(' ', $filter['keyword']);
-            foreach($keywords as $keyword) {
-                $kw = $this->db->escape(trim($keyword));
-                $keyword_filter .= $this->db->placehold("AND bi.name LIKE '%$kw%' OR bi.alt LIKE '%$kw%' OR bi.title LIKE '%$kw%' OR bi.description LIKE '%$kw%'");
-            }
-        }
-        
+
         if(isset($filter['visible'])) {
             $visible_filter = $this->db->placehold('AND bi.visible=?', intval($filter['visible']));
         }
@@ -113,7 +94,6 @@ class Banners extends Okay {
                 1 
                 $banner_id_filter 
                 $banners_images_id_filter 
-                $keyword_filter 
                 $visible_filter 
         ";
         

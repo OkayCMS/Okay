@@ -1,138 +1,109 @@
-{* Вкладки *}
-{capture name=tabs}
-    {if in_array('comments', $manager->permissions)}
-        <li>
-            <a href="index.php?module=CommentsAdmin">Комментарии</a>
-        </li>
-    {/if}
-    {if in_array('feedbacks', $manager->permissions)}
-        <li>
-            <a href="index.php?module=FeedbacksAdmin">Обратная связь</a>
-        </li>
-    {/if}
-    <li class="active">
-        <a href="index.php?module=CallbacksAdmin">Заказ обратного звонка</a>
-    </li>
-{/capture}
-
 {* Title *}
-{$meta_title='Заказ обратного звонка' scope=parent}
-
-<div id="header">
-	{if $callbacks|count>0}
-	    <h1>{$callbacks|count} {$callbacks|count|plural:'заказ':'заказов':'заказа'}</h1>
-	{else}
-	    <h1>Нет заказов</h1>
-	{/if}
+{$meta_title=$btr->callbacks_order scope=parent}
+<div class="row">
+    <div class="col-lg-7 col-md-7">
+        <div class="wrap_heading">
+            <div class="box_heading heading_page">
+               {$btr->callbacks_requests|escape} ({$callbacks_count})
+            </div>
+        </div>
+    </div>
 </div>
 
-<div id="main_list">
-    {include file='pagination.tpl'}
+<div class="boxed fn_toggle_wrap">
     {if $callbacks}
-        <form id="list_form" method="post">
-            <input type="hidden" name="session_id" value="{$smarty.session.id}"/>
-            <div id="list" class="sortable">
-                {foreach $callbacks as $callback}
-                    <div class="{if !$callback->processed}unapproved{/if} row">
-                        <div class="checkbox cell">
-                            <input type="checkbox" id="{$callback->id}" name="check[]" value="{$callback->id}"/>
-                            <label for="{$callback->id}"></label>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <form class="fn_form_list" method="post">
+                    <input type="hidden" name="session_id" value="{$smarty.session.id}">
+
+                    <div class="post_wrap okay_list">
+                        <div class="okay_list_head">
+                            <div class="okay_list_heading okay_list_check">
+                                <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value=""/>
+                                <label class="okay_ckeckbox" for="check_all_1"></label>
+                            </div>
+                            <div class="okay_list_heading okay_list_comments_name">{$btr->callbacks_requests|escape}</div>
+                            <div class="okay_list_heading okay_list_comments_btn"></div>
+                            <div class="okay_list_heading okay_list_close"></div>
                         </div>
-                        <div class="name cell">
-                            <div class='comment_name'>
-                                {$callback->name|escape}
-                                <a class="approve" href="#">Обработать</a>
-                            </div>
-                            <div class='comment_text'>
-                                Телефон: {$callback->phone|escape|nl2br}
-                            </div>
-                            {if $callback->message}
-                                <div class='comment_text'>
-                                    Сообщение: {$callback->message|escape|nl2br}
+                        <div class="okay_list_body">
+                            {foreach $callbacks as $callback}
+                                <div class="fn_row okay_list_body_item">
+                                    <div class="okay_list_row">
+                                        <div class="okay_list_boding okay_list_check">
+                                            <input class="hidden_check" type="checkbox" id="id_{$callback->id}" name="check[]" value="{$callback->id}"/>
+                                            <label class="okay_ckeckbox" for="id_{$callback->id}"></label>
+                                        </div>
+
+                                        <div class="okay_list_boding okay_list_comments_name">
+                                            <div class="okay_list_text_inline mb-q mr-1">
+                                                <span class="text_dark text_bold">{$btr->general_name|escape} </span> {$callback->name|escape}
+                                            </div>
+                                            <div class="okay_list_text_inline mb-q">
+                                                <span class="text_dark text_bold">{$btr->general_phone|escape} </span>{$callback->phone|escape}
+                                            </div>
+                                            <div class="mb-q">
+                                                <span class="text_dark text_bold">{$btr->general_message|escape} </span>
+                                                {$callback->message|escape|nl2br}
+                                            </div>
+                                            <div>
+                                                {$btr->general_request_sent|escape} <span class="tag tag-default">{$callback->date|date} | {$callback->date|time}</span>
+                                                {$btr->general_from_page|escape} <a href="{$callback->url|escape}" target="_blank">{$callback->url|escape}</a>
+                                            </div>
+                                            {if !$callback->processed}
+                                                <div class="hidden-md-up mt-q">
+                                                    <button type="button" class="btn btn_small btn-outline-warning fn_ajax_action {if $callback->processed}fn_active_class{/if}" data-module="callback" data-action="processed" data-id="{$callback->id}" onclick="$(this).hide();">
+                                                        {$btr->general_process|escape}
+                                                    </button>
+                                                 </div>
+                                            {/if}
+                                        </div>
+
+                                        <div class="okay_list_boding okay_list_comments_btn">
+                                            {if !$callback->processed}
+                                                <button type="button" class="btn btn_small btn-outline-warning fn_ajax_action {if $callback->processed}fn_active_class{/if}" data-module="callback" data-action="processed" data-id="{$callback->id}" onclick="$(this).hide();">
+                                                    {$btr->general_process|escape}
+                                                </button>
+                                            {/if}
+                                        </div>
+
+                                        <div class="okay_list_boding okay_list_close">
+                                            {*delete*}
+                                            <button data-hint="{$btr->general_delete_request|escape}" type="button" class="btn_close fn_remove hint-bottom-right-t-info-s-small-mobile  hint-anim" data-toggle="modal" data-target="#fn_action_modal" onclick="success_action($(this));">
+                                                {include file='svg_icon.tpl' svgId='delete'}
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            {/if}
-                            <div class='comment_text'>
-                                <a href="{$callback->url|escape}" target="_blank">Страница с которой было отправлено</a>
-                            </div>
-                            <div class='comment_info'>
-                                Заявка отправлена {$callback->date|date} в {$callback->date|time}
-                            </div>
+                            {/foreach}
                         </div>
-                        <div class="icons cell">
-                            <a href='#' title='Удалить' class="delete"></a>
+
+                        <div class="okay_list_footer fn_action_block">
+                            <div class="okay_list_foot_left">
+                                <div class="okay_list_heading okay_list_check">
+                                    <input class="hidden_check fn_check_all" type="checkbox" id="check_all_2" name="" value=""/>
+                                    <label class="okay_ckeckbox" for="check_all_2"></label>
+                                </div>
+                                <div class="okay_list_option">
+                                    <select name="action" class="selectpicker">
+                                        <option value="approve">{$btr->general_process|escape}</option>
+                                        <option value="delete">{$btr->general_delete|escape}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn_small btn_blue">
+                                {include file='svg_icon.tpl' svgId='checked'}
+                                <span>{$btr->general_apply|escape}</span>
+                            </button>
                         </div>
-                        <div class="clear"></div>
                     </div>
-                {/foreach}
+                </form>
             </div>
-
-            <div id="action">
-                <label id='check_all' class='dash_link'>Выбрать все</label>
-                <span id=select>
-                    <select name="action">
-                        <option value="processed">Отметить как обработанные</option>
-                        <option value="delete">Удалить</option>
-                    </select>
-                </span>
-                <input id='apply_action' class="button_green" type=submit value="Применить">
-            </div>
-        </form>
+        </div>
     {else}
-        Нет сообщений
+        <div class="heading_box mt-1">
+            <div class="text_grey">{$btr->general_no_request|escape}</div>
+        </div>
     {/if}
-    {include file='pagination.tpl'}
 </div>
-{literal}
-<script>
-$(function() {
-
-	// Раскраска строк
-	function colorize()
-	{
-		$("#list div.row:even").addClass('even');
-		$("#list div.row:odd").removeClass('even');
-	}
-	// Раскрасить строки сразу
-	colorize();
-	
-	// Выделить все
-	$("#check_all").click(function() {
-		$('#list input[type="checkbox"][name*="check"]').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:checked)').length>0);
-	});	
-
-	// Удалить 
-	$("a.delete").click(function() {
-		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
-		$(this).closest(".row").find('input[type="checkbox"][name*="check"]').attr('checked', true);
-		$(this).closest("form").find('select[name="action"] option[value=delete]').attr('selected', true);
-		$(this).closest("form").submit();
-	});
-	
-	// Обработать
-	$("a.approve").click(function() {
-		var line        = $(this).closest(".row");
-		var id          = line.find('input[type="checkbox"][name*="check"]').val();
-		line.addClass('loading_icon');
-		$.ajax({
-			type: 'POST',
-			url: 'ajax/update_object.php',
-			data: {'object': 'callback', 'id': id, 'values': {'processed': 1}, 'session_id': '{/literal}{$smarty.session.id}{literal}'},
-			success: function(data){
-				line.removeClass('loading_icon');
-                line.removeClass('unapproved');
-			},
-			dataType: 'json'
-		});	
-		return false;	
-	});
-	
-	// Подтверждение удаления
-	$("form#list_form").submit(function() {
-		if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-			return false;	
-	});
-
-});
-
-</script>
-{/literal}

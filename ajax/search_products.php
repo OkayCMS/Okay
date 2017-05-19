@@ -6,19 +6,12 @@
     require_once('../api/Okay.php');
     define('IS_CLIENT', true);
     $okay = new Okay();
-    $limit = 30;
+    $limit = 10;
     
     $lang_id  = $okay->languages->lang_id();
-    $language = $okay->languages->languages(array('id'=>$lang_id));
+    $language = $okay->languages->get_language($lang_id);
     
-    $lang_link = '';
-    $first_lang = $okay->languages->languages();
-    if (!empty($first_lang)) {
-        $first_lang = reset($first_lang);
-        if($first_lang->id !== $language->id) {
-            $lang_link = $language->label . '/';
-        }
-    }
+    $lang_link = $okay->languages->get_lang_link();
     $px = ($lang_id ? 'l' : 'p');
     $lang_sql = $okay->languages->get_query(array('object'=>'product'));
     
@@ -78,6 +71,7 @@
             $product->image = $okay->design->resize_modifier($product->image, 35, 35);
         }
         $suggestion->price = $okay->money->convert($variants[$product->id][0]->price, $currency->id);
+        $suggestion->currency = $currency->sign;
         $suggestion->value = $product->name;
         $suggestion->data = $product;
         $suggestion->lang = $lang_link;

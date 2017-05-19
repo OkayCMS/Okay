@@ -1,112 +1,143 @@
-{capture name=tabs}
-	<li>
-        <a href="index.php?module=ThemeAdmin">Тема</a>
-    </li>
-	<li>
-        <a href="index.php?module=TemplatesAdmin">Шаблоны</a>
-    </li>
-	<li>
-        <a href="index.php?module=StylesAdmin">Стили</a>
-    </li>
-    <li>
-        <a href="index.php?module=ScriptsAdmin">Скрипты</a>
-    </li>
-	<li class="active">
-        <a href="index.php?module=ImagesAdmin">Изображения</a>
-    </li>
-    {if in_array('robots', $manager->permissions)}
-        <li>
-            <a href="index.php?module=RobotsAdmin">Robots.txt</a>
-        </li>
-    {/if}
-{/capture}
+{$meta_title = $btr->images_images scope=parent}
 
-{$meta_title = "Изображения" scope=parent}
+<div class="row">
+    <div class="col-lg-10 col-md-10">
+        <div class="wrap_heading">
+            <div class="box_heading heading_page">
+                {$btr->images_theme|escape} {$theme|escape}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-lg-2 col-sm-12 float-xs-right"></div>
+</div>
+
+{if $message_error}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="boxed boxed_warning">
+                <div class="">
+                    {if $message_error == 'permissions'}
+                        {$btr->general_permissions|escape} {$images_dir|escape}
+                    {elseif $message_error == 'name_exists'}
+                        {$btr->images_exists|escape}
+                    {elseif $message_error == 'theme_locked'}
+                        {$btr->general_protected|escape}
+                    {else}
+                        {$message_error|escape}
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
+
+<div class="boxed fn_toggle_wrap">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <form method="post" enctype="multipart/form-data">
+            <input type="hidden" name="session_id" value="{$smarty.session.id}">
+            <input type="hidden" name="delete_image" value="">
+                <!-- Список файлов для выбора -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="heading_box">
+                            {$btr->images_images|escape}
+                            <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                                <a class="btn-minimize" href="javascript:;" ><i class="icon-arrow-down"></i></a>
+                            </div>
+                        </div>
+                        <div class="toggle_body_wrap fn_card on">
+                            <div class="row">
+                                {foreach $images as $image}
+                                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                                        <div class="banner_card">
+                                            <div class="banner_card_header">
+                                                <input type="text" class="hidden" name="old_name[]" value="{$image->name|escape}">
+                                                <div class="form-group col-lg-9 col-md-8 px-0 fn_rename_value hidden mb-0">
+                                                    <input type="text" class="form-control" name="new_name[]" value="{$image->name|escape}">
+                                                </div>
+                                                <span class="font-weight-bold">{$image->name|escape|truncate:20:'...'}</span>
+                                                <i class="fa fa-pencil fn_rename_theme rename_theme p-h" data-old_name="{$image->name|escape}"></i>
+
+                                                <button type="button" data-name="{$image->name}" class="fn_delete_image btn_close float-xs-right">
+                                                    {include file='svg_icon.tpl' svgId='delete'}
+                                                </button>
+                                            </div>
+                                            <div class="banner_card_block">
+                                                <div class="wrap_bottom_tag_images">
+                                                    <a class="theme_image_item" href='../{$images_dir}{$image->name|escape}'>
+                                                        <img src='../{$images_dir}{$image->name|escape}'>
+                                                    </a>
+                                                    <div class="tag tag-info">
+                                                        {if $image->size>1024*1024}
+                                                            {($image->size/1024/1024)|round:2} {$btr->general_mb|escape}
+                                                        {elseif $image->size>1024}
+                                                            {($image->size/1024)|round:2} {$btr->general_kb|escape}
+                                                        {else}
+                                                            {$image->size} {$btr->general_byte|escape}
+                                                        {/if},
+                                                        {$image->width}&times;{$image->height} px
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {/foreach}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-7 col-md-7">
+                        <div class="">
+                            <button type="button" class="fn_add_image btn btn_small btn-info mb-1 btn_images_add">
+                                {include file='svg_icon.tpl' svgId='plus'}
+                                {$btr->images_add|escape}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-md-5 pull-right">
+                        <button type="submit" name="save" class="btn btn_small btn_blue float-md-right">
+                            {include file='svg_icon.tpl' svgId='checked'}
+                            <span>{$btr->general_apply|escape}</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 {* On document load *}
+<script>
+    var general_confirm_delete = '{$btr->general_confirm_delete|escape}';
+</script>
 {literal}
 <script>
 $(function() {
 
-	// Редактировать
-	$("a.edit").click(function() {
-		name = $(this).closest('li').attr('name');
-		inp1 = $('<input type=hidden name="old_name[]">').val(name);
-		inp2 = $('<input type=text name="new_name[]">').val(name);
-		$(this).closest('li').find("p.name").html('').append(inp1).append(inp2);
-		inp2.focus().select();
-		return false;
-	});
- 
-
-	// Удалить 
-	$("a.delete").click(function() {
-		name = $(this).closest('li').attr('name');
-		$('input[name=delete_image]').val(name);
-		$(this).closest("form").submit();
-	});
+    $('.fn_rename_theme').on('click',function(){
+        $(this).parent().find('.fn_rename_value').toggleClass('hidden');
+        $(this).prev().toggleClass('hidden');
+        $(this).parent().find('.fn_rename_value > input').val($(this).data('old_name'))
+    });
+	// Удалить
+    $('.fn_delete_image').on('click',function(){
+        $('input[name=delete_image]').val($(this).data('name'));
+        $('form').submit();
+    });
 	
 	// Загрузить
-	$("#upload_image").click(function() {
-		$(this).closest('div').append($('<input type=file name=upload_images[]>'));
-	});
+    $('.fn_add_image').on('click',function(){
+        $(this).closest('div').append($('<input class="import_file" type="file" name="upload_images[]">'));
+    });
 	
 	$("form").submit(function() {
-		if($('input[name="delete_image"]').val()!='' && !confirm('Подтвердите удаление'))
+		if($('input[name="delete_image"]').val()!='' && !confirm(general_confirm_delete))
 			return false;	
 	});
 
 });
 </script>
 {/literal}
-
-<h1>Изображения темы {$theme}</h1>
-
-{if $message_error}
-    <!-- Системное сообщение -->
-    <div class="message message_error">
-        <span class="text">
-            {if $message_error == 'permissions'}
-                Установите права на запись для папки {$images_dir}
-            {elseif $message_error == 'name_exists'}
-                Файл с таким именем уже существует
-            {elseif $message_error == 'theme_locked'}
-                Текущая тема защищена от изменений. Создайте копию темы.
-            {else}
-                {$message_error}
-            {/if}
-        </span>
-    </div>
-    <!-- Системное сообщение (The End)-->
-{/if}
-
-<form method="post" enctype="multipart/form-data">
-    <input type="hidden" name="session_id" value="{$smarty.session.id}">
-    <input type="hidden" name="delete_image" value="">
-    <!-- Список файлов для выбора -->
-    <div class="block layer">
-        <ul class="theme_images">
-            {foreach $images as $image}
-                <li name='{$image->name|escape}'>
-                <a href='#' class='delete' title="Удалить"><img src='design/images/delete.png'></a>
-                <a href='#' class='edit' title="Переименовать"></a>
-                <p class="name">{$image->name|escape|truncate:16:'...'}</p>
-                <div class="theme_image">
-                <a class='preview' href='../{$images_dir}{$image->name|escape}'><img src='../{$images_dir}{$image->name|escape}'></a>
-                </div>
-                <p class=size>{if $image->size>1024*1024}{($image->size/1024/1024)|round:2} МБ{elseif $image->size>1024}{($image->size/1024)|round:2} КБ{else}{$image->size} Байт{/if}, {$image->width}&times;{$image->height} px</p>
-                </li>
-            {/foreach}
-        </ul>
-    </div>
-
-
-    <div class="block upload_image">
-        <span id="upload_image"><i class="dash_link">Добавить изображение</i></span>
-    </div>
-
-    <div class="block">
-        <input class="button_green button_save" type="submit" name="save" value="Сохранить" />
-    </div>
-
-</form>

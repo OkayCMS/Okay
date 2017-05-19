@@ -26,7 +26,7 @@ class IndexView extends View {
                 $this->design->assign('call_error', 'empty_name');
             } elseif(!$this->validate->is_phone($callback->phone, true)) {
                 $this->design->assign('call_error', 'empty_phone');
-            } elseif(!$this->validate->is_comment($callback->message, true)) {
+            } elseif(!$this->validate->is_comment($callback->message)) {
                 $this->design->assign('call_error', 'empty_comment');
             } elseif($callback_id = $this->callbacks->add_callback($callback)) {
                 $this->design->assign('call_sent', true);

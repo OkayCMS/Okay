@@ -9,8 +9,18 @@ class Callbacks extends Okay {
             return false;
         }
         $this->design->assign('callback', $callback);
+        $backend_translations = new stdClass();
+        $file = "backend/lang/".$this->settings->email_lang.".php";
+        if (!file_exists($file)) {
+            foreach (glob("backend/lang/??.php") as $f) {
+                $file = "backend/lang/".pathinfo($f, PATHINFO_FILENAME).".php";
+                break;
+            }
+        }
+        require_once($file);
+        $this->design->assign('btr', $backend_translations);
         // Отправляем письмо
-        $email_template = $this->design->fetch($this->config->root_dir.'backend/design/html/email_callback_admin.tpl');
+        $email_template = $this->design->fetch($this->config->root_dir.'backend/design/html/email/email_callback_admin.tpl');
         $subject = $this->design->get_var('subject');
         $this->notify->email($this->settings->comment_email, $subject, $email_template, "$callback->name <$callback->phone>", "$callback->name <$callback->phone>");
     }
@@ -36,7 +46,7 @@ class Callbacks extends Okay {
         }
     }
     
-    public function get_callbacks($filter = array(), $new_on_top = false) {
+    public function get_callbacks($filter = array()) {
         // По умолчанию
         $limit = 1000;
         $page = 1;
@@ -51,16 +61,10 @@ class Callbacks extends Okay {
         }
         
         if(isset($filter['processed'])) {
-            $processed = $this->db->placehold('AND processed=?',$filter['processed']);
+            $processed = $this->db->placehold('AND c.processed=?',$filter['processed']);
         }
         
         $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
-        
-        if($new_on_top) {
-            $sort='DESC';
-        } else {
-            $sort='ASC';
-        }
         
         $query = $this->db->placehold("SELECT 
                 c.id, 
@@ -74,13 +78,32 @@ class Callbacks extends Okay {
             WHERE 
                 1 
                 $processed 
-            ORDER BY c.id 
-            $sort 
+            ORDER BY c.date DESC 
             $sql_limit
         ");
         
         $this->db->query($query);
         return $this->db->results();
+    }
+
+    public function count_callbacks($filter = array()) {
+        $processed_filter = '';
+
+        if(isset($filter['processed'])) {
+            $processed_filter = $this->db->placehold('AND c.processed = ?', intval($filter['processed']));
+        }
+        $query = "SELECT COUNT(distinct c.id) as count
+            FROM __callbacks c
+            WHERE 1 
+                $processed_filter 
+              
+        ";
+
+        if($this->db->query($query)) {
+            return $this->db->result('count');
+        } else {
+            return false;
+        }
     }
     
     public function add_callback($callback) {
@@ -95,13 +118,7 @@ class Callbacks extends Okay {
     }
     
     public function update_callback($id, $callback) {
-        $date_query = '';
-        /*if(isset($fedback->date)) {
-            $date = $callback->date;
-            unset($callback->date);
-            $date_query = $this->db->placehold(', date=STR_TO_DATE(?, ?)', $date, $this->settings->date_format);
-        }*/
-        $query = $this->db->placehold("UPDATE __callbacks SET ?% $date_query WHERE id in(?@) LIMIT 1", $callback, (array)$id);
+        $query = $this->db->placehold("UPDATE __callbacks SET ?% WHERE id in(?@) LIMIT 1", $callback, (array)$id);
         $this->db->query($query);
         return $id;
     }

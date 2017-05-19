@@ -16,7 +16,7 @@
             toolbar_items_size : 'small',
             menubar:'file edit insert view format table tools',
             toolbar1: "fontselect formatselect fontsizeselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | forecolor backcolor | table | link unlink anchor media image | fullscreen code",
-            statusbar: true,
+            statusbar: false,
             font_formats: "Andale Mono=andale mono,times;"+
             "Arial=arial,helvetica,sans-serif;"+
             "Arial Black=arial black,avant garde;"+
@@ -39,11 +39,11 @@
             image_advtab: true,
             {if $config->subfolder !='/'}
             external_filemanager_path:"/{$config->subfolder}backend/design/js/filemanager/",
-            filemanager_title:"Файловый менеджер" ,
+            filemanager_title:"{$btr->tinymce_init_filemanager|escape}" ,
             external_plugins: { "filemanager" : "/{$config->subfolder}backend/design/js/filemanager/plugin.min.js"},
             {else}
             external_filemanager_path:"/backend/design/js/filemanager/",
-            filemanager_title:"Файловый менеджер" ,
+            filemanager_title:"{$btr->tinymce_init_filemanager|escape}" ,
             external_plugins: { "filemanager" : "/backend/design/js/filemanager/plugin.min.js"},
             {/if}
 
@@ -61,11 +61,13 @@
              force_p_newlines : false,
              forced_root_block : '',
              */
-            setup : function(ed) {
-                ed.on('keyup change', (function() {
-                    set_meta();
-                }));
-            }
+            {if $smarty.get.module != "SeoPatternsAdmin"}
+                setup : function(ed) {
+                    ed.on('keyup change', (function() {
+                        set_meta();
+                    }));
+                }
+            {/if}
 
             {literal}}{/literal});
     });

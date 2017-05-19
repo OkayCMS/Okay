@@ -1,122 +1,128 @@
 {$wrapper = '' scope=parent}
 <html>
-<title>Административная панель</title>
-<link rel="icon" href="design/images/favicon.png" type="image/x-icon">
-    <body>
-        <style type="text/css" scoped>
-            @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700&subset=latin,cyrillic);
-            body {
-                padding: 0;
-                margin: 0;
-                text-align: center;
-                font-size: 14px;
-                font-family: 'Roboto', sans-serif;
-                background-color: #e4e5e5;
-            }
-            #system_logo {
-                height: 120px;
-                background-color: #091A33;
-            }
-            .heading {
-                display: block;
-                font-weight: bold;
-                font-size: 24px;
-                color: #243541;
-                margin: 24px 0 17px;
-            }
-            form {
-                display: inline-block;
-                background-color: #f7f7f7;
-                padding: 22px 25px;
-                border: 1px solid #56b9ff;
-                margin-bottom: 15px;
-                width: 250px;
-            }
-            .form_group {
-                text-align: left;
-                margin-bottom: 12px;
-            }
-            .form_group label {
-                display: inline-block;
-                width: 60px;
-                font-weight: 300;
-            }
-            .form_group input {
-                height: 24px;
-                width: 180px;
-                padding: 0 5px;
-                background: #fff;
-                border: 1px solid #d0d0d0;
-            }
-            input:focus {
-                outline: none;
-            }
-            .button {
-                background: #ffcc00;
-                margin-top: 10px;
-                border: none;
-                border-radius: 2px;
-                padding: 9px 31px;
-                font-size: 16px;
-                color:#353b3e;
-                cursor: pointer;
-                -webkit-transition: all 0.3s ease;
-                -moz-transition: all 0.3s ease;
-                -o-transition: all 0.3s ease;
-                transition: all 0.3s ease;
-            }
-            .button:hover {
-                color: #fff;
-                background: #56b9ff;
-            }
-            .message_error {
-                background-color: #a70606;
-                padding: 12px;
-                color: #fff;
-                margin-bottom: 20px;
-            }
-            .recovery {
-                color: #243541;
-                margin-right: 5px;
-            }
-            .recovery:hover {
-                text-decoration: none;
-            }
-        </style>
-        <div id="system_logo">
-            <img src="design/images/system_logo.png" alt="OkayCMS" />
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Expires" CONTENT="-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Административная панель</title>
+
+    <link href="design/css/okay.css" rel="stylesheet" type="text/css" />
+    <link rel="icon" href="design/images/favicon.png" type="image/x-icon">
+    <script src="design/js/jquery/jquery.js"></script>
+</head>
+<body>
+<div class="container d-table">
+    <div class="d-100vh-va-middle">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="card-group">
+                    <div class="card p-2">
+                        <div class="card-block">
+                            {if $error_message}
+                                <div class="text-danger">
+                                    {if $error_message == 'auth_wrong'}
+                                        Неверно введены логин или пароль.
+                                        {if $limit_cnt}<br>Осталось {$limit_cnt} попыт{$limit_cnt|plural:'ка':'ок':'ки'}{/if}
+                                    {elseif $error_message == 'limit_try'}
+                                        Вы исчерпали количество попыток на сегодня.
+                                    {/if}
+                                </div>
+                            {/if}
+                            <form method="post">
+                                <input type=hidden name="session_id" value="{$smarty.session.id}">
+                                {if $recovery_mod}
+                                    <h1>Восстановление пароля</h1>
+                                    <p class="text-muted">на сайте {$smarty.server.HTTP_HOST}</p>
+                                    <div class="input-group mb-1">
+                                        <span class="input-group-addon"><i class="icon-user"></i></span>
+                                        <input name="new_login" value="" type="text" class="form-control" autofocus="" tabindex="1" placeholder="Username">
+                                    </div>
+                                    <div class="input-group mb-2">
+                                        <span class="input-group-addon"><i class="icon-lock"></i></span>
+                                        <input type="password" name="new_password" value="" tabindex="2" class="form-control" placeholder="Password">
+                                    </div>
+                                    <div class="input-group mb-2">
+                                        <span class="input-group-addon"><i class="icon-lock"></i></span>
+                                        <input type="password" name="new_password_check" value="" tabindex="3" class="form-control" placeholder="Password">
+                                    </div>
+                                    <div class="row mb-1">
+                                        <div class="col-xs-6 float-xs-right text-xs-right">
+                                            <button type="submit" value="login" class="btn btn-primary px-2" tabindex="3">Login</button>
+                                        </div>
+                                    </div>
+                                {else}
+                                    <h1>Вход</h1>
+                                    <p class="text-muted">В панель управления {$smarty.server.HTTP_HOST}</p>
+                                    <div class="input-group mb-1">
+                                        <span class="input-group-addon"><i class="icon-user"></i></span>
+                                        <input name="login" value="{$login}" type="text" class="form-control" autofocus="" tabindex="1" placeholder="Username">
+                                    </div>
+                                    <div class="input-group mb-2">
+                                        <span class="input-group-addon"><i class="icon-lock"></i></span>
+                                        <input type="password" name="password" value="" tabindex="2" class="form-control" placeholder="Password">
+                                    </div>
+                                    <div class="row mb-1">
+                                        <div class="col-xs-6 text-xs-left">
+                                            <a class="btn btn-link px-0 fn_recovery" href="">Напомнить пароль</a>
+                                        </div>
+                                        <div class="col-xs-6 float-xs-right text-xs-right">
+                                            <button type="submit" value="login" class="btn btn-primary px-2" tabindex="3">Login</button>
+                                        </div>
+                                    </div>
+                                {/if}
+                            </form>
+                            <div class="col-xs-12 p-h fn_recovery_wrap hidden px-0">
+                                <div class="fn_success" style="display: none;">Сообщение отправлено на емейл администратору</div>
+                                <label>Введите email администратора для восстановления пароля</label>
+                                <input type="email" class="form-control mb-h fn_email" value="" name="recovery_email">
+                                <button type="button" value="recovery" class="btn btn-primary px-2 fn_ajax_recover">Напомнить</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-inverse okay_bg py-3 hidden-md-down" style="width:50%">
+                        <div class="card-block text-xs-center">
+                            <div>
+                                <p>
+                                    <img src="design/images/system_logo.png" alt="OkayCMS" />
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        {if !$manager}
-        <h2 class="heading">ВХОД В СИСТЕМУ</h2>
-        {if $error_message}
-            <div class="message_error">
-                {if $error_message == 'auth_wrong'}
-                    Неверно введены логин или пароль.
-                    {if $limit_cnt}<br>Осталось {$limit_cnt} попыт{$limit_cnt|plural:'ка':'ок':'ки'}{/if}
-                {elseif $error_message == 'limit_try'}
-                    Вы исчерпали количество попыток на сегодня.
-                {/if}
-            </div>
-        {/if}
-        <form method="post">
-            <input type=hidden name="session_id" value="{$smarty.session.id}">
-            <div class="form_group">
-                <label>Логин:</label>
-                <input type="text" name="login" value="{$login}" autofocus="" tabindex="1">
-            </div>
-            <div class="form_group">
-                <label>Пароль:</label>
-                <input type="password" name="password" value="" tabindex="2">
-            </div>
-            <div>
-                <a class="recovery" href="{$config->root_url}/password.php">Напомнить пароль</a>
-                <input class="button" type="submit" value="Войти" tabindex="3">
-            </div>
-            
-        </form>
-        
-    {else}
-        <a href="javascript:;">Выйти ...</a>
-    {/if}
-    </body>
+    </div>
+</div>
+<script>
+    $(function () {
+        $(document).on("click", ".fn_recovery", function (e) {
+            e.preventDefault();
+            $(".fn_recovery_wrap").toggleClass("hidden");
+            return false;
+        });
+        $(document).on("click", ".fn_ajax_recover", function () {
+            link = window.location.href;
+            email = $(".fn_email").val();
+            $(this).attr('disabled',true);
+                $.ajax( {
+                    url: link,
+                    data: {
+                        ajax_recovery : true,
+                        recovery_email : email
+                    },
+                    method : 'get',
+                    dataType: 'json',
+                    success: function(data) {
+                        if(data.send){
+                            $(".fn_success").show();
+                            $(".fn_email").next().remove();
+                            $(".fn_email").remove();
+                        }
+                    }
+                } )
+        });
+    })
+</script>
+</body>
 </html>

@@ -1,205 +1,119 @@
-{* Вкладки *}
-{capture name=tabs}
-    {if in_array('products', $manager->permissions)}
-        <li>
-            <a href="index.php?module=ProductsAdmin">Товары</a>
-        </li>
-    {/if}
-    {if in_array('categories', $manager->permissions)}
-        <li>
-            <a href="index.php?module=CategoriesAdmin">Категории</a>
-        </li>
-    {/if}
-    <li class="active">
-        <a href="index.php?module=BrandsAdmin">Бренды</a>
-    </li>
-    {if in_array('features', $manager->permissions)}
-        <li>
-            <a href="index.php?module=FeaturesAdmin">Свойства</a>
-        </li>
-    {/if}
-    {if in_array('special', $manager->permissions)}
-        <li>
-            <a href="index.php?module=SpecialAdmin">Промо-изображения</a>
-        </li>
-    {/if}
-{/capture}
-
 {* Title *}
-{$meta_title='Бренды' scope=parent}
-
-
-<div id="header" style="overflow: visible;">
-	<h1>Бренды</h1> 
-	<a class="add" href="{url module=BrandAdmin return=$smarty.server.REQUEST_URI}">Добавить бренд</a>
-    <div class="helper_wrap">
-        <a class="top_help" id="show_help_search" href="https://www.youtube.com/watch?v=GXMSLwsgJLk" target="_blank"></a>
-        <div class="right helper_block topvisor_help">
-            <p>Видеоинструкция по разделу</p>
+{$meta_title=$btr->brands_brands scope=parent}
+<div class="row">
+    <div class="col-lg-7 col-md-7">
+        <div class="wrap_heading">
+            <div class="box_heading heading_page">
+                {$btr->brands_brands|escape}
+            </div>
+            <div class="box_btn_heading">
+                <a class="btn btn_small btn-info" href="{url module=BrandAdmin return=$smarty.server.REQUEST_URI}">
+                    {include file='svg_icon.tpl' svgId='plus'}
+                    <span>{$btr->brands_add_brand|escape}</span>
+                </a>
+            </div>
         </div>
     </div>
 </div>
 
-{if $brands}
-    <div id="main_list" class="brands">
-        <form id="list_form" method="post">
-            <input type="hidden" name="session_id" value="{$smarty.session.id}">
-            <div id="list" class="brands">
-                {foreach $brands as $brand}
-                    <div class="row">
-                        <input type="hidden" name="positions[{$brand->id}]" value="{$brand->position}">
-                        <div class="move cell">
-                            <div class="move_zone"></div>
-                        </div>
-                        <div class="checkbox cell">
-                            <input type="checkbox" id="{$brand->id}" name="check[]" value="{$brand->id}"/>
-                            <label for="{$brand->id}"></label>
-                        </div>
-                        <div class="image cell">
-                            {if $brand->image}
-                                <a href="{url module=BrandAdmin id=$brand->id return=$smarty.server.REQUEST_URI}">
-                                    <img src="{$brand->image|resize:35:35:false:$config->resized_brands_dir}" alt="" /></a>
-                            {else}
-                                <img height="35" width="35" src="design/images/no_image.png"/>
-                            {/if}
-                        </div>
-                        <div class="cell">
-                            <a href="{url module=BrandAdmin id=$brand->id return=$smarty.server.REQUEST_URI}">{$brand->name|escape}</a>
-                        </div>
-                        <div class="icons cell brand">
-                            <a class="preview" title="Предпросмотр в новом окне" href="../{$lang_link}brands/{$brand->url}" target="_blank"></a>
-                            <a class="delete" title="Удалить" href="#"></a>
-                        </div>
-                        <div class="icons cell">
-                            <a class="yandex" data-to_yandex="1" href="javascript:;">В Я.Маркет</a>
-                            <a class="yandex" data-to_yandex="0" href="javascript:;">Из Я.Маркета</a>
-                        </div>
-                        <div class="clear"></div>
+<div class="boxed fn_toggle_wrap">
+    {if $brands}
+        <form method="post" class="fn_form_list">
+            <input type="hidden" name="session_id" value="{$smarty.session.id}" />
+
+            <div class="okay_list products_list fn_sort_list">
+                <div class="okay_list_head">
+                    <div class="okay_list_boding okay_list_drag"></div>
+                    <div class="okay_list_heading okay_list_check">
+                        <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value="" />
+                        <label class="okay_ckeckbox" for="check_all_1"></label>
                     </div>
-                {/foreach}
-            </div>
-            <div id="action">
-                <label id="check_all" class="dash_link">Выбрать все</label>
-                <span id="select">
-                    <select name="action">
-                        <option value="delete">Удалить</option>
-                    </select>
-                </span>
-                <input id="apply_action" class="button_green" type="submit" value="Применить">
-            </div>
+                    <div class="okay_list_heading okay_list_photo">{$btr->general_photo|escape}</div>
+                    <div class="okay_list_heading okay_list_brands_name">{$btr->general_name|escape}</div>
+                    <div class="okay_list_heading okay_list_status">{$btr->general_enable|escape}</div>
+                    <div class="okay_list_heading okay_list_setting">{$btr->general_activities|escape}</div>
+                    <div class="okay_list_heading okay_list_close"></div>
+                </div>
+                <div class="okay_list_body sortable">
+                    {foreach $brands as $brand}
+                        <div class="fn_row okay_list_body_item fn_sort_item">
+                            <div class="okay_list_row ">
+                                <input type="hidden" name="positions[{$brand->id}]" value="{$brand->position}" />
 
+                                <div class="okay_list_boding okay_list_drag move_zone">
+                                    {include file='svg_icon.tpl' svgId='drag_vertical'}
+                                </div>
+
+                            <div class="okay_list_boding okay_list_check">
+                                <input class="hidden_check" type="checkbox" id="id_{$brand->id}" name="check[]" value="{$brand->id}" />
+                                <label class="okay_ckeckbox" for="id_{$brand->id}"></label>
+                            </div>
+
+                            <div class="okay_list_boding okay_list_photo">
+                                {if $brand->image}
+                                    <a href="{url module=BrandAdmin id=$brand->id return=$smarty.server.REQUEST_URI}">
+                                        <img src="{$brand->image|resize:55:55:false:$config->resized_brands_dir}" alt="" /></a>
+                                {else}
+                                    <img height="55" width="55" src="design/images/no_image.png"/>
+                                {/if}
+                            </div>
+
+                            <div class="okay_list_boding okay_list_brands_name">
+                                <a href="{url module=BrandAdmin id=$brand->id return=$smarty.server.REQUEST_URI}">
+                                    {$brand->name|escape}
+                                </a>
+                            </div>
+
+                                <div class="okay_list_boding okay_list_status">
+                                    {*visible*}
+                                     <label class="switch switch-default ">
+                                        <input class="switch-input fn_ajax_action {if $brand->visible}fn_active_class{/if}" data-module="brands" data-action="visible" data-id="{$brand->id}" name="visible" value="1" type="checkbox"  {if $brand->visible}checked=""{/if}/>
+                                        <span class="switch-label"></span>
+                                        <span class="switch-handle"></span>
+                                    </label>
+                                </div>
+
+                                <div class="okay_list_setting">
+                                    <a href="../{$lang_link}brands/{$brand->url|escape}" target="_blank" data-hint="{$btr->general_view|escape}" class="setting_icon setting_icon_open hint-bottom-middle-t-info-s-small-mobile  hint-anim">
+                                        {include file='svg_icon.tpl' svgId='icon_desktop'}
+                                    </a>
+                                </div>
+
+                                <div class="okay_list_boding okay_list_close">
+                                    {*delete*}
+                                    <button data-hint="{$btr->brands_delete_brand|escape}" type="button" class="btn_close fn_remove hint-bottom-right-t-info-s-small-mobile  hint-anim" data-toggle="modal" data-target="#fn_action_modal" onclick="success_action($(this));">
+                                        {include file='svg_icon.tpl' svgId='delete'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {/foreach}
+                </div>
+                <div class="okay_list_footer fn_action_block">
+                    <div class="okay_list_foot_left">
+                        <div class="okay_list_boding okay_list_drag"></div>
+                        <div class="okay_list_heading okay_list_check">
+                            <input class="hidden_check fn_check_all" type="checkbox" id="check_all_2" name="" value=""/>
+                            <label class="okay_ckeckbox" for="check_all_2"></label>
+                        </div>
+                        <div class="okay_list_option">
+                            <select name="action" class="selectpicker">
+                                <option value="in_feed">{$btr->brands_in_xml|escape}</option>
+                                <option value="out_feed">{$btr->brands_out_xml|escape}</option>
+                                <option value="delete">{$btr->general_delete|escape}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn_small btn_blue">
+                        {include file='svg_icon.tpl' svgId='checked'}
+                        <span>{$btr->general_apply|escape}</span>
+                    </button>
+                </div>
+            </div>
         </form>
-    </div>
-{else}
-    Нет брендов
-{/if}
-
-{literal}
-<script>
-$(function() {
-    
-    $("a.yandex").click(function() {
-		var icon        = $(this);
-		var line        = icon.closest(".row");
-		var id          = line.find('input[type="checkbox"][name*="check"]').val();
-        var state = $(this).data('to_yandex');
-		$.ajax({
-			type: 'POST',
-			url: 'ajax/update_object.php',
-			data: {'object': 'brand_yandex', 'id': id, 'values': {'to_yandex': state}, 'session_id': '{/literal}{$smarty.session.id}{literal}'},
-			success: function(data){
-                line.find('a.yandex.success_yandex').removeClass('success_yandex');
-                line.find('a.yandex.fail_yandex').removeClass('fail_yandex');
-				if (data == -1) {
-                    line.find('a.yandex[data-to_yandex="' + state + '"]').addClass('fail_yandex');
-                } else if (data) {
-                    line.find('a.yandex[data-to_yandex="' + state + '"]').addClass('success_yandex');
-				} else {
-                    line.find('a.yandex[data-to_yandex="' + state + '"]').removeClass('success_yandex');
-				}
-			},
-			dataType: 'json'
-		});	
-		return false;	
-	});
-
-	// Раскраска строк
-	function colorize()
-	{
-		$("#list div.row:even").addClass('even');
-		$("#list div.row:odd").removeClass('even');
-	}
-	// Раскрасить строки сразу
-	colorize();
-
-    // Сортировка списка
-    $("#list").sortable({
-        items:             ".row",
-        tolerance:         "pointer",
-        handle:            ".move_zone",
-        axis: 'y',
-        scrollSensitivity: 40,
-        opacity:           0.7,
-        forcePlaceholderSize: true,
-
-        helper: function(event, ui){
-            if($('input[type="checkbox"][name*="check"]:checked').size()<1) return ui;
-            var helper = $('<div/>');
-            $('input[type="checkbox"][name*="check"]:checked').each(function(){
-                var item = $(this).closest('.row');
-                helper.height(helper.height()+item.innerHeight());
-                if(item[0]!=ui[0]) {
-                    helper.append(item.clone());
-                    $(this).closest('.row').remove();
-                }
-                else {
-                    helper.append(ui.clone());
-                    item.find('input[type="checkbox"][name*="check"]').attr('checked', false);
-                }
-            });
-            return helper;
-        },
-        start: function(event, ui) {
-            if(ui.helper.children('.row').size()>0)
-                $('.ui-sortable-placeholder').height(ui.helper.height());
-        },
-        beforeStop:function(event, ui){
-            if(ui.helper.children('.row').size()>0){
-                ui.helper.children('.row').each(function(){
-                    $(this).insertBefore(ui.item);
-                });
-                ui.item.remove();
-            }
-        },
-        update:function(event, ui)
-        {
-            $("#list_form input[name*='check']").attr('checked', false);
-            $("#list_form").ajaxSubmit(function() {
-                colorize();
-            });
-        }
-    });
-	
-	// Выделить все
-	$("#check_all").click(function() {
-		$('#list input[type="checkbox"][name*="check"]').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:checked)').length>0);
-	});	
-
-	// Удалить
-	$("a.delete").click(function() {
-		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
-		$(this).closest("div.row").find('input[type="checkbox"][name*="check"]').attr('checked', true);
-		$(this).closest("form").find('select[name="action"] option[value=delete]').attr('selected', true);
-		$(this).closest("form").submit();
-	});
-	
-	// Подтверждение удаления
-	$("form").submit(function() {
-		if($('#list input[type="checkbox"][name*="check"]:checked').length>0)
-			if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-				return false;	
-	});
- 	
-});
-</script>
-{/literal}
+    {else}
+        <div class="heading_box mt-1">
+            <div class="text_grey">{$btr->brands_no|escape}</div>
+        </div>
+    {/if}
+</div>

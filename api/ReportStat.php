@@ -90,7 +90,7 @@ class ReportStat extends Okay {
         $status_filter = '';
         
         if (isset($filter['status'])) {
-            $status_filter = $this->db->placehold('AND o.status = ?', intval($filter['status']));
+            $status_filter = $this->db->placehold('AND o.status_id = ?', intval($filter['status']));
         }
         
         if (isset($filter['date_from']) && !isset($filter['date_to'])) {

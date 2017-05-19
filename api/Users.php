@@ -45,6 +45,12 @@ class Users extends Okay {
                 case 'name':
                     $order = 'u.name';
                     break;
+                case 'email':
+                    $order = 'u.email';
+                    break;
+                case 'cnt_order':
+                    $order = "(select count(o.id) as count from __orders o where o.user_id = u.id) DESC";
+                    break;
             }
         }
         
@@ -58,7 +64,6 @@ class Users extends Okay {
                 u.phone,
                 u.address,
                 u.group_id, 
-                u.enabled, 
                 u.last_ip, 
                 u.created, 
                 g.discount, 
@@ -126,7 +131,6 @@ class Users extends Okay {
                 u.phone,
                 u.address,
                 u.group_id, 
-                u.enabled, 
                 u.last_ip, 
                 u.created, 
                 g.discount, 

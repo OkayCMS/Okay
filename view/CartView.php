@@ -17,12 +17,9 @@ class CartView extends View {
         if($delete_variant_id = intval($this->request->get('delete_variant'))) {
             $this->cart->delete_item($delete_variant_id);
             if(!isset($_POST['submit_order']) || $_POST['submit_order']!=1) {
-                //header('location: '.$this->config->root_url.'/cart/');
-                //header('location: '.$this->config->root_url.'/'.$this->language->label.'/cart/');
                 header('location: '.$this->config->root_url.'/'.$this->lang_link.'cart/');
             }
         }
-
         // Если нажали оформить заказ
         if(isset($_POST['checkout'])) {
             $order = new stdClass;
@@ -66,7 +63,7 @@ class CartView extends View {
                 $this->design->assign('error', 'empty_address');
             } elseif(!$this->validate->is_comment($order->comment)) {
                 $this->design->assign('error', 'empty_comment');
-            } elseif($this->settings->captcha_cart && (($_SESSION['captcha_code'] != $captcha_code || empty($captcha_code)) || empty($_SESSION['captcha_code']))) {
+            } elseif($this->settings->captcha_cart && (($_SESSION['captcha_cart'] != $captcha_code || empty($captcha_code)) || empty($_SESSION['captcha_cart']))) {
                 $this->design->assign('error', 'captcha');
             } else {
                 // Добавляем заказ в базу
@@ -99,8 +96,6 @@ class CartView extends View {
 
                 // Очищаем корзину (сессию)
                 $this->cart->empty_cart();
-                unset($_SESSION['captcha_code']);
-
                 // Перенаправляем на страницу заказа
                 header('location: '.$this->config->root_url.'/'.$this->lang_link.'order/'.$order->url);
             }

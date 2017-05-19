@@ -1,1 +1,0 @@
-var lang = new Array();

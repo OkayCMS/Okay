@@ -83,7 +83,8 @@ class OrderView extends View {
         // Способ доставки
         $delivery = $this->delivery->get_delivery($order->delivery_id);
         $this->design->assign('delivery', $delivery);
-        
+        $order_status = $this->orderstatus->get_status(array("status"=>intval($order->status_id)));
+        $this->design->assign('order_status', reset($order_status));
         $this->design->assign('order', $order);
         $this->design->assign('purchases', $purchases);
         

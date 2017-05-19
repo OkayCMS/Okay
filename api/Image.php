@@ -389,8 +389,8 @@ class Image extends Okay {
         
         // Убираем комменты и т.п. из картинки
         $thumb->stripImage();
-
-        //		$thumb->setImageCompressionQuality(100);
+        $thumb->setImageCompressionQuality($this->settings->image_quality ? $this->settings->image_quality : 80 );
+        $thumb->setImageCompression($this->settings->image_quality ? $this->settings->image_quality : 80);
         
         // Записываем картинку
         if(!$thumb->writeImages($dst_file, true)) {

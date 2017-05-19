@@ -81,13 +81,16 @@ class ExportAjax extends Okay {
         } else {
             $categories_list = $this->cat_tree($categories,$purchases);
         }
-        
         foreach ($categories_list as $c) {
             fputcsv($f, $c, $this->column_delimiter);
         }
+
+
         $total = array('name'=>'Итого','amount'=>$this->total_amount,'price'=>$this->total_price);
         fputcsv($f, $total, $this->column_delimiter);
         fclose($f);
+
+        return true;
     }
     
     private function cat_tree($categories,$purchases = array(),&$result = array()) {

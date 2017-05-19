@@ -1,118 +1,169 @@
-{capture name=tabs}
-	<li class="active">
-        <a href="index.php?module=ThemeAdmin">Тема</a>
-    </li>
-	<li>
-        <a href="index.php?module=TemplatesAdmin">Шаблоны</a>
-    </li>
-	<li>
-        <a href="index.php?module=StylesAdmin">Стили</a>
-    </li>
-    <li>
-        <a href="index.php?module=ScriptsAdmin">Скрипты</a>
-    </li>
-	<li>
-        <a href="index.php?module=ImagesAdmin">Изображения</a>
-    </li>
-    {if in_array('robots', $manager->permissions)}
-        <li>
-            <a href="index.php?module=RobotsAdmin">Robots.txt</a>
-        </li>
-    {/if}
-{/capture}
-
 {if $theme->name}
-    {$meta_title = "Тема {$theme->name}" scope=parent}
+    {$meta_title = "`$btr->general_theme` {$theme->name}" scope=parent}
 {/if}
 
-<script>
-{literal}
-	
-$(function() {
-
-	// Выбрать тему
-	$('.set_main_theme').click(function() {
-     	$("form input[name=action]").val('set_main_theme');
-    	$("form input[name=theme]").val($(this).closest('li').attr('theme'));
-    	$("form").submit();
-	});	
-	
-	// Клонировать текущую тему
-	$('#header .add').click(function() {
-     	$("form input[name=action]").val('clone_theme');
-    	$("form").submit();
-	});	
-	
-	// Редактировать название
-	$("a.edit").click(function() {
-		name = $(this).closest('li').attr('theme');
-		inp1 = $('<input type=hidden name="old_name[]">').val(name);
-		inp2 = $('<input type=text name="new_name[]">').val(name);
-		$(this).closest('li').find("p.name").html('').append(inp1).append(inp2);
-		inp2.focus().select();
-		return false;
-	});
-	
-	// Удалить тему
-	$('.delete').click(function() {
-     	$("form input[name=action]").val('delete_theme');
-     	$("form input[name=theme]").val($(this).closest('li').attr('theme'));
-   		$("form").submit();
-	});	
-
-	$("form").submit(function() {
-		if($("form input[name=action]").val()=='delete_theme' && !confirm('Подтвердите удаление'))
-			return false;	
-	});
-	
-});
-{/literal}
-</script>
-
-<div id="header">
-    <h1 class="{if $theme->locked}locked{/if}">Текущая тема &mdash; {$theme->name}</h1>
-    <a class="add" href="#">Создать копию темы {$settings->theme}</a>
+<div class="row">
+    <div class="col-lg-10 col-md-10">
+        <div class="wrap_heading">
+            <div class="box_heading heading_page">
+                {$btr->theme_current|escape} {$theme->name}
+            </div>
+            <div class="box_btn_heading">
+                <a class="fn_clone_theme btn btn_small btn-info" href="/">
+                    {include file='svg_icon.tpl' svgId='plus'}
+                    <span>{$btr->theme_copy|escape} {$settings->theme}</span>
+                </a>
+            </div>
+         </div>
+    </div>
+    <div class="col-md-2 col-lg-2 col-sm-12 float-xs-right"></div>
 </div>
 
-{if $message_error}
-    <div class="message message_error">
-	<span class="text">{if $message_error == 'permissions'}Установите права на запись для папки {$themes_dir}
-	{elseif $message_error == 'name_exists'}Тема с таким именем уже существует
-	{else}{$message_error}{/if}</span>
+{if $theme->locked}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="boxed boxed_warning">
+                <div class="">
+                   {$btr->theme_close|escape}
+                </div>
+            </div>
+        </div>
     </div>
 {/if}
 
-<div class="block layer">
-
-    <form method="post" enctype="multipart/form-data">
-        <input type="hidden" name="session_id" value="{$smarty.session.id}">
-        <input type=hidden name="action">
-        <input type=hidden name="theme">
-        <ul class="themes">
-            {foreach $themes as $t}
-                <li theme='{$t->name|escape}'>
-                    {if $theme->name == $t->name}<img class="tick" src='design/images/tick.png'>{/if}
-                    {if $t->locked}<img class="tick" src='design/images/lock.png'>{/if}
-                    {if $theme->name != $t->name && !$t->locked}
-                        <a href='#' title="Удалить" class='delete'></a>
-                        <a href='#' title="Переименовать" class='edit'></a>
-                    {elseif !$t->locked}
-                        <a href='#' title="Удалить" class='delete'></a>
-                        <a href='#' title="Изменить название" class='edit'></a>
-                    {/if}
-                    {if $theme->name == $t->name}
-                        <p class=name>{$t->name|escape|truncate:16:'...'}</p>
+{if $message_error}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="boxed boxed_warning">
+                <div class="heading_box">
+                    {if $message_error == 'permissions'}
+                        {$btr->general_permissionse|escape} {$themes_dir}
+                    {elseif $message_error == 'name_exists'}
+                        {$btr->theme_exists|escape}
                     {else}
-                        <p class=name><a href='#' class='set_main_theme'>{$t->name|escape|truncate:16:'...'}</a></p>
+                        {$message_error|escape}
                     {/if}
-                    <a href="index.php?module=TemplatesAdmin" style="display: block;float: left;">
-                        <img class="preview" src='{$root_dir}../design/{$t->name}/preview.png'>
-                    </a>
-                </li>
-            {/foreach}
-        </ul>
-        <div class="block">
-            <input class="button_green button_save" type="submit" name="save" value="Сохранить"/>
+                </div>
+            </div>
         </div>
-    </form>
+    </div>
+{/if}
+
+<div class="boxed fn_toggle_wrap">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <form method="post" enctype="multipart/form-data">
+                <input type="hidden" name="session_id" value="{$smarty.session.id}">
+                <input type="hidden" name="action">
+                <input type="hidden" name="theme">
+
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="heading_box">
+                            {$btr->theme_themes|escape}
+                            <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                                <a class="btn-minimize" href="javascript:;" ><i class="icon-arrow-down"></i></a>
+                            </div>
+                        </div>
+                        <div class="toggle_body_wrap fn_card on">
+                            <div class="row">
+                                {foreach $themes as $t}
+                                    <div class="col-lg-4 col-md-6 col-sm-12">
+                                        <div class="banner_card">
+                                            <div class="banner_card_header img_bnr_c_head">
+                                                <input type="text" class="hidden" name="old_name[]" value="{$t->name|escape}">
+                                                <div class="form-group col-lg-9 col-md-8 px-0 fn_rename_value hidden mb-0">
+                                                    <input type="text" class="form-control" name="new_name[]" value="{$t->name|escape}">
+                                                </div>
+                                                <span class="theme_active_span font-weight-bold">{$t->name|escape|truncate:20:'...'} {if  $t->name == $theme->name}<span class="text_success">- {$btr->theme_current_item|escape} </span>{/if}</span>
+                                                {if  !$t->locked}
+                                                    <i class="fa fa-pencil fn_rename_theme rename_theme p-h" data-old_name="{$t->name|escape}"></i>
+                                                {/if}
+
+                                                <button data-theme_name="{$t->name|escape}" type="button" class="btn_close float-xs-right fn_remove_theme" data-toggle="modal" data-target="#fn_delete_theme">
+                                                    {include file='svg_icon.tpl' svgId='delete'}
+                                                </button>
+                                            </div>
+                                            <div class="banner_card_block">
+                                                <div class="theme_block_image" style="position:relative;">
+                                                    <img class="{if $theme->name != $t->name}gray_filter{/if}" width="" src='{$root_dir}../design/{$t->name}/preview.png'>
+                                                    {if $theme->name != $t->name}
+                                                        <div style="position:absolute; bottom:0px; right:0px;" class="fn_set_theme btn btn_small btn_blue" data-set_name="{$t->name|escape}">
+                                                            {include file='svg_icon.tpl' svgId='checked'}
+                                                            <span>{$btr->general_select|escape}</span>
+                                                        </div>
+                                                    {/if}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {/foreach}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 hidden">
+                        <button type="submit" name="save" class="btn btn_small btn_blue fn_chek_all float-md-right ">
+                            {include file='svg_icon.tpl' svgId='checked'}
+                            <span>{$btr->general_apply|escape}</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+
+<div id="fn_delete_theme" class="modal fade show" role="document">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="card-header">
+                <div class="h5">{$btr->theme_perform|escape}</div>
+            </div>
+            <div class="modal-body">
+                <button type="submit" class="btn btn-sm btn-success fn_submit_delete"><i class="fa fa-dot-circle-o"></i> Submit</button>
+                <button type="button" class="btn btn-default fn_dismiss_delete" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    {literal}
+
+    $(function() {
+
+        $('.fn_rename_theme').on('click',function(){
+            $(this).parent().find('.fn_rename_value').toggleClass('hidden');
+            $(this).prev().toggleClass('hidden');
+            $(this).parent().find('.fn_set_theme').toggleClass('opacity_toggle');
+            $(this).parent().find('.fn_rename_value > input').val($(this).data('old_name'))
+        });
+        $('.fn_set_theme').on('click',function(){
+            $("input[name=action]").val('set_main_theme');
+            $("input[name=theme]").val($(this).data('set_name'));
+            $("form").submit();
+        });
+        // Клонировать текущую тему
+        $('.fn_clone_theme').on('click',function(e){
+            e.preventDefault();
+            $("input[name=action]").val('clone_theme');
+            $("form").submit();
+        });
+
+        $(".fn_remove_theme").on("click", function () {
+            action = "delete_theme";
+            theme_name = $(this).data("theme_name");
+        });
+        $(".fn_submit_delete").on("click",function () {
+            $("form input[name=action]").val(action);
+            $("form input[name=theme]").val(theme_name);
+            $("form").submit();
+        });
+        $(".fn_dismiss_delete").on("click",function () {
+            $("form input[name=action]").val("");
+            $("form input[name=theme]").val("");
+        });
+
+    });
+    {/literal}
+</script>

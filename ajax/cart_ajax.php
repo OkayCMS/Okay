@@ -28,20 +28,29 @@
             break;
     }
     
-    $language = $okay->languages->languages(array('id'=>$okay->languages->lang_id()));
+    $language = $okay->languages->get_language($okay->languages->lang_id());
     $okay->design->assign('language', $language);
-    $lang_link = '';
-    $first_lang = $okay->languages->languages();
-    if (!empty($first_lang)) {
-        $first_lang = reset($first_lang);
-        if($first_lang->id !== $language->id) {
-            $lang_link = $language->label . '/';
-        }
-    }
-    $okay->design->assign('lang_link', $lang_link);
-    $okay->design->assign('lang', $okay->translations);
+    $okay->design->assign('lang_link', $okay->languages->get_lang_link());
+    $okay->design->assign('lang', $okay->translations->get_translations(array('lang'=>$language->label)));
     
+
     $cart = $okay->cart->get_cart();
+    $okay->design->assign('cart', $cart);
+    $currencies = $okay->money->get_currencies(array('enabled'=>1));
+    if(isset($_SESSION['currency_id'])) {
+        $currency = $okay->money->get_currency($_SESSION['currency_id']);
+    } else {
+        $currency = reset($currencies);
+    }
+    $okay->design->assign('currency',	$currency);
+
+    $deliveries = $okay->delivery->get_deliveries(array('enabled'=>1));
+    $okay->design->assign('deliveries', $deliveries);
+    foreach($deliveries as $delivery) {
+        $delivery->payment_methods = $okay->payment->get_payment_methods(array('delivery_id'=>$delivery->id, 'enabled'=>1));
+    }
+    $okay->design->assign('all_currencies', $okay->money->get_currencies());
+
     if (count($cart->purchases) > 0) {
         $coupon_code = trim($okay->request->get('coupon_code', 'string'));
         if(empty($coupon_code)) {
@@ -55,23 +64,7 @@
 				$okay->cart->apply_coupon($coupon_code);
 			}
     	}
-        
-        $cart = $okay->cart->get_cart();
-    	$okay->design->assign('cart', $cart);
-    	$currencies = $okay->money->get_currencies(array('enabled'=>1));
-        if(isset($_SESSION['currency_id'])) {
-            $currency = $okay->money->get_currency($_SESSION['currency_id']);
-        } else {
-            $currency = reset($currencies);
-        }
-    	$okay->design->assign('currency',	$currency);
-        
-        $deliveries = $okay->delivery->get_deliveries(array('enabled'=>1));
-    	$okay->design->assign('deliveries', $deliveries);
-        foreach($deliveries as $delivery) {
-            $delivery->payment_methods = $okay->payment->get_payment_methods(array('delivery_id'=>$delivery->id, 'enabled'=>1));
-        }
-        $okay->design->assign('all_currencies', $okay->money->get_currencies());
+
         if($okay->coupons->count_coupons(array('valid'=>1))>0) {
             $okay->design->assign('coupon_request', true);
         }

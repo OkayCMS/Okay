@@ -15,6 +15,8 @@ class Feedbacks extends Okay {
                 f.email, 
                 f.ip, 
                 f.message,
+                f.is_admin,
+                f.parent_id,
                 f.processed,
                 f.date,
                 f.lang_id
@@ -37,6 +39,7 @@ class Feedbacks extends Okay {
         $page = 1;
         $keyword_filter = '';
         $processed = '';
+        $has_parent_filter = '';
         if(isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));
         }
@@ -60,6 +63,10 @@ class Feedbacks extends Okay {
                 ) ');
             }
         }
+        if (isset($filter['has_parent'])) {
+            $has_parent_filter = 'and f.parent_id'.($filter['has_parent'] ? '>0' : '=0');
+        }
+
         if($new_on_top) {
             $sort='DESC';
         } else {
@@ -71,6 +78,8 @@ class Feedbacks extends Okay {
                 f.email, 
                 f.ip, 
                 f.message,
+                f.is_admin,
+                f.parent_id,
                 f.processed,
                 f.date,
                 f.lang_id
@@ -79,6 +88,7 @@ class Feedbacks extends Okay {
                 1 
                 $keyword_filter
                 $processed
+                $has_parent_filter
             ORDER BY f.id 
             $sort $sql_limit
         ");
@@ -88,7 +98,18 @@ class Feedbacks extends Okay {
     
     public function count_feedbacks($filter = array()) {
         $keyword_filter = '';
-        
+        $processed_filter = '';
+        $has_parent_filter = '';
+
+        if(isset($filter['processed'])) {
+            $processed_filter = $this->db->placehold('AND f.processed = ?', intval($filter['processed']));
+        }
+
+        if (isset($filter['has_parent'])) {
+            $has_parent_filter = 'and f.parent_id'.($filter['has_parent'] ? '>0' : '=0');
+        }
+
+
         if(!empty($filter['keyword'])) {
             $keywords = explode(' ', $filter['keyword']);
             foreach($keywords as $keyword) {
@@ -105,6 +126,8 @@ class Feedbacks extends Okay {
             WHERE 
                 1 
                 $keyword_filter
+                $processed_filter
+                $has_parent_filter
             ");
         
         $this->db->query($query);
@@ -137,6 +160,12 @@ class Feedbacks extends Okay {
         if(!empty($id)) {
             $query = $this->db->placehold("DELETE FROM __feedbacks WHERE id=? LIMIT 1", intval($id));
             $this->db->query($query);
+
+            $this->db->query('SELECT id from __feedbacks where parent_id=?', intval($id));
+            $children = $this->db->results('id');
+            foreach($children as $child_id) {
+                $this->delete_feedback($child_id);
+            }
         }
     }
     

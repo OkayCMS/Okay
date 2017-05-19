@@ -13,7 +13,7 @@ class ExportAjax extends Okay {
         'meta_keywords'=>    'Ключевые слова',
         'meta_description'=> 'Описание страницы',
         'annotation'=>       'Аннотация',
-        'body'=>             'Описание'
+        'description'=>             'Описание'
 
     );
 

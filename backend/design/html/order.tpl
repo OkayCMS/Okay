@@ -1,558 +1,667 @@
-{* Вкладки *}
-{capture name=tabs}
-	{if in_array('orders', $manager->permissions)}
-		<li {if $order->status==0}class="active"{/if}>
-            <a href="index.php?module=OrdersAdmin&status=0">Новые</a>
-        </li>
-		<li {if $order->status==1}class="active"{/if}>
-            <a href="index.php?module=OrdersAdmin&status=1">Приняты</a>
-        </li>
-		<li {if $order->status==2}class="active"{/if}>
-            <a href="index.php?module=OrdersAdmin&status=2">Выполнены</a>
-        </li>
-		<li {if $order->status==3}class="active"{/if}>
-            <a href="index.php?module=OrdersAdmin&status=3">Удалены</a>
-        </li>
-        {if $keyword}
-        <li class="active">
-            <a href="{url module=OrdersAdmin keyword=$keyword id=null label=null}">Поиск</a>
-        </li>
-        {/if}
-	{/if}
-    {if in_array('labels', $manager->permissions)}
-        <li>
-            <a href="{url module=OrdersLabelsAdmin keyword=null id=null page=null label=null}">Метки</a>
-        </li>
-    {/if}
-{/capture}
-
-
 {if $order->id}
-    {$meta_title = "Заказ №`$order->id`" scope=parent}
+    {$meta_title = "`$btr->general_order_number` `$order->id`" scope=parent}
 {else}
-    {$meta_title = 'Новый заказ' scope=parent}
+    {$meta_title = $btr->order_new scope=parent}
 {/if}
 
-<!-- Основная форма -->
-<form method=post id=order enctype="multipart/form-data">
-<input type=hidden name="session_id" value="{$smarty.session.id}">
+<form method="post" enctype="multipart/form-data" class="fn_fast_button">
+    <input type="hidden" name="session_id" value="{$smarty.session.id}">
+    <input name="id" type="hidden" value="{$order->id|escape}"/>
 
-<div id="name">
-	<input name=id type="hidden" value="{$order->id|escape}"/> 
-	<h1>{if $order->id}Заказ №{$order->id|escape}{else}Новый заказ{/if}
-	<select class=status name="status">
-		<option value='0' {if $order->status == 0}selected=""{/if}>Новый</option>
-		<option value='1' {if $order->status == 1}selected=""{/if}{if $hasVariantNotInStock && $order->status != 1 && $order->status != 2} disabled=""{/if}>Принят</option>
-		<option value='2' {if $order->status == 2}selected=""{/if}{if $hasVariantNotInStock && $order->status != 1 && $order->status != 2} disabled=""{/if}>Выполнен</option>
-		<option value='3' {if $order->status == 3}selected=""{/if}>Удален</option>
-	</select>
-	</h1>
-	<a href="{url view=print id=$order->id}" target="_blank">
-        <img src="./design/images/print.png" height="40px" name="export" title="Печать заказа">
-    </a>
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="wrap_heading">
+                <div class="box_heading heading_page">
+                    {if $order->id}
+                        {$btr->general_order_number|escape} {$order->id|escape}
+                    {else}
+                        {$btr->order_new|escape}
+                    {/if}
+                </div>
+                <div class="boxes_inline">
+                    <select class="selectpicker" name="status_id">
+                        {foreach $all_status as $status_item}
+                            <option value="{$status_item->id}" {if $order->status_id == $status_item->id}selected=""{/if} {if $hasVariantNotInStock && $status_item->is_close} disabled{/if} >{$status_item->name|escape}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div data-hint="{$btr->order_print|escape}" class="boxes_inline hint-bottom-middle-t-info-s-small-mobile  hint-anim ml-h">
+                    <a href="{url view=print id=$order->id}" target="_blank" title="{$btr->order_print|escape}" class="print_block">
+                        <i class="fa fa-print"></i>
+                    </a>
+                </div>
+                <div class="box_btn_heading ml-h hidden-xs-down">
+                    <div class="add_order_marker">
+                        <span class="fn_ajax_label_wrapper">
+                            <span class="fn_labels_show box_labels_show box_btn_heading ml-h">{include file='svg_icon.tpl' svgId='tag'} <span>{$btr->general_select_label|escape}</span> </span>
 
-
-	<div id=next_order>
-		{if $prev_order}
-		    <a class=prev_order href="{url id=$prev_order->id}">←</a>
-		{/if}
-		{if $next_order}
-		    <a class=next_order href="{url id=$next_order->id}">→</a>
-		{/if}
-	</div>
-		
-</div> 
-{if $hasVariantNotInStock && $order->status != 1 && $order->status != 2}
-    <div class="variant_not_in_stock">Не все товары есть в наличии!</div>
-{/if}
-
-{if $message_error}
-<div class="message message_error">
-	<span class="text">{if $message_error=='error_closing'}Нехватка товара на складе{else}{$message_error|escape}{/if}</span>
-	{if $smarty.get.return}
-	    <a class="button" href="{$smarty.get.return}">Вернуться</a>
-	{/if}
-</div>
-{elseif $message_success}
-<div class="message message_success">
-	<span class="text">{if $message_success=='updated'}Заказ обновлен{elseif $message_success=='added'}Заказ добавлен{else}{$message_success}{/if}</span>
-	{if $smarty.get.return}
-	    <a class="button" href="{$smarty.get.return}">Вернуться</a>
-	{/if}
-</div>
-{/if}
-
-
-
-<div id="order_details">
-	<h2>Детали заказа
-        <a href='#' class="edit_order_details">
-            <img src='design/images/pen.png' alt='Редактировать' title='Редактировать'>
-        </a>
-    </h2>
-     <div style="margin-bottom: 10px">
-        <label>Язык заказа</label>
-        <select name="lang_id">
-            {foreach $languages as $l}
-                <option value="{$l->id}" {if $l->id == $order->lang_id}selected=""{/if}>{$l->name}</option>
-            {/foreach}
-        </select>
+                            <div class='fn_labels_hide box_labels_hide'>
+                                <span class="heading_label">{$btr->general_labels|escape} <i class="fn_delete_labels_hide btn_close delete_labels_hide">{include file='svg_icon.tpl' svgId='delete'}</i></span>
+                                <ul class="option_labels_box">
+                                    {foreach $labels as $l}
+                                        <li class="fn_ajax_labels" data-order_id="{$order->id}"  style="background-color: #{$l->color|escape}">
+                                            <input id="l{$order->id}_{$l->id}" type="checkbox" class="hidden_check_1" name="order_labels[]"  value="{$l->id}" {if in_array($l->id, $order_labels) && is_array($order_labels)}checked=""{/if} />
+                                            <label   for="l{$order->id}_{$l->id}" class="label_labels"><span>{$l->name|escape}</span></label>
+                                        </li>
+                                    {/foreach}
+                                </ul>
+                            </div>
+                            <div class="fn_order_labels orders_labels box_btn_heading ml-h">
+                                {include file="labels_ajax.tpl"}
+                            </div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-	<div id="user">
-	<ul class="order_details">
-        <li>
-            <label class=property>IP покупателя</label>
-            <div class="edit_order_detail view_order_detail">{$order->ip}</div>
-        </li>
-		<li>
-			<label class=property>Дата</label>
-			<div class="edit_order_detail view_order_detail">
-			{$order->date} {$order->time}
-			</div>
-		</li>
-		<li>
-			<label class=property>Имя</label> 
-			<div class="edit_order_detail" style='display:none;'>
-				<input name="name" class="okay_inp" type="text" value="{$order->name|escape}" />
-			</div>
-			<div class="view_order_detail">
-				{$order->name|escape}
-			</div>
-		</li>
-		<li>
-			<label class=property>Email</label>
-			<div class="edit_order_detail" style='display:none;'>
-				<input name="email" class="okay_inp" type="text" value="{$order->email|escape}" />
-			</div>
-			<div class="view_order_detail">
-				<a href="mailto:{$order->email|escape}?subject=Заказ%20№{$order->id}">{$order->email|escape}</a>
-			</div>
-		</li>
-		<li>
-			<label class=property>Телефон</label>
-			<div class="edit_order_detail" style='display:none;'>
-				<input name="phone" class="okay_inp " type="text" value="{$order->phone|escape}" />
-			</div>
-			<div class="view_order_detail">
-				{if $order->phone}
-				<span class="ip_call" data-phone="{$order->phone|escape}" target="_blank">{$order->phone|escape}</span>{else}{$order->phone|escape}{/if}
-			</div>
-		</li>
-		<li>
-			<label class=property>Адрес <a href='http://maps.yandex.ru/' id=address_link target=_blank><img align=absmiddle src='design/images/map.png' alt='Карта в новом окне' title='Карта в новом окне'></a></label>
-			<div class="edit_order_detail" style='display:none;'>
-				<textarea name="address">{$order->address|escape}</textarea>
-			</div>
-			<div class="view_order_detail">
-				{$order->address|escape}
-			</div>
-		</li>
-		<li>
-			<label class=property>Комментарий пользователя</label>
-			<div class="edit_order_detail" style='display:none;'>
-			    <textarea name="comment">{$order->comment|escape}</textarea>
-			</div>
-			<div class="view_order_detail">
-				{$order->comment|escape|nl2br}
-			</div>
-		</li>
-	</ul>
-	</div>
 
 
-    {if $labels}
-        <div class='layer'>
-            <h2>Метка</h2>
-            <ul class="label_list">
-                {foreach $labels as $l}
-                    <li>
-                        <label for="label_{$l->id}">
-                            <input id="label_{$l->id}" type="checkbox" name="order_labels[]" value="{$l->id}" {if in_array($l->id, $order_labels)}checked{/if}>
-                            <span style="background-color:#{$l->color};" class="order_label"></span>
-                            {$l->name}
-                        </label>
-                    </li>
-                {/foreach}
-            </ul>
+    {if $hasVariantNotInStock}
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="boxed boxed_warning">
+                    <div class="">
+                        {$btr->order_not_in_stock|escape}
+                    </div>
+                </div>
+            </div>
         </div>
     {/if}
 
-
-    <div class='layer'>
-        <h2>Покупатель
-            <a href='#' class="edit_user">
-                <img src='design/images/pen.png' alt='Редактировать' title='Редактировать'>
-            </a>
-            {if $user}
-                <a href="#" class='delete_user'>
-                    <img src='design/images/delete.png' alt='Удалить' title='Удалить'>
-                </a>
-            {/if}
-        </h2>
-
-        <div class='view_user'>
-            {if !$user}
-                Не зарегистрирован
-            {else}
-                <a href='index.php?module=UserAdmin&id={$user->id}' target=_blank>{$user->name|escape}</a>
-                ({$user->email|escape})
-            {/if}
-        </div>
-        <div class='edit_user' style='display:none;'>
-            <input type=hidden name=user_id value='{$user->id}'>
-            <input type=text id='user' class="input_autocomplete" placeholder="Выберите пользователя">
-        </div>
-    </div>
-	
-
-	
-	<div class='layer'>
-	<h2>Примечание <a href='#' class="edit_note"><img src='design/images/pen.png' alt='Редактировать' title='Редактировать'></a></h2>
-	<ul class="order_details">
-		<li>
-			<div class="edit_note" style='display:none;'>
-				<label class=property>Ваше примечание (не видно пользователю)</label>
-				<textarea name="note">{$order->note|escape}</textarea>
-			</div>
-			<div class="view_note" {if !$order->note}style='display:none;'{/if}>
-				<label class=property>Ваше примечание (не видно пользователю)</label>
-				<div class="note_text">{$order->note|escape}</div>
-			</div>
-		</li>
-	</ul>
-	</div>
-		
-</div>
-
-
-<div id="purchases">
-
-    <div id="list" class="purchases">
-        {foreach $purchases as $purchase}
-            <div class="row">
-                <div class="image cell">
-                    <input type=hidden name=purchases[id][{$purchase->id}] value='{$purchase->id}'>
-                    {$image = $purchase->product->images|first}
-                    {if $image}
-                        <img class=product_icon src='{$image->filename|resize:35:35}'>
-                    {/if}
-                </div>
-                <div class="purchase_name cell">
-
-                <div class='purchase_variant'>
-				<span class=edit_purchase style='display:none;'>
-				<select name=purchases[variant_id][{$purchase->id}]
-                        {if $purchase->product->variants|count==1 && $purchase->variant_name == '' && $purchase->variant->sku == ''}style='display:none;'{/if}>
-                        {if !$purchase->variant}
-                        <option price='{$purchase->price}' amount='{$purchase->amount}' value=''>{$purchase->variant_name|escape} {if $purchase->sku}(арт. {$purchase->sku}){/if}</option>{/if}
-                    {foreach $purchase->product->variants as $v}
-                        {if $v->stock>0 || $v->id == $purchase->variant->id}
-                            <option price='{$v->price}' amount='{$v->stock}' value='{$v->id}' {if $v->id == $purchase->variant_id}selected{/if} >
-                                {$v->name}
-                                {if $v->sku}(арт. {$v->sku}){/if}
-                            </option>
+    {if $message_error}
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="boxed boxed_warning">
+                    <div class="heading_box">
+                        {if $message_error=='error_closing'}
+                            {$btr->order_shortage|escape}
+                        {else}
+                            {$message_error|escape}
                         {/if}
-                    {/foreach}
-                </select>
-				</span>
-				<span class=view_purchase>
-					{$purchase->variant_name} {if $purchase->sku}(арт. {$purchase->sku}){/if}			
-				</span>
                     </div>
-                    {if $purchase->product}
-                        <a class="related_product_name" href="index.php?module=ProductAdmin&id={$purchase->product->id}&return={$smarty.server.REQUEST_URI|urlencode}">{$purchase->product_name}</a>
-                    {else}
-                        {$purchase->product_name}
-                    {/if}
                 </div>
-                <div class="price cell">
-                <span class=view_purchase>{$purchase->price}</span>
-				<span class=edit_purchase style='display:none;'>
-				<input type=text name=purchases[price][{$purchase->id}] value='{$purchase->price}' size=5>
-				</span>
-                    {$currency->sign}
-                </div>
-                <div class="amount cell">
-				<span class=view_purchase>
-					{$purchase->amount} {$settings->units}
-				</span>
-				<span class=edit_purchase style='display:none;'>
-					{if $purchase->variant}
-                        {math equation="min(max(x,y),z)" x=$purchase->variant->stock+$purchase->amount*($order->closed) y=$purchase->amount z=$settings->max_order_amount assign="loop"}
-                    {else}
-                        {math equation="x" x=$purchase->amount assign="loop"}
-                    {/if}
-                    <select name=purchases[amount][{$purchase->id}]>
-                        {section name=amounts start=1 loop=$loop+1 step=1}
-                            <option value="{$smarty.section.amounts.index}" {if $purchase->amount==$smarty.section.amounts.index}selected{/if}>{$smarty.section.amounts.index} {$settings->units}</option>
-                        {/section}
-                    </select>
-				</span>
-                </div>
-                <div class="icons cell">
-                    {if !$order->closed}
-                        {if !$purchase->product}
-                            <img src='design/images/error.png' alt='Товар был удалён' title='Товар был удалён'>
-                        {elseif !$purchase->variant}
-                            <img src='design/images/error.png' alt='Вариант товара был удалён' title='Вариант товара был удалён'>
-                        {elseif $purchase->variant->stock < $purchase->amount}
-                            <img src='design/images/error.png' alt='На складе остал{$purchase->variant->stock|plural:'ся':'ось'} {$purchase->variant->stock} товар{$purchase->variant->stock|plural:'':'ов':'а'}' title='На складе остал{$purchase->variant->stock|plural:'ся':'ось'} {$purchase->variant->stock} товар{$purchase->variant->stock|plural:'':'ов':'а'}'>
+            </div>
+        </div>
+    {elseif $message_success}
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="boxed boxed_success">
+                    <div class="heading_box">
+                        {if $message_success=='updated'}
+                            {$btr->order_updated|escape}
+                        {elseif $message_success=='added'}
+                            {$btr->order_added|escape}
+                        {else}
+                            {$message_success|escape}
                         {/if}
-                    {/if}
-                    <a href='#' class="delete" title="Удалить"></a>
+                        {if $smarty.get.return}
+                            <a class="btn btn_return float-xs-right" href="{$smarty.get.return}">
+                                {include file='svg_icon.tpl' svgId='return'}
+                                <span>{$btr->general_back|escape}</span>
+                            </a>
+                        {/if}
+                    </div>
                 </div>
-                <div class="clear"></div>
             </div>
-        {/foreach}
-        <div id="new_purchase" class="row" style='display:none;'>
-            <div class="image cell">
-                <input type=hidden name=purchases[id][] value=''>
-                <img class=product_icon src=''>
-            </div>
-            <div class="purchase_name cell">
-                <div class='purchase_variant'>
-                    <select name=purchases[variant_id][] style='display:none;'></select>
+        </div>
+    {/if}
+
+    <div class="row">
+        {*left_column*}
+        <div class="col-xl-8 break_1300_12  pr-0">
+            <div class="boxed fn_toggle_wrap min_height_230px">
+                <div class="heading_box">
+                    {$btr->order_content|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="icon-arrow-down"></i></a>
+                    </div>
                 </div>
-                <a class="purchase_name" href=""></a>
+                <div class="toggle_body_wrap on fn_card">
+                    <div class="">
+                        <div id="fn_purchase" class="okay_list">
+                            <div class="okay_list_head">
+                                <div class="okay_list_heading okay_list_photo">{$btr->general_photo|escape}</div>
+                                <div class="okay_list_heading okay_list_order_name">{$btr->order_name_option|escape} </div>
+                                <div class="okay_list_heading okay_list_price">{$btr->general_price|escape} {$currency->sign|escape}</div>
+                                <div class="okay_list_heading okay_list_count">{$btr->order_qty|escape} {$settings->units|escape}
+                                </div>
+                                <div class="okay_list_heading okay_list_order_amount_price">{$btr->general_sales_amount}</div>
+                            </div>
+                            <div class="okay_list_body">
+                                {foreach $purchases as $purchase}
+                                    <div class="fn_row okay_list_body_item purchases">
+                                        <div class="okay_list_row">
+                                            <input type=hidden name=purchases[id][{$purchase->id}] value='{$purchase->id}'>
+
+                                            <div class="okay_list_boding okay_list_photo">
+                                                {$image = $purchase->product->images|first}
+                                                {if $image}
+                                                    <img class=product_icon src="{$image->filename|resize:50:50}">
+                                                {else}
+                                                    <img width="50" src="design/images/no_image.png"/>
+                                                {/if}
+                                            </div>
+                                            <div class="okay_list_boding okay_list_order_name">
+                                                <div class="boxes_inline">
+                                                    {if $purchase->product}
+                                                        <a href="{url module=ProductAdmin id=$purchase->product->id}">{$purchase->product_name|escape}</a>
+                                                        {if $purchase->variant_name}
+                                                            <span class="text_grey">{$btr->order_option|escape} {$purchase->variant_name|escape}</span>
+                                                        {/if}
+                                                        {if $purchase->sku}
+                                                            <span class="text_grey">{$btr->general_sku|escape} {$purchase->sku|default:"&mdash;"}</span>
+                                                        {/if}
+                                                    {else}
+                                                        <div class="text_grey">{$purchase->product_name|escape}</div>
+                                                        {if $purchase->variant_name}
+                                                            <div class="text_grey">{$btr->order_option|escape}{$purchase->variant_name|escape}</div>
+                                                        {/if}
+                                                        {if $purchase->sku}
+                                                            <div class="text_grey">{$btr->general_sku|escape}{$purchase->sku|default:"&mdash;"}</div>
+                                                        {/if}
+                                                    {/if}
+                                                    <div class="hidden-lg-up mt-q">
+                                                        <span class="text_primary text_600">{$purchase->price}</span>
+                                                        <span class="hidden-md-up text_500">
+                                                        {$purchase->amount} {$settings->units|escape}</span>
+                                                    </div>
+                                                </div>
+
+                                                {if !$purchase->variant}
+                                                    <input class="form-control " type="hidden" name="purchases[variant_id][{$purchase->id}]" value="" />
+                                                {else}
+                                                    <div class="boxes_inline">
+                                                        <select name="purchases[variant_id][{$purchase->id}]" class="selectpicker {if $purchase->product->variants|count == 1}hidden{/if} fn_purchase_variant">
+                                                            {foreach $purchase->product->variants as $v}
+                                                                <option data-price="{$v->price}" data-amount="{$v->stock}" value="{$v->id}" {if $v->id == $purchase->variant_id}selected{/if} >
+                                                                    {if $v->name}
+                                                                        {$v->name|escape}
+                                                                    {else}
+                                                                        #{$v@iteration}
+                                                                    {/if}
+                                                                </option>
+                                                            {/foreach}
+                                                        </select>
+                                                    </div>
+                                                {/if}
+                                            </div>
+                                            <div class="okay_list_boding okay_list_price">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control fn_purchase_price" name="purchases[price][{$purchase->id}]" value="{$purchase->price}">
+                                                    <span class="input-group-addon">{$currency->sign}</span>
+                                                </div>
+                                            </div>
+                                            <div class="okay_list_boding okay_list_count">
+                                                <div class="input-group">
+                                                    <input class="form-control fn_purchase_amount" type="text" name="purchases[amount][{$purchase->id}]" value="{$purchase->amount}"/>
+                                                    <span class="input-group-addon p-0">
+                                                         {$settings->units|escape}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="okay_list_boding okay_list_order_amount_price">
+                                                <div class="text_dark">
+                                                    <span>{($purchase->price) * ($purchase->amount)}</span>
+                                                    <span class="">{$currency->sign}</span>
+                                                </div>
+                                            </div>
+                                            <div class="okay_list_boding okay_list_close">
+                                                {*delete*}
+                                                <button data-hint="{$btr->general_delete_product|escape}" type="button" class="btn_close fn_remove_item hint-bottom-right-t-info-s-small-mobile  hint-anim" >
+                                                    {include file='svg_icon.tpl' svgId='delete'}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {/foreach}
+                            </div>
+                            <div class="okay_list_body fn_new_purchase" style="display: none">
+                                <div class="fn_row okay_list_body_item " >
+                                <div class="okay_list_row">
+
+                                    <div class="okay_list_boding okay_list_photo">
+                                        <input type="hidden" name="purchases[id][]" value="" />
+                                        <img class="fn_new_image" src="">
+                                    </div>
+
+                                    <div class="okay_list_boding okay_list_order_name">
+                                        <div class="boxes_inline">
+                                            <a class="fn_new_product" href=""></a>
+                                            <div class="fn_new_variant_name"></div>
+                                        </div>
+                                        <div class="boxes_inline">
+                                            <select name="purchases[variant_id][]" class="fn_new_variant"></select>
+                                        </div>
+
+                                    </div>
+                                    <div class="okay_list_boding okay_list_price">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control fn_purchase_price" name=purchases[price][] value="">
+                                            <span class="input-group-addon">{$currency->sign|escape}</span>
+                                        </div>
+                                    </div>
+                                    <div class="okay_list_boding okay_list_count">
+                                        <div class="input-group">
+                                            <input class="form-control fn_purchase_amount" type="text" name="purchases[amount][]" value="1"/>
+                                            <span class="input-group-addon p-0">
+                                                 {$settings->units|escape}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="okay_list_boding okay_list_order_amount_price">
+                                        <div class="text_dark">
+                                            <span>{$purchase->price}</span>
+                                            <span class="">{$currency->sign|escape}</span>
+                                        </div>
+                                    </div>
+                                    <div class="okay_list_boding okay_list_close">
+                                        {*delete*}
+                                        <button data-hint="{$btr->general_delete_product|escape}" type="button" class="btn_close fn_remove_item hint-bottom-right-t-info-s-small-mobile  hint-anim">
+                                            {include file='svg_icon.tpl' svgId='delete'}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-1">
+                            <div class="col-lg-6 col-md-12">
+                                <div class="autocomplete_arrow">
+                                    <input type="text" name="new_purchase" id="fn_add_purchase" class="form-control" placeholder="{$btr->general_add_product|escape}">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                {if $purchases}
+                                    <div class="text_dark text_500 text-xs-right mr-1 mt-h">
+                                        <div class="h5">{$btr->order_sum|escape} {$subtotal} {$currency->sign|escape}</div>
+                                    </div>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="price cell">
-                <input type=text name=purchases[price][] value='' size=5> {$currency->sign}
+
+            <div class="boxed fn_toggle_wrap min_height_230px">
+                <div class="heading_box">
+                    {$btr->order_parameters|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="icon-arrow-down"></i></a>
+                    </div>
+                </div>
+                <div class="toggle_body_wrap on fn_card">
+                    <div class="">
+                        <div class="">
+                            <div class="okay_list">
+                                <div class="okay_list_body">
+                                    <div class="okay_list_body_item">
+                                        <div class="okay_list_row  d_flex">
+                                            <div class="okay_list_boding okay_list_ordfig_name">
+                                                <div class="text_600 text_dark">{$btr->general_discount|escape}</div>
+                                            </div>
+                                            <div class="okay_list_boding okay_list_ordfig_val">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="discount" value="{$order->discount}">
+                                                    <span class="input-group-addon p-0"><i class="fa fa-percent"></i></span>
+                                                </div>
+                                            </div>
+                                            <div class="okay_list_boding okay_list_ordfig_price">
+                                                <div class="text_dark">
+                                                    <span>{($subtotal-$subtotal*$order->discount/100)|round:2}</span>
+                                                    <span class="">{$currency->sign|escape}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="okay_list_body_item">
+                                        <div class="okay_list_row d_flex">
+                                            <div class="okay_list_boding okay_list_ordfig_name">
+                                                <div class="text_600 text_dark">{$btr->general_coupon|escape}{if $order->coupon_code} ({$order->coupon_code}){/if}</div>
+                                            </div>
+                                            <div class="okay_list_boding okay_list_ordfig_val">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="coupon_discount" value="{$order->coupon_discount}" />
+                                                    <span class="input-group-addon p-0">{$currency->sign|escape}</span>
+                                                </div>
+                                            </div>
+                                            <div class="okay_list_boding okay_list_ordfig_price">
+                                                <div class="text_dark">
+                                                    <span>{($subtotal-$subtotal*$order->discount/100-$order->coupon_discount)|round:2}</span>
+                                                    <span class="">{$currency->sign|escape}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="okay_list_body_item">
+                                        <div class="okay_list_row  d_flex">
+                                            <div class="okay_list_boding okay_list_ordfig_name">
+                                                <div class="text_600 text_dark boxes_inline">{$btr->general_shipping|escape}</div>
+                                                <div class="boxes_inline">
+                                                    <select name="delivery_id" class="selectpicker">
+                                                        <option value="0">{$btr->order_not_selected|escape}</option>
+                                                        {foreach $deliveries as $d}
+                                                            <option value="{$d->id}" {if $d->id==$delivery->id}selected{/if}>{$d->name|escape}</option>
+                                                        {/foreach}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="okay_list_boding okay_list_ordfig_val">
+                                                <div class="input-group">
+                                                    <input type=text name=delivery_price class="form-control" value='{$order->delivery_price}'>
+                                                    <span class="input-group-addon p-0">{$currency->sign|escape}</span>
+                                                </div>
+                                            </div>
+                                            <div class="okay_list_boding okay_list_ordfig_price">
+                                                <div class="input-group"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-lg-4 col-md-12 mt-2">
+                                    <div class="heading_label">{$btr->order_payment_selected|escape}</div>
+                                    <div class="">
+                                        <select name="payment_method_id" class="selectpicker">
+                                            <option value="0">{$btr->order_not_selected|escape}</option>
+                                            {foreach $payment_methods as $pm}
+                                                <option value="{$pm->id}" {if $pm->id==$payment_method->id}selected{/if}>{$pm->name|escape}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-8 col-md-12">
+                                    <div class="text_dark text_500 text-xs-right mr-1 mt-1">
+                                        <div class="h5">{$btr->general_total|escape} {$order->total_price} {$currency->sign|escape}</div>
+                                    </div>
+                                    <div class="text_grey text_500 text-xs-right mr-1 mt-1">
+                                        {if $payment_method}
+                                            <div class=" text-xs-right">
+                                                <div class="h5">{$btr->order_to_pay|escape} {$order->total_price|convert:$payment_currency->id} {$payment_currency->sign}</div>
+                                            </div>
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                            <div class="col-lg-12 col-md-12 mt-1">
+
+                                <label class="switch_label boxes_inline">{$btr->order_paid|escape}</label>
+                                <label class="switch switch-default switch-pill switch-primary-outline-alt boxes_inline">
+                                    <input class="switch-input" name="paid" value='1' type="checkbox" id="paid" {if $order->paid}checked{/if}/>
+                                    <span class="switch-label"></span>
+                                    <span class="switch-handle"></span>
+                                </label>
+
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="amount cell">
-                <select name=purchases[amount][]></select>
+        </div>
+        {*right_column*}
+        <div class="col-xl-4 break_1300_12">
+            <div class="boxed fn_toggle_wrap min_height_230px">
+                <div class="heading_box">
+                    {$btr->order_buyer_information|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="icon-arrow-down"></i></a>
+                    </div>
+                </div>
+                <div class="toggle_body_wrap on fn_card">
+                    <div class="box_border_buyer">
+                        <div class="mb-1">
+                            <div class="heading_label boxes_inline">{$btr->order_date|escape}</div>
+                            <div class="boxes_inline text_dark text_600">{$order->date|date} {$order->date|time}</div>
+                        </div>
+                        <div class="mb-1">
+                            <div class="heading_label">{$btr->general_name|escape}</div>
+                            <input name="name" class="form-control" type="text" value="{$order->name|escape}" />
+                        </div>
+                        <div class="mb-1">
+                            <div class="heading_label">{$btr->general_phone|escape}</div>
+                            <input name="phone" class="form-control" type="text" value="{$order->phone|escape}" />
+                        </div>
+                        <div class="mb-1">
+                            <div class="heading_label">E-mail</div>
+                            <input name="email" class="form-control" type="text" value="{$order->email|escape}" />
+                        </div>
+                        <div class="mb-1">
+                            <div class="heading_label">{$btr->general_adress|escape} <a href="https://www.google.com/maps/search/{$order->address|escape}?hl=ru" target="_blank"><i class="fa fa-map-marker"></i> {$btr->order_on_map|escape}</a></div>
+                            <textarea name="address" class="form-control short_textarea">{$order->address|escape}</textarea>
+                        </div>
+                        <div class="mb-1">
+                            <div class="heading_label">{$btr->general_comment|escape}</div>
+                            <textarea name="comment" class="form-control short_textarea">{$order->comment|escape}</textarea>
+                        </div>
+                         <div class="mb-1">
+                            <div class="heading_label boxes_inline">{$btr->order_ip|escape} <a href="https://who.is/whois-ip/ip-address/{$order->ip}" target="_blank"><i class="fa fa-map-marker"></i> whois</a></div>
+                            <div class="boxes_inline text_dark text_600">{$order->ip|escape}</div>
+                        </div>
+                    </div>
+                    <div class="box_border_buyer">
+                        <div class="mb-1">
+                            <div style="position:relative;">
+                                {if !$user}
+                                    <div class="heading_label">
+                                        {$btr->order_buyer_not_registred|escape}
+                                    </div>
+                                    <div style="position:relative;">
+                                        <input type="hidden" name="user_id" value="{$user->id}" />
+
+                                        <input type="text" class="fn_user_complite form-control" placeholder="{$btr->order_user_select|escape}" />
+                                    </div>
+                                {else}
+                                    <div class="fn_user_row">
+                                        <div class="heading_label boxes_inline">
+                                            {$btr->order_buyer|escape}
+                                            <a href="{url module=UserAdmin id=$user->id}" target=_blank>
+                                                 {$user->name|escape}
+                                            </a>
+                                        </div>
+                                        <a href="javascript:;" data-hint="{$btr->general_delete_product|escape}" class="btn_close delete_grey fn_delete_user hint-bottom-right-t-info-s-small-mobile  hint-anim boxes_inline" >
+                                            {include file='svg_icon.tpl' svgId='delete'}
+                                        </a>
+                                        {if $user->group_id > 0}
+                                            <div class="text_grey">{$user->group->name|escape}</div>
+                                        {else}
+                                            <div class="text_grey">{$btr->order_not_in_group|escape}</div>
+                                        {/if}
+                                    </div>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box_border_buyer">
+                        <div class="mb-1">
+                            <div class="heading_label">{$btr->order_language|escape}</div>
+                            <select name="entity_lang_id" class="selectpicker">
+                                {foreach $languages as $l}
+                                    <option value="{$l->id}" {if $l->id == $order->lang_id}selected=""{/if}>{$l->name|escape}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                        <div class="">
+                            <div class="form-group">
+                                <div class="heading_label">{$btr->order_note|escape}</div>
+                                <textarea name="note" class="form-control short_textarea">{$order->note|escape}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="icons cell">
-                <a href='#' class="delete" title="Удалить"></a>
-            </div>
-            <div class="clear"></div>
         </div>
     </div>
-
- 	<div id="add_purchase" {if $purchases}style='display:none;'{/if}>
- 		<input type=text name=related id='add_purchase' class="input_autocomplete" placeholder='Выберите товар чтобы добавить его'>
- 	</div>
-	{if $purchases}
-	<a href='#' class="dash_link edit_purchases">редактировать покупки</a>
-	{/if}
-
-
-	{if $purchases}
-	<div class="subtotal">
-	Всего<b> {$subtotal} {$currency->sign}</b>
-	</div>
-	{/if}
-
-	<div class="block discount layer">
-		<h2>Скидка</h2>
-		<input type=text name=discount value='{$order->discount}'> <span class=currency>%</span>		
-	</div>
-
-	<div class="subtotal layer">
-	С учетом скидки<b> {($subtotal-$subtotal*$order->discount/100)|round:2} {$currency->sign}</b>
-	</div> 
-	
-	<div class="block discount layer">
-		<h2>Купон{if $order->coupon_code} ({$order->coupon_code}){/if}</h2>
-		<input type=text name=coupon_discount value='{$order->coupon_discount}'> <span class=currency>{$currency->sign}</span>		
-	</div>
-
-	<div class="subtotal layer">
-	С учетом купона<b> {($subtotal-$subtotal*$order->discount/100-$order->coupon_discount)|round:2} {$currency->sign}</b>
-	</div>
-
-    <div class="block delivery">
-        <h2>Доставка</h2>
-        <select name="delivery_id">
-            <option value="0">Не выбрана</option>
-            {foreach $deliveries as $d}
-                <option value="{$d->id}" {if $d->id==$delivery->id}selected{/if}>{$d->name}</option>
-            {/foreach}
-        </select>
-        <input type=text name=delivery_price value='{$order->delivery_price}'> <span class=currency>{$currency->sign}</span>
-
-        <div class="separate_delivery">
-            <input type=checkbox id="separate_delivery" name=separate_delivery value='1' {if $order->separate_delivery}checked{/if}>
-            <label for="separate_delivery">оплачивается отдельно</label>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 mb-2">
+            <button type="submit" class="btn btn_small btn_blue float-sm-right">
+                {include file='svg_icon.tpl' svgId='checked'}
+                <span>{$btr->general_apply|escape}</span>
+            </button>
+            <div class="checkbox_email float-sm-right text_dark mr-1">
+                <input id="order_to_email" name="notify_user" type="checkbox" class="hidden_check_1"  value="1" />
+                <label for="order_to_email" class="checkbox_label mr-h"></label>
+                <span>{$btr->order_email|escape}</span>
+            </div>
         </div>
     </div>
-
-	<div class="total layer">
-	Итого<b> {$order->total_price} {$currency->sign}</b>
-	</div>
-    <div class="block payment">
-        <h2>Оплата</h2>
-        <select name="payment_method_id">
-            <option value="0">Не выбрана</option>
-            {foreach $payment_methods as $pm}
-                <option value="{$pm->id}" {if $pm->id==$payment_method->id}selected{/if}>{$pm->name}</option>
-            {/foreach}
-        </select>
-
-        <input type=checkbox name="paid" id="paid" value="1" {if $order->paid}checked{/if}>
-        <label for="paid" {if $order->paid}class="green"{/if}>Заказ оплачен</label>
-    </div>
-
- 
-	{if $payment_method}
-	<div class="subtotal layer">
-	К оплате<b> {$order->total_price|convert:$payment_currency->id} {$payment_currency->sign}</b>
-	</div>
-	{/if}
-
-
-	<div class="block_save">
-	<input type="checkbox" value="1" id="notify_user" name="notify_user">
-	<label for="notify_user">Уведомить покупателя о состоянии заказа</label>
-
-	<input class="button_green button_save" type="submit" name="" value="Сохранить" />
-	</div>
-
-</div>
 </form>
 
-{* On document load *}
+
 {literal}
 <script src="design/js/autocomplete/jquery.autocomplete-min.js"></script>
+<link rel="stylesheet" type="text/css" href="design/js/autocomplete/styles.css" media="screen" />
 
 <script>
 $(function() {
+    // Удаление товара
+    $(document).on( "click", "#fn_purchase .fn_remove_item", function() {
+         $(this).closest(".fn_row").fadeOut(200, function() { $(this).remove(); });
+         return false;
+    });
 
-	// Раскраска строк
-	function colorize()
-	{
-		$("#list div.row:even").addClass('even');
-		$("#list div.row:odd").removeClass('even');
-	}
-	// Раскрасить строки сразу
-	colorize();
-	
-	// Удаление товара
-	$(".purchases a.delete").live('click', function() {
-		 $(this).closest(".row").fadeOut(200, function() { $(this).remove(); });
-		 return false;
-	});
- 
+    $(".fn_labels_show").click(function(){
+        $(this).next('.fn_labels_hide').toggleClass("active_labels");
+    });
+    $(".fn_delete_labels_hide").click(function(){
+        $(this).closest('.box_labels_hide').removeClass("active_labels");
+    });
 
-	// Добавление товара 
-	var new_purchase = $('.purchases #new_purchase').clone(true);
-	$('.purchases #new_purchase').remove().removeAttr('id');
+    $(".fn_from_date, .fn_to_date ").datepicker({
+        dateFormat: 'dd-mm-yy'
+    });
 
-	$("input#add_purchase").autocomplete({
-  	serviceUrl:'ajax/add_order_product.php',
-  	minChars:0,
-  	noCache: false, 
-  	onSelect:
-  		function(suggestion){
-  			new_item = new_purchase.clone().appendTo('.purchases');
-  			new_item.removeAttr('id');
-  			new_item.find('a.purchase_name').html(suggestion.data.name);
-  			new_item.find('a.purchase_name').attr('href', 'index.php?module=ProductAdmin&id='+suggestion.data.id);
-  			
-  			// Добавляем варианты нового товара
-  			var variants_select = new_item.find('select[name*=purchases][name*=variant_id]');
-			for(var i in suggestion.data.variants)
-			{
-				sku = suggestion.data.variants[i].sku == ''?'':' (арт. '+suggestion.data.variants[i].sku+')';
-  				variants_select.append("<option value='"+suggestion.data.variants[i].id+"' price='"+suggestion.data.variants[i].price+"' amount='"+suggestion.data.variants[i].stock+"'>"+suggestion.data.variants[i].name+sku+"</option>");
-  			}
-  			
-  			if(suggestion.data.variants.length>1 || suggestion.data.variants[0].name != '')
-  				variants_select.show();
-  				  				
-			variants_select.bind('change', function(){change_variant(variants_select);});
-				change_variant(variants_select);
-  			
-  			if(suggestion.data.image)
-  				new_item.find('img.product_icon').attr("src", suggestion.data.image);
-  			else
-  				new_item.find('img.product_icon').remove();
+    $(document).on("change", ".fn_ajax_labels input", function () {
+        elem = $(this);
+       var order_id = parseInt($(this).closest(".fn_ajax_labels").data("order_id"));
+       var state = "";
+       session_id = '{/literal}{$smarty.session.id}{literal}';
+       var label_id = parseInt($(this).closest(".fn_ajax_labels").find("input").val());
+       if($(this).closest(".fn_ajax_labels").find("input").is(":checked")){
+            state = "add";
+       } else {
+            state = "remove";
+       }
 
-			$("input#add_purchase").val('').focus().blur(); 
-  			new_item.show();
-  		},
-		formatResult:
-			function(suggestion, currentValue){
-				var reEscape = new RegExp('(\\' + ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'].join('|\\') + ')', 'g');
-				var pattern = '(' + currentValue.replace(reEscape, '\\$1') + ')';
-  				return (suggestion.data.image?"<img align=absmiddle src='"+suggestion.data.image+"'> ":'') + suggestion.value.replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>');
-			}
-  		
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: "ajax/update_order.php",
+            data: {
+                order_id : order_id,
+                state : state,
+                label_id : label_id,
+                session_id : session_id
+            },
+            success: function(data){
+                var msg = "";
+                if(data){
+                    elem.closest(".fn_ajax_label_wrapper").find(".fn_order_labels").html(data.data);
+                    toastr.success(msg, "Success");
+                } else {
+                    toastr.error(msg, "Error");
+
+                }
+            }
+        });
+    });
+
+
+    // Добавление товара
+    var new_purchase = $('#fn_purchase .fn_new_purchase').clone(true);
+    $('#fn_purchase .fn_new_purchase').remove().removeAttr('class');
+
+    $("#fn_add_purchase").autocomplete({
+    serviceUrl:'ajax/add_order_product.php',
+    minChars:0,
+    noCache: false,
+    onSelect:
+        function(suggestion){
+            new_item = new_purchase.clone().appendTo('#fn_purchase');
+            new_item.removeAttr('id');
+            new_item.find('.fn_new_product').html(suggestion.data.name);
+            new_item.find('.fn_new_product').attr('href', 'index.php?module=ProductAdmin&id='+suggestion.data.id);
+
+            // Добавляем варианты нового товара
+            var variants_select = new_item.find("select.fn_new_variant");
+
+            for(var i in suggestion.data.variants) {
+                variants_select.append("<option value='"+suggestion.data.variants[i].id+"' data-price='"+suggestion.data.variants[i].price+"' data-amount='"+suggestion.data.variants[i].stock+"'>"+suggestion.data.variants[i].name+"</option>");
+            }
+
+            if(suggestion.data.variants.length> 1 || suggestion.data.variants[0].name != '') {
+                variants_select.show();
+                variants_select.selectpicker();
+            } else {
+                variants_select.hide();
+            }
+            variants_select.find('option:first').attr('selected',true);
+
+            variants_select.bind('change', function(){
+                change_variant(variants_select);
+            });
+            change_variant(variants_select);
+
+            if(suggestion.data.image) {
+                new_item.find('.fn_new_image').attr("src", suggestion.data.image);
+            } else {
+                new_item.find('.fn_new_image').remove();
+            }
+            $("input#fn_add_purchase").val('').focus().blur();
+            new_item.show();
+        },
+        formatResult:
+            function(suggestions, currentValue){
+                    var reEscape = new RegExp('(\\' + ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'].join('|\\') + ')', 'g');
+                    var pattern = '(' + currentValue.replace(reEscape, '\\$1') + ')';
+                    return "<div>" + (suggestions.data.image?"<img align=absmiddle src='"+suggestions.data.image+"'> ":'') + "</div>" +  "<span>" + suggestions.value.replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>') + "</span>";
+                }
+
+
   });
-  
+
   // Изменение цены и макс количества при изменении варианта
-  function change_variant(element)
-  {
-		price = element.find('option:selected').attr('price');
-		amount = element.find('option:selected').attr('amount');
-		element.closest('.row').find('input[name*=purchases][name*=price]').val(price);
-		
-		// 
-		amount_select = element.closest('.row').find('select[name*=purchases][name*=amount]');
-		selected_amount = amount_select.val();
-		amount_select.html('');
-		for(i=1; i<=amount; i++)
-			amount_select.append("<option value='"+i+"'>"+i+" {/literal}{$settings->units}{literal}</option>");
-		amount_select.val(Math.min(selected_amount, amount));
-
-
-		return false;
+    function change_variant(element) {
+        var price = element.find('option:selected').data('price');
+        var amount = element.find('option:selected').data('amount');
+        element.closest('.fn_row').find('input.fn_purchase_price').val(price);
+        var amount_input = element.closest('.fn_row').find('input.fn_purchase_amount');
+        amount_input.val('1');
+        amount_input.data('max',amount);
+        return false;
   }
-  
-  
-	// Редактировать покупки
-	$("a.edit_purchases").click( function() {
-		 $(".purchases span.view_purchase").hide();
-		 $(".purchases span.edit_purchase").show();
-		 $(".edit_purchases").hide();
-		 $("div#add_purchase").show();
-		 return false;
-	});
-  
-	// Редактировать получателя
-	$("div#order_details a.edit_order_details").click(function() {
-		 $("ul.order_details .view_order_detail").hide();
-		 $("ul.order_details .edit_order_detail").show();
-		 return false;
-	});
-  
-	// Редактировать примечание
-	$("div#order_details a.edit_note").click(function() {
-		 $("div.view_note").hide();
-		 $("div.edit_note").show();
-		 return false;
-	});
-  
-	// Редактировать пользователя
-	$("div#order_details a.edit_user").click(function() {
-		 $("div.view_user").hide();
-		 $("div.edit_user").show();
-		 return false;
-	});
-	$("input#user").autocomplete({
-		serviceUrl:'ajax/search_users.php',
-		minChars:0,
-		noCache: false, 
-		onSelect:
-			function(suggestion){
-				$('input[name="user_id"]').val(suggestion.data.id);
-			}
-	});
-  
-	// Удалить пользователя
-	$("div#order_details a.delete_user").click(function() {
-		$('input[name="user_id"]').val(0);
-		$('div.view_user').hide();
-		$('div.edit_user').hide();
-		return false;
-	});
 
-	// Посмотреть адрес на карте
-	$("a#address_link").attr('href', 'http://maps.yandex.ru/?text='+$('#order_details textarea[name="address"]').val());
-    
-	$('select[name*=purchases][name*=variant_id]').bind('change', function(){change_variant($(this));});
-    
+    $(".fn_user_complite").autocomplete({
+        serviceUrl:'ajax/search_users.php',
+        minChars:0,
+        noCache: false,
+        onSelect:
+            function(suggestion){
+                $('input[name="user_id"]').val(suggestion.data.id);
+            },
+            formatResult:
+                function(suggestions, currentValue){
+                        var reEscape = new RegExp('(\\' + ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'].join('|\\') + ')', 'g');
+                        var pattern = '(' + currentValue.replace(reEscape, '\\$1') + ')';
+                        return "<span>" + suggestions.value.replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>') + "</span>";
+                    }
+    });
+
+    $(document).on("click", ".fn_delete_user", function () {
+        $(this).closest(".fn_user_row").hide();
+        $('input[name="user_id"]').val(0);
+    });
+
+
+    $("select.fn_purchase_variant").bind("change", function(){
+        change_variant($(this));
+    });
+
 });
 
 </script>
 {/literal}
-

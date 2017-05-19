@@ -38,8 +38,11 @@ class Okay {
         /*statistic*/
         ,'reportstat' => 'ReportStat'
         /*statistic*/
-        ,'topvisor'  => 'Topvisor'
         ,'validate'  => 'Validate'
+        ,'orderlabels'    => 'OrderLabels'
+        ,'orderstatus'    => 'OrderStatus'
+		,'supportinfo'=> 'SupportInfo'
+		,'support'   => 'Support'
 	);
     
 	private static $objects = array();

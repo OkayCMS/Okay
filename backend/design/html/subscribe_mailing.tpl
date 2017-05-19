@@ -1,116 +1,145 @@
-{* Вкладки *}
-{capture name=tabs}
-    {if in_array('users', $manager->permissions)}
-        <li>
-            <a href="index.php?module=UsersAdmin">Пользователи</a>
-        </li>
-    {/if}
-    {if in_array('groups', $manager->permissions)}
-        <li>
-            <a href="index.php?module=GroupsAdmin">Группы</a>
-        </li>
-    {/if}
-    {if in_array('coupons', $manager->permissions)}
-        <li>
-            <a href="index.php?module=CouponsAdmin">Купоны</a>
-        </li>
-    {/if}
-    <li class="active">
-        <a href="index.php?module=SubscribeMailingAdmin">Подписчики</a>
-    </li>
-{/capture}
 
 {* Title *}
-{$meta_title='Подписчики' scope=parent}
 
-<div id="header">
-	{if $keyword && $subscribes_count>0}
-        <h1>{$subscribes_count|plural:'Нашелся':'Нашлось':'Нашлись'} {$subscribes_count} {$subscribes_count|plural:'подписчик':'подписчика':'подписчиков'}</h1>
-	{elseif $subscribes_count>0}
-        <h1>{$subscribes_count} {$subscribes_count|plural:'подписчик':'подписчика':'подписчиков'}</h1> 	
-	{else}
-        <h1>Нет подписчиков</h1> 	
-	{/if}
-	{if $subscribes_count>0}
-        <form method="post" action="{url module=SubscribeMailingAdmin}" target="_blank">
-        <input type="hidden" name="session_id" value="{$smarty.session.id}"/>
-        <input type="hidden" name="is_export" value="1" />
-        <input type="image" src="./design/images/export_excel.png" name="export" title="Экспортировать этих подписчиков"/>
-        </form>
-	{/if}
+{$meta_title=$btr->subscribe_mailing_subscribes scope=parent}
+{if $subscribes_count>0}
+    <div class="row">
+        <progress id="progressbar" class="progress progress-xs progress-info mt-0" style="display: none" value="0" max="100"></progress>
+    </div>
+{/if}
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <div class="heading_page">
+            {if $keyword && $subscribes_count>0}
+                {$btr->subscribe_mailing_subscribes|escape} - {$subscribes_count}
+            {elseif $subscribes_count>0}
+                {$btr->subscribe_mailing_subscribes|escape} - {$subscribes_count}
+            {/if}
+
+            {if $subscribes_count>0}
+                <div class="export_block export_subscribes hint-bottom-middle-t-info-s-small-mobile  hint-anim" data-hint="{$btr->subscribe_mailing_export|escape}">
+                    <span class="fn_start_export fa fa-file-excel-o"></span>
+                </div>
+            {/if}
+        </div>
+    </div>
 </div>
 
-{if $subscribes}
-    <div id="main_list" class="brands">
-        {include file='pagination.tpl'}
-        <form id="list_form" method="post">
-            <input type="hidden" name="session_id" value="{$smarty.session.id}"/>
-            <div id="list" class="brands">
-                {foreach $subscribes as $subscribe}
-                    <div class="row">
-                        <div class="checkbox cell">
-                            <input type="checkbox" id="{$subscribe->id}" name="check[]" value="{$subscribe->id}"/>
-                            <label for="{$subscribe->id}"></label>
+<div class="boxed fn_toggle_wrap">
+    {if $subscribes}
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <form class="fn_form_list" method="post">
+                    <input type="hidden" name="session_id" value="{$smarty.session.id}"/>
+
+                    <div class="users_wrap okay_list">
+                        <div class="okay_list_head">
+                            <div class="okay_list_heading okay_list_check">
+                                <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value=""/>
+                                <label class="okay_ckeckbox" for="check_all_1"></label>
+                            </div>
+                            <div class="okay_list_heading okay_list_subscribe_name">{$btr->subscribe_mailing_email|escape}</div>
+                            <div class="okay_list_heading okay_list_close"></div>
                         </div>
-                        <div class="cell">
-                            {$subscribe->email|escape}
+                        <div class="okay_list_body sortable">
+                            {foreach $subscribes as $subscribe}
+                                <div class="fn_row okay_list_body_item">
+                                    <div class="okay_list_row">
+                                    <div class="okay_list_boding okay_list_check">
+                                        <input class="hidden_check" type="checkbox" id="id_{$subscribe->id}" name="check[]" value="{$subscribe->id}"/>
+                                        <label class="okay_ckeckbox" for="id_{$subscribe->id}"></label>
+                                    </div>
+
+                                    <div class="okay_list_boding okay_list_subscribe_name">
+                                        <a class="link" href="mailto:{$subscribe->email|escape}">
+                                            {$subscribe->email|escape}
+                                        </a>
+                                    </div>
+                                    <div class="okay_list_boding okay_list_close">
+                                        {*delete*}
+                                        <button data-hint="{$btr->general_delete|escape}" type="button" class="btn_close fn_remove hint-bottom-right-t-info-s-small-mobile  hint-anim" data-toggle="modal" data-target="#fn_action_modal" onclick="success_action($(this));">
+                                            {include file='svg_icon.tpl' svgId='delete'}
+                                        </button>
+                                    </div>
+                                </div>
+                                </div>
+                            {/foreach}
                         </div>
-                        <div class="icons cell">
-                            <a class="delete" title="Удалить" href="#"></a>
+                        <div class="okay_list_footer fn_action_block">
+                            <div class="okay_list_foot_left">
+                                <div class="okay_list_heading okay_list_check">
+                                    <input class="hidden_check fn_check_all" type="checkbox" id="check_all_2" name="" value=""/>
+                                    <label class="okay_ckeckbox" for="check_all_2"></label>
+                                </div>
+                                <div class="okay_list_option">
+                                    <select name="action" class="selectpicker">
+                                        <option value="delete">{$btr->general_delete|escape}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn_small btn_blue">
+                             {include file='svg_icon.tpl' svgId='checked'}
+                            <span>{$btr->general_apply|escape}</span>
+                        </button>
                         </div>
-                        <div class="clear"></div>
                     </div>
-                {/foreach}
+                </form>
             </div>
-            <div id="action">
-                <label id="check_all" class="dash_link">Выбрать все</label>
-			<span id="select">
-			<select name="action">
-                <option value="delete">Удалить</option>
-            </select>
-			</span>
-                <input id="apply_action" class="button_green" type="submit" value="Применить"/>
-            </div>
-        </form>
-        {include file='pagination.tpl'}
-    </div>
-{else}
-    Нет подписчиков
-{/if}
 
-{literal}
+        </div>
+    {else}
+        <div class="heading_box mt-1">
+            <div class="text_grey">{$btr->subscribe_mailing_mo|escape}</div>
+        </div>
+    {/if}
+</div>
+
+
+
+<script src="{$config->root_url}/backend/design/js/piecon/piecon.js"></script>
 <script>
-$(function() {
+    var in_process=false;
+    var keyword='{$keyword|escape}';
+    var sort='{$sort|escape}';
 
-	// Раскраска строк
-	function colorize()
-	{
-		$("#list div.row:even").addClass('even');
-		$("#list div.row:odd").removeClass('even');
-	}
-	// Раскрасить строки сразу
-	colorize();	
-	
-	// Выделить все
-	$("#check_all").click(function() {
-		$('#list input[type="checkbox"][name*="check"]').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:checked)').length>0);
-	});	
+    {literal}
+    $(function() {
 
-	// Удалить
-	$("a.delete").click(function() {
-		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
-		$(this).closest("div.row").find('input[type="checkbox"][name*="check"]').attr('checked', true);
-		$(this).closest("form").find('select[name="action"] option[value=delete]').attr('selected', true);
-		$(this).closest("form").submit();
-	});
-	
-	// Подтверждение удаления
-	$("form").submit(function() {
-		if($('#list input[type="checkbox"][name*="check"]:checked').length>0)
-			if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-				return false;	
-	});
- 	
-});
+        $(document).on('click','.fn_start_export',function(){
+            Piecon.setOptions({fallback: 'force'});
+            Piecon.setProgress(0);
+            var progress_item = $("#progressbar"); //указываем селектор элемента с анимацией
+            progress_item.show();
+            do_export('',progress_item);
+        });
+
+        function do_export(page,progress) {
+            page = typeof(page) != 'undefined' ? page : 1;
+            $.ajax({
+                url: "ajax/export_subscribes.php",
+                data: {page:page, keyword:keyword, sort:sort},
+                dataType: 'json',
+                success: function(data){
+                    if(data && !data.end)
+                    {
+                        Piecon.setProgress(Math.round(100*data.page/data.totalpages));
+                        progress.attr('value',100*data.page/data.totalpages);
+                        do_export(data.page*1+1,progress);
+                    }
+                    else
+                    {
+                        Piecon.setProgress(100);
+                        progress.attr('value','100');
+                        window.location.href = 'files/export_users/subscribes.csv';
+                        progress.fadeOut(500);
+                    }
+                },
+                error:function(xhr, status, errorThrown) {
+                    alert(errorThrown+'\n'+xhr.responseText);
+                }
+
+            });
+        }
+    });
 </script>
 {/literal}

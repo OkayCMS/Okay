@@ -3,7 +3,7 @@
 	if(!$okay->managers->access('products')) {
         exit();
     }
-    $limit = 100;
+    $limit = 30;
 
     if (!empty($_SESSION['admin_lang_id'])) {
         $okay->languages->set_lang_id($_SESSION['admin_lang_id']);

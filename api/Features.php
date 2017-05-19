@@ -207,7 +207,7 @@ class Features extends Okay {
             if (!empty($diff)) {
                 $this->db->query('select o.product_id 
                     from __options o
-                    inner join s_products_categories pc on(pc.product_id=o.product_id)
+                    inner join __products_categories pc on(pc.product_id=o.product_id)
                     where o.feature_id=? and pc.category_id in(?@) group by o.product_id', intval($id), $diff);
                 $p_ids = $this->db->results('product_id');
                 if (!empty($p_ids)) {
@@ -395,5 +395,14 @@ class Features extends Okay {
         
         return $res;
     }
-    
+
+    public function check_auto_id($feature_id, $auto_id, $field = "auto_name_id") {
+        if (empty($auto_id)) {
+            return true;
+        }
+        $this->db->query("SELECT id FROM __features WHERE $field=?", $auto_id);
+        $exist_id = $this->db->result('id');
+        return (!$exist_id || $feature_id == $exist_id);
+    }
+
 }

@@ -27,7 +27,8 @@ class Variants extends Okay {
         $lang_sql = $this->languages->get_query(array('object'=>'variant'));
         $query = $this->db->placehold("SELECT 
                 v.id, 
-                v.product_id, 
+                v.product_id,
+                v.weight,
                 v.price, 
                 NULLIF(v.compare_price, 0) as compare_price, 
                 v.sku, 
@@ -36,7 +37,7 @@ class Variants extends Okay {
                 v.attachment, 
                 v.position, 
                 v.currency_id, 
-                v.yandex, 
+                v.feed,
                 c.rate_from, 
                 c.rate_to, 
                 $lang_sql->fields
@@ -74,7 +75,8 @@ class Variants extends Okay {
         $lang_sql = $this->languages->get_query(array('object'=>'variant'));
         $query = $this->db->placehold("SELECT 
                 v.id, 
-                v.product_id, 
+                v.product_id,
+                v.weight,
                 v.price, 
                 NULLIF(v.compare_price, 0) as compare_price, 
                 v.sku, 
@@ -82,7 +84,7 @@ class Variants extends Okay {
                 (v.stock IS NULL) as infinity, 
                 v.attachment, 
                 v.currency_id, 
-                v.yandex, 
+                v.feed,
                 c.rate_from, 
                 c.rate_to, 
                 $lang_sql->fields

@@ -65,25 +65,7 @@ class ExportAjax extends Okay {
         }
         $status = $this->request->get('status', 'integer');
         if (!empty($status)) {
-            switch ($status) {
-                case '1': {
-                    $stat_o = 0;
-                    break;
-                }
-                case '2': {
-                    $stat_o = 1;
-                    break;
-                }
-                case '3': {
-                    $stat_o = 2;
-                    break;
-                }
-                case '4': {
-                    $stat_o = 3;
-                    break;
-                }
-            }
-            $filter['status'] = $stat_o;
+            $filter['status'] = $status;
         }
         
         $sort_prod = $this->request->get('sort_prod');
@@ -108,17 +90,6 @@ class ExportAjax extends Okay {
         $total_summ = 0;
         $total_amount = 0;
         $report_stat_purchases = $this->reportstat->get_report_purchases($filter);
-       /* foreach ($report_stat_purchases as $id=>$r) {
-            if (!empty($r->product_id)) {
-                $tmp_cat = $this->categories->get_categories(array('product_id' => $r->product_id));
-                $tmp_cat = reset($tmp_cat);
-                if (!empty($cat_filter) && $tmp_cat->id != $cat_filter) {
-                    unset($report_stat_purchases[$id]);
-                } else {
-                    $report_stat_purchases[$id]->category_name = $tmp_cat->name;
-                }
-            }
-        }*/
         $cat_filter = $this->request->get('category');
         $cat = $this->categories->get_category(intval($filter['category_id']));
         foreach ($report_stat_purchases as $id=>$r) {

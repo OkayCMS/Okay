@@ -1,0 +1,96 @@
+{if $group->id}
+    {$meta_title = $group->name scope=parent}
+{else}
+    {$meta_title = $btr->user_group_new scope=parent}
+{/if}
+
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <div class="wrap_heading">
+            <div class="box_heading heading_page">
+                {if !$group->id}
+                    {$btr->user_group_add|escape}
+                {else}
+                    {$group->name|escape}
+                {/if}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-lg-12 col-sm-12 float-xs-right"></div>
+</div>
+
+{if $message_success}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="boxed boxed_success">
+                <div class="heading_box">
+                    {if $message_success=='added'}
+                        {$btr->general_group_added|escape}
+                    {elseif $message_success=='updated'}
+                        {$btr->user_group_updated|escape}
+                    {else}
+                        {$message_success|escape}
+                    {/if}
+                    {if $smarty.get.return}
+                        <a class="btn btn_return float-xs-right" href="{$smarty.get.return}">
+                            {include file='svg_icon.tpl' svgId='return'}
+                            <span>{$btr->general_back|escape}</span>
+                        </a>
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
+
+{if $message_error}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="boxed boxed_warning">
+                <div class="heading_box">
+                    {if $message_error=='empty_name'}
+                        {$btr->general_enter_title|escape}
+                    {else}
+                        {$message_error|escape}
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
+
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="session_id" value="{$smarty.session.id}">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="boxed match_matchHeight_true">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="heading_label">
+                            {$btr->user_group_name|escape}
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" name="name" type="text" value="{$group->name|escape}"/>
+                            <input name="id" type="hidden" value="{$group->id|escape}"/>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12">
+                        <div class="heading_label">
+                            {$btr->general_discount|escape}
+                        </div>
+                        <div class="form-group">
+                             <input name="discount" class="form-control" type="text" value="{$group->discount|escape}" />
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 mt-1">
+                        <button type="submit" class="btn btn_small btn_blue float-md-right">
+                            {include file='svg_icon.tpl' svgId='checked'}
+                            <span>{$btr->general_apply|escape}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

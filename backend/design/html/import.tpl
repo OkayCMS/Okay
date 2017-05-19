@@ -1,27 +1,114 @@
-{capture name=tabs}
-	<li class="active">
-        <a href="index.php?module=ImportAdmin">Импорт</a>
-    </li>
-	{if in_array('export', $manager->permissions)}
-        <li>
-            <a href="index.php?module=ExportAdmin">Экспорт</a>
-        </li>
+{$meta_title=$btr->import_products scope=parent}
+
+<div class="row">
+    <div class="col-lg-7 col-md-7">
+        <div class="heading_page">
+            {$btr->import_products|escape}
+            <div class="export_block export_users hint-bottom-middle-t-info-s-small-mobile  hint-anim" data-hint="{$btr->general_example|escape}">
+                <a class="export_block" href="files/import/example.csv" target="_blank">
+                   <i class="fa fa-file"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="import_error" class="boxed boxed_warning" style="display: none;"></div>
+
+{if $message_error}
+    <!-- Системное сообщение -->
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="boxed boxed_warning">
+                <div class="">
+                   {if $message_error == 'no_permission'}
+                        {$btr->general_permissions|escape} {$import_files_dir|escape}
+                    {elseif $message_error == 'convert_error'}
+                        {$btr->import_utf|escape}
+                    {elseif $message_error == 'locale_error'}
+                        {$btr->import_locale|escape} {$locale|escape} {$btr->import_not_correctly|escape}
+                    {elseif $message_error == 'upload_error'}
+                       {$btr->upload_error|escape}
+                    {else}
+                        {$message_error|escape}
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Системное сообщение (The End)-->
+{/if}
+
+{if $message_error != 'no_permission'}
+    {if $filename}
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="boxed fn_toggle_wrap ">
+                <div class="heading_box boxes_inline">
+                    {$btr->import_file|escape} {if $filename}{$filename|escape}{/if}
+                </div>
+                {if $filename}
+                    <div id='import_result' class="boxes_inline" style="display: none;">
+                        <a class="btn btn_small btn-info" href="index.php?module=ImportLogAdmin" target="_blank">{$btr->import_log|escape}</a>
+                    </div>
+                    <div>
+                        <progress id="progressbar" class="progress progress-xs progress-info mt-1" style="display: none" value="0" max="100"></progress>
+                    </div>
+                {/if}
+            </div>
+        </div>
+    </div>
     {/if}
-    {if in_array('import', $manager->permissions)}
-        <li>
-            <a href="index.php?module=MultiImportAdmin">Импорт переводов</a>
-        </li>
-    {/if}
-    {if in_array('export', $manager->permissions)}
-        <li>
-            <a href="index.php?module=MultiExportAdmin">Экспорт переводов</a>
-        </li>
-    {/if}
-    <li>
-        <a href="index.php?module=ImportLogAdmin">Лог импорта</a>
-    </li>
-{/capture}
-{$meta_title='Импорт товаров' scope=parent}
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="boxed fn_toggle_wrap">
+                <div class="heading_box">
+                    {$btr->import_download|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="icon-arrow-down"></i></a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="text_warning">
+                            <div class="heading_normal text_warning">
+                                <span class="text_warning">{$btr->import_backup|escape}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="text_primary">
+                            <div class="heading_normal text_primary">
+                                <span class="text_primary">
+                                 {$btr->import_maxsize|escape}
+                                    {if $config->max_upload_filesize>1024*1024}
+                                        {$config->max_upload_filesize/1024/1024|round:'2'} {$btr->general_mb|escape}
+                                    {else}
+                                        {$config->max_upload_filesize/1024|round:'2'} {$btr->general_kb|escape}
+                                    {/if}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form class="form-horizontal mt-1" method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-lg-5 col-md-6 col-sm-12 my-h">
+                            <input type=hidden name="session_id" value="{$smarty.session.id}">
+                            <input name="file" class="import_file" style="padding:0px;" type="file" value="" />
+                        </div>
+                        <div class="col-lg-7 col-md-6 my-h">
+                            <button type="submit" class="btn btn_small btn_blue float-md-right"><i class="fa fa-upload"></i>&nbsp;{$btr->import_to_download|escape}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{/if}
 
 <script src="{$config->root_url}/backend/design/js/piecon/piecon.js"></script>
 <script>
@@ -31,11 +118,12 @@
         $(function(){
             Piecon.setOptions({fallback: 'force'});
             Piecon.setProgress(0);
-            $("#progressbar").progressbar({ value: 1 });
-            do_import();
+            var progress_item = $("#progressbar"); //указываем селектор элемента с анимацией
+            progress_item.show();
+            do_import('',progress_item);
         });
 
-        function do_import(from)
+        function do_import(from,progress)
         {
             from = typeof(from) != 'undefined' ? from : 0;
             $.ajax({
@@ -46,7 +134,7 @@
                         if (data.error) {
                             var error = '';
                             if (data.missing_fields) {
-                                error = '<span>В файле импорта отсутствуют необходимые столбцы: </span><b>';
+                                error = '<span class="heading_box">В файле импорта отсутствуют необходимые столбцы: </span><b>';
                                 for (var i in data.missing_fields) {
                                     error += data.missing_fields[i] + ', ';
                                 }
@@ -54,19 +142,20 @@
                                 error += '</b>';
                             }
 
-                            $("#progressbar").hide('fast');
+                            progress.fadeOut(500);
                             $('#import_error').html(error);
                             $('#import_error').show();
                         } else {
                             Piecon.setProgress(Math.round(100 * data.from / data.totalsize));
-                            $("#progressbar").progressbar({value: 100 * data.from / data.totalsize});
+                            progress.attr('value',100*data.from/data.totalsize);
 
                             if (data != false && !data.end) {
-                                do_import(data.from);
+                                do_import(data.from,progress);
                             } else {
                                 Piecon.setProgress(100);
-                                $("#progressbar").hide('fast');
+                                progress.attr('value','100');
                                 $("#import_result").show();
+                                progress.fadeOut(500);
                             }
                         }
                     },
@@ -79,95 +168,3 @@
     {/literal}
 {/if}
 </script>
-
-<style>
-	.ui-progressbar-value { background-color:#b4defc; background-image: url(design/images/progress.gif); background-position:left; border-color: #009ae2;}
-	#progressbar{ clear: both; height:29px;}
-	#result{ clear: both; width:100%;}
-</style>
-
-<div id="import_error" class="message message_error" style="display: none;"></div>
-
-{if $message_error}
-    <!-- Системное сообщение -->
-    <div class="message message_error">
-        <span class="text">
-            {if $message_error == 'no_permission'}
-                Установите права на запись в папку {$import_files_dir}
-            {elseif $message_error == 'convert_error'}
-                Не получилось сконвертировать файл в кодировку UTF8
-            {elseif $message_error == 'locale_error'}
-                На сервере не установлена локаль {$locale}, импорт может работать некорректно
-            {else}
-                {$message_error}
-            {/if}
-        </span>
-    </div>
-    <!-- Системное сообщение (The End)-->
-{/if}
-
-	{if $message_error != 'no_permission'}
-        {if $filename}
-        <div>
-            <h1>Импорт {$filename|escape}</h1>
-        </div>
-        <div id='progressbar'></div>
-        <div id='import_result' style="display: none; clear: left;">
-            <a href="index.php?module=ImportLogAdmin" target="_blank">Лог последнего импорта</a>
-        </div>
-        {else}
-
-            <h1>Импорт товаров</h1>
-
-            <div class="block">
-            <form method=post id=product enctype="multipart/form-data">
-                <input type=hidden name="session_id" value="{$smarty.session.id}">
-                <input name="file" class="import_file" type="file" value="" />
-                <input class="button_green" type="submit" name="" value="Загрузить" />
-                <p>
-                    (максимальный размер файла &mdash; {if $config->max_upload_filesize>1024*1024}{$config->max_upload_filesize/1024/1024|round:'2'} МБ{else}{$config->max_upload_filesize/1024|round:'2'} КБ{/if})
-                </p>
-
-
-            </form>
-            </div>
-
-            <div class="block block_help">
-            <p>
-                Создайте бекап на случай неудачного импорта.
-            </p>
-            <p>
-                Сохраните таблицу в формате CSV
-            </p>
-            <p>
-                В первой строке таблицы должны быть указаны названия колонок в таком формате:
-                <ul>
-                    <li><label>Товар</label> название товара</li>
-                    <li><label>Категория</label> категория товара</li>
-                    <li><label>Бренд</label> бренд товара</li>
-                    <li><label>Вариант</label> название варианта</li>
-                    <li><label>Цена</label> цена товара</li>
-                    <li><label>ID валюты</label>ID валюты в системе</li>
-                    <li><label>Старая цена</label> старая цена товара</li>
-                    <li><label>Склад</label> количество товара на складе</li>
-                    <li><label>Артикул</label> артикул товара</li>
-                    <li><label>Видим</label> отображение товара на сайте (0 или 1)</li>
-                    <li><label>Рекомендуемый</label> является ли товар рекомендуемым (0 или 1)</li>
-                    <li><label>Аннотация</label> краткое описание товара</li>
-                    <li><label>Адрес</label> адрес страницы товара</li>
-                    <li><label>Описание</label> полное описание товара</li>
-                    <li><label>Изображения</label> имена локальных файлов или url изображений в интернете, через запятую</li>
-                    <li><label>Заголовок страницы</label> заголовок страницы товара (Meta title)</li>
-                    <li><label>Ключевые слова</label> ключевые слова (Meta keywords)</li>
-                    <li><label>Описание страницы</label> описание страницы товара (Meta description)</li>
-                </ul>
-            </p>
-            <p>
-                Любое другое название колонки трактуется как название свойства товара
-            </p>
-            <p>
-                <a href='files/import/example.csv'>Скачать пример файла</a>
-            </p>
-            </div>
-        {/if}
-    {/if}

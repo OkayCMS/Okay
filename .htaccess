@@ -59,8 +59,11 @@ RewriteRule ^([a-z]{2}/)?brands/?$	index.php?module=BrandsView&lang_label=$1 [L,
 RewriteRule ^([a-z]{2}/)?brands/([^/]+) index.php?module=ProductsView&brand=$2&lang_label=$1 [L,QSA]
 
 # Блог
-RewriteRule ^([a-z]{2}/)?blog/([^/]+)/?$	index.php?module=BlogView&url=$2&lang_label=$1 [L,QSA]
-RewriteRule ^([a-z]{2}/)?blog/?$	index.php?module=BlogView&lang_label=$1 [L,QSA]
+RewriteRule ^([a-z]{2}/)?blog/([^/]+)/?$	index.php?module=BlogView&url=$2&lang_label=$1&type_post=blog [L,QSA]
+RewriteRule ^([a-z]{2}/)?blog/?$	index.php?module=BlogView&lang_label=$1&type_post=blog [L,QSA]
+# Новости
+RewriteRule ^([a-z]{2}/)?news/([^/]+)/?$	index.php?module=BlogView&url=$2&lang_label=$1&type_post=news [L,QSA]
+RewriteRule ^([a-z]{2}/)?news/?$	index.php?module=BlogView&lang_label=$1&type_post=news [L,QSA]
 
 # Избранное
 RewriteRule ^([a-z]{2}/)?wishlist/?$	index.php?module=WishlistView&lang_label=$1 [L,QSA]
@@ -89,7 +92,7 @@ RewriteRule ^([a-z]{2}/)?user/?$	index.php?module=UserView&lang_label=$1  [L,QSA
 RewriteRule ^([a-z]{2}/)?sitemap.xml?$	sitemap.php?lang_label=$1  [L,QSA]
 
 # XML
-RewriteRule ^yandex.xml?$	yandex.php  [L,QSA]
+RewriteRule ^feed.xml?$	feed.php  [L,QSA]
 
 # feedback
 RewriteRule ^([a-z]{2}/)?contact/?$	index.php?module=FeedbackView&lang_label=$1  [L,QSA]

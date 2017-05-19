@@ -23,7 +23,8 @@ class ProductsView extends View {
         if (strlen($this->config->subfolder) > 1) {
             $this->subdir = "/?".$this->config->subfolder;
         }
-        
+        $translations = $this->translations->get_translations(array('lang'=>$this->language->label));
+
         /**
          *
          * внешний вид параметров:
@@ -56,7 +57,7 @@ class ProductsView extends View {
                         foreach(explode('_',$param_values) as $bv) {
                             if(($brand = $this->brands->get_brand((string)$bv)) && !in_array($brand->id, $_GET['b'])) {
                                 $_GET['b'][] = $brand->id;
-                                $this->meta_array['brand'][] = $this->translations->products_brand.' '. $brand->name;
+                                $this->meta_array['brand'][] = $translations->products_brand.' '. $brand->name;
                             } else {
                                 $this->is_wrong_params = 1;
                             }
@@ -86,7 +87,7 @@ class ProductsView extends View {
                                 foreach ($this->features->get_options(array('feature_id' => $feature->id)) as $fo) {
                                     $option_translits[] = $fo->translit;
                                     if (in_array($fo->translit, $_GET[$feature->id])) {
-                                        $this->meta_array['options'][$feature->id][] = $feature->name . ' ' . $fo->value;
+                                        $this->meta_array['options'][$feature->id][] = $fo->value;
                                     }
                                 }
                                 foreach ($_GET[$feature->id] as $param_value) {
@@ -133,16 +134,16 @@ class ProductsView extends View {
         }
         
         if(!empty($this->meta['h1'])) {
-            $this->meta['h1']           = !empty($this->translations->ceo_filter_s_harakteristikami) ? ' ' : ''.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['h1'];
+            $this->meta['h1']           = !empty($translations->ceo_filter_s_harakteristikami) ? ' ' : ''.$translations->ceo_filter_s_harakteristikami.' '.$this->meta['h1'];
         }
         if(!empty($this->meta['title'])) {
-            $this->meta['title']        = !empty($this->translations->ceo_filter_s_harakteristikami) ? ' ' : ''.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['title'];
+            $this->meta['title']        = !empty($translations->ceo_filter_s_harakteristikami) ? ' ' : ''.$translations->ceo_filter_s_harakteristikami.' '.$this->meta['title'];
         }
         if(!empty($this->meta['keywords'])) {
-            $this->meta['keywords']     = !empty($this->translations->ceo_filter_s_harakteristikami) ? ' ' : ''.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['keywords'];
+            $this->meta['keywords']     = !empty($translations->ceo_filter_s_harakteristikami) ? ' ' : ''.$translations->ceo_filter_s_harakteristikami.' '.$this->meta['keywords'];
         }
         if(!empty($this->meta['description'])) {
-            $this->meta['description']  = !empty($this->translations->ceo_filter_s_harakteristikami) ? ' ' : ''.$this->translations->ceo_filter_s_harakteristikami.' '.$this->meta['description'];
+            $this->meta['description']  = !empty($translations->ceo_filter_s_harakteristikami) ? ' ' : ''.$translations->ceo_filter_s_harakteristikami.' '.$this->meta['description'];
         }
         
         if($this->set_canonical) {

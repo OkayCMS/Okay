@@ -1,280 +1,175 @@
-{* Вкладки *}
-{capture name=tabs}
-    <li class="active">
-        <a href="index.php?module=BannersImagesAdmin">Баннеры</a>
-    </li>
-    <li>
-        <a href="index.php?module=BannersAdmin">Группы баннеров</a>
-    </li>
-{/capture}
-
 {* Title *}
 {if $banner}
 	{$meta_title=$banner->name scope=parent}
 {else}
-	{$meta_title='Баннеры' scope=parent}
+	{$meta_title=$btr->banners_images_banners  scope=parent}
 {/if}
+<div class="row">
 
-
-<form method="get">
-<div id="search">
-	<input type="hidden" name="module" value="BannersImagesAdmin">
-	<input class="search" type="text" name="keyword" value="{$keyword|escape}" />
-	<input class="search_button" type="submit" value=""/>
-</div>
-</form>
-	
-{* Заголовок *}
-<div id="header">	
-	{if $banners_images_count}
-		{if $banner->name}
-			<h1>{$banner->name} ({$banners_images_count} {$banners_images_count|plural:'товар':'товаров':'товара'})</h1>
-		{elseif $keyword}
-			<h1>{$banners_images_count|plural:'Найден':'Найдено':'Найдено'} {$banners_images_count} {$banners_images_count|plural:'баннер':'баннеров':'баннера'}</h1>
-		{else}
-			<h1>{$banners_images_count} {$banners_images_count|plural:'баннер':'баннеров':'баннера'}</h1>
-		{/if}		
-	{else}
-		<h1>Нет баннеров</h1>
-	{/if}
-	<a class="add" href="{url module=BannersImageAdmin return=$smarty.server.REQUEST_URI}">Добавить баннер</a>
+    <div class="col-lg-7 col-md-7">
+        <div class="wrap_heading">
+            <div class="box_heading heading_page">
+                {if $banners_images_count}
+                   {$btr->banners_images_banners} - {$banners_images_count}
+               {elseif $keyword}
+                    {$btr->banners_images_banners} - {$banners_images_count}
+                {else}
+                    {$btr->banners_images_none|escape}
+               {/if}
+            </div>
+            <div class="box_btn_heading">
+               <a class="btn btn_small btn-info" href="{url module=BannersImageAdmin return=$smarty.server.REQUEST_URI}">
+                    {include file='svg_icon.tpl' svgId='plus'}
+                    <span>{$btr->banners_images_add|escape}</span>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div id="main_list">
-    {include file='pagination.tpl'}
-    {if $banners_images}
-        {* Основная форма *}
-        <form id="list_form" method="post">
-            <input type="hidden" name="session_id" value="{$smarty.session.id}">
-            <div id="list">
-                {foreach $banners_images as $banners_image}
-                    <div class="{if !$banners_image->visible}invisible{/if} {if $banners_image->featured}featured{/if} row">
-                        <input type="hidden" name="positions[{$banners_image->id}]" value="{$banners_image->position}">
-                        <div class="move cell">
-                            <div class="move_zone"></div>
+
+
+<div class="boxed fn_toggle_wrap">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 ">
+            <div class="boxed_sorting">
+                <div class="row">
+                    <div class="col-md-4 col-lg-4 col-sm-12">
+                        <div>
+                            <select class="selectpicker" onchange="location = this.value;">
+                                <option value="{url brand_id=null banner_id=null keyword=null page=null filter=null}" {if !$filter}{/if}>{$btr->banners_images_all|escape}</option>
+                                <option value="{url keyword=null brand_id=null banner_id=null page=null filter='visible'}" {if $filter=='visible'}selected{/if}>{$btr->banners_images_enable|escape}</option>
+                                <option value="{url keyword=null brand_id=null banner_id=null page=null filter='hidden'}" {if $filter=='hidden'}selected{/if}>{$btr->banners_images_disable|escape}</option>
+                            </select>
                         </div>
-                        <div class="checkbox cell">
-                            <input type="checkbox" id="{$banners_image->id}" name="check[]" value="{$banners_image->id}"/>
-                            <label for="{$banners_image->id}"></label>
-                        </div>
-                        <div class="image cell">
-                            {if $banners_image->image}
-                                <a href="{url module=BannersImageAdmin id=$banners_image->id return=$smarty.server.REQUEST_URI}">
-                                    <img src="../{$config->banners_images_dir}{$banners_image->image}" width="30px"/>
-                                </a>
-                            {/if}
-                        </div>
-                        <div class="name cell">
-                            <a href="{url module=BannersImageAdmin id=$banners_image->id return=$smarty.server.REQUEST_URI}">{$banners_image->name|escape}</a>
-                        </div>
-                        <div class="icons cell banner">
-                            <a class="enable" title="Активен" href="#"></a>
-                            <a class="delete" title="Удалить" href="#"></a>
-                        </div>
-                        <div class="icons cell">
-                            {if $banners}
-                                <select name=image_banners[{$banners_image->id}] style="width:150px;">
-                                    {foreach $banners as $b}
-                                        <option value="{$b->id}"{if $b->id == $banners_image->banner_id} selected{/if}>{$b->name}</option>
-                                    {/foreach}
-                                </select>
-                            {/if}
-                        </div>
-                        <div class="clear"></div>
                     </div>
-                {/foreach}
+                    {if $banners}
+                        <div class="col-md-4 col-lg-4 col-sm-12">
+                            <select class="selectpicker" onchange="location = this.value;">
+                                <option value="{url banner_id=null brand_id=null}" {if !$banner->id}selected{/if}>{$btr->general_groups|escape}</option>
+                                {foreach $banners as $b}
+                                    <option value="{url keyword=null page=null banner_id=$b->id}" {if $banner->id == $b->id}selected{/if}>{$b->name|escape}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    {/if}
+                </div>
             </div>
+        </div>
+    </div>
+    <div class="row">
+        {if $banners_images}
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <form class="fn_form_list" method="post">
+                    <div id="main_list" class=" okay_list products_list fn_sort_list">
+                        <input type="hidden" name="session_id" value="{$smarty.session.id}" />
+                        <div class="okay_list_head">
+                            <div class="okay_list_heading okay_list_drag"></div>
+                            <div class="okay_list_heading okay_list_check">
+                                <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value=""/>
+                                <label class="okay_ckeckbox" for="check_all_1"></label>
+                            </div>
+                            <div class="okay_list_heading okay_list_brands_photo">{$btr->general_image|escape}</div>
+                            <div class="okay_list_heading okay_list_bransimages_name">{$btr->general_name|escape}</div>
+                            <div class="okay_list_heading okay_list_brands_group">{$btr->general_banner_group|escape}</div>
+                            <div class="okay_list_heading okay_list_status">{$btr->general_enable|escape}</div>
+                            <div class="okay_list_heading okay_list_close"></div>
+                        </div>
 
-            <div id="action">
-                <label id="check_all" class="dash_link">Выбрать все</label>
-                <span id="select">
-                    <select name="action">
-                        <option value="enable">Сделать видимыми</option>
-                        <option value="disable">Сделать невидимыми</option>
-                        <option value="duplicate">Создать дубликат</option>
-                        {if $banners|count>1}
-                            <option value="move_to_banner">Переместить в группу</option>
-                        {/if}
-                        <option value="delete">Удалить</option>
-                    </select>
-                </span>
-                <span id="move_to_banner">
-                    <select name="target_banner">
-                        {foreach $banners as $b}
-                            <option value="{$b->id}"{if $b->id == $banners_image->banner_id} selected{/if}>{$b->name}</option>
-                        {/foreach}
-                    </select>
-                </span>
-                <input id="apply_action" class="button_green" type="submit" value="Применить">
+                        <div class="banners_wrap okay_list_body features_wrap sortable">
+                            {foreach $banners_images as $banners_image}
+                                <div class="fn_row okay_list_body_item fn_sort_item">
+                                    <div class="okay_list_row">
+                                        <input type="hidden" name="positions[{$banners_image->id}]" value="{$banners_image->position}">
+
+                                        <div class="okay_list_boding okay_list_drag move_zone">
+                                            {include file='svg_icon.tpl' svgId='drag_vertical'}
+                                        </div>
+
+                                        <div class="okay_list_boding okay_list_check">
+                                            <input class="hidden_check" type="checkbox" id="id_{$banners_image->id}" name="check[]" value="{$banners_image->id}"/>
+                                            <label class="okay_ckeckbox" for="id_{$banners_image->id}"></label>
+                                        </div>
+
+                                        <div class="okay_list_boding okay_list_brands_photo">
+                                            {if $banners_image->image}
+                                                <a href="{url module=BannersImageAdmin id=$banners_image->id return=$smarty.server.REQUEST_URI}">
+                                                    <img src="../{$config->banners_images_dir}{$banners_image->image}" width="200px"/>
+                                                </a>
+                                            {else}
+                                                <img height="100" width="100" src="design/images/no_image.png"/>
+                                            {/if}
+                                        </div>
+
+                                        <div class="okay_list_boding okay_list_bransimages_name">
+                                            <a class="link" href="{url module=BannersImageAdmin id=$banners_image->id return=$smarty.server.REQUEST_URI}">
+                                                {$banners_image->name|escape}
+                                            </a>
+                                            <div class="okay_list_name_brand">
+                                                {$banners_image->image}
+                                            </div>
+                                        </div>
+
+                                        <div class="okay_list_boding okay_list_brands_group">
+                                            {if $banners}
+                                                <select class="selectpicker" name=image_banners[{$banners_image->id}]">
+                                                    {foreach $banners as $b}
+                                                        <option value="{$b->id}"{if $b->id == $banners_image->banner_id} selected{/if}>{$b->name}</option>
+                                                    {/foreach}
+                                                </select>
+                                            {/if}
+                                        </div>
+
+                                        <div class="okay_list_boding okay_list_status">
+                                            {*visible*}
+                                            <label class="switch switch-default">
+                                                <input class="switch-input fn_ajax_action {if $banners_image->visible}fn_active_class{/if}" data-module="banners_image" data-action="visible" data-id="{$banners_image->id}" name="visible" value="1" type="checkbox"  {if $banners_image->visible}checked=""{/if}/>
+                                                <span class="switch-label"></span>
+                                                <span class="switch-handle"></span>
+                                            </label>
+                                        </div>
+                                        <div class="okay_list_boding okay_list_close">
+                                            {*delete*}
+                                            <button data-hint="{$btr->banners_images_delete|escape}" type="button" class="btn_close fn_remove hint-bottom-right-t-info-s-small-mobile  hint-anim" data-toggle="modal" data-target="#fn_action_modal" onclick="success_action($(this));">
+                                                {include file='svg_icon.tpl' svgId='delete'}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {/foreach}
+                        </div>
+                        <div class="okay_list_footer fn_action_block">
+                            <div class="okay_list_foot_left">
+                                <div class="okay_list_heading okay_list_drag"></div>
+                                <div class="okay_list_heading okay_list_check">
+                                    <input class="hidden_check fn_check_all" type="checkbox" id="check_all_2" name="" value=""/>
+                                    <label class="okay_ckeckbox" for="check_all_2"></label>
+                                </div>
+                                <div class="okay_list_option">
+                                   <select name="action" class="selectpicker">
+                                        {if $banners|count>1}
+                                            {foreach $banners as $b}
+                                                <option value="move_to_banner[{$b->id}]">{$btr->banners_images_move|escape} {$b->name|escape}</option>
+                                            {/foreach}
+                                        {/if}
+                                        <option value="enable">{$btr->general_do_enable|escape}</option>
+                                        <option value="disable">{$btr->general_do_disable|escape}</option>
+                                        <option value="delete">{$btr->general_delete|escape}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn_small btn_blue">
+                                {include file='svg_icon.tpl' svgId='checked'}
+                                <span>{$btr->general_apply|escape}</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </form>
-    {/if}
-
-    {include file='pagination.tpl'}
+        {else}
+            <div class="heading_box mt-1">
+                <div class="text_grey">{$btr->banners_images_none|escape}</div>
+            </div>
+        {/if}
+    </div>
 </div>
-
-<div id="right_menu">
-
-    <ul>
-        <li {if !$filter}class="selected"{/if}>
-            <a href="{url brand_id=null banner_id=null keyword=null page=null filter=null}">Все баннеры</a>
-        </li>
-        <li {if $filter=='visible'}class="selected"{/if}>
-            <a href="{url keyword=null brand_id=null banner_id=null page=null filter='visible'}">Активные</a>
-        </li>
-        <li {if $filter=='hidden'}class="selected"{/if}>
-            <a href="{url keyword=null brand_id=null banner_id=null page=null filter='hidden'}">Неактивные</a>
-        </li>
-    </ul>
-
-	{if $banners}
-	<ul>
-		<li {if !$banner->id}class="selected"{/if}>
-            <a href="{url banner_id=null brand_id=null}">Все группы</a>
-        </li>
-		{foreach $banners as $b}
-		<li banner_id="{$b->id}" {if $banner->id == $b->id}class="selected"{else}class="droppable"{/if}>
-            <a href='{url keyword=null page=null banner_id={$b->id}}'>{$b->name}</a>
-        </li>
-		{/foreach}
-	</ul>
-	{/if}
-</div>
-{* On document load *}
-{literal}
-<script>
-
-$(function() {
-
-	// Сортировка списка
-	$("#list").sortable({
-		items:             ".row",
-		tolerance:         "pointer",
-		handle:            ".move_zone",
-		scrollSensitivity: 40,
-		opacity:           0.7, 
-		
-		helper: function(event, ui){		
-			if($('input[type="checkbox"][name*="check"]:checked').size()<1) return ui;
-			var helper = $('<div/>');
-			$('input[type="checkbox"][name*="check"]:checked').each(function(){
-				var item = $(this).closest('.row');
-				helper.height(helper.height()+item.innerHeight());
-				if(item[0]!=ui[0]) {
-					helper.append(item.clone());
-					$(this).closest('.row').remove();
-				}
-				else {
-					helper.append(ui.clone());
-					item.find('input[type="checkbox"][name*="check"]').attr('checked', false);
-				}
-			});
-			return helper;			
-		},	
- 		start: function(event, ui) {
-  			if(ui.helper.children('.row').size()>0)
-				$('.ui-sortable-placeholder').height(ui.helper.height());
-		},
-		beforeStop:function(event, ui){
-			if(ui.helper.children('.row').size()>0){
-				ui.helper.children('.row').each(function(){
-					$(this).insertBefore(ui.item);
-				});
-				ui.item.remove();
-			}
-		},
-		update:function(event, ui)
-		{
-			$("#list_form input[name*='check']").attr('checked', false);
-			$("#list_form").ajaxSubmit(function() {
-				colorize();
-			});
-		}
-	});
-	
-
-	// Перенос товара в другую категорию
-	$("#action select[name=action]").change(function() {
-		if($(this).val() == 'move_to_banner')
-			$("span#move_to_banner").show();
-		else
-			$("span#move_to_banner").hide();
-	});
-	$("#right_menu .droppable.banner").droppable({
-		activeClass: "drop_active",
-		hoverClass: "drop_hover",
-		tolerance: "pointer",
-		drop: function(event, ui){
-			$(ui.helper).find('input[type="checkbox"][name*="check"]').attr('checked', true);
-			$(ui.draggable).closest("form").find('select[name="action"] option[value=move_to_banner]').attr("selected", "selected");	
-			$(ui.draggable).closest("form").find('select[name=target_banner] option[value='+$(this).attr('banner_id')+']').attr("selected", "selected");
-			$(ui.draggable).closest("form").submit();
-			return false;			
-		}
-	});
-
-
-	// Раскраска строк
-	function colorize()
-	{
-		$("#list div.row:even").addClass('even');
-		$("#list div.row:odd").removeClass('even');
-	}
-	// Раскрасить строки сразу
-	colorize();
-
-	// Выделить все
-	$("#check_all").click(function() {
-		$('#list input[type="checkbox"][name*="check"]').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:checked)').length>0);
-	});	
-
-	// Удалить товар
-	$("a.delete").click(function() {
-		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
-		$(this).closest("div.row").find('input[type="checkbox"][name*="check"]').attr('checked', true);
-		$(this).closest("form").find('select[name="action"] option[value=delete]').attr('selected', true);
-		$(this).closest("form").submit();
-	});
-	
-	// Дублировать товар
-	$("a.duplicate").click(function() {
-		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
-		$(this).closest("div.row").find('input[type="checkbox"][name*="check"]').attr('checked', true);
-		$(this).closest("form").find('select[name="action"] option[value=duplicate]').attr('selected', true);
-		$(this).closest("form").submit();
-	});
-	
-	// Показать товар
-	$("a.enable").click(function() {
-		var icon        = $(this);
-		var line        = icon.closest("div.row");
-		var id          = line.find('input[type="checkbox"][name*="check"]').val();
-		var state       = line.hasClass('invisible')?1:0;
-		icon.addClass('loading_icon');
-		$.ajax({
-			type: 'POST',
-			url: 'ajax/update_object.php',
-			data: {'object': 'banners_image', 'id': id, 'values': {'visible': state}, 'session_id': '{/literal}{$smarty.session.id}{literal}'},
-			success: function(data){
-				icon.removeClass('loading_icon');
-				if(state)
-					line.removeClass('invisible');
-				else
-					line.addClass('invisible');				
-			},
-			dataType: 'json'
-		});	
-		return false;	
-	});
-
-
-	// Подтверждение удаления
-	$("form").submit(function() {
-		if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-			return false;	
-	});
-	
-});
-
-</script>
-{/literal}

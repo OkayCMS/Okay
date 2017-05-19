@@ -7,6 +7,7 @@ class ExportAjax extends Okay {
         'name'=>             'Товар',
         'price'=>            'Цена',
         'currency'=>         'ID валюты',
+        'weight'=>           'Вес варианта',
         'url'=>              'Адрес',
         'visible'=>          'Видим',
         'featured'=>         'Рекомендуемый',
@@ -19,7 +20,7 @@ class ExportAjax extends Okay {
         'meta_keywords'=>    'Ключевые слова',
         'meta_description'=> 'Описание страницы',
         'annotation'=>       'Аннотация',
-        'body'=>             'Описание',
+        'description'=>             'Описание',
         'images'=>           'Изображения'
         
     );
@@ -132,6 +133,7 @@ class ExportAjax extends Okay {
                 $v['compare_price']   = $variant->compare_price;
                 $v['sku']             = $variant->sku;
                 $v['stock']           = $variant->stock;
+                $v['weight']           = $variant->weight;
                 $v['currency']        = $variant->currency_id;
                 if($variant->infinity) {
                     $v['stock']           = '';

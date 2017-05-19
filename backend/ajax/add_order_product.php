@@ -1,6 +1,6 @@
 <?php
 
-    $limit = 100;
+    $limit = 30;
     
     if(!$okay->managers->access('orders')) {
         exit();

@@ -1,130 +1,140 @@
-{* Вкладки *}
-{capture name=tabs}
-	<li>
-        <a href="index.php?module=BannersImagesAdmin">Баннеры</a>
-    </li>
-    <li class="active">
-        <a href="index.php?module=BannersAdmin">Группы баннеров</a>
-    </li>
-{/capture}
-
 {* Title *}
-{$meta_title='Группы баннеров' scope=parent}
+{$meta_title=$btr->banners_groups scope=parent}
 
-<div id="header">
-	<h1>Группы баннеров</h1>
-	<a class="add" href="{url module=BannerAdmin return=$smarty.server.REQUEST_URI}">Добавить группу</a>
+<div class="row">
+    <div class="col-lg-7 col-md-7">
+        <div class="wrap_heading">
+            <div class="box_heading heading_page">
+                {$btr->banners_groups|escape}
+            </div>
+            <div class="box_btn_heading">
+                    <a class="btn btn_small btn-info" href="{url module=BannerAdmin return=$smarty.server.REQUEST_URI}">
+                    {include file='svg_icon.tpl' svgId='plus'}
+                    <span>{$btr->banners_add|escape}</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5 col-lg-5 col-sm-12 float-xs-right"></div>
 </div>
 
-{if $banners}
-    <div id="main_list" class="categories">
-        <form id="list_form" method="post">
-            <input type="hidden" name="session_id" value="{$smarty.session.id}">
-            <div id="list" class="sortable">
-                {foreach $banners as $banner}
-                    <div class="{if !$banner->visible}invisible{/if} row">
-                        <div class="tree_row">
-                            <input type="hidden" name="positions[{$banner->id}]" value="{$banner->position}">
+<div class="boxed fn_toggle_wrap">
+    {if $banners}
+        <div class="categories">
+            <form class="fn_form_list" method="post">
+                <input type="hidden" name="session_id" value="{$smarty.session.id}">
+                    <div class="okay_list products_list fn_sort_list">
+                        <div class="okay_list_head">
+                            <div class="okay_list_heading okay_list_drag"></div>
+                            <div class="okay_list_heading okay_list_check">
+                                <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value=""/>
+                                <label class="okay_ckeckbox" for="check_all_1"></label>
+                            </div>
+                            <div class="okay_list_heading okay_list_features_name">{$btr->banners_group_name|escape}</div>
+                            <div class="okay_list_heading okay_list_brands_tag">{$btr->banners_display|escape}</div>
+                            <div class="okay_list_heading okay_list_status">{$btr->general_enable|escape}</div>
+                            <div class="okay_list_heading okay_list_close"></div>
+                        </div>
+                        <div class="banners_groups_wrap okay_list_body features_wrap sortable">
+                        {foreach $banners as $banner}
+                            <div class="fn_row okay_list_body_item fn_sort_item">
+                                <div class="okay_list_row">
+                                    <input type="hidden" name="positions[{$banner->id}]" value="{$banner->position}">
 
-                            <div class="move cell" style="margin-left:{$level*20}px">
-                                <div class="move_zone"></div>
+                                    <div class="okay_list_boding okay_list_drag move_zone">
+                                        {include file='svg_icon.tpl' svgId='drag_vertical'}
+                                    </div>
+
+                                    <div class="okay_list_boding okay_list_check">
+                                        <input class="hidden_check" type="checkbox" id="id_{$banner->id}" name="check[]" value="{$banner->id}"/>
+                                        <label class="okay_ckeckbox" for="id_{$banner->id}"></label>
+                                    </div>
+
+                                    <div class="okay_list_boding okay_list_features_name">
+                                        <a class="link" href="{url module=BannerAdmin id=$banner->id return=$smarty.server.REQUEST_URI}">
+                                            {$banner->name|escape}
+                                        </a>
+                                    </div>
+
+                                    <div class="okay_list_boding okay_list_brands_tag">
+                                        <div class="wrap_tags">
+                                            {if $banner->show_all_pages}
+                                                <span class="tag tag-success">{$btr->general_all_pages|escape}</span>
+                                            {/if}
+                                            {if !$banner->show_all_pages && $banner->category_show}
+                                                <div>
+                                                    <span class="text_dark text_700 font_12">{$btr->general_categories|escape}</span>
+                                                    {foreach $banner->category_show as $cat_show}
+                                                        <span class="tag tag-info">{$cat_show->name|escape}</span>
+                                                    {/foreach}
+                                                </div>
+                                            {/if}
+                                            {if !$banner->show_all_pages && $banner->brands_show}
+                                                <div>
+                                                    <span class="text_dark text_700 font_12">{$btr->general_brands|escape}</span>
+                                                    {foreach $banner->brands_show as $brand_show}
+                                                        <span class="tag tag-warning">{$brand_show->name|escape}</span>
+                                                    {/foreach}
+                                                </div>
+                                            {/if}
+                                            {if !$banner->show_all_pages && $banner->page_show}
+                                                <div>
+                                                    <span class="text_dark text_700 font_12">{$btr->general_pages|escape}</span>
+                                                    {foreach $banner->page_show as $page_show}
+                                                        <span class="tag tag-danger">{$page_show->name|escape}</span>
+                                                    {/foreach}
+                                                </div>
+                                            {/if}
+                                        </div>
+                                    </div>
+
+                                    <div class="okay_list_boding okay_list_status">
+                                        {*visible*}
+                                        <div class="col-lg-4 col-md-3">
+                                            <label class="switch switch-default">
+                                                <input class="switch-input fn_ajax_action {if $banner->visible}fn_active_class{/if}" data-module="banner" data-action="visible" data-id="{$banner->id}" name="visible" value="1" type="checkbox"  {if $banner->visible}checked=""{/if}/>
+                                                <span class="switch-label"></span>
+                                                <span class="switch-handle"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="okay_list_boding okay_list_close">
+                                        {*delete*}
+                                        <button data-hint="{$btr->general_delete|escape}" type="button" class="btn_close fn_remove hint-bottom-right-t-info-s-small-mobile  hint-anim" data-toggle="modal" data-target="#fn_action_modal" onclick="success_action($(this));">
+                                            {include file='svg_icon.tpl' svgId='delete'}
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="checkbox cell">
-                                <input type="checkbox" id="{$banner->id}" name="check[]" value="{$banner->id}"/>
-                                <label for="{$banner->id}"></label>
+                        {/foreach}
+                    </div>
+                        <div class="okay_list_footer fn_action_block">
+                            <div class="okay_list_foot_left">
+                                <div class="okay_list_heading okay_list_drag"></div>
+                                <div class="okay_list_heading okay_list_check">
+                                    <input class="hidden_check fn_check_all" type="checkbox" id="check_all_2" name="" value=""/>
+                                    <label class="okay_ckeckbox" for="check_all_2"></label>
+                                </div>
+                                <div class="okay_list_option">
+                                    <select name="action" class="selectpicker col-lg-12 col-md-12">
+                                        <option value="enable">{$btr->general_do_enable|escape}</option>
+                                        <option value="disable">{$btr->general_do_disable|escape}</option>
+                                        <option value="delete">{$btr->general_delete|escape}</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="cell">
-                                <a href="{url module=BannerAdmin id=$banner->id return=$smarty.server.REQUEST_URI}">{$banner->name|escape}</a>
-                            </div>
-                            <div class="icons cell banner">
-                                <a class="enable" title="Активна" href="#"></a>
-                                <a class="delete" title="Удалить" href="#"></a>
-                            </div>
-                            <div class="clear"></div>
+                            <button type="submit" class="btn btn_small btn_blue">
+                                {include file='svg_icon.tpl' svgId='checked'}
+                                <span>{$btr->general_apply|escape}</span>
+                            </button>
                         </div>
                     </div>
-                {/foreach}
-            </div>
+                </form>
+        </div>
+    {else}
+        <div class="heading_box mt-1">
+            <div class="text_grey">{$btr->banners_no_groups|escape}</div>
+        </div>
+    {/if}
+</div>
 
-            <div id="action">
-                <label id="check_all" class="dash_link">Выбрать все</label>
-                <span id="select">
-                    <select name="action">
-                        <option value="enable">Сделать видимыми</option>
-                        <option value="disable">Сделать невидимыми</option>
-                        <option value="delete">Удалить</option>
-                    </select>
-                </span>
-                <input id="apply_action" class="button_green" type="submit" value="Применить">
-            </div>
-        </form>
-    </div>
-{else}
-    Нет групп баннеров
-{/if}
-
-{literal}
-<script>
-$(function() {
-
-	// Сортировка списка
-	$(".sortable").sortable({
-		items:".row",
-		handle: ".move_zone",
-		tolerance:"pointer",
-		scrollSensitivity:40,
-		opacity:0.7, 
-		axis: "y",
-		update:function()
-		{
-			$("#list_form input[name*='check']").attr('checked', false);
-			$("#list_form").ajaxSubmit();
-		}
-	});
- 
-	// Выделить все
-	$("#check_all").click(function() {
-		$('#list input[type="checkbox"][name*="check"]:not(:disabled)').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:disabled):not(:checked)').length>0);
-	});	
-
-	// Показать категорию
-	$("a.enable").click(function() {
-		var icon        = $(this);
-		var line        = icon.closest(".row");
-		var id          = line.find('input[type="checkbox"][name*="check"]').val();
-		var state       = line.hasClass('invisible')?1:0;
-		icon.addClass('loading_icon');
-		$.ajax({
-			type: 'POST',
-			url: 'ajax/update_object.php',
-			data: {'object': 'banner', 'id': id, 'values': {'visible': state}, 'session_id': '{/literal}{$smarty.session.id}{literal}'},
-			success: function(data){
-				icon.removeClass('loading_icon');
-				if(state)
-					line.removeClass('invisible');
-				else
-					line.addClass('invisible');				
-			},
-			dataType: 'json'
-		});	
-		return false;	
-	});
-
-	// Удалить 
-	$("a.delete").click(function() {
-		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
-		$(this).closest("div.row").find('input[type="checkbox"][name*="check"]:first').attr('checked', true);
-		$(this).closest("form").find('select[name="action"] option[value=delete]').attr('selected', true);
-		$(this).closest("form").submit();
-	});
-
-	
-	// Подтвердить удаление
-	$("form").submit(function() {
-		if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-			return false;	
-	});
-
-});
-</script>
-{/literal}

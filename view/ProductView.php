@@ -66,7 +66,7 @@ class ProductView extends View {
             $this->design->assign('comment_email', $comment->email);
             
             // Проверяем капчу и заполнение формы
-            if ($this->settings->captcha_product && ($_SESSION['captcha_code'] != $captcha_code || empty($captcha_code))) {
+            if ($this->settings->captcha_product && ($_SESSION['captcha_product'] != $captcha_code || empty($captcha_code))) {
                 $this->design->assign('error', 'captcha');
             } elseif (!$this->validate->is_name($comment->name, true)) {
                 $this->design->assign('error', 'empty_name');
@@ -80,21 +80,13 @@ class ProductView extends View {
                 $comment->type      = 'product';
                 $comment->ip        = $_SERVER['REMOTE_ADDR'];
                 $comment->lang_id   = $_SESSION['lang_id'];
-                
-                // Если были одобренные комментарии от текущего ip, одобряем сразу
-                $this->db->query("SELECT 1 FROM __comments WHERE approved=1 AND ip=? LIMIT 1", $comment->ip);
-                if($this->db->num_rows()>0) {
-                    $comment->approved = 1;
-                }
-                
+
                 // Добавляем комментарий в базу
                 $comment_id = $this->comments->add_comment($comment);
                 
                 // Отправляем email
                 $this->notify->email_comment_admin($comment_id);
-                
-                // Приберем сохраненную капчу, иначе можно отключить загрузку рисунков и постить старую
-                unset($_SESSION['captcha_code']);
+
                 header('location: '.$_SERVER['REQUEST_URI'].'#comment_'.$comment_id);
             }
         }
@@ -212,9 +204,9 @@ class ProductView extends View {
             $auto_meta_title = strtr($auto_meta_title, $parts);
             $auto_meta_keywords = strtr($auto_meta_keywords, $parts);
             $auto_meta_description = strtr($auto_meta_description, $parts);
-            if (!empty($category->auto_body) && empty($product->body)) {
-                $product->body = strtr($category->auto_body, $parts);
-                $product->body = preg_replace('/\{\$[^\$]*\}/', '', $product->body);
+            if (!empty($category->auto_description) && empty($product->description)) {
+                $product->description = strtr($category->auto_description, $parts);
+                $product->description = preg_replace('/\{\$[^\$]*\}/', '', $product->description);
             }
             $auto_meta_title = preg_replace('/\{\$[^\$]*\}/', '', $auto_meta_title);
             $auto_meta_keywords = preg_replace('/\{\$[^\$]*\}/', '', $auto_meta_keywords);

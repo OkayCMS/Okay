@@ -37,22 +37,25 @@ class View extends Okay {
             self::$view_instance = $this;
             
             // Язык
-            $languages = $this->languages->languages();
+            $languages = $this->languages->get_languages();
             $lang_link = '';
             if (!empty($languages)) {
                 if($_GET['lang_label']) {
-                    $this->language = $this->languages->languages(array('id'=>$this->languages->lang_id()));
+                    $this->language = $this->languages->get_language($this->languages->lang_id());
                     if(!is_object($this->language)) {
                         $_GET['page_url'] = '404';
                         $_GET['module'] = 'PageView';
+                        $this->language = $this->languages->get_first_language();
+                        //$this->languages->set_lang_id($this->language->id);
+                    } else {
+                        $lang_link = $this->language->label . '/';
                     }
-                    $lang_link = $this->language->label . '/';
                 } else {
-                    $this->language = reset($languages);
+                    $this->language = $this->languages->get_first_language();
                     $this->languages->set_lang_id($this->language->id);
                 }
                 
-                $first_lang = reset($languages);
+                $first_lang = $this->languages->get_first_language();
                 $ruri = $_SERVER['REQUEST_URI'];
                 if (strlen($this->config->subfolder) > 1) {
                     $pos = strpos($_SERVER['REQUEST_URI'], $this->config->subfolder);
@@ -62,7 +65,7 @@ class View extends Okay {
                     }
                 }
                 $ruri = explode('/', $ruri);
-                $as = $first_lang->id !== $this->languages->lang_id() ? 2 : 1;
+                $as = $first_lang->id != $this->languages->lang_id() ? 2 : 1;
                 
                 if(is_array($ruri) && $first_lang->id == $this->languages->lang_id() && $ruri[1] == $first_lang->label) {
                     header("HTTP/1.1 301 Moved Permanently");
@@ -72,11 +75,17 @@ class View extends Okay {
                 
                 foreach($languages as $l) {
                     // основному языку не нужна метка
-                    if($first_lang->id !== $l->id) {
+                    if($first_lang->id != $l->id) {
                         $l->url = $l->label . ($ruri?'/'.implode('/',array_slice($ruri, $as)):'');
                     } else {
                         $l->url = ($ruri ? implode('/',array_slice($ruri, $as)) : '');
                     }
+                }
+
+                if(!$this->language->enabled && $this->language->id != $first_lang->id) {
+                    header('HTTP/1.0 503 Service Temporarily Unavailable');
+                    header('Status: 503 Service Temporarily Unavailable');
+                    header('Retry-After: 86400');//86400 seconds - 1day
                 }
             }
             $this->design->assign('lang_link', $lang_link);
@@ -103,7 +112,7 @@ class View extends Okay {
             // Пользователь, если залогинен
             if(isset($_SESSION['user_id'])) {
                 $u = $this->users->get_user(intval($_SESSION['user_id']));
-                if($u && $u->enabled) {
+                if($u) {
                     $this->user = $u;
                     $this->group = $this->users->get_group($this->user->group_id);
                 }
@@ -125,8 +134,7 @@ class View extends Okay {
             }
             $this->design->assign('language', $this->language);
             $this->design->assign('languages', $languages);
-            $this->design->assign('lang', $this->translations);
-            $this->design->assign('translate_id', $this->translations->get_labels_ids());
+            $this->design->assign('lang', $this->translations->get_translations(array('lang'=>$this->language->label)));
 
             $this->page = $this->pages->get_page((string)$page_url);
             $this->design->assign('page', $this->page);
@@ -150,11 +158,27 @@ class View extends Okay {
             $this->design->smarty->registerPlugin("function", "get_discounted_products",	array($this, 'get_discounted_products_plugin'));
             $this->design->smarty->registerPlugin("function", "get_categories",             array($this, 'get_categories_plugin'));
             $this->design->smarty->registerPlugin("function", "get_banner",                 array($this, 'get_banner_plugin'));
+            $this->design->smarty->registerPlugin("function", "get_captcha",                 array($this, 'get_captcha_plugin'));
         }
     }
     
     function fetch() {
         return false;
+    }
+
+    public function get_captcha_plugin($params, &$smarty) {
+        if(isset($params['var'])) {
+            $number = 0;
+            unset($_SESSION[$params['var']]);
+            $total = rand(10,50);
+            $secret = rand(1,10);
+            $result[] = $total - $secret;
+            $result[] = $total;
+            $_SESSION[$params['var']] = $secret;
+            $smarty->assign($params['var'], $result);
+        } else {
+            return false;
+        }
     }
     
     public function get_categories_plugin($params, &$smarty) {
@@ -354,13 +378,12 @@ class View extends Okay {
         if(!isset($params['group']) || empty($params['group'])) {
             return false;
         }
-        
-        @$product = $this->design->smarty->getTemplateVars('product');
+
         @$category = $this->design->smarty->getTemplateVars('category');
         @$brand = $this->design->smarty->getTemplateVars('brand');
         @$page = $this->design->smarty->getTemplateVars('page');
         
-        $show_filter_array = array('products'=>$product->id,'categories'=>$category->id,'brands'=>$brand->id,'pages'=>$page->id);
+        $show_filter_array = array('categories'=>$category->id,'brands'=>$brand->id,'pages'=>$page->id);
         $banner = $this->banners->get_banner($params['group'], true, $show_filter_array);
         if(!empty($banner)) {
             if($items = $this->banners->get_banners_images(array('banner_id'=>$banner->id, 'visible'=>1))) {

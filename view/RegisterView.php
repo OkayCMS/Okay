@@ -7,7 +7,6 @@ class RegisterView extends View {
     public function fetch() {
         if($this->request->method('post') && $this->request->post('register')) {
             $user = new stdClass();
-            $user->enabled  = 1; // Активен ли пользователь сразу после регистрации (0 или 1)
             $user->last_ip  = $_SERVER['REMOTE_ADDR'];
             $user->name     = $this->request->post('name');
             $user->email    = $this->request->post('email');
@@ -36,11 +35,10 @@ class RegisterView extends View {
                 $this->design->assign('error', 'empty_address');
             } elseif(empty($user->password)) {
                 $this->design->assign('error', 'empty_password');
-            } elseif($this->settings->captcha_register && (($_SESSION['captcha_code'] != $captcha_code || empty($captcha_code)) || empty($_SESSION['captcha_code']))) {
+            } elseif($this->settings->captcha_register && (($_SESSION['captcha_register'] != $captcha_code || empty($captcha_code)) || empty($_SESSION['captcha_register']))) {
                 $this->design->assign('error', 'captcha');
             } elseif($user_id = $this->users->add_user($user)) {
                 $_SESSION['user_id'] = $user_id;
-                unset($_SESSION['captcha_code']);
                 header('Location: '.$this->config->root_url.'/'.$this->lang_link.'user');
             } else {
                 $this->design->assign('error', 'unknown error');

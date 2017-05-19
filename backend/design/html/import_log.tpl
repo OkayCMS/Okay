@@ -1,128 +1,122 @@
-{* Вкладки *}
-{capture name=tabs}
-    <li>
-        <a href="index.php?module=ImportAdmin">Импорт</a>
-    </li>
-    {if in_array('export', $manager->permissions)}
-        <li>
-            <a href="index.php?module=ExportAdmin">Экспорт</a>
-        </li>
-    {/if}
-    {if in_array('import', $manager->permissions)}
-        <li>
-            <a href="index.php?module=MultiImportAdmin">Импорт переводов</a>
-        </li>
-    {/if}
-    {if in_array('export', $manager->permissions)}
-        <li>
-            <a href="index.php?module=MultiExportAdmin">Экспорт переводов</a>
-        </li>
-    {/if}
-    <li class="active">
-        <a href="index.php?module=ImportLogAdmin">Лог импорта</a>
-    </li>
-{/capture}
 {* Title *}
-{$meta_title='Лог импорта товаров' scope=parent}
-
-{* Поиск *}
-<form method="get">
-    <div id="search">
-        <input type="hidden" name="module" value="ImportLogAdmin">
-        <input class="search" type="text" name="keyword" value="{$keyword|escape}" />
-        <input class="search_button" type="submit" value=""/>
+{$meta_title=$btr->import_log_products scope=parent}
+<div class="row">
+    <div class="col-lg-7 col-md-7">
+        <div class="wrap_heading">
+            {if $logs_count}
+                <div class="box_heading heading_page">
+                    {if $keyword}
+                       {$logs_count|plural:'Найден':'Найдено':'Найдено'} {$logs_count} {$logs_count|plural:'товар':'товаров':'товара'}
+                    {else}
+                       {$logs_count} {$logs_count|plural:'товар':'товаров':'товара'}
+                    {/if}
+                </div>
+            {else}
+                <div class="heading_page">{$btr->import_log_empty|escape}</div>
+            {/if}
+        </div>
     </div>
-</form>
-
-{* Заголовок *}
-<div id="header">
-    {if $logs_count}
-        {if $keyword}
-            <h1>{$logs_count|plural:'Найден':'Найдено':'Найдено'} {$logs_count} {$logs_count|plural:'товар':'товаров':'товара'}</h1>
-        {else}
-            <h1>{$logs_count} {$logs_count|plural:'товар':'товаров':'товара'}</h1>
-        {/if}
-    {else}
-        <h1>Лог пуст</h1>
-    {/if}
-</div>
-
-<div id="main_list">
-
-    {if $logs}
-        {include file='pagination.tpl'}
-        <div class="limit_show">
-            <span>Показывать по: </span>
-            <select onchange="location = this.value;">
-                <option value="{url limit=25}" {if $current_limit == 25}selected{/if}>25</option>
-                <option value="{url limit=50}" {if $current_limit == 50}selected{/if}>50</option>
-                <option value="{url limit=100}" {if $current_limit == 100}selected{/if}>100</option>
-                <option value="{url limit=200}" {if $current_limit == 200}selected{/if}>200</option>
-                <option value="{url limit=500}" {if $current_limit == 500}selected{/if}>500</option>
-            </select>
-        </div>
-
-        {* Основная форма *}
-        <form id="list_form" method="post">
-            <input type="hidden" name="session_id" value="{$smarty.session.id}">
-            <div id="list" class="catalog">
-                {foreach $logs as $log}
-                    <div class="row">
-                        <div class="import_result cell">
-                            <span class="status {$log->status}" title="{$log->status}"></span>
-                        </div>
-                        <div class="image cell">
-                            {$image = $log->product->images|@first}
-                            {if $image}
-                                <a href="{url module=ProductAdmin id=$log->product_id return=$smarty.server.REQUEST_URI}" target="_blank">
-                                    <img src="{$image->filename|escape|resize:35:35}"/>
-                                </a>
-                            {else}
-                                <img height="35" width="35" src="design/images/no_image.png"/>
-                            {/if}
-                        </div>
-                        <div class="name product_name cell">
-                            <a href="{url module=ProductAdmin id=$log->product_id return=$smarty.server.REQUEST_URI}" target="_blank">{$log->product_name|escape}</a>
-                            {if $log->variant_name}<span>({$log->variant_name|escape})</span>{/if}
-                        </div>
-                        <div class="icons cell products">
-                        </div>
-                        <div class="clear"></div>
-                    </div>
-                {/foreach}
+    <div class="col-md-12 col-lg-5 col-xs-12 float-xs-right">
+        <div class="boxed_search">
+            <form class="search" method="get">
+            <input type="hidden" name="module" value="ImportLogAdmin">
+            <div class="input-group">
+                <input name="keyword" class="form-control" placeholder="{$btr->general_search|escape}" type="text" value="{$keyword|escape}" >
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn_blue"><i class="fa fa-search"></i> <span class="hidden-md-down"></span></button>
+                </span>
             </div>
-        </form>
+            </form>
+        </div>
+    </div>
+</div>
 
-        {*Пагинация*}
-        {include file='pagination.tpl'}
-        {*Пагинация END*}
-        <div class="limit_show">
-            <span>Показывать по: </span>
-            <select onchange="location = this.value;">
-                <option value="{url limit=25}" {if $current_limit == 25}selected{/if}>25</option>
-                <option value="{url limit=50}" {if $current_limit == 50}selected{/if}>50</option>
-                <option value="{url limit=100}" {if $current_limit == 100}selected{/if}>100</option>
-                <option value="{url limit=200}" {if $current_limit == 200}selected{/if}>200</option>
-                <option value="{url limit=500}" {if $current_limit == 500}selected{/if}>500</option>
-            </select>
+<div class="boxed fn_toggle_wrap">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 ">
+            <div class="boxed_sorting">
+                <div class="row">
+                    <div class="col-md-3 col-lg-3 col-sm-12">
+                        <select class="selectpicker" onchange="location = this.value;">
+                            <option value="{url keyword=null page=null limit=null filter=null}" {if !$filter}selected{/if}>{$btr->general_all|escape}</option>
+                            <option value="{url keyword=null page=null limit=null filter='added'}" {if $filter == 'added'}selected{/if}>{$btr->import_added|escape}</option>
+                            <option value="{url keyword=null page=null limit=null filter='updated'}" {if $filter == 'updated'}selected{/if}>{$btr->import_updated|escape}</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-9 col-md-9 col-sm 12">
+                        <div class="pull-right">
+                            <select onchange="location = this.value;" class="selectpicker">
+                                <option value="{url limit=10}" {if $current_limit == 10}selected{/if}>{$btr->general_show_by|escape} 10</option>
+                                <option value="{url limit=25}" {if $current_limit == 25}selected{/if}>{$btr->general_show_by|escape} 25</option>
+                                <option value="{url limit=50}" {if $current_limit == 50}selected{/if}>{$btr->general_show_by|escape} 50</option>
+                                <option value="{url limit=100}" {if $current_limit == 100}selected{/if}>{$btr->general_show_by|escape} 100</option>
+                                <option value="{url limit=200}" {if $current_limit == 200}selected{/if}>{$btr->general_show_by|escape} 200</option>
+                                <option value="{url limit=500}" {if $current_limit == 500}selected{/if}>{$btr->general_show_by|escape} 500</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {if $logs}
+        <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+                {include file='pagination.tpl'}
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <form method="post">
+                    <input type="hidden" name="session_id" value="{$smarty.session.id}">
+
+                    <div class="okay_list">
+                        <div class="okay_list_head">
+                           <div class="okay_list_heading okay_list_check">№</div>
+                           <div class="okay_list_heading okay_list_photo">{$btr->general_photo|escape}</div>
+                           <div class="okay_list_heading okay_list_log_name">{$btr->general_name|escape} </div>
+                            <div class="okay_list_heading okay_list_log_status">
+                               <span>{$btr->general_status|escape}</span>
+                            </div>
+                        </div>
+                        <div class="okay_list_body">
+                            {foreach $logs as $log}
+                                <div class="fn_row okay_list_body_item">
+                                    <div class="okay_list_row">
+                                        <div class="okay_list_boding okay_list_check">{$log@iteration}</div>
+                                        <div class="okay_list_boding okay_list_photo">
+                                           {$image = $log->product->images|@first}
+                                            {if $image}
+                                                <a href="{url module=ProductAdmin id=$log->product_id return=$smarty.server.REQUEST_URI}" target="_blank">
+                                                    <img src="{$image->filename|escape|resize:55:55}"/>
+                                                </a>
+                                            {else}
+                                                <img height="55" width="55" src="design/images/no_image.png"/>
+                                            {/if}
+                                        </div>
+
+                                        <div class="okay_list_boding okay_list_log_name">
+                                            <a class="link" href="{url module=ProductAdmin id=$log->product_id return=$smarty.server.REQUEST_URI}" target="_blank">{$log->product_name|escape}</a>
+                                            {if $log->variant_name}
+                                                <span class="text_grey">({$log->variant_name|escape})</span>
+                                            {/if}
+                                        </div>
+                                        <div class="okay_list_boding okay_list_log_status">
+                                            {if $log->status == 'added'}
+                                                <i class="fa fa-plus font-2xl text-success" title="{$log->status}"></i>
+                                            {elseif $log->status == 'updated'}
+                                                <i class="fa fa-refresh font-2xl text-info" title="{$log->status}"></i>
+                                            {/if}
+                                        </div>
+                                    </div>
+                                </div>
+                            {/foreach}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {else}
+        <div class="heading_box mt-1">
+            <div class="text_grey">{$btr->import_log_empty|escape}</div>
         </div>
     {/if}
 </div>
-
-{*Меню*}
-<div id="right_menu">
-    {*Фильтр*}
-    <ul class="filter_right">
-        <li {if !$filter}class="selected"{/if}>
-            <a href="{url keyword=null page=null limit=null filter=null}">Все</a>
-        </li>
-        <li {if $filter=='added'}class="selected"{/if}>
-            <a href="{url keyword=null page=null limit=null filter='added'}">Добавлены</a>
-        </li>
-        <li {if $filter=='updated'}class="selected"{/if}>
-            <a href="{url keyword=null page=null limit=null filter='updated'}">Обновлены</a>
-        </li>
-    </ul>
-    {*Фильтр END*}
-</div>
-{*Меню END*}

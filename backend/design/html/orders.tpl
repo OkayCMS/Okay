@@ -1,301 +1,402 @@
-{* Вкладки *}
-{capture name=tabs}
-    {if in_array('orders', $manager->permissions)}
-        <li {if $status===0}class="active"{/if}>
-            <a href="{url module=OrdersAdmin status=0 keyword=null id=null page=null label=null from_date=null to_date=null}">Новые</a>
-        </li>
-        <li {if $status==1}class="active"{/if}>
-            <a href="{url module=OrdersAdmin status=1 keyword=null id=null page=null label=null from_date=null to_date=null}">Приняты</a>
-        </li>
-        <li {if $status==2}class="active"{/if}>
-            <a href="{url module=OrdersAdmin status=2 keyword=null id=null page=null label=null from_date=null to_date=null}">Выполнены</a>
-        </li>
-        <li {if $status==3}class="active"{/if}>
-            <a href="{url module=OrdersAdmin status=3 keyword=null id=null page=null label=null from_date=null to_date=null}">Удалены</a>
-        </li>
-        {if $keyword}
-            <li class="active">
-                <a href="{url module=OrdersAdmin keyword=$keyword id=null label=null from_date=null to_date=null}">Поиск</a>
-            </li>
-        {/if}
-    {/if}
-    {if in_array('labels', $manager->permissions)}
-        <li>
-            <a href="{url module=OrdersLabelsAdmin keyword=null id=null page=null label=null from_date=null to_date=null}">Метки</a>
-        </li>
-    {/if}
-{/capture}
-
 {* Title *}
-{$meta_title='Заказы' scope=parent}
-
-{literal}
-    <script src="design/js/jquery/datepicker/jquery.ui.datepicker-ru.js"></script>
-{/literal}
-{* Поиск *}
-<form id="search_form" method="get">
- 
-    <div id="search">
-    	<input type="hidden" name="module" value="OrdersAdmin">
-    	<input class="search" type="text" name="keyword" value="{$keyword|escape}"/>
-    	<input class="search_button" type="submit" value=""/> 
-    </div>
-
-    <div class="helper_wrap">
-       <a href="javascript:;" id="show_help_search" class="helper_link"></a> 
-       <div class="search_help helper_block">
-            <b>В поиске участвуют следующие данные:</b>
-            <span>1.    Номер заказа</span>
-            <span>2.    Имя покупателя</span>
-            <span>3.    Телефон</span>
-            <span>4.    Адрес</span>
-            <span>5.    E-mail</span>
-            <span>6.    Название товара или название варианта товара в заказе</span>
+{$meta_title=$btr->general_orders scope=parent}
+<div class="row">
+    <div class="col-lg-7 col-md-7">
+        <div class="wrap_heading">
+            {if $orders_count}
+                <div class="box_heading heading_page">
+                    {$btr->general_orders|escape} - {$orders_count}
+                </div>
+            {else}
+                <div class="box_heading heading_page">{$btr->orders_no|escape}</div>
+            {/if}
+            <div class="box_btn_heading">
+                <a class="btn btn_small btn-info" href="{url module=OrderAdmin}">
+                    {include file='svg_icon.tpl' svgId='plus'}
+                    <span>{$btr->orders_add|escape}</span>
+                </a>
+            </div>
         </div>
-    </div> 
-</form>
+    </div>
+    <div class="col-md-12 col-lg-5 col-xs-12 float-xs-right">
+        <div class="boxed_search">
+            <form class="search" method="get">
+                <input type="hidden" name="module" value="OrdersAdmin">
+                <div class="input-group">
+                    <input name="keyword" class="form-control" placeholder="{$btr->general_search|escape}" type="text" value="{$keyword|escape}" >
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn_blue"><i class="fa fa-search"></i> <span class="hidden-md-down"></span></button>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-	
-{* Заголовок *}
-<div id="header">
-	<h1>{if $orders_count}{$orders_count}{else}Нет{/if} заказ{$orders_count|plural:'':'ов':'а'}</h1>
-	<a class="add" href="{url module=OrderAdmin}">Добавить заказ</a>
-</div>	
 
 {if $message_error}
-    <!-- Системное сообщение -->
-    <div class="message message_error">
-        <span class="text">{if $message_error=='error_closing'}Нехватка некоторых товаров на складе{else}{$message_error|escape}{/if}</span>
-        {if $smarty.get.return}
-        <a class="button" href="{$smarty.get.return}">Вернуться</a>
-        {/if}
-    </div>
-{/if}
-
-{if $orders}
-    <div id="main_list">
-        {include file='pagination.tpl'}
-        <form id="form_list" method="post">
-            <input type="hidden" name="session_id" value="{$smarty.session.id}">
-
-            <div id="list">
-                {foreach $orders as $order}
-                    <div class="{if $order->paid}green{/if} row">
-                        <div class="checkbox cell">
-                            <input type="checkbox" id="{$order->id}" name="check[]" value="{$order->id}"/>
-                            <label for="{$order->id}"></label>
-                        </div>
-                        <div class="order_date cell">
-                            {$order->date|date} в {$order->date|time}
-                        </div>
-
-                        <div class="order_name cell">
-                            {foreach $order->labels as $l}
-                                <span class="order_label" style="background-color:#{$l->color};" title="{$l->name}"></span>
-                            {/foreach}
-
-                            <div class="order_info_wrap">
-                                 <a class="show_purchases" href="javascript:;"><span>{$order->purchases|count}</span><i class="info_icon"></i></a>
-
-                                <div class="order_info">
-                                    <p>Товары в заказе №{$order->id}</p>
-                                    <table class="orders_purchases">
-                                        {foreach $order->purchases as $purchase}
-                                            <tr>
-                                                <td>
-                                                {$purchase->product_name}
-                                                {if $purchase->variant_name}({$purchase->variant_name}){/if}
-                                                </td>
-                                                <td>{$purchase->price}</td>
-                                                <td>{$purchase->amount}{$settings->units}</td>
-                                            </tr>
-                                        {/foreach}
-                                    </table>
-                                </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="boxed boxed_warning">
+                <div class="heading_box">
+                    {if $message_error=='error_closing'}
+                        {$btr->orders_in|escape}
+                        {foreach $error_orders as $error_order_id}
+                            <div>
+                                № {$error_order_id}
                             </div>
-
-                            <a href="{url module=OrderAdmin id=$order->id return=$smarty.server.REQUEST_URI}">Заказ №{$order->id}</a> 
-                            <span>{$order->name|escape}</span>
-                            {if $order->note}
-                                <div class="note">{$order->note|escape}</div>
-                            {/if}
-                        </div>
-
-                        <div class="name cell" style='white-space:nowrap;'>
-                            {$order->total_price|escape} {$currency->sign}
-                        </div>
-
-                        <div class="icons cell">
-                            <a href='{url module=OrderAdmin id=$order->id view=print}' target="_blank" class="print" title="Печать заказа"></a>
-                            <a href='#' class=delete title="Удалить"></a>
-                        </div>
-
-                         <div class="icons cell">
-                            {if $order->paid}
-                                <img src='design/images/moneybox_paid.png'  alt='Оплачен' title='Оплачен'>
-                            {else}
-                                <img src='design/images/moneybox.png'  alt='Не оплачен' title='Не оплачен'>
-                            {/if}
-                        </div>
-
-                       
-                        {if $keyword}
-                            <div class="icons cell">
-                                {if $order->status == 0}
-                                    <img src='design/images/new.png' alt='Новый' title='Новый'>
-                                {/if}
-                                {if $order->status == 1}
-                                    <img src='design/images/time.png' alt='Принят' title='Принят'>
-                                {/if}
-                                {if $order->status == 2}
-                                    <img src='design/images/tick.png' alt='Выполнен' title='Выполнен'>
-                                {/if}
-                                {if $order->status == 3}
-                                    <img src='design/images/cross.png' alt='Удалён' title='Удалён'>
-                                {/if}
-                            </div>
-                        {/if}
-                        <div class="clear"></div>
-                    </div>
-                {/foreach}
-            </div>
-
-            <div id="action">
-                <label id='check_all' class="dash_link">Выбрать все</label>
-                <span id="select">
-                    <select name="action">
-                        {if $status!==0}
-                            <option value="set_status_0">В новые</option>
-                        {/if}
-                        {if $status!==1}
-                            <option value="set_status_1">В принятые</option>
-                        {/if}
-                        {if $status!==2}
-                            <option value="set_status_2">В выполненные</option>
-                        {/if}
-                        {foreach $labels as $l}
-                            <option value="set_label_{$l->id}">Отметить &laquo;{$l->name}&raquo;</option>
                         {/foreach}
-                        {foreach $labels as $l}
-                            <option value="unset_label_{$l->id}">Снять &laquo;{$l->name}&raquo;</option>
-                        {/foreach}
-                        <option value="delete">Удалить выбранные заказы</option>
-                    </select>
-                </span>
-                <input id="apply_action" class="button_green" type="submit" value="Применить">
-            </div>
-        </form>
-        {include file='pagination.tpl'}
-    </div>
-{/if}
-
-<div id="right_menu">
-
-    <form class="date_filter" method="get">
-        <input type="hidden" name="module" value="OrdersAdmin">
-        <input type="hidden" name="status" value="{$status}">
-        <div class="date_filter_title">
-            <span>Заказы за период</span>
-            <div class="helper_wrap">
-                <a id="show_help_filter" class="helper_link" href="javascript:;"></a>
-                <div id="help_date_filter" class="helper_block">
-                    <span> Если не указана дата «С» то выбираются заказы начиная с самого первого.</span>
-                    <span> Если не указана конечная дата «По» то автоматом подставляется текущая дата.</span>
+                        {$btr->orders_shortage|escape}
+                    {else}
+                        {$message_error|escape}
+                    {/if}
                 </div>
             </div>
         </div>
-        <div class="form_group">
-           <label for="from_date">C</label>
-            <input class="okay_inp" type="text" id="from_date" name="from_date" value="{$from_date}" autocomplete="off"> 
-        </div>
-         <div class="form_group">
-            <label for="to_date">По</label>
-            <input class="okay_inp" type="text" id="to_date" name="to_date" value="{$to_date}" autocomplete="off">
-         </div>
-        <input class="button" type="submit" value="Показать"/>
-    </form>
+    </div>
+{/if}
 
-    {if $labels}
-        <ul id="labels">
-            <li {if !$label}class="selected"{/if}>
-                <span class="label"></span>
-                <a href="{url label=null}">Все заказы</a>
-            </li>
-            {foreach $labels as $l}
-                <li data-label-id="{$l->id}" {if $label->id==$l->id}class="selected"{/if}>
-                    <a href="{url label=$l->id}">
-                        <span style="background-color:#{$l->color};" class="order_label"></span>{$l->name}
-                    </a>
-                </li>
-            {/foreach}
-        </ul>
+
+<div class="boxed fn_toggle_wrap">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 ">
+            <div class="hidden-md-up">
+                <div class="row mb-1">
+                    {if $all_status}
+                        <div class=" col-md-6 col-sm-12">
+                            <select name="status" class="selectpicker"  onchange="location = this.value;">
+
+                                {foreach $all_status as $order_status}
+                                    <option value="{url module=OrdersAdmin status=$order_status->id keyword=null id=null page=null label=null from_date=null to_date=null}" {if $status == $order_status->id}selected=""{/if} >{$order_status->name|escape}</option>
+                                {/foreach}
+                                <option value="{url module=OrdersAdmin status='all' keyword=null id=null page=null label=null from_date=null to_date=null}" {if $smarty.get.status && $status == "all" || !$status}selected{/if}>{$btr->general_all|escape}</option>
+                            </select>
+                        </div>
+                    {/if}
+                </div>
+            </div>
+            <div class="boxed_sorting">
+                <div class="row">
+                    <div class="col-md-11 col-lg-11 col-xl-7 col-sm-12 mb-1">
+                        <div class="date">
+                            <form class="date_filter row" method="get">
+                                <input type="hidden" name="module" value="OrdersAdmin">
+                                <input type="hidden" name="status" value="{$status}">
+
+                                <div class="col-md-5 col-lg-5 pr-0 pl-0">
+                                    <div class="input-group">
+                                        <span class="input-group-addon-date">{$btr->general_from|escape}</span>
+                                        <input type="date" class="fn_from_date form-control" name="from_date" value="{$from_date}" autocomplete="off" >
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 col-lg-5 pr-0 pl-0">
+                                    <div class="input-group">
+                                        <span class="input-group-addon-date">{$btr->general_to|escape}</span>
+                                        <input type="date" class="fn_to_date form-control" name="to_date" value="{$to_date}" autocomplete="off" >
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-lg-2 pr-0">
+                                    <button class="btn btn_blue" type="submit">{$btr->general_apply|escape}</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    {if $all_status}
+                        <div class="col-md-6 col-lg-4 col-sm-12">
+                            <select name="status" class="selectpicker"  onchange="location = this.value;">
+                                {foreach $all_status as $order_status}
+                                    <option value="{url module=OrdersAdmin status=$order_status->id keyword=null id=null page=null label=null from_date=null to_date=null}" {if $status == $order_status->id}selected=""{/if} >{$order_status->name|escape}</option>
+                                {/foreach}
+                                <option value="{url module=OrdersAdmin status='all' keyword=null id=null page=null label=null from_date=null to_date=null}" {if $smarty.get.status && $status == "all" || !$status}selected{/if}>{$btr->general_all|escape}</option>
+                            </select>
+                        </div>
+                    {/if}
+                    {if $labels}
+                        <div class="col-md-6 col-lg-4 col-sm-12">
+                            <select class="selectpicker" onchange="location = this.value;">
+                                {foreach $labels as $l}
+                                    <option value="{url label=$l->id}" {if $label->id == $l->id}selected{/if}>{$l->name|escape}</option>
+                                {/foreach}
+                                <option value="{url label=null}" {if $label->id != $l->id} selected{/if}>{$btr->general_all|escape}</option>
+                            </select>
+                        </div>
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {if $orders}
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <form class="fn_form_list" method="post">
+                    <input type="hidden" name="session_id" value="{$smarty.session.id}">
+
+                    <div class="orders_list okay_list products_list">
+                        <div class="okay_list_head">
+                            <div class="okay_list_heading okay_list_check">
+                                <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value=""/>
+                                <label class="okay_ckeckbox" for="check_all_1"></label>
+                            </div>
+                            <div class="okay_list_heading okay_list_order_number">№ </div>
+                            <div class="okay_list_heading okay_list_orders_name">{$btr->general_full_name|escape}</div>
+                            <div class="okay_list_heading okay_list_order_status">{$btr->general_status|escape}</div>
+                            <div class="okay_list_heading okay_list_order_product_count">{$btr->general_products|escape}</div>
+                            <div class="okay_list_heading okay_list_orders_price">{$btr->general_sales_amount}</div>
+                            <div class="okay_list_heading okay_list_order_marker">{$btr->orders_label|escape}</div>
+                            <div class="okay_list_heading okay_list_close"></div>
+                        </div>
+                        <div class="okay_list_body">
+                            {foreach $orders as $order}
+                            <div class="fn_row okay_list_body_item">
+                                <div class="okay_list_row">
+                                    <div class="okay_list_boding okay_list_check">
+                                        <input class="hidden_check" type="checkbox" id="id_{$order->id}" name="check[]" value="{$order->id}"/>
+                                        <label class="okay_ckeckbox" for="id_{$order->id}"></label>
+                                    </div>
+
+                                    <div class="okay_list_boding okay_list_order_number">
+                                        <a href="{url module=OrderAdmin id=$order->id return=$smarty.server.REQUEST_URI}">{$btr->orders_order|escape} {$order->id}</a>
+                                        {if $order->paid}
+                                            <div class="order_paid">
+                                                <span class="tag tag-success">{$btr->general_paid|escape}</span>
+                                            </div>
+                                        {/if}
+                                    </div>
+
+                                    <div class="okay_list_boding okay_list_orders_name">
+                                        <a href="{url module=OrderAdmin id=$order->id return=$smarty.server.REQUEST_URI}" class="text_dark text_bold">{$order->name|escape}</a>
+                                        {if $order->note}
+                                            <div class="note">{$order->note|escape}</div>
+                                        {/if}
+                                        <div class="hidden-lg-up mt-q">
+                                            <span class="tag tag-warning">{$orders_status[$order->status_id]->name|escape}</span>
+                                        </div>
+                                        <div class="mt-q"><span class="hidden-md-down">{$btr->orders_order_in|escape}</span>
+                                        <span class="tag tag-default">{$order->date|date} | {$order->date|time}</span></div>
+                                    </div>
+
+                                    <div class="okay_list_boding okay_list_order_status">
+                                        {$orders_status[$order->status_id]->name|escape}
+                                    </div>
+
+                                    <div class="okay_list_boding okay_list_order_product_count">
+                                        <span>{$order->purchases|count}</span>
+                                        {if $order->purchases|count > 0}
+                                            <span  class="fn_orders_toggle">
+                                                <i class="fn_icon_arrow fa fa-angle-down fa-lg m-t-2 "></i>
+                                            </span>
+                                        {/if}
+                                    </div>
+
+                                    <div class="okay_list_boding okay_list_orders_price">
+                                        <div class="input-group">
+                                            <span class="form-control">
+                                                {$order->total_price|escape}
+                                            </span>
+                                            <span class="input-group-addon">
+                                                {$currency->sign|escape}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="okay_list_boding okay_list_order_marker">
+                                        <span class="fn_ajax_label_wrapper">
+                                            <span class="fn_labels_show box_labels_show">{include file='svg_icon.tpl' svgId='tag'} <span>{$btr->orders_choose|escape}</span> </span>
+
+                                            <div class='fn_labels_hide box_labels_hide'>
+                                                <span class="heading_label">{$btr->general_labels|escape} <i class="fn_delete_labels_hide btn_close delete_labels_hide">{include file='svg_icon.tpl' svgId='delete'}</i></span>
+                                                <ul class="option_labels_box">
+                                                    {foreach $labels as $l}
+                                                        <li class="fn_ajax_labels" data-order_id="{$order->id}"  style="background-color: #{$l->color|escape}">
+                                                            <input id="l{$order->id}_{$l->id}" type="checkbox" class="hidden_check_1"  value="{$l->id}" {if is_array($order->labels_ids) && in_array($l->id,$order->labels_ids)}checked=""{/if} />
+                                                            <label   for="l{$order->id}_{$l->id}" class="label_labels"><span>{$l->name|escape}</span></label>
+                                                        </li>
+                                                    {/foreach}
+                                                </ul>
+                                            </div>
+                                            <div class="fn_order_labels orders_labels">
+                                                {include file="labels_ajax.tpl"}
+                                            </div>
+                                        </span>
+                                    </div>
+
+                                    <div class="okay_list_boding okay_list_close">
+                                        {*delete*}
+                                        <button data-hint="{$btr->orders_delete|escape}" type="button" class="btn_close fn_remove hint-bottom-right-t-info-s-small-mobile hint-anim" data-toggle="modal" data-target="#fn_action_modal" onclick="success_action($(this));" >
+                                           {include file='svg_icon.tpl' svgId='delete'}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="okay_list_row">
+                                    {if $order->purchases|count > 0}
+                                        <div class="orders_purchases_block" style="display: none">
+                                            <div class="purchases_table">
+                                                <div class="purchases_head">
+                                                    <div class="purchases_heading purchases_table_orders_num">№</div>
+                                                    <div class="purchases_heading purchases_table_orders_sku">{$btr->general_sku|escape}</div>
+                                                    <div class="purchases_heading purchases_table_orders_name">{$btr->general_name|escape}</div>
+                                                    <div class="purchases_heading purchases_table_orders_price">{$btr->general_price|escape}</div>
+                                                    <div class="purchases_heading col-lg-2 purchases_table_orders_unit">{$btr->general_qty|escape}</div>
+                                                    <div class="purchases_heading purchases_table_orders_total">{$btr->orders_total_price|escape}</div>
+                                                </div>
+                                                <div class="purchases_body">
+                                                    {foreach $order->purchases as $purchase}
+                                                        <div class="purchases_body_items">
+                                                            <div class="purchases_body_item">
+                                                                <div class="purchases_bodyng purchases_table_orders_num">{$purchase@iteration}</div>
+                                                                <div class="purchases_bodyng purchases_table_orders_sku">{$purchase->sku|default:"&mdash;"}</div>
+                                                                <div class="purchases_bodyng purchases_table_orders_name">
+                                                                    {$purchase->product_name|escape}
+                                                                    {if $purchase->variant_name}({$purchase->variant_name|escape}){/if}
+                                                                </div>
+                                                                <div class="purchases_bodyng purchases_table_orders_price">{$purchase->price|convert} {$currency->sign|escape}</div>
+                                                                <div class="purchases_bodyng purchases_table_orders_unit"> {$purchase->amount}{$settings->units|escape}</div>
+                                                                <div class="purchases_bodyng purchases_table_orders_total"> {($purchase->amount*$purchase->price)|convert} {$currency->sign|escape}</div>
+
+                                                             </div>
+                                                        </div>
+                                                    {/foreach}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {/if}
+                                </div>
+                            </div>
+                            {/foreach}
+                        </div>
+                        <div class="okay_list_footer">
+                            <div class="okay_list_foot_left">
+                                <div class="okay_list_heading okay_list_check">
+                                    <input class="hidden_check fn_check_all" type="checkbox" id="check_all_2" name="" value=""/>
+                                    <label class="okay_ckeckbox" for="check_all_2"></label>
+                                </div>
+                                <div class="okay_list_option">
+                                    <select name="action" class="selectpicker fn_change_orders">
+                                        <option value="0">{$btr->general_select_action|escape}</option>
+                                        <option data-item="status" value="change_status">{$btr->orders_change_status|escape}</option>
+                                        <option data-item="label" value="set_label">{$btr->orders_set_label|escape}</option>
+                                        <option data-item="label" value="unset_label">{$btr->orders_unset_label|escape}</option>
+                                        <option data-item="remove" value="delete">{$btr->orders_permanently_delete|escape}</option>
+                                    </select>
+                                </div>
+                                <div class="okay_list_option fn_show_label" style="display: none">
+                                    <select name="change_label_id" class="selectpicker px-0 fn_labels_select" >
+                                        <option value="0">{$btr->general_select_label|escape}</option>
+                                        {foreach $labels as $change_label}
+                                            <option value="{$change_label->id}">{$change_label->name|escape}</option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                                <div class="okay_list_option fn_show_status" style="display: none;">
+                                    <select name="change_status_id" class="selectpicker px-0 fn_labels_select">
+                                        <option value="0">{$btr->general_select_status|escape}</option>
+                                        {foreach $all_status as $change_status}
+                                            <option value="{$change_status->id}">{$change_status->name|escape}</option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class=" btn btn_small btn_blue">
+                                {include file='svg_icon.tpl' svgId='checked'}
+                                <span>{$btr->general_apply|escape}</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {else}
+        <div class="heading_box mt-1">
+            <div class="text_grey">{$btr->orders_no|escape}</div>
+        </div>
     {/if}
 </div>
+
 {* On document load *}
 {literal}
 <script>
 
 $(function() {
 
-	// Сортировка списка
-	$("#labels").sortable({
-		items:             "li",
-		tolerance:         "pointer",
-		scrollSensitivity: 40,
-		opacity:           0.7
-	});
-
-    $("#from_date, #to_date").datepicker({
-        dateFormat: 'dd-mm-yy'
+    $(document).on('click','.fn_orders_toggle',function(){
+        $(this).find('.fn_icon_arrow').toggleClass('rotate_180');
+        $(this).parents('.fn_row').find('.orders_purchases_block').slideToggle();
     });
 
-    $('.show_purchases').on('click',function(){
-       $(this).next().slideToggle(300);
+    $(".fn_labels_show").click(function(){
+        $(this).next('.fn_labels_hide').toggleClass("active_labels");
     });
-	
+    $(".fn_delete_labels_hide").click(function(){
+        $(this).closest('.box_labels_hide').removeClass("active_labels");
+    });
 
-	$("#main_list #list .row").droppable({
-		activeClass: "drop_active",
-		hoverClass: "drop_hover",
-		tolerance: "pointer",
-		drop: function(event, ui){
-			label_id = $(ui.helper).attr('data-label-id');
-			$(this).find('input[type="checkbox"][name*="check"]').attr('checked', true);
-			$(this).closest("form").find('select[name="action"] option[value=set_label_'+label_id+']').attr("selected", "selected");		
-			$(this).closest("form").submit();
-			return false;	
-		}		
-	});
-	
-	// Раскраска строк
-	function colorize()
-	{
-		$("#list div.row:even").addClass('even');
-		$("#list div.row:odd").removeClass('even');
-	}
-	// Раскрасить строки сразу
-	colorize();
+    if($(window).width() >= 1199 ){
+        $(".fn_from_date, .fn_to_date ").datepicker({
+            dateFormat: 'dd-mm-yy'
+        });
+    }
 
-	// Выделить все
-	$("#check_all").click(function() {
-		$('#list input[type="checkbox"][name*="check"]').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:checked)').length>0);
-	});	
 
-	// Удалить 
-	$("a.delete").click(function() {
-		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
-		$(this).closest(".row").find('input[type="checkbox"][name*="check"]').attr('checked', true);
-		$(this).closest("form").find('select[name="action"] option[value=delete]').attr('selected', true);
-		$(this).closest("form").submit();
-	});
+    $(document).on("change", ".fn_change_orders", function () {
+        console.log($(this));
+       var item = $(this).find("option:selected").data("item");
+       if(item == "status") {
+           $(".fn_show_label").hide();
+           $(".fn_show_status").show();
 
-	// Подтверждение удаления
-	$("form").submit(function() {
-		if($('#list input[type="checkbox"][name*="check"]:checked').length>0)
-			if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-				return false;	
-	});
+       } else if (item == "label") {
+           $(".fn_show_label").show();
+           $(".fn_show_status").hide();
+       } else {
+           $(".fn_show_label").hide();
+           $(".fn_show_status").hide();
+       }
+
+    });
+
+    $(document).on("change", ".fn_ajax_labels input", function () {
+        elem = $(this);
+       var order_id = parseInt($(this).closest(".fn_ajax_labels").data("order_id"));
+       var state = "";
+       session_id = '{/literal}{$smarty.session.id}{literal}';
+       var label_id = parseInt($(this).closest(".fn_ajax_labels").find("input").val());
+       if($(this).closest(".fn_ajax_labels").find("input").is(":checked")){
+            state = "add";
+       } else {
+            state = "remove";
+       }
+
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: "ajax/update_order.php",
+            data: {
+                order_id : order_id,
+                state : state,
+                label_id : label_id,
+                session_id : session_id
+            },
+            success: function(data){
+                var msg = "";
+                if(data){
+                    elem.closest(".fn_ajax_label_wrapper").find(".fn_order_labels").html(data.data);
+                    toastr.success(msg, "Success");
+                } else {
+                    toastr.error(msg, "Error");
+
+                }
+            }
+        });
+    });
 });
-
 </script>
 {/literal}

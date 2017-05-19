@@ -1,210 +1,192 @@
-{* Вкладки *}
-{capture name=tabs}
-    {if in_array('products', $manager->permissions)}
-        <li>
-            <a href="index.php?module=ProductsAdmin">Товары</a>
-        </li>
-    {/if}
-    <li class="active">
-        <a href="index.php?module=CategoriesAdmin">Категории</a>
-    </li>
-    {if in_array('brands', $manager->permissions)}
-        <li>
-            <a href="index.php?module=BrandsAdmin">Бренды</a>
-        </li>
-    {/if}
-    {if in_array('features', $manager->permissions)}
-        <li>
-            <a href="index.php?module=FeaturesAdmin">Свойства</a>
-        </li>
-    {/if}
-    {if in_array('special', $manager->permissions)}
-        <li>
-            <a href="index.php?module=SpecialAdmin">Промо-изображения</a>
-        </li>
-    {/if}
-{/capture}
-
 {* Title *}
-{$meta_title='Категории' scope=parent}
+{$meta_title=$btr->general_categories scope=parent}
 
-{* Заголовок *}
-<div id="header" style="overflow: visible;">
-	<h1>Категории товаров</h1>
-	<a class="add" href="{url module=CategoryAdmin return=$smarty.server.REQUEST_URI}">Добавить категорию</a>
-    <div class="helper_wrap">
-        <a class="top_help" id="show_help_search" href="https://www.youtube.com/watch?v=-EIM2YxnV4Q" target="_blank"></a>
-        <div class="right helper_block topvisor_help">
-            <p>Видеоинструкция по разделу</p>
+<div class="row">
+    <div class="col-lg-7 col-md-7">
+        <div class="wrap_heading">
+            <div class="box_heading heading_page">
+                {$btr->general_categories|escape}
+            </div>
+            <div class="box_btn_heading">
+                <a class="btn btn_small btn-info" href="{url module=CategoryAdmin return=$smarty.server.REQUEST_URI}">
+                    {include file='svg_icon.tpl' svgId='plus'}
+                    <span>{$btr->categories_add|escape}</span>
+                </a>
+            </div>
         </div>
     </div>
 </div>
-{* Заголовок END *}
 
-{if $categories}
-    <div id="main_list" class="categories">
+<div class="boxed fn_toggle_wrap">
+    {if $categories}
+        <form method="post" class="fn_form_list">
+            <input type="hidden" name="session_id" value="{$smarty.session.id}" />
+            <div class="okay_list products_list fn_sort_list">
+                <div class="okay_list_head">
+                    <div class="okay_list_heading okay_list_subicon"></div>
+                    <div class="okay_list_heading okay_list_drag"></div>
+                    <div class="okay_list_heading okay_list_check">
+                        <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value=""/>
+                        <label class="okay_ckeckbox" for="check_all_1"></label>
+                    </div>
+                    <div class="okay_list_heading okay_list_photo hidden-sm-down">{$btr->general_photo|escape}</div>
+                    <div class="okay_list_heading okay_list_categories_name">{$btr->general_name|escape}</div>
+                    <div class="okay_list_heading okay_list_status">{$btr->general_enable|escape}</div>
+                    <div class="okay_list_heading okay_list_setting">{$btr->general_activities|escape}</div>
+                    <div class="okay_list_heading okay_list_close"></div>
+                </div>
+                <div class="okay_list_body categories_wrap sortable ">
+                {if $categories}
+                    {foreach $categories as $category}
+                        <div class="fn_row okay_list_body_item   fn_sort_item">
+                            <div class="okay_list_row ">
+                                <input type="hidden" name="positions[{$category->id}]" value="{$category->position}" />
 
-        <form id="list_form" method="post">
-            <input type="hidden" name="session_id" value="{$smarty.session.id}">
-
-            <div id="list">
-                {function name=categories_tree level=0}
-                    {if $categories}
-                        <div class="sortable">
-                            {foreach $categories as $category}
-                                <div class="{if !$category->visible}invisible{/if} row">
-                                    <div class="tree_row">
-                                        <input type="hidden" name="positions[{$category->id}]" value="{$category->position}">
-
-                                        <div class="move cell" style="margin-left:{$level*20}px">
-                                            <div class="move_zone"></div>
-                                        </div>
-                                        <div class="checkbox cell">
-                                            <input type="checkbox" name="check[]" id="{$category->id}" value="{$category->id}"/>
-                                            <label for="{$category->id}"></label>
-                                        </div>
-                                        <div class="image cell">
-                                            {if $category->image}
-                                                <a href="{url module=CategoryAdmin id=$category->id return=$smarty.server.REQUEST_URI}">
-                                                    <img src="{$category->image|resize:35:35:false:$config->resized_categories_dir}" alt="" /></a>
-                                                {else}
-                                                    <img height="35" width="35" src="design/images/no_image.png"/>
-                                            {/if}
-                                        </div>
-                                        <div class="cell categ_name">
-                                            <a href="{url module=CategoryAdmin id=$category->id return=$smarty.server.REQUEST_URI}">{$category->name|escape}</a>
-                                        </div>
-                                        <div class="icons cell cat">
-                                            <a class="preview" title="Предпросмотр в новом окне" href="../{$lang_link}catalog/{$category->url}" target="_blank"></a>
-                                            <a class="enable" title="Активность" href="#"></a>
-                                            <a class="delete" title="Удалить" href="#"></a>
-                                        </div>
-                                        <div class="icons cell">
-                                            <div class="helper_wrap">
-                                                <a href="javascript:;" id="show_help_search" class="helper_link"></a>
-                                                <div class="helper_block">
-                                                    Отметить/снять отметку выгрузки всех товаров из этой категории и её подкатегорий в файл экспорта для ЯндексМаркета
-                                                </div>
-                                            </div>
-                                            <a class="yandex" data-to_yandex="1" href="javascript:;">В Я.Маркет</a>
-                                            <a class="yandex" data-to_yandex="0" href="javascript:;">Из Я.Маркета</a>
-                                        </div>
-                                        <div class="clear"></div>
+                                {if $category->subcategories}
+                                    <div class="okay_list_heading okay_list_subicon">
+                                        <a href="javascript:;" class="fn_ajax_toggle" data-toggle="0" data-category_id="{$category->id}" >
+                                            <i class="fa fa-plus-square"></i>
+                                        </a>
                                     </div>
-                                    {categories_tree categories=$category->subcategories level=$level+1}
+                                {else}
+                                    <div class="okay_list_heading okay_list_subicon"></div>
+                                {/if}
+
+                                <div class="okay_list_boding okay_list_drag move_zone">
+                                    {include file='svg_icon.tpl' svgId='drag_vertical'}
                                 </div>
-                            {/foreach}
 
+                                <div class="okay_list_boding okay_list_check">
+                                    <input class="hidden_check" type="checkbox" id="id_{$category->id}" name="check[]" value="{$category->id}" />
+                                    <label class="okay_ckeckbox" for="id_{$category->id}"></label>
+                                </div>
+
+                                <div class="okay_list_boding okay_list_photo hidden-sm-down">
+                                    {if $category->image}
+                                        <a href="{url module=CategoryAdmin id=$category->id return=$smarty.server.REQUEST_URI}">
+                                            <img src="{$category->image|resize:55:55:false:$config->resized_categories_dir}" alt="" />
+                                        </a>
+                                    {else}
+                                        <img height="55" width="55" src="design/images/no_image.png"/>
+                                    {/if}
+                                </div>
+
+                                <div class="okay_list_boding okay_list_categories_name">
+                                    <a class="link" href="{url module=CategoryAdmin id=$category->id return=$smarty.server.REQUEST_URI}">
+                                        {$category->name|escape}
+                                    </a>
+                                </div>
+
+                                <div class="okay_list_boding okay_list_status">
+                                    {*visible*}
+                                    <label class="switch switch-default">
+                                        <input class="switch-input fn_ajax_action {if $category->visible}fn_active_class{/if}" data-module="category" data-action="visible" data-id="{$category->id}" name="visible" value="1" type="checkbox"  {if $category->visible}checked=""{/if}/>
+                                        <span class="switch-label"></span>
+                                        <span class="switch-handle"></span>
+                                    </label>
+                                </div>
+
+                                <div class=" okay_list_setting">
+                                    {*open*}
+                                    <a href="../{$lang_link}catalog/{$category->url|escape}" target="_blank" data-hint="{$btr->general_view|escape}" class="setting_icon setting_icon_open hint-bottom-middle-t-info-s-small-mobile  hint-anim">
+                                        {include file='svg_icon.tpl' svgId='icon_desktop'}
+                                    </a>
+                                </div>
+                                <div class="okay_list_boding okay_list_close">
+                                    {*delete*}
+                                    <button data-hint="{$btr->categories_delete|escape}" type="button" class="btn_close fn_remove hint-bottom-right-t-info-s-small-mobile  hint-anim" data-toggle="modal" data-target="#fn_action_modal" onclick="success_action($(this));">
+                                        {include file='svg_icon.tpl' svgId='delete'}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {if $category->subcategories}
+                                <div class="fn_ajax_categories categories_sub_block subcategories_level_1">
+                                    {include file="categories_ajax.tpl"}
+                                </div>
+                            {/if}
                         </div>
-                    {/if}
-                {/function}
-                {categories_tree categories=$categories}
+                    {/foreach}
+                {/if}
+                </div>
+                <div class="okay_list_footer fn_action_block">
+                    <div class="okay_list_foot_left">
+                        <div class="okay_list_heading okay_list_subicon"></div>
+                        <div class="okay_list_heading okay_list_drag"></div>
+                        <div class="okay_list_heading okay_list_check">
+                            <input class="hidden_check fn_check_all" type="checkbox" id="check_all_2" name="" value=""/>
+                            <label class="okay_ckeckbox" for="check_all_2"></label>
+                        </div>
+                        <div class="okay_list_option">
+                            <select name="action" class="selectpicker">
+                                <option value="enable">{$btr->general_do_enable|escape}</option>
+                                <option value="in_feed">{$btr->categories_in_xml|escape}</option>
+                                <option value="out_feed">{$btr->categories_out_xml|escape}</option>
+                                <option value="disable">{$btr->general_do_disable|escape}</option>
+                                <option value="delete">{$btr->general_delete|escape}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn_small btn_blue">
+                        {include file='svg_icon.tpl' svgId='checked'}
+                        <span>{$btr->general_apply|escape}</span>
+                    </button>
+                </div>
             </div>
-            <div id="action">
-                <label id="check_all" class="dash_link">Выбрать все</label>
-                <span id="select">
-                    <select name="action">
-                        <option value="enable">Сделать видимыми</option>
-                        <option value="disable">Сделать невидимыми</option>
-                        <option value="delete">Удалить</option>
-                    </select>
-                </span>
-                <input id="apply_action" class="button_green" type="submit" value="Применить">
-            </div>
-
         </form>
-    </div>
-{else}
-    Нет категорий
-{/if}
+    {else}
+        <div class="heading_box mt-1">
+            <div class="text_grey">{$btr->categories_no|escape}</div>
+        </div>
+    {/if}
+</div>
 
-{literal}
 <script>
-$(function() {
-    
-    $("a.yandex").click(function() {
-		var icon        = $(this);
-		var line        = icon.closest(".row");
-		var id          = line.find('input[type="checkbox"][name*="check"]').val();
-        var state = $(this).data('to_yandex');
-		$.ajax({
-			type: 'POST',
-			url: 'ajax/update_object.php',
-			data: {'object': 'category_yandex', 'id': id, 'values': {'to_yandex': state}, 'session_id': '{/literal}{$smarty.session.id}{literal}'},
-			success: function(data){
-                line.find('.tree_row a.yandex.success_yandex').removeClass('success_yandex');
-                line.find('.tree_row a.yandex.fail_yandex').removeClass('fail_yandex');
-                if (data == -1) {
-                    line.find('.tree_row a.yandex[data-to_yandex="' + state + '"]').addClass('fail_yandex');
-                } else if (data) {
-                    line.find('.tree_row a.yandex[data-to_yandex="' + state + '"]').addClass('success_yandex');
-				} else {
-                    line.find('.tree_row a.yandex[data-to_yandex="' + state + '"]').removeClass('success_yandex');
-				}
-			},
-			dataType: 'json'
-		});	
-		return false;	
-	});
+    $(document).on("click", ".fn_ajax_toggle", function () {
+        elem = $(this);
+        var toggle = parseInt(elem.data("toggle"));
+        var category_id = parseInt(elem.data("category_id"));
+        session_id = '{$smarty.session.id}';
+        if(toggle == 0){
+            $.ajax({
+                dataType: 'json',
+                url: "ajax/get_categories.php",
+                data: {
+                    category_id: category_id,
+                    session_id : session_id,
+                },
+                success: function(data){
+                    var msg = "";
 
-	// Сортировка списка
-	$(".sortable").sortable({
-		items:".row",
-		handle: ".move_zone",
-		tolerance:"pointer",
-		scrollSensitivity:40,
-		opacity:0.7, 
-		axis: "y",
-		update:function()
-		{
-			$("#list_form input[name*='check']").attr('checked', false);
-			$("#list_form").ajaxSubmit();
-		}
-	});
- 
-	// Выделить все
-	$("#check_all").click(function() {
-		$('#list input[type="checkbox"][name*="check"]:not(:disabled)').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:disabled):not(:checked)').length>0);
-	});	
+                    if(data.success){
+                        elem.closest(".fn_row").find(".fn_ajax_categories").html(data.cats);
+                        elem.closest(".fn_row").find(".fn_ajax_categories").addClass("sortable");
+                        elem.data("toggle",1);
+                        elem.find("i").toggleClass("fa-minus-square");
+                    } else {
+                        toastr.error(msg, "Error");
+                    }
 
-	// Показать категорию
-	$("a.enable").click(function() {
-		var icon        = $(this);
-		var line        = icon.closest(".row");
-		var id          = line.find('input[type="checkbox"][name*="check"]').val();
-		var state       = line.hasClass('invisible')?1:0;
-		icon.addClass('loading_icon');
-		$.ajax({
-			type: 'POST',
-			url: 'ajax/update_object.php',
-			data: {'object': 'category', 'id': id, 'values': {'visible': state}, 'session_id': '{/literal}{$smarty.session.id}{literal}'},
-			success: function(data){
-				icon.removeClass('loading_icon');
-				if(state)
-					line.removeClass('invisible');
-				else
-					line.addClass('invisible');				
-			},
-			dataType: 'json'
-		});	
-		return false;	
-	});
+                    var el = document.querySelectorAll("div.sortable , .fn_ajax_categories.sortable");
+                    for (i = 0; i < el.length; i++) {
+                        var sortable = Sortable.create(el[i], {
+                            handle: ".move_zone",  // Drag handle selector within list items
+                            sort: true,  // sorting inside list
+                            animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
+                            scroll: true, // or HTMLElement
+                            ghostClass: "sortable-ghost",  // Class name for the drop placeholder
+                            chosenClass: "sortable-chosen",  // Class name for the chosen item
+                            dragClass: "sortable-drag",  // Class name for the dragging item
+                            scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
+                            scrollSpeed: 10, // px
+                        });
+                    }
 
-	// Удалить 
-	$("a.delete").click(function() {
-		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
-		$(this).closest("div.row").find('input[type="checkbox"][name*="check"]:first').attr('checked', true);
-		$(this).closest("form").find('select[name="action"] option[value=delete]').attr('selected', true);
-		$(this).closest("form").submit();
-	});
-
-	
-	// Подтвердить удаление
-	$("form").submit(function() {
-		if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-			return false;	
-	});
-
-});
+                }
+            });
+        } else {
+            elem.closest(".fn_row").find(".fn_ajax_categories").slideToggle(500);
+            elem.find("i").toggleClass("fa-minus-square");
+        }
+    });
 </script>
-{/literal}

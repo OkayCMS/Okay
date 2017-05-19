@@ -17,19 +17,11 @@
     $comparison = $okay->comparison->get_comparison();
     $okay->design->assign('comparison', $comparison);
     
-    $language = $okay->languages->languages(array('id'=>$okay->languages->lang_id()));
+    $language = $okay->languages->get_language($okay->languages->lang_id());
     $okay->design->assign('language', $language);
     
-    $lang_link = '';
-    $first_lang = $okay->languages->languages();
-    if (!empty($first_lang)) {
-        $first_lang = reset($first_lang);
-        if($first_lang->id !== $language->id) {
-            $lang_link = $language->label . '/';
-        }
-    }
-    $okay->design->assign('lang_link', $lang_link);
-    $okay->design->assign('lang', $okay->translations);
+    $okay->design->assign('lang_link', $okay->languages->get_lang_link());
+    $okay->design->assign('lang', $okay->translations->get_translations(array('lang'=>$language->label)));
     
     $result = $okay->design->fetch('comparison_informer.tpl');
     header("Content-type: application/json; charset=UTF-8");
