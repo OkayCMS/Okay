@@ -3,10 +3,11 @@
     if(!$okay->managers->access('orders') && !$okay->managers->access('users')) {
         exit();
     }
+
     $limit = 100;
-    
     $keyword = $okay->request->get('query', 'string');
-    
+
+    /*Поиск пользователей*/
     $okay->db->query('SELECT 
             u.id, 
             u.name, 

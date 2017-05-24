@@ -1,8 +1,6 @@
 <?php
 
-/*require_once('Okay.php');*/
-
-class Validate /*extends Okay*/ {
+class Validate {
 
     private $denied = array(
         "<script", "</script",

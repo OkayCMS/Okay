@@ -3,7 +3,8 @@
 require_once('Okay.php');
 
 class Pages extends Okay {
-    
+
+    /*Выборка конкрентной страницы*/
     public function get_page($id) {
         if(gettype($id) == 'string') {
             $where = $this->db->placehold('AND p.url=? ', $id);
@@ -32,7 +33,8 @@ class Pages extends Okay {
         $this->db->query($query);
         return $this->db->result();
     }
-    
+
+    /*Выборка всех страниц*/
     public function get_pages($filter = array()) {
         $menu_filter = '';
         $visible_filter = '';
@@ -69,7 +71,8 @@ class Pages extends Okay {
         }
         return $pages;
     }
-    
+
+    /*Добавление страницы*/
     public function add_page($page) {
         $page = (object)$page;
         // Проверяем есть ли мультиязычность и забираем описания для перевода
@@ -91,7 +94,8 @@ class Pages extends Okay {
         $this->db->query("UPDATE __pages SET position=id WHERE id=?", $id);
         return $id;
     }
-    
+
+    /*Обновление страницы*/
     public function update_page($id, $page) {
         $page = (object)$page;
         // Проверяем есть ли мультиязычность и забираем описания для перевода
@@ -110,7 +114,8 @@ class Pages extends Okay {
         
         return $id;
     }
-    
+
+    /*Удаление страницы*/
     public function delete_page($id) {
         if(!empty($id)) {
             $query = $this->db->placehold("DELETE FROM __pages WHERE id=? LIMIT 1", intval($id));
@@ -121,7 +126,8 @@ class Pages extends Okay {
         }
         return false;
     }
-    
+
+    /*Выборка всех меню*/
     public function get_menus() {
         $menus = array();
         $query = "SELECT * FROM __menu ORDER BY position";
@@ -131,7 +137,8 @@ class Pages extends Okay {
         }
         return $menus;
     }
-    
+
+    /*Выборка конкретного меню*/
     public function get_menu($menu_id) {
         $query = $this->db->placehold("SELECT * FROM __menu WHERE id=? LIMIT 1", intval($menu_id));
         $this->db->query($query);

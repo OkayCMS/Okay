@@ -12,12 +12,14 @@ class CallbacksAdmin extends Okay {
             if(!empty($ids)) {
                 switch($this->request->post('action')) {
                     case 'delete': {
+                        /*Удаление заявок на обратный звонок*/
                         foreach($ids as $id) {
                             $this->callbacks->delete_callback($id);
                         }
                         break;
                     }
                     case 'processed': {
+                        /*Модерация заявок на обратный звонок*/
                         foreach ($ids as $id) {
                             $this->callbacks->update_callback($id, array('processed'=>1));
                         }
@@ -38,7 +40,7 @@ class CallbacksAdmin extends Okay {
         if($this->request->get('page') == 'all') {
             $filter['limit'] = $callbacks_count;
         }
-        
+        /*Выборка заявок на обратный звонок*/
         $callbacks = $this->callbacks->get_callbacks($filter, true);
 
         $this->design->assign('pages_count', ceil($callbacks_count/$filter['limit']));

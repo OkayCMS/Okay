@@ -2,7 +2,6 @@
 
 require_once('api/Okay.php');
 
-########################################
 class CommentsAdmin extends Okay {
     
     public function fetch() {
@@ -25,7 +24,7 @@ class CommentsAdmin extends Okay {
             $this->design->assign('keyword', $keyword);
         }
         
-        // Обработка действий
+        /*Принимаем ответ администратора на комментарий*/
         if($this->request->method('post')) {
             if ($this->request->post('comment_answer', 'boolean') && ($parent_comment = $this->comments->get_comment($this->request->post('parent_id', 'integer')))) {
                 $comment = new stdClass();
@@ -45,12 +44,14 @@ class CommentsAdmin extends Okay {
             if(!empty($ids) && is_array($ids)) {
                 switch($this->request->post('action')) {
                     case 'approve': {
+                        /*Модерация комментария*/
                         foreach($ids as $id) {
                             $this->comments->update_comment($id, array('approved'=>1));
                         }
                         break;
                     }
                     case 'delete': {
+                        /*Удаления комментария*/
                         foreach($ids as $id) {
                             $this->comments->delete_comment($id);
                         }
@@ -90,6 +91,9 @@ class CommentsAdmin extends Okay {
             if($comment->type == 'blog') {
                 $posts_ids[] = $comment->object_id;
             }
+            if($comment->type == 'news') {
+                $posts_ids[] = $comment->object_id;
+            }
         }
         $products = array();
         foreach($this->products->get_products(array('id'=>$products_ids, 'limit' => count($products_ids))) as $p) {
@@ -100,12 +104,16 @@ class CommentsAdmin extends Okay {
         foreach($this->blog->get_posts(array('id'=>$posts_ids)) as $p) {
             $posts[$p->id] = $p;
         }
-        
+
+        /*Определение сущности, к которой был оставлен комментарий*/
         foreach($comments as $comment) {
             if($comment->type == 'product' && isset($products[$comment->object_id])) {
                 $comment->product = $products[$comment->object_id];
             }
             if($comment->type == 'blog' && isset($posts[$comment->object_id])) {
+                $comment->post = $posts[$comment->object_id];
+            }
+            if($comment->type == 'news' && isset($posts[$comment->object_id])) {
                 $comment->post = $posts[$comment->object_id];
             }
         }

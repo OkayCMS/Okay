@@ -33,7 +33,7 @@ foreach($okay->pages->get_pages() as $p) {
         }
         $last_modify[] = $p->last_modify;
         $last_modify = max($last_modify);
-		$last_modify = substr($last_modify, 0, 10);
+        $last_modify = substr($last_modify, 0, 10);
         print "\t\t<lastmod>$last_modify</lastmod>"."\n";
         print "\t\t<changefreq>daily</changefreq>"."\n";
         print "\t\t<priority>1.0</priority>"."\n";
@@ -74,7 +74,7 @@ foreach($okay->categories->get_categories() as $c) {
             $last_modify = $res;
         }
         $last_modify[] = $c->last_modify;
-		$last_modify = substr(max($last_modify), 0, 10);
+        $last_modify = substr(max($last_modify), 0, 10);
         print "\t\t<lastmod>$last_modify</lastmod>"."\n";
         print "\t\t<changefreq>daily</changefreq>"."\n";
         print "\t\t<priority>1.0</priority>"."\n";
@@ -98,7 +98,7 @@ foreach($okay->brands->get_brands() as $b) {
         $last_modify = $res;
     }
     $last_modify[] = $b->last_modify;
-	$last_modify = substr(max($last_modify), 0, 10);
+    $last_modify = substr(max($last_modify), 0, 10);
     print "\t\t<lastmod>$last_modify</lastmod>"."\n";
     print "\t\t<changefreq>daily</changefreq>"."\n";
     print "\t\t<priority>1.0</priority>"."\n";
@@ -124,5 +124,5 @@ foreach($okay->db->results() as $p) {
 print '</urlset>'."\n";
 
 function esc($s) {
-    return(htmlspecialchars($s, ENT_QUOTES, 'UTF-8'));	
+    return(htmlspecialchars($s, ENT_QUOTES, 'UTF-8'));    
 }

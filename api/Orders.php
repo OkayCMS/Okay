@@ -3,7 +3,8 @@
 require_once('Okay.php');
 
 class Orders extends Okay {
-    
+
+    /*Выборка конкретного заказа*/
     public function get_order($id) {
         if (empty($id)) {
             return false;
@@ -52,7 +53,8 @@ class Orders extends Okay {
             return false;
         }
     }
-    
+
+    /*Выборка всех заказов*/
     public function get_orders($filter = array()) {
         // По умолчанию
         $limit = 100;
@@ -170,7 +172,8 @@ class Orders extends Okay {
         }
         return $orders;
     }
-    
+
+    /*Подсчет количества заказов*/
     public function count_orders($filter = array()) {
         $keyword_filter = '';
         $label_filter = '';
@@ -233,7 +236,8 @@ class Orders extends Okay {
         $this->db->query($query);
         return $this->db->result('count');
     }
-    
+
+    /*Обновление заказа*/
     public function update_order($id, $order) {
         $order = (object)$order;
 
@@ -242,7 +246,8 @@ class Orders extends Okay {
         $this->update_total_price(intval($id));
         return $id;
     }
-    
+
+    /*Удаление заказа*/
     public function delete_order($id) {
         if(!empty($id)) {
             $query = $this->db->placehold("DELETE FROM __purchases WHERE order_id=?", $id);
@@ -255,7 +260,8 @@ class Orders extends Okay {
             $this->db->query($query);
         }
     }
-    
+
+    /*Добавления заказа*/
     public function add_order($order) {
         $order = (object)$order;
         $order->url = md5(uniqid($this->config->salt, true));
@@ -277,12 +283,14 @@ class Orders extends Okay {
         return $id;
     }
 
+    /*Выборка покупки по его ID*/
     public function get_purchase($id) {
         $query = $this->db->placehold("SELECT * FROM __purchases WHERE id=? LIMIT 1", intval($id));
         $this->db->query($query);
         return $this->db->result();
     }
-    
+
+    /*Выборка списка покупок с заказов*/
     public function get_purchases($filter = array()) {
         $order_id_filter = '';
         if(!empty($filter['order_id'])) {
@@ -293,7 +301,8 @@ class Orders extends Okay {
         $this->db->query($query);
         return $this->db->results();
     }
-    
+
+    /*Обновление покупки(товара)*/
     public function update_purchase($id, $purchase) {
         $purchase = (object)$purchase;
         $old_purchase = $this->get_purchase($id);
@@ -334,7 +343,8 @@ class Orders extends Okay {
         $this->update_total_price($order->id);
         return $id;
     }
-    
+
+    /*Добавление покупки(товара в заказе)*/
     public function add_purchase($purchase) {
         $purchase = (object)$purchase;
         if(!empty($purchase->variant_id)) {
@@ -396,7 +406,8 @@ class Orders extends Okay {
         $this->update_total_price($order->id);
         return $purchase_id;
     }
-    
+
+    /*Удаление покупки*/
     public function delete_purchase($id) {
         $purchase = $this->get_purchase($id);
         if(!$purchase) {
@@ -420,7 +431,8 @@ class Orders extends Okay {
         $this->update_total_price($order->id);
         return true;
     }
-    
+
+    /*Закрытие заказа(списание количества)*/
     public function close($order_id) {
         $order = $this->get_order(intval($order_id));
         if(empty($order)) {
@@ -456,7 +468,8 @@ class Orders extends Okay {
         }
         return $order->id;
     }
-    
+
+    /*Открытие заказа (возвращение количества)*/
     public function open($order_id) {
         $order = $this->get_order(intval($order_id));
         if(empty($order)) {
@@ -477,7 +490,8 @@ class Orders extends Okay {
         }
         return $order->id;
     }
-    
+
+    /*Обновление итого заказа*/
     private function update_total_price($order_id) {
         $order = $this->get_order(intval($order_id));
         if(empty($order)) {
@@ -488,4 +502,5 @@ class Orders extends Okay {
         $this->db->query($query);
         return $order->id;
     }
+
 }

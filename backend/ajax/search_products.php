@@ -3,15 +3,18 @@
 	if(!$okay->managers->access('products')) {
         exit();
     }
-    $limit = 30;
 
+    $limit = 30;
     if (!empty($_SESSION['admin_lang_id'])) {
         $okay->languages->set_lang_id($_SESSION['admin_lang_id']);
     }
+
+    /*Определение языка для поиска*/
     $lang_id  = $okay->languages->lang_id();
     $px = ($lang_id ? 'l' : 'p');
     $lang_sql = $okay->languages->get_query(array('object'=>'product', 'px'=>'p'));
-    
+
+    /*Поиск товаров*/
     $keyword = $okay->request->get('query', 'string');
     $keywords = explode(' ', $keyword);
     $keyword_sql = '';

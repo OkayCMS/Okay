@@ -3,7 +3,8 @@
 require_once('api/Okay.php');
 
 class StylesAdmin extends Okay {
-    
+
+    /*Файл стилей шаблона*/
     public function fetch() {
         $styles_dir = 'design/'.$this->settings->theme.'/css/';
         $styles = array();

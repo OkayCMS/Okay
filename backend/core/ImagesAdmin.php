@@ -9,7 +9,7 @@ class ImagesAdmin extends Okay {
         $allowed_extentions = array('png', 'gif', 'jpg', 'jpeg', 'ico');
         $images = array();
         
-        // Сохраняем
+        /*Сохранение изображений*/
         if($this->request->method('post') && !is_file($images_dir.'../locked')) {
             $old_names = $this->request->post('old_name');
             $new_names = $this->request->post('new_name');
@@ -50,7 +50,7 @@ class ImagesAdmin extends Okay {
             }
         }
         
-        // Чтаем все файлы
+        // Читаем все файлы
         if($handle = opendir($images_dir)) {
             while(false !== ($file = readdir($handle))) {
                 if(is_file($images_dir.$file) && $file[0] != '.' && in_array(pathinfo($file, PATHINFO_EXTENSION), $allowed_extentions)) {

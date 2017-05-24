@@ -20,7 +20,7 @@ class CartView extends View {
                 header('location: '.$this->config->root_url.'/'.$this->lang_link.'cart/');
             }
         }
-        // Если нажали оформить заказ
+        /*Оформление заказа*/
         if(isset($_POST['checkout'])) {
             $order = new stdClass;
             $order->payment_method_id = $this->request->post('payment_method_id', 'integer');
@@ -30,7 +30,7 @@ class CartView extends View {
             $order->address     = $this->request->post('address');
             $order->phone       = $this->request->post('phone');
             $order->comment     = $this->request->post('comment');
-            $order->ip      	= $_SERVER['REMOTE_ADDR'];
+            $order->ip          = $_SERVER['REMOTE_ADDR'];
 
             $this->design->assign('delivery_id', $order->delivery_id);
             $this->design->assign('name', $order->name);
@@ -45,14 +45,15 @@ class CartView extends View {
             $order->discount = $cart->discount;
 
             if($cart->coupon) {
-            	$order->coupon_discount = $cart->coupon_discount;
-            	$order->coupon_code = $cart->coupon->code;
+                $order->coupon_discount = $cart->coupon_discount;
+                $order->coupon_code = $cart->coupon->code;
             }
 
             if(!empty($this->user->id)) {
                 $order->user_id = $this->user->id;
             }
 
+            /*Валидация данных клиента*/
             if(!$this->validate->is_name($order->name, true)) {
                 $this->design->assign('error', 'empty_name');
             } elseif(!$this->validate->is_email($order->email, true)) {
@@ -86,6 +87,8 @@ class CartView extends View {
                 $delivery = $this->delivery->get_delivery($order->delivery_id);
                 if(!empty($delivery) && $delivery->free_from > $order->total_price) {
                     $this->orders->update_order($order->id, array('delivery_price'=>$delivery->price, 'separate_delivery'=>$delivery->separate_payment));
+                } elseif ($delivery->separate_payment) {
+                    $this->orders->update_order($order->id, array('separate_delivery'=>$delivery->separate_payment));
                 }
 
                 // Отправляем письмо пользователю
@@ -124,6 +127,7 @@ class CartView extends View {
         }
     }
 
+    /*Отображение заказа*/
     public function fetch() {
         // Способы доставки
         $deliveries = $this->delivery->get_deliveries(array('enabled'=>1));

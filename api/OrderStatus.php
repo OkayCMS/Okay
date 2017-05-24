@@ -8,7 +8,7 @@ class OrderStatus extends Okay {
      * get all status
      * @return array of objects
      */
-
+    /*Выборка всех статусов заказов*/
     public function get_status($filter = array()) {
         $status_id_filter = '';
 
@@ -37,6 +37,7 @@ class OrderStatus extends Okay {
      * @status - array or object with data
      * @return id of new status
      * */
+    /*Добавление статуса заказа*/
     public function add_status($status) {
         $status = (object)$status;
         // Проверяем есть ли мультиязычность и забираем описания для перевода
@@ -62,6 +63,7 @@ class OrderStatus extends Okay {
      * @status - array of object of data
      * @return id of updated status
      * */
+    /*Обновления статуса заказа*/
     public function update_status($id, $status) {
         $status = (object)$status;
         // Проверяем есть ли мультиязычность и забираем описания для перевода
@@ -83,6 +85,7 @@ class OrderStatus extends Okay {
      * @return boolean
      *
      * */
+    /*Удаления статуса заказа*/
     public function delete_status($id) {
         if(!empty($id)) {
             $order_query = $this->db->placehold("SELECT COUNT(o.id) as count FROM __orders WHERE status_id = ?", intval($id));

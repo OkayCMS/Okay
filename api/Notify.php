@@ -1,7 +1,8 @@
 <?php
 
 class Notify extends Okay {
-    
+
+    /*Отправка емейла*/
     public function email($to, $subject, $message, $from = '', $reply_to = '') {
         $headers = "MIME-Version: 1.0\n" ;
         $headers .= "Content-type: text/html; charset=utf-8; \r\n";
@@ -14,7 +15,8 @@ class Notify extends Okay {
         
         mail($to, $subject, $message, $headers);
     }
-    
+
+    /*Отправка емейла клиенту о заказе*/
     public function email_order_user($order_id) {
         if(!($order = $this->orders->get_order(intval($order_id))) || empty($order->email)) {
             return false;
@@ -28,6 +30,8 @@ class Notify extends Okay {
             $this->design->assign('lang_link', $this->languages->get_lang_link());
             $this->money->init_currencies();
             $this->design->assign("currency", $this->money->get_currency());
+            $this->settings->init_settings();
+            $this->design->assign('settings', $this->settings);
             $this->design->assign('lang', $this->translations->get_translations(array('lang'=>$entity_language->label)));
         }
         /*/lang_modify...*/
@@ -92,12 +96,13 @@ class Notify extends Okay {
             $this->design->assign('lang_link', $this->languages->get_lang_link());
             $this->money->init_currencies();
             $this->design->assign("currency", $this->money->get_currency());
-            //$cur_language = $this->languages->get_language($cur_lang_id);
-            //$this->design->assign('lang', $this->translations->get_translations(array('lang'=>$cur_language->label)));
+            $this->settings->init_settings();
+            $this->design->assign('settings', $this->settings);
         }
         /*/lang_modify...*/
     }
-    
+
+    /*Отправка емейла о заказе администратору*/
     public function email_order_admin($order_id) {
         if(!($order = $this->orders->get_order(intval($order_id)))) {
             return false;
@@ -171,7 +176,8 @@ class Notify extends Okay {
         $this->email($this->settings->order_email, $subject, $email_template, $this->settings->notify_from_email);
     
     }
-    
+
+    /*Отправка емейла о комментарии администратору*/
     public function email_comment_admin($comment_id) {
         if(!($comment = $this->comments->get_comment(intval($comment_id)))) {
             return false;
@@ -204,6 +210,7 @@ class Notify extends Okay {
         $this->email($this->settings->comment_email, $subject, $email_template, $this->settings->notify_from_email);
     }
 
+    /*Отправка емейла с ответом на комментарий клиенту*/
     public function email_comment_answer_to_user($comment_id) {
         if(!($comment = $this->comments->get_comment(intval($comment_id)))
                 || !($parent_comment = $this->comments->get_comment(intval($comment->parent_id)))
@@ -217,6 +224,8 @@ class Notify extends Okay {
             $cur_lang_id = $this->languages->lang_id();
             $this->languages->set_lang_id($entity_language->id);
             $this->design->assign('lang_link', $this->languages->get_lang_link());
+            $this->settings->init_settings();
+            $this->design->assign('settings', $this->settings);
             $this->design->assign('lang', $this->translations->get_translations(array('lang'=>$entity_language->label)));
         }
         /*/lang_modify...*/
@@ -241,10 +250,13 @@ class Notify extends Okay {
         if (!empty($entity_language)) {
             $this->languages->set_lang_id($cur_lang_id);
             $this->design->assign('lang_link', $this->languages->get_lang_link());
+            $this->settings->init_settings();
+            $this->design->assign('settings', $this->settings);
         }
         /*/lang_modify...*/
     }
-    
+
+    /*Отправка емейла о восстановлении пароля клиенту*/
     public function email_password_remind($user_id, $code) {
         if(!($user = $this->users->get_user(intval($user_id)))) {
             return false;
@@ -262,7 +274,8 @@ class Notify extends Okay {
         $this->design->smarty->clearAssign('user');
         $this->design->smarty->clearAssign('code');
     }
-    
+
+    /*Отправка емейла о заявке с формы обратной связи администратору*/
     public function email_feedback_admin($feedback_id) {
         if(!($feedback = $this->feedbacks->get_feedback(intval($feedback_id)))) {
             return false;
@@ -286,6 +299,7 @@ class Notify extends Okay {
         $this->email($this->settings->comment_email, $subject, $email_template, "$feedback->name <$feedback->email>", "$feedback->name <$feedback->email>");
     }
 
+    /*Отправка емейла с ответом на заявку с формы обратной связи клиенту*/
     public function email_feedback_answer_to_user($comment_id,$text) {
         if(!($feedback = $this->feedbacks->get_feedback(intval($comment_id)))) {
             return false;
@@ -317,6 +331,8 @@ class Notify extends Okay {
         }
         /*/lang_modify...*/
     }
+
+    /*Отправка емейла на восстановление пароля администратора*/
     public function password_recovery_admin($email, $code){
         if(empty($email) || empty($code)){
             return false;

@@ -5,7 +5,8 @@ require_once('api/Okay.php');
 class ExportAdmin extends Okay {
     
     private $export_files_dir = 'backend/files/export/';
-    
+
+    /*Экспорт товаров*/
     public function fetch() {
         $this->design->assign('export_files_dir', $this->export_files_dir);
         if(!is_writable($this->export_files_dir)) {

@@ -62,7 +62,7 @@
                                 <tr>
                                     <td border="0" class="td" valign="top" align="left" style="border: 0">
                                         <div>
-                                            <div style="text-align: left; font-family: 'Trebuchet MS'; font-size: 14px; color: rgb(51, 51, 51); line-height: 1.5"><span style="font-size:18px;"><span style="font-family:trebuchet ms,helvetica,sans-serif;"><strong>{$lang->email_comment_hello} {$comment-name|escape}</strong></span></span><br />
+                                            <div style="text-align: left; font-family: 'Trebuchet MS'; font-size: 14px; color: rgb(51, 51, 51); line-height: 1.5"><span style="font-size:18px;"><span style="font-family:trebuchet ms,helvetica,sans-serif;"><strong>{$lang->email_comment_hello} {$feedback->name|escape}</strong></span></span><br />
                                                 <br />
                                                 <span style="font-family:trebuchet ms,helvetica,sans-serif;">
                                                     <span style="font-size:14px;">

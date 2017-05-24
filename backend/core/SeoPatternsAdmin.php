@@ -9,7 +9,7 @@ class SeoPatternsAdmin extends Okay {
         $this->design->set_compiled_dir('backend/design/compiled');
 
         if($this->request->post("ajax")){
-
+            /*Получение категории*/
             if($this->request->post("action") == "get") {
                 $result = new stdClass();
                 $category = $this->categories->get_category($this->request->post("category_id","integer"));
@@ -30,6 +30,7 @@ class SeoPatternsAdmin extends Okay {
 
             }
 
+            /*Обновление шаблона данных категории*/
             if($this->request->post("action") == "set") {
                 $result = new stdClass();
                 $category = new stdClass();

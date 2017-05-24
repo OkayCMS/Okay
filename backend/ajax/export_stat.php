@@ -4,7 +4,7 @@ class ExportAjax extends Okay {
     
     public $total_price;
     public $total_amount;
-    
+    /*Поля(столбцы) для файла экспорта*/
     private $columns_names = array(
         'name'=>             'Категория',
         'amount'=>            'Количество',

@@ -2,9 +2,9 @@
 
 require_once('api/Okay.php');
 
-// Этот класс выбирает модуль в зависимости от параметра Section и выводит его на экран
 class IndexAdmin extends Okay {
 
+    /*Массив с меню сайта (из него автоматически формируется главное меню админки)*/
     private $left_menu = array(
         'left_catalog' => array(
             'left_products_title'     => 'ProductsAdmin',
@@ -88,8 +88,6 @@ class IndexAdmin extends Okay {
         'FeatureAdmin'        => 'features',
         'OrdersAdmin'         => 'orders',
         'OrderAdmin'          => 'orders',
-        'OrdersLabelsAdmin'   => 'labels',
-        'OrdersLabelAdmin'    => 'labels',
         'UsersAdmin'          => 'users',
         'UserAdmin'           => 'users',
         'ExportUsersAdmin'    => 'users',
@@ -127,10 +125,10 @@ class IndexAdmin extends Okay {
         'ManagerAdmin'        => 'managers',
         'LicenseAdmin'        => 'license',
         'SubscribeMailingAdmin'=> 'users',
-        'BannersAdmin'		  => 'banners',
-		'BannerAdmin'		  => 'banners',
-		'BannersImagesAdmin'  => 'banners',
-		'BannersImageAdmin'   => 'banners',
+        'BannersAdmin'          => 'banners',
+        'BannerAdmin'          => 'banners',
+        'BannersImagesAdmin'  => 'banners',
+        'BannersImageAdmin'   => 'banners',
         'CallbacksAdmin'      => 'callbacks',
         
         /* Мультиязычность start */
@@ -203,8 +201,8 @@ class IndexAdmin extends Okay {
         $this->design->set_templates_dir('backend/design/html');
         $this->design->set_compiled_dir('backend/design/compiled');
 
-        $this->design->assign('settings',	$this->settings);
-        $this->design->assign('config',	$this->config);
+        $this->design->assign('settings',    $this->settings);
+        $this->design->assign('config',    $this->config);
 
         $is_mobile = $this->design->is_mobile();
         $is_tablet = $this->design->is_tablet();
@@ -246,6 +244,8 @@ class IndexAdmin extends Okay {
         if(empty($module)) {
             $module = 'ProductsAdmin';
         }
+
+        /*Формирование меню*/
         if($module != "AuthAdmin") {
             foreach ($this->left_menu as $key => $val) {
                 foreach ($val as $ind => $menu_items) {
@@ -294,7 +294,8 @@ class IndexAdmin extends Okay {
             die("Error creating $module class");
         }
     }
-    
+
+    /*Отображение запрашуемого модуля*/
     public function fetch() {
         $currency = $this->money->get_currency();
         $this->design->assign("currency", $currency);
@@ -314,7 +315,7 @@ class IndexAdmin extends Okay {
             $first_status = reset($all_status);
         }
 
-        // Счетчики для верхнего меню
+        /*Счетчики для верхнего меню*/
         $new_orders_counter = $this->orders->count_orders(array('status'=>$first_status->id));
         $this->design->assign("new_orders_counter", $new_orders_counter);
         

@@ -7,7 +7,7 @@ $token = $_GET['token'];
 
 $okay = new Okay();
 
-/*resizing_image*/
+/*Принимаем нужную сущность для ресаза её изображения*/
 $original_img_dir = null;
 $resized_img_dir = null;
 if (isset($_GET['object']) && !empty($_GET['object'])) {
@@ -34,10 +34,8 @@ if (isset($_GET['object']) && !empty($_GET['object'])) {
     }
 
 }
-/*/resizing_image*/
 
-$resized_filename =  $okay->image->resize($filename/*resizing_image*/, $original_img_dir, $resized_img_dir/*/resizing_image*/);
-
+$resized_filename =  $okay->image->resize($filename, $original_img_dir, $resized_img_dir);
 if(is_readable($resized_filename)) {
     header('Content-type: image');
     print file_get_contents($resized_filename);

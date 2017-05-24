@@ -8,6 +8,7 @@ $okay->design->set_templates_dir('backend/design/html');
 $okay->design->set_compiled_dir('backend/design/compiled');
 
 $result = array();
+/*Принимаем метки, с которыми нужно сделать действие*/
 if($okay->request->method("post")) {
     $order_id = $okay->request->post("order_id", "integer");
     $state = $okay->request->post("state", "string");

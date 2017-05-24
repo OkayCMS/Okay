@@ -6,6 +6,7 @@ class OrderAdmin extends Okay {
     
     public function fetch() {
         $order = new stdClass;
+        /*Прием информации о заказе*/
         if($this->request->method('post')) {
             $order->id = $this->request->post('id', 'integer');
             $order->name = $this->request->post('name');
@@ -26,7 +27,8 @@ class OrderAdmin extends Okay {
             if(!$order_labels = $this->request->post('order_labels')) {
                 $order_labels = array();
             }
-            
+
+            /*Добавление/Обновление заказа*/
             if(empty($order->id)) {
                 $order->id = $this->orders->add_order($order);
                 $this->design->assign('message_success', 'added');
@@ -38,7 +40,7 @@ class OrderAdmin extends Okay {
             $this->orderlabels->update_order_labels($order->id, $order_labels);
             
             if($order->id) {
-                // Покупки
+                /*Работа с покупками заказа*/
                 $purchases = array();
                 if($this->request->post('purchases')) {
                     foreach($this->request->post('purchases') as $n=>$va) foreach($va as $i=>$v) {
@@ -144,7 +146,8 @@ class OrderAdmin extends Okay {
                     $products[$variant->product_id]->variants[] = $variant;
                 }
             }
-            
+
+            /*Определение, есть ли товары с количеством 0*/
             $hasVariantNotInStock = false;
             foreach($purchases as $purchase) {
                 if(!empty($products[$purchase->product_id])) {

@@ -3,7 +3,8 @@
 require_once('Okay.php');
 
 class Comparison extends Okay {
-    
+
+    /*Выборка списка товаров в сравнении*/
     public function get_comparison() {
         $comparison = new stdClass();
         $comparison->products = array();
@@ -82,7 +83,8 @@ class Comparison extends Okay {
         }
         return $comparison;
     }
-    
+
+    /*Добавление товара в список сравнения*/
     public function add_item($product_id) {
         if(is_array($_SESSION['comparison']) && !in_array($product_id,$_SESSION['comparison'])) {
             $_SESSION['comparison'][] = $product_id;
@@ -93,7 +95,8 @@ class Comparison extends Okay {
             $_SESSION['comparison'][] = $product_id;
         }
     }
-    
+
+    /*Удаление товара из списка сравнения*/
     public function delete_item($product_id) {
         foreach($_SESSION['comparison'] as $k=>$id) {
             if($id == $product_id) {
@@ -101,7 +104,8 @@ class Comparison extends Okay {
             }
         }
     }
-    
+
+    /*Очистка списка сравнения*/
     public function empty_comparison() {
         unset($_SESSION['comparison']);
     }

@@ -3,10 +3,10 @@
 require_once('Okay.php');
 
 class Banners extends Okay {
-    
+
+    /*Выбираем все слайды*/
     public function get_banners_images($filter = array()) {
-        // По умолчанию
-        $limit = 100;
+        $limit = 100;  // По умолчанию
         $page = 1;
         $banner_id_filter = '';
         $banners_images_id_filter = '';
@@ -41,9 +41,6 @@ class Banners extends Okay {
                 case 'position':
                     $order = 'bi.position DESC';
                     break;
-                case 'name':
-                    /*$order = 'bi.name';
-                    break;*/
             }
         }
         
@@ -70,7 +67,8 @@ class Banners extends Okay {
         $this->db->query($query);
         return $this->db->results();
     }
-    
+
+    /*Подсчитываем количество найденных слайдов*/
     public function count_banners_images($filter = array()) {
         $banner_id_filter = '';
         $banners_images_id_filter = '';
@@ -100,7 +98,8 @@ class Banners extends Okay {
         $this->db->query($query);
         return $this->db->result('count');
     }
-    
+
+    /*Выбираем конкретный слайд*/
     public function get_banners_image($id) {
         if(!is_int($id)) {
            return false;
@@ -126,7 +125,8 @@ class Banners extends Okay {
         $banners_image = $this->db->result();
         return $banners_image;
     }
-    
+
+    /*Добавление слайда*/
     public function add_banners_image($banners_image) {
         $banners_image = (object)$banners_image;
         // Проверяем есть ли мультиязычность и забираем описания для перевода
@@ -145,7 +145,8 @@ class Banners extends Okay {
             return false;
         }
     }
-    
+
+    /*Обновление слайда*/
     public function update_banners_image($id, $banners_image) {
         $banners_image = (object)$banners_image;
         // Проверяем есть ли мультиязычность и забираем описания для перевода
@@ -162,7 +163,8 @@ class Banners extends Okay {
             return false;
         }
     }
-    
+
+    /*Удаление слайда*/
     public function delete_banners_image($id) {
         if(!empty($id)) {
             $this->db->query("SELECT image FROM __banners_images WHERE id=?", intval($id));
@@ -179,21 +181,8 @@ class Banners extends Okay {
         }
         return false;
     }
-    
-    /*public function duplicate_banners_image($id) {
-        $banners_image = $this->get_banners_image($id);
-        $banners_image->id = null;
-        $banners_image->image = '';
-        
-        // Сдвигаем товары вперед и вставляем копию на соседнюю позицию
-        $this->db->query('UPDATE __banners_images SET position=position+1 WHERE position>?', $banners_image->position);
-        $new_id = $this->banners->add_banners_image($banners_image);
-        $this->db->query('UPDATE __banners_images SET position=? WHERE id=?', $banners_image->position+1, $new_id);
-        
-        return $new_id;
-    }*/
-    
-    //группы баннеров
+
+    /*Выбираем все группы баннеров*/
     public function get_banners($filter = array()) {
         $visible_filter = '';
         $banners = array();
@@ -212,7 +201,8 @@ class Banners extends Okay {
         
         return $banners;
     }
-    
+
+    /*Выбираем определенную группу баннеров*/
     public function get_banner($id, $visible = false, $show_filter_array = array()) {
         if (empty($id)) {
             return false;
@@ -248,7 +238,8 @@ class Banners extends Okay {
         $banner = $this->db->result();
         return $banner;
     }
-    
+
+    /*Обновляем группу баннеров*/
     public function update_banner($id, $banner) {
         $query = $this->db->placehold("UPDATE __banners SET ?% WHERE id in (?@) LIMIT ?", $banner, (array)$id, count((array)$id));
         if($this->db->query($query)) {
@@ -257,7 +248,8 @@ class Banners extends Okay {
             return false;
         }
     }
-    
+
+    /*Добавляем группу баннеров*/
     public function add_banner($banner) {
         $banner = (array) $banner;
         
@@ -269,7 +261,8 @@ class Banners extends Okay {
             return false;
         }
     }
-    
+
+    /*Удаляем группу баннеров*/
     public function delete_banner($id) {
         if(!empty($id)) {
             $this->db->query("SELECT id FROM __banners_images where banner_id=?", intval($id));

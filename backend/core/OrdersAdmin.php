@@ -40,12 +40,14 @@ class OrdersAdmin extends Okay {
             if(is_array($ids)) {
                 switch($this->request->post('action')) {
                     case 'delete': {
+                        /*Удалить заказ*/
                         foreach($ids as $id) {
                                 $this->orders->delete_order(intval($id));
                             }
                         break;
                     }
                     case 'change_status': {
+                        /*Смена статуса заказа*/
                         if($this->request->post("change_status_id")) {
                             $new_status = $this->orderstatus->get_status(array("status"=>$this->request->post("change_status_id","integer")));
                             $error_orders = array();
@@ -69,6 +71,7 @@ class OrdersAdmin extends Okay {
                         break;
                     }
                     case 'set_label': {
+                        /*Добавить метку к заказу*/
                         if($this->request->post("change_label_id")) {
                             foreach($ids as $id) {
                                 $this->orderlabels->add_order_labels($id, $this->request->post("change_label_id","integer"));
@@ -77,6 +80,7 @@ class OrdersAdmin extends Okay {
                         break;
                     }
                     case 'unset_label': {
+                        /*Удалить метку из заказа*/
                         if($this->request->post("change_label_id")) {
                             foreach($ids as $id) {
                                 $this->orderlabels->delete_order_labels($id, $this->request->post("change_label_id","integer"));

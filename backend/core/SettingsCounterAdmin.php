@@ -4,6 +4,7 @@ require_once('api/Okay.php');
 
 class SettingsCounterAdmin extends Okay {
 
+    /*Настройки счетчиков*/
     public function fetch() {
         if($this->request->method('POST')) {
             $this->settings->g_analytics = $this->request->post('g_analytics');
@@ -17,4 +18,5 @@ class SettingsCounterAdmin extends Okay {
 
         return $this->design->fetch('settings_counter.tpl');
     }
+
 }

@@ -6,6 +6,7 @@ class PageAdmin extends Okay {
     
     public function fetch() {
         $page = new stdClass;
+        /*Прием информации о страницу*/
         if($this->request->method('POST')) {
             $page->id = $this->request->post('id', 'integer');
             $page->name = $this->request->post('name');
@@ -17,7 +18,7 @@ class PageAdmin extends Okay {
             $page->menu_id = $this->request->post('menu_id', 'integer');
             $page->visible = $this->request->post('visible', 'boolean');
             
-            ## Не допустить одинаковые URL разделов.
+            /*Не допустить одинаковые URL разделов*/
             if(($p = $this->pages->get_page($page->url)) && $p->id!=$page->id) {
                 $this->design->assign('message_error', 'url_exists');
             } elseif(empty($page->name)) {
@@ -25,6 +26,7 @@ class PageAdmin extends Okay {
             } elseif(substr($page->url, -1) == '-' || substr($page->url, 0, 1) == '-') {
                 $this->design->assign('message_error', 'url_wrong');
             } else {
+                /*Добавление/Обновление страницы*/
                 if(empty($page->id)) {
                     $page->id = $this->pages->add_page($page);
                     $page = $this->pages->get_page($page->id);

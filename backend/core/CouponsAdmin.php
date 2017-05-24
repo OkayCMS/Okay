@@ -12,6 +12,7 @@ class CouponsAdmin extends Okay {
             if(is_array($ids) && count($ids)>0) {
                 switch($this->request->post('action')) {
                     case 'delete': {
+                        /*Удаление купона*/
                         foreach($ids as $id) {
                             $this->coupons->delete_coupon($id);
                         }
@@ -20,6 +21,7 @@ class CouponsAdmin extends Okay {
                 }
             }
 
+            /*Создание купона*/
             if($this->request->post("new_code")){
                 $new_expire = $this->request->post('new_expire');
                 $new_coupon = new stdClass();

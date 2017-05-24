@@ -3,7 +3,8 @@
 require_once('View.php');
 
 class MainView extends View {
-    
+
+    /*Отображение контента главной страницы*/
     public function fetch() {
         if($this->page) {
             $this->design->assign('meta_title', $this->page->meta_title);

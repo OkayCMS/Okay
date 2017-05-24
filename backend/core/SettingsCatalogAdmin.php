@@ -7,6 +7,7 @@ class SettingsCatalogAdmin extends Okay {
     private $allowed_image_extentions = array('png', 'gif', 'jpg', 'jpeg', 'ico');
     public $passwd_file_1c = "cml/.passwd";
 
+    /*Настройки каталога*/
     public function fetch() {
         $managers = $this->managers->get_managers();
         $this->design->assign('managers', $managers);
@@ -18,7 +19,7 @@ class SettingsCatalogAdmin extends Okay {
             $this->settings->products_num = $this->request->post('products_num');
             $this->settings->max_order_amount = $this->request->post('max_order_amount');
             $this->settings->comparison_count = $this->request->post('comparison_count');
-            $this->settings->units = $this->request->post('units');
+            $this->settings->update('units', $this->request->post('units'));
             $this->settings->posts_num = $this->request->post('posts_num');
             if($this->request->post('is_preorder', 'integer')){
                 $this->settings->is_preorder = $this->request->post('is_preorder', 'integer');

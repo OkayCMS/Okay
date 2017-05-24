@@ -237,3 +237,5 @@ $lang['email_comment_your_comment'] = "Your comment";
 $lang['email_comment_admin_ans'] = "Admin answer";
 $lang['email_on_site'] = "On site";
 $lang['email_order_your_status'] = "Your order status";
+$lang['receipt_name'] = "Name, Surname";
+$lang['receipt_address'] = "Address";

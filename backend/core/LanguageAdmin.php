@@ -8,6 +8,7 @@ class LanguageAdmin extends Okay {
         $languages = $this->languages->get_languages();
         $lang_list = $this->languages->lang_list();
         $language = new stdClass();
+        /*Принимаем информацию о языке сайта*/
         if($this->request->method('post')) {
             $language->id      = $this->request->post('id', 'integer');
             $language->enabled = $this->request->post('enabled', 'boolean');
@@ -25,6 +26,7 @@ class LanguageAdmin extends Okay {
                 } elseif($exist_label && $exist_label->id!=$language->id) {
                     $this->design->assign('message_error', 'label_exists');
                 } else {
+                    /*Добавление/Обновление языка*/
                     $language->id = $this->languages->add_language($language);
                     $languages = $this->languages->get_languages();
                     foreach($languages as $l) {

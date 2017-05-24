@@ -8,22 +8,24 @@
 require_once('Okay.php');
 
 class Config {
-    
-    public $version = '2.0.0';
-
+    /*Версия системы*/
+    public $version = '2.0.1';
+    /*Тип системы*/
     public $version_type = 'pro';
     
-    // Файл для хранения настроек
+    /*Файл для хранения настроек*/
     public $config_file = 'config/config.php';
     
     private $vars = array();
-    
-    // В конструкторе записываем настройки файла в переменные этого класса
-    // для удобного доступа к ним. Например: $okay->config->db_user
+
+    /*
+     * В конструкторе записываем настройки файла в переменные этого класса
+     *  для удобного доступа к ним. Например: $okay->config->db_user
+     * */
     public function __construct() {
-        // Читаем настройки из дефолтного файла
+        /*Читаем настройки из дефолтного файла*/
         $ini = parse_ini_file(dirname(dirname(__FILE__)).'/'.$this->config_file);
-        // Записываем настройку как переменную класса
+        /*Записываем настройку как переменную класса*/
         foreach($ini as $var=>$value) {
             $this->vars[$var] = $value;
         }
@@ -75,7 +77,8 @@ class Config {
             date_default_timezone_set($this->vars['php_timezone']);
         }
     }
-    
+
+    /*Выборка настройки*/
     public function __get($name) {
         if(isset($this->vars[$name])) {
             return $this->vars[$name];
@@ -83,9 +86,9 @@ class Config {
             return null;
         }
     }
-    
+
+    /*Запись данных в конфиг*/
     public function __set($name, $value) {
-        # Запишем конфиги
         if(isset($this->vars[$name])) {
             $conf = file_get_contents(dirname(dirname(__FILE__)).'/'.$this->config_file);
             $conf = preg_replace("/".$name."\s*=.*\n/i", $name.' = '.$value."\r\n", $conf);
@@ -95,11 +98,13 @@ class Config {
             $this->vars[$name] = $value;
         }
     }
-    
+
+    /*Формирование токена*/
     public function token($text) {
         return md5($text.$this->salt);
     }
-    
+
+    /*Проверка токена*/
     public function check_token($text, $token) {
         if(!empty($token) && $token === $this->token($text)) {
             return true;

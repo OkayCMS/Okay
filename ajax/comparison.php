@@ -6,6 +6,7 @@
     require_once('../api/Okay.php');
     define('IS_CLIENT', true);
     $okay = new Okay();
+    /*Действия над товаром в сравнении*/
     $product_id = $okay->request->get('product', 'integer');
     $action = $okay->request->get('action');
     if($action == 'add') {
@@ -16,10 +17,10 @@
     
     $comparison = $okay->comparison->get_comparison();
     $okay->design->assign('comparison', $comparison);
-    
+
+    /*Определяем язык*/
     $language = $okay->languages->get_language($okay->languages->lang_id());
     $okay->design->assign('language', $language);
-    
     $okay->design->assign('lang_link', $okay->languages->get_lang_link());
     $okay->design->assign('lang', $okay->translations->get_translations(array('lang'=>$language->label)));
     

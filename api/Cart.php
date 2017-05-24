@@ -3,7 +3,8 @@
 require_once('Okay.php');
 
 class Cart extends Okay {
-    
+
+    /*Выбираем содержимое корзины*/
     public function get_cart() {
         $cart = new stdClass();
         $cart->purchases = array();
@@ -78,7 +79,8 @@ class Cart extends Okay {
         }
         return $cart;
     }
-    
+
+    /*Добавление товара в корзину*/
     public function add_item($variant_id, $amount = 1) {
         // Выберем товар из базы, заодно убедившись в его существовании
         $variant = $this->variants->get_variant($variant_id);
@@ -93,7 +95,8 @@ class Cart extends Okay {
             $_SESSION['shopping_cart'][$variant_id] = intval($amount);
         }
     }
-    
+
+    /*Обновление товара в корзине*/
     public function update_item($variant_id, $amount = 1) {
         // Выберем товар из базы, заодно убедившись в его существовании
         $variant = $this->variants->get_variant($variant_id);
@@ -105,16 +108,19 @@ class Cart extends Okay {
             $_SESSION['shopping_cart'][$variant_id] = intval($amount);
         }
     }
-    
+
+    /*Удаление товара из корзины*/
     public function delete_item($variant_id) {
         unset($_SESSION['shopping_cart'][$variant_id]);
     }
-    
+
+    /*Очистка корзины*/
     public function empty_cart() {
         unset($_SESSION['shopping_cart']);
         unset($_SESSION['coupon_code']);
     }
-    
+
+    /*Применение купона в корзине*/
     public function apply_coupon($coupon_code) {
         $coupon = $this->coupons->get_coupon((string)$coupon_code);
         if($coupon && $coupon->valid) {

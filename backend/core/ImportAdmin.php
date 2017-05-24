@@ -8,7 +8,8 @@ class ImportAdmin extends Okay {
     public $import_file = 'import.csv';
     public $allowed_extensions = array('csv', 'txt');
     private $locale = 'ru_RU.UTF-8';
-    
+
+    /*Импорт товаров*/
     public function fetch() {
         $this->design->assign('import_files_dir', $this->import_files_dir);
         if(!is_writable($this->import_files_dir)) {

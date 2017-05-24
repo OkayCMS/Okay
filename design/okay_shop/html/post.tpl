@@ -9,51 +9,51 @@
 
 {* The page heading *}
 <h1 class="h1">
-	<span data-post="{$post->id}">{$post->name|escape}</span>
+    <span data-post="{$post->id}">{$post->name|escape}</span>
 </h1>
 
 <div class="block padding">
-	{* Post date *}
-	<div class="post_date">
-		<span>{$post->date|date}</span>
-	</div>
+    {* Post date *}
+    <div class="post_date">
+        <span>{$post->date|date}</span>
+    </div>
 
-	{* Post content *}
-	{$post->description}
+    {* Post content *}
+    {$post->description}
 
     {* Social share *}
     <div class="post_share">
         <div class="ya-share2" data-services="vkontakte,facebook,twitter,viber"></div>
     </div>
 
-	{* Previous/Next posts *}
-	{if $prev_post || $next_post}
-		<nav>
-			<ol class="pager row">
-				<li class="col-xs-12{if $next_post} col-sm-6{else} col-sm-12{/if}">
-					{if $prev_post}
-						<a href="{$smarty.get.type_post}/{$prev_post->url}">← <span>{$prev_post->name}</span></a>
-					{/if}
-				</li>
+    {* Previous/Next posts *}
+    {if $prev_post || $next_post}
+        <nav>
+            <ol class="pager row">
+                <li class="col-xs-12{if $next_post} col-sm-6{else} col-sm-12{/if}">
+                    {if $prev_post}
+                        <a href="{$smarty.get.type_post}/{$prev_post->url}">← <span>{$prev_post->name}</span></a>
+                    {/if}
+                </li>
                 <li class="col-xs-12 col-sm-6">
-					{if $next_post}
-						<a href="{$smarty.get.type_post}/{$next_post->url}"><span>{$next_post->name}</span> →</a>
-					{/if}
-				</li>
-			</ol>
-		</nav>
-	{/if}
+                    {if $next_post}
+                        <a href="{$smarty.get.type_post}/{$next_post->url}"><span>{$next_post->name}</span> →</a>
+                    {/if}
+                </li>
+            </ol>
+        </nav>
+    {/if}
 </div>
 
 <div id="comments">
-	<div class="h2">
-		<span data-language="post_comments">{$lang->post_comments}</span>
-	</div>
+    <div class="h2">
+        <span data-language="post_comments">{$lang->post_comments}</span>
+    </div>
 
     <div class="padding block">
         <div class="row">
             <div class="col-lg-7">
-        		{if $comments}
+                {if $comments}
                     {function name=comments_tree level=0}
                         {foreach $comments as $comment}
                             
@@ -89,52 +89,52 @@
                         {/foreach}
                     {/function}
                     {comments_tree comments=$comments}
-        		{else}
-        			<div class="no_comments">
-        				<span data-language="post_no_comments">{$lang->post_no_comments}</span>
-        			</div>
-        		{/if}
+                {else}
+                    <div class="no_comments">
+                        <span data-language="post_no_comments">{$lang->post_no_comments}</span>
+                    </div>
+                {/if}
             </div>
 
             <div class="col-lg-5">
-        	   {* Comment form *}
-        	   <form id="fn-blog_comment" class="fn_validate_post"  method="post" action="">
-        		
+               {* Comment form *}
+               <form id="fn-blog_comment" class="fn_validate_post"  method="post" action="">
+                
                     <div class="h3">
                         <span data-language="post_write_comment">{$lang->post_write_comment}</span>
                     </div>
 
-        			{* Form error messages *}
-        			{if $error}
-        				<div class="message_error">
-        					{if $error=='captcha'}
-        						<span data-language="form_error_captcha">{$lang->form_error_captcha}</span>
-        					{elseif $error=='empty_name'}
-        						<span data-language="form_enter_name">{$lang->form_enter_name}</span>
-        					{elseif $error=='empty_comment'}
-        						<span data-language="form_enter_comment">{$lang->form_enter_comment}</span>
+                    {* Form error messages *}
+                    {if $error}
+                        <div class="message_error">
+                            {if $error=='captcha'}
+                                <span data-language="form_error_captcha">{$lang->form_error_captcha}</span>
+                            {elseif $error=='empty_name'}
+                                <span data-language="form_enter_name">{$lang->form_enter_name}</span>
+                            {elseif $error=='empty_comment'}
+                                <span data-language="form_enter_comment">{$lang->form_enter_comment}</span>
                             {elseif $error=='empty_email'}
                                 <span data-language="form_enter_email">{$lang->form_enter_email}</span>
-        					{/if}
-        			    </div>
+                            {/if}
+                        </div>
                     {/if}
 
-        			<div class="row">
-        				{* User's name *}
-        				<div class="col-lg-6 form_group">
-        					<input class="form_input" type="text" name="name" value="{$comment_name|escape}" placeholder="{$lang->form_name}*">
-        				</div>
+                    <div class="row">
+                        {* User's name *}
+                        <div class="col-lg-6 form_group">
+                            <input class="form_input" type="text" name="name" value="{$comment_name|escape}" placeholder="{$lang->form_name}*">
+                        </div>
 
                         {* User's email *}
                         <div class="col-lg-6 form_group">
                             <input class="form_input" type="text" name="email" value="{$comment_email|escape}" placeholder="{$lang->form_email}"/>
                         </div>
-        			</div>
+                    </div>
 
-        			{* User's comment *}
-        			<div class="form_group">
-        				<textarea class="form_textarea" rows="3" name="text" placeholder="{$lang->form_enter_comment}*">{$comment_text}</textarea>
-        			</div>
+                    {* User's comment *}
+                    <div class="form_group">
+                        <textarea class="form_textarea" rows="3" name="text" placeholder="{$lang->form_enter_comment}*">{$comment_text}</textarea>
+                    </div>
 
                     {* Captcha *}
                     {if $settings->captcha_post}
@@ -145,9 +145,9 @@
                         </div>
                     {/if}
 
-        			{* Submit button *}
-        			<input class="button" type="submit" name="comment" data-language="form_send" value="{$lang->form_send}">
-        	   </form>
+                    {* Submit button *}
+                    <input class="button" type="submit" name="comment" data-language="form_send" value="{$lang->form_send}">
+               </form>
            </div>
        </div>
     </div>

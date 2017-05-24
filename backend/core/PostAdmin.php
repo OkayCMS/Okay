@@ -7,6 +7,7 @@ class PostAdmin extends Okay {
     public function fetch() {
         $related_products = array();
         $post = new stdClass;
+        /*Прием информации о записи*/
         if($this->request->method('post')) {
             $post->id = $this->request->post('id', 'integer');
             $post->name = $this->request->post('name');
@@ -41,6 +42,7 @@ class PostAdmin extends Okay {
             } elseif(substr($post->url, -1) == '-' || substr($post->url, 0, 1) == '-') {
                 $this->design->assign('message_error', 'url_wrong');
             } else {
+                /*Добавление/Обновление записи*/
                 if(empty($post->id)) {
                     $post->id = $this->blog->add_post($post);
                     $this->design->assign('message_success', 'added');
@@ -84,6 +86,7 @@ class PostAdmin extends Okay {
             $post->date = date($this->settings->date_format, time());
         }
 
+        /*Связанные товары записи*/
         if(!empty($related_products)) {
             foreach($related_products as &$r_p) {
                 $r_products[$r_p->related_id] = &$r_p;
@@ -98,6 +101,7 @@ class PostAdmin extends Okay {
                 $r_products[$image->product_id]->images[] = $image;
             }
         }
+
         $this->design->assign('related_products', $related_products);
         $this->design->assign('post', $post);
         return $this->design->fetch('post.tpl');

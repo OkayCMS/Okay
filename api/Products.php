@@ -5,7 +5,8 @@ require_once('Okay.php');
 class Products extends Okay {
     
     private $all_brands = array();
-    
+
+    /*Выборка всех товаров*/
     public function get_products($filter = array()) {
         // По умолчанию
         $limit = 100;
@@ -218,7 +219,8 @@ class Products extends Okay {
         }*/
         return $products;
     }
-    
+
+    /*Подсчет количества товаров*/
     public function count_products($filter = array()) {
         $category_id_filter = '';
         $brand_id_filter = '';
@@ -348,7 +350,8 @@ class Products extends Okay {
             return $this->db->result('count');
         }
     }
-    
+
+    /*Выборка конкретного товара*/
     public function get_product($id) {
         if (empty($id)) {
             return false;
@@ -384,7 +387,8 @@ class Products extends Okay {
         $product = $this->db->result();
         return $product;
     }
-    
+
+    /*Обновление товара*/
     public function update_product($id, $product) {
         $product = (object)$product;
         $result = $this->languages->get_description($product, 'product');
@@ -400,7 +404,8 @@ class Products extends Okay {
             return false;
         }
     }
-    
+
+    /*Добавление товара*/
     public function add_product($product) {
         $product = (array) $product;
         if(empty($product['url'])) {
@@ -433,7 +438,8 @@ class Products extends Okay {
             return false;
         }
     }
-    
+
+    /*Удаление товара*/
     public function delete_product($id) {
         if(!empty($id)) {
             // Удаляем варианты
@@ -498,7 +504,8 @@ class Products extends Okay {
         }
         return false;
     }
-    
+
+    /*Дублирование товара*/
     public function duplicate_product($id) {
         $product = $this->get_product($id);
         $product->id = null;
@@ -559,7 +566,8 @@ class Products extends Okay {
         $this->multi_duplicate_product($id, $new_id);
         return $new_id;
     }
-    
+
+    /*Выборка связанных товаров*/
     public function get_related_products($product_id = array()) {
         if(empty($product_id)) {
             return array();
@@ -580,18 +588,21 @@ class Products extends Okay {
         $this->db->query($query);
         return $this->db->results();
     }
-    
+
+    /*Добавление связанных товаров*/
     public function add_related_product($product_id, $related_id, $position=0) {
         $query = $this->db->placehold("INSERT IGNORE INTO __related_products SET product_id=?, related_id=?, position=?", $product_id, $related_id, $position);
         $this->db->query($query);
         return $related_id;
     }
-    
+
+    /*Удаление связанных товаров*/
     public function delete_related_product($product_id, $related_id) {
         $query = $this->db->placehold("DELETE FROM __related_products WHERE product_id=? AND related_id=? LIMIT 1", intval($product_id), intval($related_id));
         $this->db->query($query);
     }
-    
+
+    /*Выборка изображений товаров*/
     public function get_images($filter = array()) {
         $product_id_filter = '';
         if(!empty($filter['product_id'])) {
@@ -614,7 +625,8 @@ class Products extends Okay {
         $this->db->query($query);
         return $this->db->results();
     }
-    
+
+    /*Добавление изображений товаров*/
     public function add_image($product_id, $filename, $name = '') {
         $query = $this->db->placehold("SELECT id FROM __images WHERE product_id=? AND filename=?", $product_id, $filename);
         $this->db->query($query);
@@ -628,13 +640,15 @@ class Products extends Okay {
         }
         return($id);
     }
-    
+
+    /*Обновление изображений*/
     public function update_image($id, $image) {
         $query = $this->db->placehold("UPDATE __images SET ?% WHERE id=?", $image, $id);
         $this->db->query($query);
         return($id);
     }
-    
+
+    /*Удаление изображений*/
     public function delete_image($id) {
         $query = $this->db->placehold("SELECT filename FROM __images WHERE id=?", $id);
         $this->db->query($query);
@@ -660,6 +674,7 @@ class Products extends Okay {
         }
     }
 
+    /*Выборка "соседних" товаров*/
     public function get_neighbors_products($category_id, $position) {
         $pids = array();
         // следующий товар
@@ -702,6 +717,7 @@ class Products extends Okay {
         return $result;
     }
 
+    /*Дублирование мультиязычного контента товара*/
     public function multi_duplicate_product($id, $new_id) {
         $lang_id = $this->languages->lang_id();
         if (!empty($lang_id)) {
@@ -733,7 +749,7 @@ class Products extends Okay {
                             $this->variants->update_variant($variants[$i]->id, $upd_variant);
                         }
                     }
-            		
+                    
                     // Дублируем свойства
                     $options = $this->features->get_options(array('product_id'=>$id));
                     foreach($options as $o) {
@@ -746,6 +762,7 @@ class Products extends Okay {
         }
     }
 
+    /*Выборка промо-изображений*/
     public function get_spec_images() {
         $query = $this->db->placehold("SELECT id, filename, position FROM __spec_img ORDER BY position ASC");
         $this->db->query($query);
@@ -757,6 +774,7 @@ class Products extends Okay {
         }
     }
 
+    /*Удаление промо-изображений*/
     public function delete_spec_image($image_id) {
         if(empty($image_id)){
             return false;
@@ -771,7 +789,7 @@ class Products extends Okay {
         return true;
     }
 
-
+    /*Обновление промо-изображений*/
     public function update_spec_images($id, $spec_image){
         if(empty($id) || empty($spec_image)){
             return false;
@@ -781,6 +799,8 @@ class Products extends Okay {
         $this->db->query($query);
         return $id;
     }
+
+    /*Добавление промо-изображений*/
     public function add_spec_image($image) {
         if(empty($image)){
             return false;

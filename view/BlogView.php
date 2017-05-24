@@ -12,9 +12,9 @@ class BlogView extends View {
             return $this->fetch_blog();
         }
     }
-    
+
+    /*Выбираем пост из базы*/
     private function fetch_post($url) {
-        // Выбираем пост из базы
         $type_post = $this->request->get('type_post');
         $post = $this->blog->get_post($url, $type_post);
         
@@ -32,7 +32,7 @@ class BlogView extends View {
             $this->design->assign('comment_email', $this->user->email);
         }
         
-        // Принимаем комментарий
+        /*Принимаем комментарий*/
         if ($this->request->method('post') && $this->request->post('comment')) {
             $comment = new stdClass;
             $comment->name = $this->request->post('name');
@@ -125,7 +125,8 @@ class BlogView extends View {
         
         return $this->design->fetch('post.tpl');
     }
-    
+
+    /*Отображение записей на странице*/
     private function fetch_blog() {
         //lastModify
         $this->db->query("SELECT b.last_modify FROM __blog b");
@@ -136,7 +137,7 @@ class BlogView extends View {
         }
         $this->setHeaderLastModify(max($last_modify));
         
-        // Количество постов на 1 странице
+        // Количество постов на одной странице
         $items_per_page = max(1, intval($this->settings->posts_num));
         
         $filter = array();

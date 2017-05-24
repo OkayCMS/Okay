@@ -6,6 +6,7 @@ class CategoryAdmin extends Okay {
     
     public function fetch() {
         $category = new stdClass;
+        /*Принимаем данные о категории*/
         if($this->request->method('post')) {
             $category->id = $this->request->post('id', 'integer');
             $category->parent_id = $this->request->post('parent_id', 'integer');
@@ -32,6 +33,7 @@ class CategoryAdmin extends Okay {
             } elseif(substr($category->url, -1) == '-' || substr($category->url, 0, 1) == '-') {
                 $this->design->assign('message_error', 'url_wrong');
             } else {
+                /*Добавление/обновление категории*/
                 if(empty($category->id)) {
                     $category->id = $this->categories->add_category($category);
                     $this->design->assign('message_success', 'added');
@@ -55,7 +57,7 @@ class CategoryAdmin extends Okay {
             $category->id = $this->request->get('id', 'integer');
             $category = $this->categories->get_category($category->id);
         }
-        
+        /*Выборка дерева категорий*/
         $categories = $this->categories->get_categories_tree();
         
         $this->design->assign('category', $category);

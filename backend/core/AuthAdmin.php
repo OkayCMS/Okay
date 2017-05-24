@@ -5,6 +5,7 @@ require_once('api/Okay.php');
 class AuthAdmin extends Okay {
 
     public function fetch() {
+        /*Восстановление пароля администратора*/
         $recovery_email = $this->request->get('recovery_email');
         if($this->request->get("ajax_recovery") && !empty($recovery_email)){
             if($recovery_email == $this->settings->admin_email){
@@ -38,14 +39,15 @@ class AuthAdmin extends Okay {
             }
 
         } elseif ($this->request->method('post')) {
-
+            /*Авторизация в админ.панель*/
             $login = $this->request->post('login');
             $pass = $this->request->post('password');
             $manager = $this->managers->get_manager((string)$login);
 
 
             if ($manager) {
-				$limit = 10;
+                /*Подсчитываем количество неправильны попыток входа*/
+                $limit = 10;
                 $now = date('Y-m-d');
                 $last = (isset($manager->last_try) ? $manager->last_try : $now);
                 if ($last != $now) {
@@ -58,20 +60,20 @@ class AuthAdmin extends Okay {
                 if ($manager->cnt_try > $limit) {
                     $this->design->assign('error_message', 'limit_try');
                 } elseif ($this->managers->check_password($pass, $manager->password)) {
-                    // Установим переменную сессии, чтоб сервер знал что админ авторизован.
+                    /*Входим в админку*/
                     $_SESSION['admin'] = $manager->login;
                     $this->managers->update_manager((int)$manager->id, array('cnt_try'=>0, 'last_try'=>null));
                     header('location: '.$this->config->root_url.'/backend/index.php');
                     exit();
                 } else {
-                    // не верный пароль менеджера
+                    /*неверный пароль менеджера*/
                     $this->design->assign('login', $login);
                     $this->design->assign('error_message', 'auth_wrong');
                     $this->design->assign('limit_cnt', $limit-$manager->cnt_try);
                     $this->managers->update_manager((int)$manager->id, array('cnt_try'=>$manager->cnt_try, 'last_try'=>$last));
                 }
             } else {
-                // менеджер не найден
+                /*менеджер не найден*/
                 $this->design->assign('login', $login);
                 $this->design->assign('error_message', 'auth_wrong');
             }

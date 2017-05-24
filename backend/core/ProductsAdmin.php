@@ -43,7 +43,7 @@ class ProductsAdmin extends Okay {
             $filter['brand_id'] = $brand->id;
         }
         
-        // Текущий фильтр
+        /*Фильтр по товарам*/
         if($f = $this->request->get('filter', 'string')) {
             if($f == 'featured') {
                 $filter['featured'] = 1;
@@ -100,42 +100,51 @@ class ProductsAdmin extends Okay {
             if(!empty($ids)) {
                 switch($this->request->post('action')) {
                     case 'disable': {
+                        /*Выключить товар*/
                         $this->products->update_product($ids, array('visible'=>0));
                         break;
                     }
                     case 'enable': {
+                        /*Включить товар*/
                         $this->products->update_product($ids, array('visible'=>1));
                         break;
                     }
                     case 'set_featured': {
+                        /*Включить "хит продаж"*/
                         $this->products->update_product($ids, array('featured'=>1));
                         break;
                     }
                     case 'unset_featured': {
+                        /*Выключить "хит продаж"*/
                         $this->products->update_product($ids, array('featured'=>0));
                         break;
                     }
                     case 'set_feed': {
+                        /*Выгружать в фид*/
                         $this->db->query("UPDATE __variants set feed=1 where product_id in(?@)", $ids);
                         break;
                     }
                     case 'unset_feed': {
+                        /*Не выгружать в фид*/
                         $this->db->query("UPDATE __variants set feed=0 where product_id in(?@)", $ids);
                         break;
                     }
                     case 'delete': {
+                        /*Удалить товар*/
                         foreach($ids as $id) {
                             $this->products->delete_product($id);
                         }
                         break;
                     }
                     case 'duplicate': {
+                        /*Сделать копию товара*/
                         foreach($ids as $id) {
                             $this->products->duplicate_product(intval($id));
                         }
                         break;
                     }
                     case 'move_to_page': {
+                        /*Переместить на страницу*/
                         $target_page = $this->request->post('target_page', 'integer');
                         
                         // Сразу потом откроем эту страницу
@@ -182,6 +191,7 @@ class ProductsAdmin extends Okay {
                         break;
                     }
                     case 'move_to_category': {
+                        /*Переместить в категорию*/
                         $category_id = $this->request->post('target_category', 'integer');
                         $filter['page'] = 1;
                         $category = $this->categories->get_category($category_id);
@@ -199,6 +209,7 @@ class ProductsAdmin extends Okay {
                         break;
                     }
                     case 'move_to_brand': {
+                        /*Переместить в бренд*/
                         $brand_id = $this->request->post('target_brand', 'integer');
                         $brand = $this->brands->get_brand($brand_id);
                         $filter['page'] = 1;

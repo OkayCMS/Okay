@@ -3,8 +3,10 @@
 require_once('View.php');
 
 class BrandsView extends View {
-    
+
+    /*Отображение страницы всех брендов*/
     public function fetch() {
+        /*Выбираем все бренды*/
         $brands = $this->brands->get_brands();
         $this->design->assign('brands', $brands);
         if($this->page) {

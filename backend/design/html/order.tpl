@@ -21,7 +21,7 @@
                 <div class="boxes_inline">
                     <select class="selectpicker" name="status_id">
                         {foreach $all_status as $status_item}
-                            <option value="{$status_item->id}" {if $order->status_id == $status_item->id}selected=""{/if} {if $hasVariantNotInStock && $status_item->is_close} disabled{/if} >{$status_item->name|escape}</option>
+                            <option value="{$status_item->id}" {if $order->status_id == $status_item->id}selected=""{/if} {if $hasVariantNotInStock && !$order->closed && $status_item->is_close} disabled{/if} >{$status_item->name|escape}</option>
                         {/foreach}
                     </select>
                 </div>
@@ -57,7 +57,7 @@
     </div>
 
 
-    {if $hasVariantNotInStock}
+    {if $hasVariantNotInStock && !$order->closed}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="boxed boxed_warning">
@@ -174,7 +174,7 @@
                                                     <div class="boxes_inline">
                                                         <select name="purchases[variant_id][{$purchase->id}]" class="selectpicker {if $purchase->product->variants|count == 1}hidden{/if} fn_purchase_variant">
                                                             {foreach $purchase->product->variants as $v}
-                                                                <option data-price="{$v->price}" data-amount="{$v->stock}" value="{$v->id}" {if $v->id == $purchase->variant_id}selected{/if} >
+                                                                <option data-price="{$v->price|convert}" data-amount="{$v->stock}" value="{$v->id}" {if $v->id == $purchase->variant_id}selected{/if} >
                                                                     {if $v->name}
                                                                         {$v->name|escape}
                                                                     {else}
@@ -251,8 +251,8 @@
                                     </div>
                                     <div class="okay_list_boding okay_list_order_amount_price">
                                         <div class="text_dark">
-                                            <span>{$purchase->price}</span>
-                                            <span class="">{$currency->sign|escape}</span>
+                                            <span></span>
+                                            <span class=""></span>
                                         </div>
                                     </div>
                                     <div class="okay_list_boding okay_list_close">
@@ -439,7 +439,7 @@
                             <textarea name="comment" class="form-control short_textarea">{$order->comment|escape}</textarea>
                         </div>
                          <div class="mb-1">
-                            <div class="heading_label boxes_inline">{$btr->order_ip|escape} <a href="https://who.is/whois-ip/ip-address/{$order->ip}" target="_blank"><i class="fa fa-map-marker"></i> whois</a></div>
+                            <div class="heading_label boxes_inline">{$btr->order_ip|escape} {if $order->id}<a href="https://who.is/whois-ip/ip-address/{$order->ip}" target="_blank"><i class="fa fa-map-marker"></i> whois</a>{/if}</div>
                             <div class="boxes_inline text_dark text_600">{$order->ip|escape}</div>
                         </div>
                     </div>
@@ -457,13 +457,14 @@
                                     </div>
                                 {else}
                                     <div class="fn_user_row">
+                                        <input type="hidden" name="user_id" value="{$user->id}" />
                                         <div class="heading_label boxes_inline">
                                             {$btr->order_buyer|escape}
                                             <a href="{url module=UserAdmin id=$user->id}" target=_blank>
                                                  {$user->name|escape}
                                             </a>
                                         </div>
-                                        <a href="javascript:;" data-hint="{$btr->general_delete_product|escape}" class="btn_close delete_grey fn_delete_user hint-bottom-right-t-info-s-small-mobile  hint-anim boxes_inline" >
+                                        <a href="javascript:;" data-hint="{$btr->users_delete|escape}" class="btn_close delete_grey fn_delete_user hint-bottom-right-t-info-s-small-mobile  hint-anim boxes_inline" >
                                             {include file='svg_icon.tpl' svgId='delete'}
                                         </a>
                                         {if $user->group_id > 0}

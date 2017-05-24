@@ -3,7 +3,8 @@
 require_once('Okay.php');
 
 class ReportStat extends Okay {
-    
+
+    /*Выборка статистики продаж*/
     public function get_report_purchases($filter = array()) {
         // По умолчанию
         $sort_prod = 'sum_price DESC';
@@ -65,7 +66,8 @@ class ReportStat extends Okay {
         $this->db->query($query);
         return $this->db->results();
     }
-    
+
+    /*Подсчет количества для статистики*/
     public function get_report_purchases_count($filter = array()) {
         // По умолчанию
         $all_filters = $this->make_filter($filter);
@@ -82,7 +84,8 @@ class ReportStat extends Okay {
         $this->db->query($query);
         return $this->db->result('count');
     }
-    
+
+    /*Фильтр статистики продаж*/
     private function make_filter($filter = array()) {
         // По умолчанию
         $period_filter = '';
@@ -151,7 +154,8 @@ class ReportStat extends Okay {
         }
         return "$status_filter $date_filter $period_filter";
     }
-    
+
+    /*Выборка категоризации продаж*/
     public function get_categorized_stat($filter=array()) {
         $category_filter = '';
         $brand_filter = '';

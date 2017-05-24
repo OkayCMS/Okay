@@ -3,7 +3,8 @@
 require_once('Okay.php');
 
 class Comments extends Okay {
-    
+
+    /*Выбираем конкретный комментарий*/
     public function get_comment($id) {
         if (empty($id)) {
             return false;
@@ -34,8 +35,9 @@ class Comments extends Okay {
             return false;
         }
     }
-    
-    public function get_comments($filter = array()) {	
+
+    /*Выбираем все комментарии*/
+    public function get_comments($filter = array()) {
         // По умолчанию
         $limit = 0;
         $page = 1;
@@ -114,8 +116,9 @@ class Comments extends Okay {
         $this->db->query($query);
         return $this->db->results();
     }
-    
-    public function count_comments($filter = array()) {	
+
+    /*Подсчитываем количество комментариев*/
+    public function count_comments($filter = array()) {    
         $object_id_filter = '';
         $type_filter = '';
         $approved_filter = '';
@@ -162,7 +165,8 @@ class Comments extends Okay {
         $this->db->query($query);
         return $this->db->result('count');
     }
-    
+
+    /*Добавление комментария*/
     public function add_comment($comment) {
         $query = $this->db->placehold('INSERT INTO __comments SET ?%, date = NOW()', $comment);
         if(!$this->db->query($query)) {
@@ -181,7 +185,8 @@ class Comments extends Okay {
         
         return $id;
     }
-    
+
+    /*Обновление комментария*/
     public function update_comment($id, $comment) {
         $date_query = '';
         if(isset($comment->date)) {
@@ -205,7 +210,8 @@ class Comments extends Okay {
         
         return $id;
     }
-    
+
+    /*Удаление комментария*/
     public function delete_comment($id) {
         if(!empty($id)) {
             $this->db->query('select object_id, type, approved from __comments where id=?', intval($id));

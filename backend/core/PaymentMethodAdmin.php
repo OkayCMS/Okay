@@ -6,13 +6,14 @@ class PaymentMethodAdmin extends Okay {
     
     public function fetch() {
         $payment_method = new stdClass;
+        /*Приме информации о способе оплаты*/
         if($this->request->method('post')) {
-            $payment_method->id 			= $this->request->post('id', 'intgeger');
-            $payment_method->enabled 		= $this->request->post('enabled', 'boolean');
-            $payment_method->name 			= $this->request->post('name');
-            $payment_method->currency_id	= $this->request->post('currency_id');
-            $payment_method->description	= $this->request->post('description');
-            $payment_method->module			= $this->request->post('module', 'string');
+            $payment_method->id              = $this->request->post('id', 'intgeger');
+            $payment_method->enabled         = $this->request->post('enabled', 'boolean');
+            $payment_method->name            = $this->request->post('name');
+            $payment_method->currency_id     = $this->request->post('currency_id');
+            $payment_method->description     = $this->request->post('description');
+            $payment_method->module          = $this->request->post('module', 'string');
             
             $payment_settings = $this->request->post('payment_settings');
             
@@ -23,6 +24,7 @@ class PaymentMethodAdmin extends Okay {
             if (empty($payment_method->name)) {
                 $this->design->assign('message_error', 'empty_name');
             } else {
+                /*Добавление/Обновление способа оплаты*/
                 if(empty($payment_method->id)) {
                     $payment_method->id = $this->payment->add_payment_method($payment_method);
                     $this->design->assign('message_success', 'added');

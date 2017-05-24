@@ -4,6 +4,7 @@ require_once('api/Okay.php');
 
 class SettingsFeedAdmin extends Okay {
 
+    /*Настройки выгрузки в яндекс*/
     public function fetch() {
         if($this->request->method('POST')) {
             $this->settings->yandex_export_not_in_stock = $this->request->post('yandex_export_not_in_stock', 'boolean');
@@ -18,4 +19,5 @@ class SettingsFeedAdmin extends Okay {
 
         return $this->design->fetch('settings_feed.tpl');
     }
+
 }

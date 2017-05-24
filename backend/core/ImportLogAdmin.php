@@ -4,6 +4,7 @@ require_once('api/Okay.php');
 
 class ImportLogAdmin extends Okay {
 
+    /*Лог импорта товаров*/
     public function fetch() {
         $filter = array();
         $filter['page'] = max(1, $this->request->get('page', 'integer'));
@@ -77,6 +78,7 @@ class ImportLogAdmin extends Okay {
         return $this->design->fetch('import_log.tpl');
     }
 
+    /*Выборка лога последнего успешного импорта*/
     private function get_logs($filter = array(), $is_count = true) {
         $keyword_filter = '';
         $status_filter = '';

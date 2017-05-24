@@ -4,24 +4,27 @@ require_once('api/Okay.php');
 
 class BannersAdmin extends Okay {
     public function fetch() {
+        /*Принимаем выбранные группы баннеров*/
         if($this->request->method('post')) {
-            // Действия с выбранными
             $ids = $this->request->post('check');
             if(is_array($ids)) {
                 switch($this->request->post('action')) {
                     case 'disable': {
+                        /*Выключаем группы баннеров*/
                         foreach($ids as $id) {
                             $this->banners->update_banner($id, array('visible'=>0));
                         }
                         break;
                     }
                     case 'enable': {
+                        /*Включаем группы банннеров*/
                         foreach($ids as $id) {
                             $this->banners->update_banner($id, array('visible'=>1));
                         }
                         break;
                     }
                     case 'delete': {
+                        /*Удаляем группы баннеров*/
                         foreach ($ids as $id) {
                             $this->banners->delete_banner($id);
                         }

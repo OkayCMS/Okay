@@ -11,7 +11,7 @@ class IndexView extends View {
     }
     
     public function fetch() {
-
+        /*Принимаем данные с формы заказа обратного звонка*/
         if($this->request->method('post') && $this->request->post('callback')) {
             $callback = new stdClass();
             $callback->phone        = $this->request->post('phone');
@@ -22,6 +22,8 @@ class IndexView extends View {
             $this->design->assign('callname',  $callback->name);
             $this->design->assign('callemail', $callback->phone);
             $this->design->assign('callmessage', $callback->message);
+
+            /*Валидация данных клиента*/
             if (!$this->validate->is_name($callback->name, true)) {
                 $this->design->assign('call_error', 'empty_name');
             } elseif(!$this->validate->is_phone($callback->phone, true)) {
@@ -37,7 +39,7 @@ class IndexView extends View {
             }
         }
         
-        // E-mail подписка
+        /*E-mail подписка*/
         if ($this->request->post('subscribe')) {
             $email = $this->request->post('subscribe_email');
             $this->db->query("select count(id) as cnt from __subscribe_mailing where email=?", $email);
@@ -53,15 +55,18 @@ class IndexView extends View {
         }
         
         // Содержимое корзины
-        $this->design->assign('cart',		$this->cart->get_cart());
+        $this->design->assign('cart', $this->cart->get_cart());
         
         // Избранное
-        @$wished = (array)explode(',', $_COOKIE['wished_products']);
+        if($_COOKIE['wished_products']) {
+            $wished = (array)explode(',', $_COOKIE['wished_products']);
+        } else {
+            $wished = array();
+        }
         $this->design->assign('wished_products', ($wished[0] > 0) ? $wished : array());
         
         // Сравнение
-        //unset($_SESSION['comparison']);
-		$this->design->assign('comparison', $this->comparison->get_comparison());
+        $this->design->assign('comparison', $this->comparison->get_comparison());
         
         // Категории товаров
         $this->count_visible($this->categories->get_categories_tree());
@@ -130,6 +135,7 @@ class IndexView extends View {
         }
     }
 
+    /*Подсчет количества видимых дочерних категорий*/
     private function count_visible($categories = array()) {
         $all_categories = $this->categories->get_categories();
         foreach ($categories as $category) {

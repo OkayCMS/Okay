@@ -6,18 +6,19 @@ class UserGroupsAdmin extends Okay {
     
     public function fetch() {
         if($this->request->method('post')) {
-        	// Действия с выбранными
+            // Действия с выбранными
             $ids = $this->request->post('check');
             if(is_array($ids)) {
                 switch($this->request->post('action')){
                     case 'delete': {
+                        /*Удаление группы пользователей*/
                         foreach($ids as $id) {
                             $this->users->delete_group($id);
                         }
                         break;
                     }
                 }
-        	}
+            }
         }
         
         $groups = $this->users->get_groups();

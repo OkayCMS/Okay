@@ -17,6 +17,7 @@ if(pathinfo($style, PATHINFO_EXTENSION) != 'css') {
     exit();
 }
 
+/*Сохранение стилей из админки*/
 $file = $okay->config->root_dir.'design/'.$theme.'/css/'.$style;
 if(is_file($file) && is_writable($file) && !is_file($okay->config->root_dir.'design/'.$theme.'/locked')) {
     file_put_contents($file, $content);

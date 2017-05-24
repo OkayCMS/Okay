@@ -6,6 +6,7 @@ class BrandAdmin extends Okay {
     
     public function fetch() {
         $brand = new stdClass;
+        /*Принимаем инофмрацию о бренде*/
         if($this->request->method('post')) {
             $brand->id = $this->request->post('id', 'integer');
             $brand->name = $this->request->post('name');
@@ -32,6 +33,7 @@ class BrandAdmin extends Okay {
             } elseif(empty($brand->url)) {
                 $this->design->assign('message_error', 'empty_url');
             } else {
+                /*Добавляем/обновляем бренд*/
                 if(empty($brand->id)) {
                     $brand->id = $this->brands->add_brand($brand);
                     $this->design->assign('message_success', 'added');

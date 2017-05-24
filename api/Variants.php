@@ -3,7 +3,8 @@
 require_once('Okay.php');
 
 class Variants extends Okay {
-    
+
+    /*Выборка вариантов*/
     public function get_variants($filter = array()) {
         $product_id_filter = '';
         $variant_id_filter = '';
@@ -63,9 +64,10 @@ class Variants extends Okay {
                 }
             }
         }
-		return $variants;
+        return $variants;
     }
-    
+
+    /*Выборка конкретного варианта*/
     public function get_variant($id) {
         if(empty($id)) {
             return false;

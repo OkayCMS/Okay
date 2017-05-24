@@ -29,7 +29,6 @@
                         {/if}
                     </span>
                     {if $smarty.get.return}
-
                         <a class="btn btn_return float-xs-right" href="{url module=TranslationsAdmin}">{$btr->general_back|escape}</a>
                     {/if}
                 </div>

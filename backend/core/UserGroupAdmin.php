@@ -6,6 +6,7 @@ class UserGroupAdmin extends Okay {
     
     public function fetch() {
         $group = new stdClass;
+        /*Прием данных о группе пользователей*/
         if($this->request->method('post')) {
             $group->id = $this->request->post('id', 'integer');
             $group->name = $this->request->post('name');
@@ -14,6 +15,7 @@ class UserGroupAdmin extends Okay {
             if (empty($group->name)) {
                 $this->design->assign('message_error', 'empty_name');
             } else {
+                /*Добавление/Обновление групы пользователей*/
                 if(empty($group->id)) {
                     $group->id = $this->users->add_group($group);
                     $this->design->assign('message_success', 'added');

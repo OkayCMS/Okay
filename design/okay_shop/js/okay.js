@@ -197,15 +197,15 @@ $( document ).on( 'click', '.fn_sub_coupon', function(e) {
 $(function(){
 
     $(function(){
-		$(window).scroll(function() {
-			var screen = $(document);
-			if (screen.scrollTop() < 140) {
-				$(".header_bottom").removeClass('fixed');
+        $(window).scroll(function() {
+            var screen = $(document);
+            if (screen.scrollTop() < 140) {
+                $(".header_bottom").removeClass('fixed');
             } else {
-				$(".header_bottom").addClass('fixed');
+                $(".header_bottom").addClass('fixed');
             }
-		});
-	});
+        });
+    });
 
     /* Обратный звонок */
     $('.fn_callback').fancybox();

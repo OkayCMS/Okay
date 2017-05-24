@@ -12,6 +12,7 @@ class LanguagesAdmin extends Okay {
             if(is_array($ids)) {
                 switch($this->request->post('action')) {
                     case 'delete': {
+                        /*Удаление языка*/
                         $languages = $this->languages->get_languages();
                         if (count($languages) == count($ids)) {
                             $first = $this->languages->get_first_language();
@@ -22,10 +23,12 @@ class LanguagesAdmin extends Okay {
                         break;
                     }
                     case 'disable': {
+                        /*Выключение языка*/
                         $this->languages->update_language($ids, array('enabled'=>0));
                         break;
                     }
                     case 'enable': {
+                        /*Включение языка*/
                         $this->languages->update_language($ids, array('enabled'=>1));
                         break;
                     }

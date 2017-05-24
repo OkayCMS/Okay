@@ -2,7 +2,6 @@
 
 require_once('api/Okay.php');
 
-########################################
 class ReportStatsAdmin extends Okay {
     
     public function fetch() {
@@ -12,7 +11,8 @@ class ReportStatsAdmin extends Okay {
             $filter['date_filter'] = $date_filter;
             $this->design->assign('date_filter', $date_filter);
         }
-        
+
+        /*Фильтр по датам*/
         $date_from = $this->request->get('date_from');
         $date_to = $this->request->get('date_to');
         $filter_check = $this->request->get('filter_check');
@@ -50,7 +50,7 @@ class ReportStatsAdmin extends Okay {
         $temp_filter = $filter;
         unset($temp_filter['limit']);
         unset($temp_filter['page']);
-        
+
         $stat_count = $this->reportstat->get_report_purchases_count($temp_filter);
         $this->design->assign('posts_count',$stat_count );
         
@@ -61,6 +61,7 @@ class ReportStatsAdmin extends Okay {
         $this->design->assign('pages_count', ceil($stat_count/$filter['limit']));
         $this->design->assign('current_page', $filter['page']);
 
+        /*Выборка товаров для статистики*/
         $report_stat_purchases = $this->reportstat->get_report_purchases($filter);
         $cat = $this->categories->get_category($cat_filter);
         foreach ($report_stat_purchases as $id=>$r) {

@@ -13,12 +13,12 @@ class LicenseAdmin extends Okay {
         $p=13; $g=3; $x=5; $r = ''; $s = $x;
         $bs = explode(' ', $this->config->license);
         foreach($bs as $bl){
-        	for($i=0, $m=''; $i<strlen($bl)&&isset($bl[$i+1]); $i+=2){
-        		$a = base_convert($bl[$i], 36, 10)-($i/2+$s)%27;
-        		$b = base_convert($bl[$i+1], 36, 10)-($i/2+$s)%24;
-        		$m .= ($b * (pow($a,$p-$x-5) )) % $p;}
-        	$m = base_convert($m, 10, 16); $s+=$x;
-        	for ($a=0; $a<strlen($m); $a+=2) $r .= @chr(hexdec($m{$a}.$m{($a+1)}));}
+            for($i=0, $m=''; $i<strlen($bl)&&isset($bl[$i+1]); $i+=2){
+                $a = base_convert($bl[$i], 36, 10)-($i/2+$s)%27;
+                $b = base_convert($bl[$i+1], 36, 10)-($i/2+$s)%24;
+                $m .= ($b * (pow($a,$p-$x-5) )) % $p;}
+            $m = base_convert($m, 10, 16); $s+=$x;
+            for ($a=0; $a<strlen($m); $a+=2) $r .= @chr(hexdec($m{$a}.$m{($a+1)}));}
         
         @list($l->domains, $l->expiration, $l->comment) = explode('#', $r, 3);
         

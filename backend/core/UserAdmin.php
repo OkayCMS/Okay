@@ -6,6 +6,7 @@ class UserAdmin extends Okay {
     
     public function fetch() {
         $user = new stdClass;
+        /*Прием данных о пользователе*/
         if($this->request->method('post')) {
             $user->id = $this->request->post('id', 'integer');
             $user->name = $this->request->post('name');
@@ -14,7 +15,7 @@ class UserAdmin extends Okay {
             $user->address = $this->request->post('address');
             $user->group_id = $this->request->post('group_id');
             
-            ## Не допустить одинаковые email пользователей.
+            /*Не допустить одинаковые email пользователей*/
             if(empty($user->name)) {
                 $this->design->assign('message_error', 'empty_name');
             } elseif(empty($user->email)) {
@@ -22,6 +23,7 @@ class UserAdmin extends Okay {
             } elseif(($u = $this->users->get_user($user->email)) && $u->id!=$user->id) {
                 $this->design->assign('message_error', 'login_existed');
             } else {
+                /*Обновление пользователя*/
                 $user->id = $this->users->update_user($user->id, $user);
                 $this->design->assign('message_success', 'updated');
                 $user = $this->users->get_user(intval($user->id));
@@ -32,7 +34,8 @@ class UserAdmin extends Okay {
         if(!empty($id)) {
             $user = $this->users->get_user(intval($id));
         }
-        
+
+        /*История заказов пользователя*/
         if(!empty($user)) {
             $this->design->assign('user', $user);
             

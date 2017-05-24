@@ -5,6 +5,7 @@ require_once('View.php');
 class RegisterView extends View {
     
     public function fetch() {
+        /*Прием данных для регистрации*/
         if($this->request->method('post') && $this->request->post('register')) {
             $user = new stdClass();
             $user->last_ip  = $_SERVER['REMOTE_ADDR'];
@@ -22,7 +23,8 @@ class RegisterView extends View {
             
             $this->db->query('SELECT count(*) as count FROM __users WHERE email=?', $user->email);
             $user_exists = $this->db->result('count');
-            
+
+            /*Валидация данных клиента*/
             if($user_exists) {
                 $this->design->assign('error', 'user_exists');
             } elseif(!$this->validate->is_name($user->name, true)) {

@@ -3,20 +3,22 @@
 require_once('View.php');
 
 class UserView extends View {
-    
+
+    /*Отображение личного кабинета пользователя*/
     public function fetch() {
         if(empty($this->user)) {
             header('Location: '.$this->config->root_url.'/'.$this->lang_link.'user/login');
             exit();
         }
 
+        /*Обновление данных клиеньа*/
         if($this->request->method('post') && $this->request->post('user_save')) {
             $user = new stdClass();
-            $user->name	    = $this->request->post('name');
-            $user->email	= $this->request->post('email');
-            $user->phone    = $this->request->post('phone');
-            $user->address  = $this->request->post('address');
-            $password		= $this->request->post('password');
+            $user->name       = $this->request->post('name');
+            $user->email      = $this->request->post('email');
+            $user->phone      = $this->request->post('phone');
+            $user->address    = $this->request->post('address');
+            $password         = $this->request->post('password');
             
             $this->design->assign('name', $user->name);
             $this->design->assign('email', $user->email);
@@ -25,7 +27,8 @@ class UserView extends View {
             
             $this->db->query('SELECT count(*) as count FROM __users WHERE email=? AND id!=?', $user->email, $this->user->id);
             $user_exists = $this->db->result('count');
-            
+
+            /*Валидация данных*/
             if($user_exists) {
                 $this->design->assign('error', 'user_exists');
             } elseif(!$this->validate->is_name($user->name, true)) {
@@ -53,7 +56,8 @@ class UserView extends View {
             $this->design->assign('phone', $this->user->phone);
             $this->design->assign('address', $this->user->address);
         }
-        
+
+        /*Выборка истории заказов клиента*/
         $orders = $this->orders->get_orders(array('user_id'=>$this->user->id));
         $all_status = $this->orderstatus->get_status();
         if($all_status) {

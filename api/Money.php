@@ -6,7 +6,8 @@ class Money extends Okay {
     
     private $currencies = array();
     private $currency;
-    
+
+    /*Создание основных настроек для работы с валютой*/
     public function __construct() {
         parent::__construct();
         
@@ -21,7 +22,8 @@ class Money extends Okay {
         
         $this->init_currencies();
     }
-    
+
+    /*Инициализация валют сайта*/
     public function init_currencies() {
         $lang_sql = $this->languages->get_query(array('object'=>'currency'));
         $this->currencies = array();
@@ -46,7 +48,8 @@ class Money extends Okay {
         }
         $this->currency = reset($this->currencies);
     }
-    
+
+    /*Выборка валют*/
     public function get_currencies($filter = array()) {
         $currencies = array();
         foreach($this->currencies as $id=>$currency) {
@@ -56,7 +59,8 @@ class Money extends Okay {
         }
         return $currencies;
     }
-    
+
+    /*Выборка конкретной валюты*/
     public function get_currency($id = null) {
         if(!empty($id) && is_integer($id) && isset($this->currencies[$id])) {
             return $this->currencies[$id];
@@ -70,7 +74,8 @@ class Money extends Okay {
         }
         return $this->currency;
     }
-    
+
+    /*Добавление валюты*/
     public function add_currency($currency) {
         $currency = (object)$currency;
         // Проверяем есть ли мультиязычность и забираем описания для перевода
@@ -93,7 +98,8 @@ class Money extends Okay {
         $this->init_currencies();
         return $id;
     }
-    
+
+    /*Обновление валюты*/
     public function update_currency($id, $currency) {
         $currency = (object)$currency;
         // Проверяем есть ли мультиязычность и забираем описания для перевода
@@ -112,7 +118,8 @@ class Money extends Okay {
         $this->init_currencies();
         return $id;
     }
-    
+
+    /*Удаление валюты*/
     public function delete_currency($id) {
         if(!empty($id)) {
             $query = $this->db->placehold("DELETE FROM __currencies WHERE id=? LIMIT 1", intval($id));
@@ -121,7 +128,8 @@ class Money extends Okay {
         }
         $this->init_currencies();
     }
-    
+
+    /*Конвертация валюты в определнный формат*/
     public function convert($price, $currency_id = null, $format = true) {
         if(isset($currency_id)) {
             if(is_numeric($currency_id)) {

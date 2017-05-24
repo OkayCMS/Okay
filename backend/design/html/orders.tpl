@@ -86,7 +86,11 @@
                                 <div class="col-md-5 col-lg-5 pr-0 pl-0">
                                     <div class="input-group">
                                         <span class="input-group-addon-date">{$btr->general_from|escape}</span>
-                                        <input type="date" class="fn_from_date form-control" name="from_date" value="{$from_date}" autocomplete="off" >
+                                        {if $is_mobile || $is_tablet}
+                                            <input type="date" class="fn_from_date form-control" name="from_date" value="{$from_date}" autocomplete="off" >
+                                        {else}
+                                            <input type="text" class="fn_from_date form-control" name="from_date" value="{$from_date}" autocomplete="off" >
+                                        {/if}
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </div>
@@ -95,7 +99,11 @@
                                 <div class="col-md-5 col-lg-5 pr-0 pl-0">
                                     <div class="input-group">
                                         <span class="input-group-addon-date">{$btr->general_to|escape}</span>
-                                        <input type="date" class="fn_to_date form-control" name="to_date" value="{$to_date}" autocomplete="off" >
+                                        {if $is_mobile || $is_tablet}
+                                            <input type="date" class="fn_to_date form-control" name="to_date" value="{$to_date}" autocomplete="off" >
+                                            {else}
+                                            <input type="text" class="fn_to_date form-control" name="to_date" value="{$to_date}" autocomplete="off" >
+                                        {/if}
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </div>
@@ -125,7 +133,7 @@
                                 {foreach $labels as $l}
                                     <option value="{url label=$l->id}" {if $label->id == $l->id}selected{/if}>{$l->name|escape}</option>
                                 {/foreach}
-                                <option value="{url label=null}" {if $label->id != $l->id} selected{/if}>{$btr->general_all|escape}</option>
+                                <option value="{url label=null}" {if !$label} selected{/if}>{$btr->general_all|escape}</option>
                             </select>
                         </div>
                     {/if}

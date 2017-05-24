@@ -155,6 +155,7 @@ class ProductsView extends View {
         
         $this->design->smarty->registerPlugin('function', 'furl', array($this, 'filter_chpu_url'));
     }
+
     public function filter_chpu_url($params) {
         if(is_array(reset($params))) {
             $params = reset($params);
@@ -252,6 +253,7 @@ class ProductsView extends View {
         //отдаем сформированную ссылку
         return $result_string;
     }
+
     private function filter_chpu_sort_brands($brands_urls = array()) {
         if(empty($brands_urls)) {
             return false;
@@ -264,6 +266,7 @@ class ProductsView extends View {
         }
         return $result;
     }
+
     private function filter_chpu_sort_features($features = array()) {
         if(empty($features)) {
             return false;
@@ -276,6 +279,7 @@ class ProductsView extends View {
         }
         return $result_string;
     }
+
     private function filter_chpu_parse_url() {
         $uri = @parse_url($_SERVER["REQUEST_URI"]);
         preg_match("~$this->subdir(/?$this->lang_label)?/?(catalog|all-products|brands|discounted|bestsellers)/?~", $uri['path'], $this->catalog_type);
@@ -290,6 +294,7 @@ class ProductsView extends View {
     }
     // ЧПУ END
 
+    /*Отображение каталога*/
     public function fetch() {
         if ($this->is_wrong_params) {
             return false;
@@ -441,10 +446,10 @@ class ProductsView extends View {
             $last_modify[] = $category->last_modify;
         }
         $this->db->query("SELECT p.last_modify
-			FROM __products p
-			$category_id_filter
-			WHERE 1 $brand_id_filter
-			GROUP BY p.id");
+            FROM __products p
+            $category_id_filter
+            WHERE 1 $brand_id_filter
+            GROUP BY p.id");
         $res = $this->db->results('last_modify');
         if (!empty($res)) {
             $last_modify = array_merge($last_modify, $res);
@@ -454,10 +459,7 @@ class ProductsView extends View {
         }
         $this->setHeaderLastModify(max($last_modify));
         //lastModify END
-        
-        ///////////////////////////////////////////////
-        // Постраничная навигация END
-        ///////////////////////////////////////////////
+        /*Постраничная навигация END*/
 
         // Товары
         $products = array();

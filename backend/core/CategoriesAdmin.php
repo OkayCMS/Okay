@@ -11,22 +11,26 @@ class CategoriesAdmin extends Okay {
             if(is_array($ids)) {
                 switch($this->request->post('action')) {
                     case 'disable': {
+                        /*Выключение категории*/
                         foreach($ids as $id) {
                             $this->categories->update_category($id, array('visible'=>0));
                         }
                         break;
                     }
                     case 'enable': {
+                        /*Включение категории*/
                         foreach($ids as $id) {
                             $this->categories->update_category($id, array('visible'=>1));
                         }
                         break;
                     }
                     case 'delete': {
+                        /*Удаление категории*/
                         $this->categories->delete_category($ids);
                         break;
                     }
                     case 'in_feed': {
+                        /*Выгрузка товаров категории в файл feed.xml*/
                         foreach($ids as $id) {
                             $category = $this->categories->get_category(intval($id));
                             $q = $this->db->placehold("SELECT v.id FROM __categories c RIGHT JOIN __products_categories pc ON c.id=pc.category_id
@@ -43,6 +47,7 @@ class CategoriesAdmin extends Okay {
                         break;
                     }
                     case 'out_feed': {
+                        /*Снятие товаров категории с выгрузки файла feed.xml*/
                         foreach($ids as $id) {
                             $category = $this->categories->get_category(intval($id));
                             $q = $this->db->placehold("SELECT v.id FROM __categories c
@@ -70,7 +75,7 @@ class CategoriesAdmin extends Okay {
                 $this->categories->update_category($ids[$i], array('position'=>$position));
             }
         }
-        
+        /*Выборка дерева категорий*/
         $categories = $this->categories->get_categories_tree();
         
         $this->design->assign('categories', $categories);

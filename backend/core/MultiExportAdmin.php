@@ -6,6 +6,7 @@ class MultiExportAdmin extends Okay {
 
     private $export_files_dir = 'backend/files/export/';
 
+    /*Экспорт переводов*/
     public function fetch() {
         $this->design->assign('export_files_dir', $this->export_files_dir);
         if(!is_writable($this->export_files_dir)) {

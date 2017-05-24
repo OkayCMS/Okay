@@ -10,6 +10,7 @@ class Translations extends Okay {
         parent::__construct();
     }
 
+    /*Запись переводов*/
     private function write_translations($lang_label, $translations) {
         if (empty($lang_label)) {
             return;
@@ -27,6 +28,7 @@ class Translations extends Okay {
         }
     }
 
+    /*Инициализация перевода*/
     private function init_one($label = "") {
         if (empty($label)) {
             return false;
@@ -51,6 +53,7 @@ class Translations extends Okay {
         return $this->vars;
     }
 
+    /*Выборка перевода*/
     public function get_translation($id) {
         $translation = array();
         foreach ($this->languages->get_languages() as $l) {
@@ -67,6 +70,7 @@ class Translations extends Okay {
         return false;
     }
 
+    /*Выборка всех переводов*/
     public function get_translations($filter = array()) {
         if (!empty($filter['lang'])) {
             $result = $this->init_one($filter['lang']);
@@ -96,7 +100,8 @@ class Translations extends Okay {
         return (object)$result;
     }
 
-    // id - предыдущий label
+    /*Обновление перевода*/
+    /* id - предыдущий(или обновляемый) label, $data['label'] - новый */
     public function update_translation($id, $data) {
         $data = (array)$data;
         $this->init_translations();
@@ -110,7 +115,8 @@ class Translations extends Okay {
         return $data['label'];
     }
 
-    // id - удаляемый label
+    /*удаление перевода*/
+    /* id - удаляемый label */
     public function delete_translation($id) {
         if(!empty($id)) {
             $this->init_translations();
@@ -121,6 +127,7 @@ class Translations extends Okay {
         }
     }
 
+    /*Дублирование переводов*/
     public function copy_translations($label_src, $label_dest) {
         if (empty($label_src) || empty($label_dest) || $label_src == $label_dest) {
             return;

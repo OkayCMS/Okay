@@ -12,14 +12,17 @@ class BlogAdmin extends Okay {
             if(is_array($ids)) {
                 switch($this->request->post('action')) {
                     case 'disable': {
+                        /*Выключение записей*/
                         $this->blog->update_post($ids, array('visible'=>0));
                         break;
                     }
                     case 'enable': {
+                        /*Включение записей*/
                         $this->blog->update_post($ids, array('visible'=>1));
                         break;
                     }
                     case 'delete': {
+                        /*Удаление записей*/
                         foreach($ids as $id) {
                             $this->blog->delete_post($id);
                         }
@@ -51,7 +54,7 @@ class BlogAdmin extends Okay {
         if($this->request->get('page') == 'all') {
             $filter['limit'] = $posts_count;
         }
-        
+        /*Выбираем записи*/
         $posts = $this->blog->get_posts($filter);
         $this->design->assign('posts_count', $posts_count);
         

@@ -4,6 +4,7 @@ require_once('Okay.php');
 
 class OrderLabels extends Okay {
 
+    /*Выборка конкретной метки*/
     public function get_label($id) {
         $lang_sql = $this->languages->get_query(array('object'=>'order_labels', 'px'=>'lb'));
         $query = $this->db->placehold("SELECT lb.* ,
@@ -15,6 +16,7 @@ class OrderLabels extends Okay {
         return $this->db->result();
     }
 
+    /*Выборка всех меток*/
     public function get_labels() {
         $lang_sql = $this->languages->get_query(array('object'=>'order_labels', 'px'=>'lb'));
         $query = $this->db->placehold("SELECT lb.* ,
@@ -26,6 +28,7 @@ class OrderLabels extends Okay {
         return $this->db->results();
     }
 
+    /*Добавление метки*/
     public function add_label($label) {
         $label = (object)$label;
         // Проверяем есть ли мультиязычность и забираем описания для перевода
@@ -44,6 +47,7 @@ class OrderLabels extends Okay {
         return $id;
     }
 
+    /*Обновление метки*/
     public function update_label($id, $label) {
         $label = (object)$label;
         // Проверяем есть ли мультиязычность и забираем описания для перевода
@@ -59,6 +63,7 @@ class OrderLabels extends Okay {
         return $id;
     }
 
+    /*Удаление метки*/
     public function delete_label($id) {
         if(!empty($id)) {
             $query = $this->db->placehold("DELETE FROM __orders_labels WHERE label_id=?", intval($id));
@@ -74,6 +79,7 @@ class OrderLabels extends Okay {
         }
     }
 
+    /*Выборка меток конкретного заказа*/
     public function get_order_labels($order_id = array()) {
         if(empty($order_id)) {
             return array();
@@ -105,6 +111,7 @@ class OrderLabels extends Okay {
         }
     }
 
+    /*Обновление меток заказа*/
     public function update_order_labels($id, $labels_ids) {
         $labels_ids = (array)$labels_ids;
         $query = $this->db->placehold("DELETE FROM __orders_labels WHERE order_id=?", intval($id));
@@ -116,6 +123,7 @@ class OrderLabels extends Okay {
         }
     }
 
+    /*Добавление меток к заказу*/
     public function add_order_labels($id, $labels_ids) {
         $labels_ids = (array)$labels_ids;
         if(is_array($labels_ids))
@@ -124,6 +132,7 @@ class OrderLabels extends Okay {
             }
     }
 
+    /*Удаление меток с заказа*/
     public function delete_order_labels($id, $labels_ids)
     {
         $labels_ids = (array)$labels_ids;
@@ -133,4 +142,5 @@ class OrderLabels extends Okay {
             }
         }
     }
+
 }

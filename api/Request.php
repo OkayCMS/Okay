@@ -16,10 +16,11 @@ class Request extends Okay {
     * Если аргумент не задан, возвращает имя метода
     * Пример:
     *
-    *	if($okay->request->method('post'))
-    *		print 'Request method is POST';
+    *    if($okay->request->method('post'))
+    *        print 'Request method is POST';
     *
     */
+    /*Возвращение метода передачи данных*/
     public function method($method = null) {
         if(!empty($method)) {
             return strtolower($_SERVER['REQUEST_METHOD']) == strtolower($method);
@@ -32,6 +33,7 @@ class Request extends Okay {
     * Второй параметр $type может иметь такие значения: integer, string, boolean
     * Если $type не задан, возвращает переменную в чистом виде
     */
+    /*Прием параметров с массива $_GET*/
     public function get($name, $type = null) {
         $val = null;
         if(isset($_GET[$name])) {
@@ -66,6 +68,7 @@ class Request extends Okay {
     * Второй параметр $type может иметь такие значения: integer, string, boolean
     * Если $type не задан, возвращает переменную в чистом виде
     */
+    /*Прием параметров с массива $_POST*/
     public function post($name = null, $type = null) {
         $val = null;
         if(!empty($name) && isset($_POST[$name])) {
@@ -98,6 +101,7 @@ class Request extends Okay {
     * Обычно переменные _FILES являются двухмерными массивами, поэтому можно указать второй параметр,
     * например, чтобы получить имя загруженного файла: $filename = $okay->request->files('myfile', 'name');
     */
+    /*Прием параметров с массива $_FILES*/
     public function files($name, $name2 = null) {
         if(!empty($name2) && !empty($_FILES[$name][$name2])) {
             return $_FILES[$name][$name2];
@@ -141,7 +145,7 @@ class Request extends Okay {
     }
     
     /**
-    * URL
+    * Формирование ссылки
     */
     public function url($params = array()) {
         $url = @parse_url($_SERVER["REQUEST_URI"]);
@@ -178,27 +182,27 @@ class Request extends Okay {
     
 }
 
-
+/*Обьявление функции построения ссылки*/
 if (!function_exists('http_build_url')) {
-    define('HTTP_URL_REPLACE', 1);				// Replace every part of the first URL when there's one of the second URL
-    define('HTTP_URL_JOIN_PATH', 2);			// Join relative paths
-    define('HTTP_URL_JOIN_QUERY', 4);			// Join query strings
-    define('HTTP_URL_STRIP_USER', 8);			// Strip any user authentication information
-    define('HTTP_URL_STRIP_PASS', 16);			// Strip any password authentication information
-    define('HTTP_URL_STRIP_AUTH', 32);			// Strip any authentication information
-    define('HTTP_URL_STRIP_PORT', 64);			// Strip explicit port numbers
-    define('HTTP_URL_STRIP_PATH', 128);			// Strip complete path
-    define('HTTP_URL_STRIP_QUERY', 256);		// Strip query string
-    define('HTTP_URL_STRIP_FRAGMENT', 512);		// Strip any fragments (#identifier)
-    define('HTTP_URL_STRIP_ALL', 1024);			// Strip anything but scheme and host
+    define('HTTP_URL_REPLACE', 1);                // Replace every part of the first URL when there's one of the second URL
+    define('HTTP_URL_JOIN_PATH', 2);            // Join relative paths
+    define('HTTP_URL_JOIN_QUERY', 4);            // Join query strings
+    define('HTTP_URL_STRIP_USER', 8);            // Strip any user authentication information
+    define('HTTP_URL_STRIP_PASS', 16);            // Strip any password authentication information
+    define('HTTP_URL_STRIP_AUTH', 32);            // Strip any authentication information
+    define('HTTP_URL_STRIP_PORT', 64);            // Strip explicit port numbers
+    define('HTTP_URL_STRIP_PATH', 128);            // Strip complete path
+    define('HTTP_URL_STRIP_QUERY', 256);        // Strip query string
+    define('HTTP_URL_STRIP_FRAGMENT', 512);        // Strip any fragments (#identifier)
+    define('HTTP_URL_STRIP_ALL', 1024);            // Strip anything but scheme and host
     
     // Build an URL
     // The parts of the second URL will be merged into the first according to the flags argument.
     //
-    // @param	mixed			(Part(s) of) an URL in form of a string or associative array like parse_url() returns
-    // @param	mixed			Same as the first argument
-    // @param	int				A bitmask of binary or'ed HTTP_URL constants (Optional)HTTP_URL_REPLACE is the default
-    // @param	array			If set, it will be filled with the parts of the composed url like parse_url() would return
+    // @param    mixed            (Part(s) of) an URL in form of a string or associative array like parse_url() returns
+    // @param    mixed            Same as the first argument
+    // @param    int                A bitmask of binary or'ed HTTP_URL constants (Optional)HTTP_URL_REPLACE is the default
+    // @param    array            If set, it will be filled with the parts of the composed url like parse_url() would return
     function http_build_url($url, $parts=array(), $flags=HTTP_URL_REPLACE, &$new_url=false) {
         $keys = array('user','pass','port','path','query','fragment');
         

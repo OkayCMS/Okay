@@ -7,10 +7,12 @@ if(!$okay->request->check_session()) {
 }
 
 $result = '';
+/*Принимаем данные от объекта, который нужно обновить*/
 $id = intval($okay->request->post('id'));
 $object = $okay->request->post('object');
 $values = $okay->request->post('values');
 
+/*В зависимости от сущности, обновляем её*/
 switch ($object) {
     case 'product':
         if($okay->managers->access('products')) {
@@ -87,7 +89,7 @@ switch ($object) {
             $result = $okay->banners->update_banner($id, $values);
         }
         break;
-	case 'banners_image':
+    case 'banners_image':
         if($okay->managers->access('banners')) {
             $result = $okay->banners->update_banners_image($id, $values);
         }

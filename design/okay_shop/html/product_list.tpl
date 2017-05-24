@@ -16,8 +16,8 @@
             </a>
         {/if}
 
-		{* Product image *}
-		<a class="preview_image{if $smarty.get.module=='ComparisonView'} fn_zoom{/if}" href="{if $smarty.get.module=='ComparisonView'}{$product->image->filename|resize:800:600:w}{else}{$lang_link}products/{$product->url}{/if}" {if $smarty.get.module=='ComparisonView'}data-fancybox="group" data-caption="{$product->name|escape}"{/if}>
+        {* Product image *}
+        <a class="preview_image{if $smarty.get.module=='ComparisonView'} fn_zoom{/if}" href="{if $smarty.get.module=='ComparisonView'}{$product->image->filename|resize:800:600:w}{else}{$lang_link}products/{$product->url}{/if}" {if $smarty.get.module=='ComparisonView'}data-fancybox="group" data-caption="{$product->name|escape}"{/if}>
             {if $product->image->filename}
                 <img class="fn_img preview_img" src="{$product->image->filename|resize:200:200}" alt="{$product->name|escape}" title="{$product->name|escape}"/>
             {else}
@@ -26,7 +26,7 @@
             {if $product->special}
                 <img class="promo_img" src='files/special/{$product->special}' alt='{$product->special}' title="{$product->special}"/>
             {/if}
-		</a>
+        </a>
 
         <div class="overlay_buttons">
             {* Comparison *}
@@ -48,22 +48,22 @@
             {/if}
         </div>
 
-		{* Product name *}
-		<a class="product_name" data-product="{$product->id}" href="{$lang_link}products/{$product->url}">{$product->name|escape}</a>
+        {* Product name *}
+        <a class="product_name" data-product="{$product->id}" href="{$lang_link}products/{$product->url}">{$product->name|escape}</a>
 
-		<div class="price_container">
-			{* Old price *}
-			<div class="old_price{if !$product->variant->compare_price} hidden{/if}">
-				<span class="fn_old_price">{$product->variant->compare_price|convert}</span> <span>{$currency->sign|escape}</span>
+        <div class="price_container">
+            {* Old price *}
+            <div class="old_price{if !$product->variant->compare_price} hidden{/if}">
+                <span class="fn_old_price">{$product->variant->compare_price|convert}</span> <span>{$currency->sign|escape}</span>
             </div>
 
-			{* Price *}
-			<div class="price">
-				<span class="fn_price">{$product->variant->price|convert}</span> <span>{$currency->sign|escape}</span>
-			</div>
-		</div>
+            {* Price *}
+            <div class="price">
+                <span class="fn_price">{$product->variant->price|convert}</span> <span>{$currency->sign|escape}</span>
+            </div>
+        </div>
 
-		<form class="fn_variants preview_form" action="/{$lang_link}cart">
+        <form class="fn_variants preview_form" action="/{$lang_link}cart">
             {if !$settings->is_preorder}
                 {* Out of stock *}
                 <p class="fn_not_preorder {if $product->variant->stock > 0} hidden{/if}">

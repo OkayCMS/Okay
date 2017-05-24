@@ -35,14 +35,17 @@ class PagesAdmin extends Okay {
             if(is_array($ids)) {
                 switch($this->request->post('action')) {
                     case 'disable': {
+                        /*Выключить страницу*/
                         $this->pages->update_page($ids, array('visible'=>0));
                         break;
                     }
                     case 'enable': {
+                        /*Включить страницу*/
                         $this->pages->update_page($ids, array('visible'=>1));
                         break;
                     }
                     case 'delete': {
+                        /*Удалить страницу*/
                         foreach($ids as $id) {
                             $this->pages->delete_page($id);
                         }

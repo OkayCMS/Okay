@@ -3,14 +3,15 @@
 require_once('Okay.php');
 
 class Delivery extends Okay {
-    
+
+    /*Выборка конкретного способа доставки*/
     public function get_delivery($id) {
         if (empty($id)) {
             return false;
         }
         $delivery_id_filter = $this->db->placehold('AND d.id=?', intval($id));
         $lang_sql = $this->languages->get_query(array('object'=>'delivery'));
-    	$query = $this->db->placehold("SELECT 
+        $query = $this->db->placehold("SELECT 
                 d.id, 
                 d.free_from, 
                 d.price, 
@@ -27,10 +28,11 @@ class Delivery extends Okay {
             LIMIT 1 
         ");
         
-    	$this->db->query($query);
-    	return $this->db->result();
+        $this->db->query($query);
+        return $this->db->result();
     }
-    
+
+    /*Выборка всех способов доставки*/
     public function get_deliveries($filter = array()) {
         // По умолчанию
         $enabled_filter = '';
@@ -60,7 +62,8 @@ class Delivery extends Okay {
         $this->db->query($query);
         return $this->db->results();
     }
-    
+
+    /*Обновление способа доставки*/
     public function update_delivery($id, $delivery) {
         $delivery = (object)$delivery;
         // Проверяем есть ли мультиязычность и забираем описания для перевода
@@ -75,7 +78,8 @@ class Delivery extends Okay {
         }
         return $id;
     }
-    
+
+    /*Добавление способа доставки*/
     public function add_delivery($delivery) {
         $delivery = (object)$delivery;
         // Проверяем есть ли мультиязычность и забираем описания для перевода
@@ -96,7 +100,8 @@ class Delivery extends Okay {
         $this->db->query("UPDATE __delivery SET position=id WHERE id=?", intval($id));
         return $id;
     }
-    
+
+    /*Удаление способа доставки*/
     public function delete_delivery($id) {
         // Удаляем связь доставки с методоми оплаты
         $query = $this->db->placehold("DELETE FROM __delivery_payment WHERE delivery_id=?", intval($id));
@@ -109,13 +114,15 @@ class Delivery extends Okay {
             $this->db->query("DELETE FROM __lang_delivery WHERE delivery_id=?", intval($id));
         }
     }
-    
+
+    /*Выборка доступных способов оплаты для данного способа доставки*/
     public function get_delivery_payments($id) {
         $query = $this->db->placehold("SELECT payment_method_id FROM __delivery_payment WHERE delivery_id=?", intval($id));
         $this->db->query($query);
         return $this->db->results('payment_method_id');
     }
-    
+
+    /*Обновление способов оплаты у данного способа доставки*/
     public function update_delivery_payments($id, $payment_methods_ids) {
         $query = $this->db->placehold("DELETE FROM __delivery_payment WHERE delivery_id=?", intval($id));
         $this->db->query($query);

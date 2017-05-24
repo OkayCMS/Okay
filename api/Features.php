@@ -3,7 +3,8 @@
 require_once('Okay.php');
 
 class Features extends Okay {
-    
+
+    /*Выборка всех свойств товаров*/
     public function get_features($filter = array()) {
         $category_id_filter = '';
         if(isset($filter['category_id'])) {
@@ -43,7 +44,8 @@ class Features extends Okay {
         $this->db->query($query);
         return $this->db->results();
     }
-    
+
+    /*Выборка конкретного свойства товара*/
     public function get_feature($id) {
         if (empty($id)) {
             return false;
@@ -74,7 +76,8 @@ class Features extends Okay {
         $this->db->query($query);
         return $this->db->result();
     }
-    
+
+    /*Выборка категорий, закрепленных за свойством*/
     public function get_feature_categories($id) {
         $query = $this->db->placehold("SELECT cf.category_id as category_id 
             FROM __categories_features cf
@@ -82,7 +85,8 @@ class Features extends Okay {
         $this->db->query($query);
         return $this->db->results('category_id');
     }
-    
+
+    /*Добавление свойства*/
     public function add_feature($feature) {
         $feature = (array)$feature;
         $feature['url'] = preg_replace("/[\s]+/ui", '', $feature['url']);
@@ -114,7 +118,8 @@ class Features extends Okay {
         }
         return $id;
     }
-    
+
+    /*Обновление свойства*/
     public function update_feature($id, $feature) {
         //lastModify
         $feature = (array)$feature;
@@ -142,7 +147,8 @@ class Features extends Okay {
         }
         return $id;
     }
-    
+
+    /*Удаление свойства*/
     public function delete_feature($id = array()) {
         if(!empty($id)) {
             //lastModify
@@ -161,7 +167,8 @@ class Features extends Okay {
             $this->db->query("DELETE FROM __lang_features WHERE feature_id=?", intval($id));
         }
     }
-    
+
+    /*Удаление значения свойства*/
     public function delete_option($product_id, $feature_id) {
         $lang_id  = $this->languages->lang_id();
         $lang_id_filter = '';
@@ -172,7 +179,8 @@ class Features extends Okay {
         $query = $this->db->placehold("DELETE FROM __options WHERE product_id=? AND feature_id=? $lang_id_filter LIMIT 1", intval($product_id), intval($feature_id));
         $this->db->query($query);
     }
-    
+
+    /*Обновление значения свойства*/
     public function update_option($product_id, $feature_id, $value, $translit = '') {
         $lang_id  = $this->languages->lang_id();
         $lang_id_filter = '';
@@ -192,12 +200,14 @@ class Features extends Okay {
         }
         return true;
     }
-    
+
+    /*Добавление связки категории и свойства*/
     public function add_feature_category($id, $category_id) {
         $query = $this->db->placehold("INSERT IGNORE INTO __categories_features SET feature_id=?, category_id=?", $id, $category_id);
         $this->db->query($query);
     }
-    
+
+    /*Обновление связки категории и свойства*/
     public function update_feature_categories($id, $categories) {
         //lastModify
         if (is_array($categories)) {
@@ -249,7 +259,8 @@ class Features extends Okay {
             $this->db->query($query);
         }
     }
-    
+
+    /*Выборка значений свойств*/
     public function get_options($filter = array()) {
         $feature_id_filter = '';
         $product_id_filter = '';
@@ -307,8 +318,8 @@ class Features extends Okay {
                 count(po.product_id) as count
             FROM __options po
             $visible_filter
-        	$category_id_filter
-        	WHERE 
+            $category_id_filter
+            WHERE 
                 1 
                 $lang_id_filter 
                 $feature_id_filter 
@@ -322,7 +333,8 @@ class Features extends Okay {
         $this->db->query($query);
         return $this->db->results();
     }
-    
+
+    /*Выборка значений свойств товара(ов)*/
     public function get_product_options($filter = array()) {
         $product_id_filter = '';
         if (!empty($filter['product_id'])) {
@@ -359,13 +371,12 @@ class Features extends Okay {
                 $lang_id_filter 
             ORDER BY f.position
         ");
-        /*$query = $this->db->placehold("SELECT f.id as feature_id, f.name, po.value, po.product_id FROM __options po LEFT JOIN __features f ON f.id=po.feature_id
-        							   WHERE po.product_id in(?@) $lang_id_filter ORDER BY f.position", (array)$product_id);*/
-        
+
         $this->db->query($query);
         return $this->db->results();
     }
-    
+
+    /*Выборка свойств для товаров из списка сравнения*/
     public function get_comparison_options($products_ids = array()) {
         if(empty($products_ids)) {
             return array();
@@ -376,7 +387,6 @@ class Features extends Okay {
         if($lang_id) {
             $lang_id_filter = $this->db->placehold("AND po.lang_id=?", $lang_id);
         }
-        //$lang_sql = $this->languages->get_query(array('object'=>'feature', 'px'=>'f'));
         
         $query = $this->db->placehold("SELECT 
                 po.product_id, 

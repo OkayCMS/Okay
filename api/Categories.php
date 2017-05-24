@@ -8,7 +8,8 @@ class Categories extends Okay {
     private $all_categories;
     // Дерево категорий
     private $categories_tree;
-    
+
+    /*Выбираем все категории*/
     public function get_categories($filter = array()) {
         if(!isset($this->categories_tree)) {
             $this->init_categories();
@@ -56,26 +57,30 @@ class Categories extends Okay {
         
         return $this->all_categories;
     }
-    
+
+    /*Выбираем категории определенного товара*/
     public function get_product_categories($product_id) {
         $query = $this->db->placehold("SELECT product_id, category_id, position FROM __products_categories WHERE product_id in(?@) ORDER BY position", (array)$product_id);
         $this->db->query($query);
         return $this->db->results();
     }
-    
+
+    /*Выбираем связку товаров и их категорий*/
     public function get_products_categories() {
         $query = $this->db->placehold("SELECT product_id, category_id, position FROM __products_categories ORDER BY position");
         $this->db->query($query);
         return $this->db->results();
     }
-    
+
+    /*Выбираем дерево категорий*/
     public function get_categories_tree() {
         if(!isset($this->categories_tree)) {
             $this->init_categories();
         }
         return $this->categories_tree;
     }
-    
+
+    /*Выбираем конкретную категорию*/
     public function get_category($id) {
         if(!isset($this->all_categories)) {
             $this->init_categories();
@@ -91,7 +96,8 @@ class Categories extends Okay {
         }
         return false;
     }
-    
+
+    /*Добавление категории*/
     public function add_category($category) {
         $category = (array)$category;
         if(empty($category['url'])) {
@@ -132,7 +138,8 @@ class Categories extends Okay {
         unset($this->all_categories);
         return $id;
     }
-    
+
+    /*Обновление уровня вложенности категории*/
     private function update_level_depth($id, $prev_level = 1) {
         if ($this->all_categories[$id]->subcategories) {
             foreach ($this->all_categories[$id]->subcategories as $sub_cat) {
@@ -141,7 +148,8 @@ class Categories extends Okay {
             }
         }
     }
-    
+
+    /*Обновление категории*/
     public function update_category($id, $category) {
         if (is_object($category)) {
             if ($category->parent_id) {
@@ -169,7 +177,8 @@ class Categories extends Okay {
         unset($this->all_categories);
         return intval($id);
     }
-    
+
+    /*Удаление категории*/
     public function delete_category($ids) {
         $ids = (array) $ids;
         foreach($ids as $id) {
@@ -190,19 +199,22 @@ class Categories extends Okay {
         unset($this->all_categories);
         return $id;
     }
-    
+
+    /*Добавление категории к товару*/
     public function add_product_category($product_id, $category_id, $position=0) {
         $this->db->query("update __categories set last_modify=now() where id=?", intval($category_id));
         $query = $this->db->placehold("INSERT IGNORE INTO __products_categories SET product_id=?, category_id=?, position=?", $product_id, $category_id, $position);
         $this->db->query($query);
     }
-    
+
+    /*Удаление категории из товара*/
     public function delete_product_category($product_id, $category_id) {
         $this->db->query("update __categories set last_modify=now() where id=?", intval($category_id));
         $query = $this->db->placehold("DELETE FROM __products_categories WHERE product_id=? AND category_id=? LIMIT 1", intval($product_id), intval($category_id));
         $this->db->query($query);
     }
-    
+
+    /*Выборка категорий из БД и рекурсивное построение дерева категорий*/
     private function init_categories() {
         // Дерево категорий
         $tree = new stdClass();
@@ -272,10 +284,6 @@ class Categories extends Okay {
                 } else {
                     $pointers[$pointers[$id]->parent_id]->children = $pointers[$id]->children;
                 }
-                
-                // Добавляем количество товаров к родительской категории, если текущая видима
-                // if(isset($pointers[$pointers[$id]->parent_id]) && $pointers[$id]->visible)
-                //		$pointers[$pointers[$id]->parent_id]->products_count += $pointers[$id]->products_count;
             }
         }
         unset($pointers[0]);
@@ -285,6 +293,7 @@ class Categories extends Okay {
         $this->all_categories = $pointers;
     }
 
+    /*Выборка категорий яндекс маркета*/
     public function get_market($query = '') {
         $query = mb_strtolower($query);
         $market_cats = array();

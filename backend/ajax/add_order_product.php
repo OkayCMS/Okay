@@ -1,18 +1,18 @@
 <?php
-
-    $limit = 30;
-    
     if(!$okay->managers->access('orders')) {
         exit();
     }
-
     if (!empty($_SESSION['admin_lang_id'])) {
         $okay->languages->set_lang_id($_SESSION['admin_lang_id']);
     }
+
+    $limit = 30;
+    /*Определение языка для поиска*/
     $lang_id  = $okay->languages->lang_id();
     $px = ($lang_id ? 'l' : 'p');
     $lang_sql = $okay->languages->get_query(array('object'=>'product', 'px'=>'p'));
-    
+
+    /*Поиск товара*/
     $keyword = $okay->request->get('query', 'string');
     $keywords = explode(' ', $keyword);
     $keyword_sql = '';
@@ -46,7 +46,8 @@
     foreach($okay->db->results() as $product) {
         $products[$product->id] = $product;
     }
-    
+
+    /*Выборка вариантов для найденных товаров*/
     $lang_sql = $okay->languages->get_query(array('object'=>'variant', 'px'=>'pv'));
     $variants = array();
     if(!empty($products)) {
@@ -75,8 +76,8 @@
             $products[$variant->product_id]->variants[] = $variant;
             if ($variant->currency_id && ($currency = $okay->money->get_currency(intval($variant->currency_id)))) {
                 if ($currency->rate_from != $currency->rate_to) {
-                    $variant->price = $variant->price*$currency->rate_to/$currency->rate_from;
-                    $variant->compare_price = $variant->compare_price*$currency->rate_to/$currency->rate_from;
+                    $variant->price = round($variant->price*$currency->rate_to/$currency->rate_from,2);
+                    $variant->compare_price = round($variant->compare_price*$currency->rate_to/$currency->rate_from,2);
                 }
             }
         }

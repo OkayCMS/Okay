@@ -14,7 +14,8 @@ class CategoryStatsAdmin extends Okay {
         
         $date_from = $this->request->get('date_from');
         $date_to = $this->request->get('date_to');
-        
+
+        /*Фильтр по датам*/
         if (!empty($date_from) || !empty($date_to)) {
             if (!empty($date_from)) {
                 $filter['date_from'] = date("Y-m-d 00:00:01",strtotime($date_from));
@@ -25,13 +26,16 @@ class CategoryStatsAdmin extends Okay {
                 $this->design->assign('date_to', $date_to);
             }
         }
-        
+
+        /*Фильтр по категории*/
         $category_id = $this->request->get('category','integer');
         if (!empty($category_id)) {
             $category = $this->categories->get_category($category_id);
             $this->design->assign('category',$category);
             $filter['category_id'] = $category->children;
         }
+
+        /*Фильтр по бренду*/
         $brand_id = $this->request->get('brand','integer');
         if (!empty($brand_id)) {
             $filter['brand_id'] = $brand_id;
@@ -45,7 +49,8 @@ class CategoryStatsAdmin extends Okay {
             $brands_filter['category_id'] = $category->children;
         }
         $brands = $this->brands->get_brands($brands_filter);
-        
+
+        /*Формирование статистики*/
         $purchases = $this->reportstat->get_categorized_stat($filter);
         if (!empty($category)) {
             $categories_list = $this->cat_tree(array($category),$purchases);
@@ -60,7 +65,8 @@ class CategoryStatsAdmin extends Okay {
         
         return $this->design->fetch('category_stats.tpl');
     }
-    
+
+    /*Построение дерева категорий со статистикой продаж*/
     private function cat_tree($categories,$purchases = array()) {
         foreach ($categories as $k=>$v) {
             if (isset($v->subcategories)) {

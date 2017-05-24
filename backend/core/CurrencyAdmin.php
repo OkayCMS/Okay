@@ -7,6 +7,7 @@ class CurrencyAdmin extends Okay {
     public function fetch() {
         // Обработка действий
         if($this->request->method('post')) {
+            /*Формирование данных с валютами*/
             foreach($this->request->post('currency') as $n=>$va) {
                 foreach($va as $i=>$v) {
                     if(empty($currencies[$i])) {
@@ -17,6 +18,8 @@ class CurrencyAdmin extends Okay {
             }
             $wrong_iso = array();
             $currencies_ids = array();
+
+            /*Добавление/Удаление валюты*/
             foreach($currencies as $currency) {
                 if(!preg_match('(^[a-zA-Z]{1,3}$)',$currency->code)) {
                     $wrong_iso[] = $currency->name;
@@ -42,7 +45,7 @@ class CurrencyAdmin extends Okay {
             $new_currency = reset($currencies);
             if($old_currency->id != $new_currency->id) {
                 $coef = $new_currency->rate_from/$new_currency->rate_to;
-                
+                /*Пересчет цен по курсу валюты*/
                 if($this->request->post('recalculate') == 1) {
                     $this->db->query("UPDATE __variants SET price=price*?, compare_price=compare_price*? where currency_id=0", $coef, $coef);
                     $this->db->query("UPDATE __delivery SET price=price*?, free_from=free_from*?", $coef, $coef);
@@ -75,22 +78,27 @@ class CurrencyAdmin extends Okay {
             if(!empty($action) && !empty($id)) {
                 switch($action) {
                     case 'disable': {
+                        /*Выключить валюту*/
                         $this->money->update_currency($id, array('enabled'=>0));
                         break;
                     }
                     case 'enable': {
+                        /*Включить валюту*/
                         $this->money->update_currency($id, array('enabled'=>1));
                         break;
                     }
                     case 'show_cents': {
+                        /*Показывать копейки*/
                         $this->money->update_currency($id, array('cents'=>2));
                         break;
                     }
                     case 'hide_cents': {
+                        /*Не показывать копейки*/
                         $this->money->update_currency($id, array('cents'=>0));
                         break;
                     }
                     case 'delete': {
+                        /*Удалить валюту*/
                         $this->money->delete_currency($id);
                         break;
                     }

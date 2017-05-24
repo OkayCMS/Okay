@@ -3,7 +3,8 @@
 require_once('View.php');
 
 class ProductView extends View {
-    
+
+    /*Отображение товара*/
     public function fetch() {
         $product_url = $this->request->get('product_url', 'string');
         

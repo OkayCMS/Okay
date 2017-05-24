@@ -6,6 +6,7 @@ if(!$okay->request->check_session()) {
     exit();
 }
 
+/*Выборка категорий для Я.Маркета из файла*/
 $res = new stdClass();
 if($okay->managers->access('categories')) {
     $module = $okay->request->post('module');

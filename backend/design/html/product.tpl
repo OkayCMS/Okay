@@ -13,7 +13,7 @@
                     {$product->name|escape}
                 {/if}
             </div>
-            {if $product->id}
+            {if $product->id && !empty($product->url)}
                 <div class="box_btn_heading">
                     <a class="btn btn_small btn-info add" target="_blank" href="../{$lang_link}products/{$product->url}" >
                         {include file='svg_icon.tpl' svgId='icon_desktop'}
@@ -142,6 +142,7 @@
         <div class="col-lg-8 col-md-12 pr-0 ">
             <div class="boxed fn_toggle_wrap min_height_230px">
                 <div class="heading_box">
+                    {$btr->product_images|escape}
                     <div class="toggle_arrow_wrap fn_toggle_card text-primary">
                         <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
                     </div>
@@ -199,7 +200,7 @@
                         <div id="product_cats">
                             {assign var ='first_category' value=reset($product_categories)}
                             <select class="selectpicker  mb-1 fn_product_category fn_meta_categories" data-live-search="true">
-                                <option value="0" selected="" data-category_name="">Укажите категорию</option>
+                                <option value="0" selected="" disabled="" data-category_name="">{$btr->product_select_category}</option>
                                 {function name=category_select level=0}
                                     {foreach $categories as $category}
                                         <option value="{$category->id}" {if $category->id == $first_category->id}selected{/if} data-category_name="{$category->name|escape}">{section sp $level}- {/section}{$category->name|escape}</option>
@@ -844,7 +845,9 @@
                         feature = data[i];
                         var new_line = new_feature.clone(true);
                         new_line.find("input[name='new_features_names[]']").val(feature.name);
+                        new_line.find("input[name='new_features_names[]']").attr("disabled",true);
                         new_line.find("input[name='new_features_values[]']").val(feature.value);
+                        new_line.find(".fn_delete_feature").hide();
                         new_line.appendTo("div.fn_features_wrap").find("input[name='new_features_values[]']")
                         .autocomplete({
                             serviceUrl:'ajax/options_autocomplete.php',
@@ -927,9 +930,6 @@
             if($(this).val() == '')
                 $(this).val('∞');
         });
-
-
     });
 </script>
 {/literal}
-

@@ -1,7 +1,8 @@
 <?php
 
 class StatAjax extends Okay {
-    
+
+    /*Отображеие статистики заказов*/
     public function fetch() {
         if(!$this->managers->access('stats')) {
             return false;

@@ -22,8 +22,8 @@
     <script src="design/js/toastr.min.js"></script>
     <script src="design/js/Sortable.js"></script>
 </head>
-<body class="navbar-fixed {if $manager->menu_status}menu-pin{/if}">
-    <a href="index.php?module=LicenseAdmin" id="fix_logo" class="hidden-lg-down"></a>
+<body class="navbar-fixed {if $manager->menu_status && $is_mobile === false && $is_tablet === false}menu-pin{/if}">
+    <a href="javascript:;" id="fix_logo" class="hidden-lg-down"></a>
     <nav id="admin_catalog" class="fn_left_menu">
         <div id="mob_menu"></div>
         <div class="sidebar_header">

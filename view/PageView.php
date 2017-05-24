@@ -3,7 +3,8 @@
 require_once('View.php');
 
 class PageView extends View {
-    
+
+    /*Отображение страниц сайта*/
     public function fetch() {
         $url = $this->request->get('page_url', 'string');
         $page = $this->pages->get_page($url);

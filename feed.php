@@ -39,7 +39,7 @@ foreach($categories as $c)
 {
 print "<category id='$c->id'";
 if($c->parent_id>0)
-	print " parentId='$c->parent_id'";
+    print " parentId='$c->parent_id'";
 print ">".htmlspecialchars($c->name)."</category>
 ";
 }

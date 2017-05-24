@@ -3,7 +3,8 @@
 require_once('Okay.php');
 
 class Coupons extends Okay {
-    
+
+    /*Выборка конкретного купона*/
     public function get_coupon($id) {
         if (empty($id)) {
             return false;
@@ -36,7 +37,8 @@ class Coupons extends Okay {
             return false;
         }
     }
-    
+
+    /*Выборка всех купонов*/
     public function get_coupons($filter = array()) {
         // По умолчанию
         $limit = 1000;
@@ -99,7 +101,8 @@ class Coupons extends Okay {
         $this->db->query($query);
         return $this->db->results();
     }
-    
+
+    /*Подсчитываем количество купонов*/
     public function count_coupons($filter = array()) {
         $coupon_id_filter = '';
         $valid_filter = '';
@@ -141,7 +144,8 @@ class Coupons extends Okay {
             return false;
         }
     }
-    
+
+    /*Добавление купона*/
     public function add_coupon($coupon) {
         if(empty($coupon->single)) {
             $coupon->single = 0;
@@ -154,13 +158,15 @@ class Coupons extends Okay {
             return $this->db->insert_id();
         }
     }
-    
+
+    /*Обновление купона*/
     public function update_coupon($id, $coupon) {
         $query = $this->db->placehold("UPDATE __coupons SET ?% WHERE id in(?@) LIMIT ?", $coupon, (array)$id, count((array)$id));
         $this->db->query($query);
         return $id;
     }
-    
+
+    /*Удаление купона*/
     public function delete_coupon($id) {
         if(!empty($id)) {
             $query = $this->db->placehold("DELETE FROM __coupons WHERE id=? LIMIT 1", intval($id));

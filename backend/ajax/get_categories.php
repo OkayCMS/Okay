@@ -9,6 +9,7 @@ $okay->design->set_compiled_dir('backend/design/compiled');
 $lang_id  = $okay->languages->lang_id();
 $lang_sql = $okay->languages->get_query(array('object'=>'category'));
 $result = array();
+
 // Перевод админки
 $backend_translations = new stdClass();
 $manager = $okay->managers->get_manager();
@@ -21,6 +22,8 @@ if (!file_exists($file)) {
 }
 require_once($file);
 $okay->design->assign('btr', $backend_translations);
+
+/*Выборка категории и её деток*/
 if($okay->request->get("category_id")) {
     $category_id = $okay->request->get("category_id", 'integer');
     $categories = $okay->categories->get_category($category_id);
@@ -30,6 +33,7 @@ if($okay->request->get("category_id")) {
 } else {
     $result['success ']= false;
 }
+
 header("Content-type: application/json; charset=UTF-8");
 header("Cache-Control: must-revalidate");
 header("Pragma: no-cache");

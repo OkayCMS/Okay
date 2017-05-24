@@ -2,7 +2,7 @@
 
 class ImportAjax extends Okay {
     
-    // Соответствие полей в базе и имён колонок в файле
+    /*Соответствие полей в базе и имён колонок в файле*/
     private $columns_names = array(
         'name'=>             array('product', 'name', 'товар', 'название', 'наименование'),
         'url'=>              array('url', 'адрес'),

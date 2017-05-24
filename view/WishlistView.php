@@ -7,7 +7,8 @@ class WishlistView extends View {
     public function __construct() {
         parent::__construct();
     }
-    
+
+    /*Отображение списка избранного*/
     public function fetch() {
         $limit = 500;
         $id = $this->request->get('id', 'integer');
@@ -24,7 +25,6 @@ class WishlistView extends View {
             if ($key !== false) {
                 unset($products_ids[$key]);
             }
-            //header('Location: '.$this->config->root_url.'/wishlist/');
         } elseif($id > 0) {
             array_push($products_ids, $id);
             $products_ids = array_unique($products_ids);
@@ -71,10 +71,10 @@ class WishlistView extends View {
             }
         }
         
-        // Содержимое сравнения товаров
+        // Содержимое списка избранного
         $this->design->assign('wished_products', $products);
         
-        // Выводим шаблона
+        // Выводим шаблон
         return $this->design->fetch('wishlist.tpl');
     }
     

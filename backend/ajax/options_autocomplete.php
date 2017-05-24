@@ -4,10 +4,12 @@
         exit();
     }
     $limit = 100;
-    
+
+    /*Принимаем строку запроса*/
     $keyword = $okay->request->get('query', 'string');
     $feature_id = $okay->request->get('feature_id', 'string');
-    
+
+    /*Выбираем значение свойства*/
     $query = $okay->db->placehold('SELECT DISTINCT po.value 
         FROM __options po
         WHERE 

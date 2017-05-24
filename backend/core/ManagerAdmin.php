@@ -6,6 +6,7 @@ class ManagerAdmin extends Okay {
     
     public function fetch() {
         $manager = new stdClass();
+        /*Прием информации о менеджере*/
         if($this->request->method('post')) {
             $manager->id = $this->request->post('id', 'integer');
             $manager->lang = $this->request->post('manager_lang');
@@ -38,6 +39,7 @@ class ManagerAdmin extends Okay {
                         $manager->permissions = (array)$this->request->post('permissions');
                     }
 
+                    /*Добавление/Обновление менеджера*/
                     if(empty($manager->id)) {
                         $manager->id = $this->managers->add_manager($manager);
                         $this->design->assign('message_success', 'added');
@@ -59,6 +61,7 @@ class ManagerAdmin extends Okay {
             }
         }
 
+        /*Группировка списка доступов менеджера*/
         $permission = array(
             'left_catalog' => array(
                 'products'     => 'Товары',

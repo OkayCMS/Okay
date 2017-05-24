@@ -3,7 +3,8 @@
 require_once('Okay.php');
 
 class Languages extends Okay {
-    
+
+    /*Создание списка мультиязычных таблиц в БД*/
     public $tables = array('product'  => 'products',
         'variant'  => 'variants',
         'brand'    => 'brands',
@@ -23,7 +24,8 @@ class Languages extends Okay {
     private $first_language;
     private $lang_id;
     private $available_languages;
-    
+
+    /*Выборка списка языков сайта*/
     public function lang_list() {
         if (!isset($this->available_languages)) {
             include_once("backend/lang/languages_list.php");
@@ -31,7 +33,8 @@ class Languages extends Okay {
         }
         return $this->available_languages;
     }
-    
+
+    /*Выборка мультиязычных полей из БД*/
     public function get_fields($object = '') {
         $fields['categories']      = array('name', 'name_h1', 'meta_title', 'meta_keywords', 'meta_description', 'annotation', 'description', 'auto_meta_title', 'auto_meta_keywords', 'auto_meta_desc', 'auto_description');
         $fields['brands']          = array('name', 'meta_title', 'meta_keywords', 'meta_description', 'annotation', 'description');
@@ -53,7 +56,8 @@ class Languages extends Okay {
             return $fields;
         }
     }
-    
+
+    /*Выборка данных для связки таблиц и их мультиязычных данных*/
     public function get_query($params = array()) {
         $lang   = (isset($params['lang']) && $params['lang'] ? $params['lang'] : $this->lang_id());
         $object = $params['object'];
@@ -68,8 +72,6 @@ class Languages extends Okay {
         $exist = $this->db->result();
 
         if (!empty($lang) && $exist && !empty($this->languages)) {
-            /*$f = 'l';
-            $lang_join = 'LEFT JOIN __lang_'.$this->tables[$object].' l ON l.'.$object.'_id='.$px.'.id AND l.lang_id = '.(int)$lang;*/
             $f = (isset($params['px_lang']) && $params['px_lang'] ? $params['px_lang'] : 'l');
             $lang_join = 'LEFT JOIN __lang_'.$this->tables[$object].' '.$f.' ON '.$f.'.'.$object.'_id='.$px.'.id AND '.$f.'.lang_id = '.(int)$lang;
         } else {
@@ -84,7 +86,8 @@ class Languages extends Okay {
         
         return $result;
     }
-    
+
+    /*Выборка ID текущего языка*/
     public function lang_id() {
         if(empty($this->languages)) {
             return false;
@@ -120,7 +123,8 @@ class Languages extends Okay {
         }
         return $this->lang_id;
     }
-    
+
+    /*Установка ID языка*/
     public function set_lang_id($id) {
         $this->lang_id = $_SESSION['lang_id'] = intval($id);
     }
@@ -131,6 +135,7 @@ class Languages extends Okay {
     }
 
     // Если нужно обновить список языков, в нужное место добавить вызов этой ф-ии
+    /*Инициалищация языков*/
     public function init_languages() {
         $this->languages = array();
         $this->db->query("SELECT * FROM __languages WHERE 1 ORDER BY position");
@@ -140,10 +145,12 @@ class Languages extends Okay {
         $this->first_language = reset($this->languages);
     }
 
+    /*Выборка первого языка сайта*/
     public function get_first_language() {
         return $this->first_language;
     }
-    
+
+    /*Выборка конкретного языка*/
     public function get_language($id) {
         if (!empty($id)) {
             if(is_int($id) && isset($this->languages[$id])) {
@@ -158,7 +165,8 @@ class Languages extends Okay {
         }
         return false;
     }
-    
+
+    /*Выборка всех языков*/
     public function get_languages() {
         return $this->languages;
     }
@@ -177,7 +185,8 @@ class Languages extends Okay {
         }
         return $lang_link;
     }
-    
+
+    /*Обновление языка*/
     public function update_language($id, $data) {
         $data = (object)$data;
         $query = $this->db->placehold("UPDATE __languages SET ?% WHERE id in(?@)", $data, (array)$id);
@@ -186,7 +195,8 @@ class Languages extends Okay {
         $this->init_languages();
         return $id;
     }
-    
+
+    /*Добавление языка*/
     public function add_language($data) {
         $data = (object)$data;
         $query = $this->db->placehold('INSERT INTO __languages SET ?%', $data);
@@ -219,14 +229,23 @@ class Languages extends Okay {
                         $this->db->query("REPLACE INTO __options SET lang_id=?, value=?, product_id=?, feature_id=?, translit=?", $last_id, $o->value, $o->product_id, $o->feature_id, $o->translit);
                     }
                 }
+
+                $settings = $this->settings->get_settings($this->first_language->id);
+                if (!empty($settings)) {
+                    foreach ($settings as $s) {
+                        $this->db->query("REPLACE INTO __settings_lang SET lang_id=?, name=?, value=?", $last_id, $s->name, $s->value);
+                    }
+                }
             } else {
                 $this->db->query("UPDATE __options SET lang_id=?", $last_id);
+                $this->db->query("UPDATE __settings_lang SET lang_id=?", $last_id);
             }
             $this->init_languages();
             return $last_id;
         }
     }
-    
+
+    /*Удаление языка*/
     public function delete_language($id, $save_main = false) {
         if(!empty($id)) {
             $query = $this->db->placehold("DELETE FROM __languages WHERE id=? LIMIT 1", intval($id));
@@ -238,13 +257,16 @@ class Languages extends Okay {
 
             if (!$save_main) {
                 $this->db->query("DELETE FROM  __options WHERE lang_id=?", intval($id));
+                $this->db->query("DELETE FROM __settings_lang WHERE lang_id=?", intval($id));
             } else {
                 $this->db->query("UPDATE __options set lang_id=0 where lang_id=?", intval($id));
+                $this->db->query("UPDATE __settings_lang SET lang_id=0 WHERE lang_id=?", intval($id));
             }
             $this->init_languages();
         }
     }
-    
+
+    /*Действия над мультиязычным контентом*/
     public function action_data($object_id, $data, $object) {
         if(!in_array($object, array_keys($this->tables))) {
             return false;
@@ -265,7 +287,8 @@ class Languages extends Okay {
         }
         return $result;
     }
-    
+
+    /*Выборка мультиязычных данных*/
     public function get_description($data, $object) {
         if(!in_array($object, array_keys($this->tables)) || empty($this->languages)) {
             return false;
@@ -289,7 +312,8 @@ class Languages extends Okay {
         }
         return false;
     }
-    
+
+    /*Выборка мультиязычных данных и их дальнейшая обработка*/
     public function action_description($object_id, $description, $object, $update_lang = null) {
         if(!in_array($object, array_keys($this->tables)) || empty($this->languages)) {
             return false;

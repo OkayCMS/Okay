@@ -175,6 +175,7 @@
                                                             <td valign="middle">
                                                                 <a href="{$config->root_url}/{$lang_link}products/{$purchase->product->url}" style="font-family: 'Trebuchet MS'; font-size: 14px; color: rgb(29, 103, 164); text-decoration: underline">{$purchase->product_name|escape}</a><br />
                                                                 <span style="font-family:verdana,geneva,sans-serif;"><em><span style="color: rgb(128, 128, 128); font-size: 11px;">{$purchase->variant_name|escape}</span></em></span>
+                                                                {if $purchase->variant->stock == 0}<span class="preorder_label">{$lang->product_pre_order}</span>{/if}
                                                                 {if $order->paid && $purchase->variant->attachment}
                                                                     <div style="font-family:verdana,geneva,sans-serif;">
                                                                         <a href="{$config->root_url}/{$lang_link}order/{$order->url}/{$purchase->variant->attachment}">

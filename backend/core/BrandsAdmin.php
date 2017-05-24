@@ -13,12 +13,14 @@ class BrandsAdmin extends Okay {
             if(is_array($ids)) {
                 switch($this->request->post('action')) {
                     case 'delete': {
+                        /*Удаление брендов*/
                         foreach($ids as $id) {
                             $this->brands->delete_brand($id);
                         }
                         break;
                     }
                     case 'in_feed': {
+                        /*Выгрузка товаров бренда в файл feed.xml*/
                         foreach($ids as $id) {
                             $q = $this->db->placehold("SELECT v.id FROM __products p LEFT JOIN __variants v ON v.product_id=p.id WHERE p.brand_id =?", $id);
                             $this->db->query($q);
@@ -31,6 +33,7 @@ class BrandsAdmin extends Okay {
                         break;
                     }
                     case 'out_feed': {
+                        /*Снятие товаров бренда с выгрузки файла feed.xml*/
                         foreach($ids as $id) {
                             $q = $this->db->placehold("SELECT v.id FROM __products p LEFT JOIN __variants v ON v.product_id=p.id WHERE p.brand_id =?", $id);
                             $this->db->query($q);

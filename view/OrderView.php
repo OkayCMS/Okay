@@ -17,7 +17,8 @@ class OrderView extends View {
             return $this->fetch_order();
         }
     }
-    
+
+    /*Отображение оформленного заказа*/
     public function fetch_order() {
         if($url = $this->request->get('url', 'string')) {
             $order = $this->orders->get_order((string)$url);
@@ -35,7 +36,7 @@ class OrderView extends View {
         if(!$purchases) {
             return false;
         }
-        
+        /*Выбор другого способа оплаты*/
         if($this->request->method('post')) {
             if($payment_method_id = $this->request->post('payment_method_id', 'integer')) {
                 $this->orders->update_order($order->id, array('payment_method_id'=>$payment_method_id));
@@ -104,7 +105,8 @@ class OrderView extends View {
         // Выводим заказ
         return $this->body = $this->design->fetch('order.tpl');
     }
-    
+
+    /*Скачивание цифрового товара*/
     private function download() {
         $file = $this->request->get('file');
         
@@ -134,7 +136,8 @@ class OrderView extends View {
         
         exit();
     }
-    
+
+    /*Подлючение формы оплаты для выбранного способа*/
     public function checkout_form($params, &$smarty) {
         $module_name = preg_replace("/[^A-Za-z0-9]+/", "", $params['module']);
         

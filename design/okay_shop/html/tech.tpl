@@ -2,7 +2,7 @@
 <title>{$settings->site_name}</title>
     <body>
     <div class="site_off_logo">
-        <img src="{$config->root_url}/design/{$settings->theme}/images/logo_ru.png">
+        <img src="{$config->root_url}/design/{$settings->theme}/images/logo.png">
     </div>
         <div class="site_off_text">
             {$settings->site_annotation}

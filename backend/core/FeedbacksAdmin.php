@@ -12,6 +12,7 @@ class FeedbacksAdmin extends Okay {
             if(!empty($ids)) {
                 switch($this->request->post('action')) {
                     case 'delete': {
+                        /*Удалить заявку с формы обратной связи*/
                         foreach($ids as $id) {
                             $this->feedbacks->delete_feedback($id);
                         }
@@ -20,6 +21,8 @@ class FeedbacksAdmin extends Okay {
                 }
             }
         }
+
+        /*Ответ админисратора на заявку с формы обратной связи*/
         if($this->request->method('post')) {
             if ($this->request->post('feedback_answer', 'boolean') && ($feedback_id = $this->feedbacks->get_feedback($this->request->post('feedback_id', 'integer')))) {
                 $txt = $this->request->post('text');

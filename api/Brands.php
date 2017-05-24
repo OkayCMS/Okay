@@ -3,7 +3,8 @@
 require_once('Okay.php');
 
 class Brands extends Okay {
-    
+
+    /*Выбираем все бренды*/
     public function get_brands($filter = array()) {
         $category_id_filter = '';
         $category_join = '';
@@ -52,7 +53,8 @@ class Brands extends Okay {
         $this->db->query($query);
         return $this->db->results();
     }
-    
+
+    /*Выбираем конкретный бренд*/
     public function get_brand($id) {
         if (empty($id)) {
             return false;
@@ -83,7 +85,8 @@ class Brands extends Okay {
         $this->db->query($query);
         return $this->db->result();
     }
-    
+
+    /*Добавление бренда*/
     public function add_brand($brand) {
         $brand = (object)$brand;
         $brand->url = preg_replace("/[\s]+/ui", '', $brand->url);
@@ -113,7 +116,8 @@ class Brands extends Okay {
         }
         return $id;
     }
-    
+
+    /*Обновление бренда*/
     public function update_brand($id, $brand) {
         $brand = (object)$brand;
         // Проверяем есть ли мультиязычность и забираем описания для перевода
@@ -130,7 +134,8 @@ class Brands extends Okay {
         
         return $id;
     }
-    
+
+    /*Удаление бренда*/
     public function delete_brand($id) {
         if(!empty($id)) {
             $this->image->delete_image($id, 'image', 'brands', $this->config->original_brands_dir, $this->config->resized_brands_dir);
@@ -139,7 +144,7 @@ class Brands extends Okay {
             $query = $this->db->placehold("UPDATE __products SET brand_id=NULL WHERE brand_id=?", $id);
             $this->db->query($query);
             $this->db->query("DELETE FROM __lang_brands WHERE brand_id=?", $id);
-    	}
+        }
     }
     
 }

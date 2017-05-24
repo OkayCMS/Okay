@@ -23,11 +23,11 @@ class BannersImagesAdmin extends Okay {
         // Текущий фильтр
         if($f = $this->request->get('filter', 'string'))
         {
-        	if($f == 'visible')
-        		$filter['visible'] = 1;
-        	elseif($f == 'hidden')
-        		$filter['visible'] = 0;
-        	$this->design->assign('filter', $f);
+            if($f == 'visible')
+                $filter['visible'] = 1;
+            elseif($f == 'hidden')
+                $filter['visible'] = 0;
+            $this->design->assign('filter', $f);
         }
         
         // Обработка действий

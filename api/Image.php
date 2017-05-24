@@ -4,10 +4,10 @@ require_once('Okay.php');
 
 class Image extends Okay {
     
-    private	$allowed_extentions = array('png', 'gif', 'jpg', 'jpeg', 'ico');
+    private $allowed_extentions = array('png', 'gif', 'jpg', 'jpeg', 'ico');
     
     public function __construct() {
-    	parent::__construct();
+        parent::__construct();
     }
     
     /**
@@ -17,7 +17,7 @@ class Image extends Okay {
      * @param max_h максимальная высота
      * @return $string имя файла превью
      */
-    public function resize($filename/*resizing_image*/,$original_images_dir = null, $resized_images_dir = null/*/resizing_image*/) {
+    public function resize($filename,$original_images_dir = null, $resized_images_dir = null) {
         list($source_file, $width , $height, $set_watermark) = $this->get_resize_params($filename);
         
         $size = $width.'x'.$height;
@@ -44,7 +44,6 @@ class Image extends Okay {
         $resized_file = $this->add_resize_params($original_file, $width, $height, $set_watermark);
         
         // Пути к папкам с картинками
-        /*resizing_image*/
         if ($original_images_dir && !$resized_images_dir) {
             $resized_images_dir = $original_images_dir;
         } else {
@@ -57,9 +56,6 @@ class Image extends Okay {
         }
         $originals_dir = $this->config->root_dir.$original_images_dir;
         $preview_dir = $this->config->root_dir.$resized_images_dir;
-        //$originals_dir = $this->config->root_dir.$this->config->original_images_dir;
-        //$preview_dir = $this->config->root_dir.$this->config->resized_images_dir;
-        /*/resizing_image*/
         
         $watermark_offet_x = $this->settings->watermark_offset_x;
         $watermark_offet_y = $this->settings->watermark_offset_y;
@@ -81,7 +77,8 @@ class Image extends Okay {
         
         return $preview_dir.$resized_file;
     }
-    
+
+    /*Добавление параметров ресайза для изображения*/
     public function add_resize_params($filename, $width=0, $height=0, $set_watermark=false) {
         if('.' != ($dirname = pathinfo($filename,  PATHINFO_DIRNAME))) {
             $file = $dirname.'/'.pathinfo($filename, PATHINFO_FILENAME);
@@ -98,22 +95,24 @@ class Image extends Okay {
         
         return $resized_filename;
     }
-    
+
+    /*Выборка параметров изображения для ресайза*/
     public function get_resize_params($filename) {
         // Определаяем параметры ресайза
         if(!preg_match('/(.+)\.([0-9]*)x([0-9]*)(w)?\.([^\.]+)$/', $filename, $matches)) {
             return false;
         }
         
-        $file = $matches[1];					// имя запрашиваемого файла
-        $width = $matches[2];					// ширина будущего изображения
-        $height = $matches[3];					// высота будущего изображения
-        $set_watermark = $matches[4] == 'w';	// ставить ли водяной знак
-        $ext = $matches[5];						// расширение файла
+        $file = $matches[1];                    // имя запрашиваемого файла
+        $width = $matches[2];                    // ширина будущего изображения
+        $height = $matches[3];                    // высота будущего изображения
+        $set_watermark = $matches[4] == 'w';    // ставить ли водяной знак
+        $ext = $matches[5];                        // расширение файла
         
         return array($file.'.'.$ext, $width, $height, $set_watermark);
     }
-    
+
+    /*Загрузка изображения*/
     public function download_image($filename) {
         // Заливаем только есть такой файл есть в базе
         $this->db->query('SELECT 1 FROM __images WHERE filename=? LIMIT 1', $filename);
@@ -150,22 +149,21 @@ class Image extends Okay {
             return false;
         }
     }
-    
-    public function upload_image($filename, $name/*resizing_image*/, $original_dir = null/*/resizing_image*/) {
+
+    /*Загрузка изображения*/
+    public function upload_image($filename, $name, $original_dir = null) {
         // Имя оригинального файла
         $name = preg_replace('~(.+)\.([0-9]*)x([0-9]*)(w)?\.([^\.\?]+)$~', '${1}.${5}', $name);
         $name = $this->correct_filename($name);
         $uploaded_file = $new_name = pathinfo($name, PATHINFO_BASENAME);
         $base = pathinfo($uploaded_file, PATHINFO_FILENAME);
         $ext = pathinfo($uploaded_file, PATHINFO_EXTENSION);
-        
-        /*resizing_image*/
+
         if (!$original_dir) {
             $original_dir = $this->config->original_images_dir;
         }
-        /*/resizing_image*/
         if(in_array(strtolower($ext), $this->allowed_extentions)) {
-            while(file_exists($this->config->root_dir./*resizing_image*/$original_dir/*$this->config->original_images_dir*//*/resizing_image*/.$new_name)) {
+            while(file_exists($this->config->root_dir.$original_dir.$new_name)) {
                 $new_base = pathinfo($new_name, PATHINFO_FILENAME);
                 if(preg_match('/_([0-9]+)$/', $new_base, $parts)) {
                     $new_name = $base.'_'.($parts[1]+1).'.'.$ext;
@@ -173,7 +171,7 @@ class Image extends Okay {
                     $new_name = $base.'_1.'.$ext;
                 }
             }
-            if(move_uploaded_file($filename, $this->config->root_dir./*resizing_image*/$original_dir/*$this->config->original_images_dir*//*/resizing_image*/.$new_name)) {
+            if(move_uploaded_file($filename, $this->config->root_dir.$original_dir.$new_name)) {
                 return $new_name;
             }
         }
@@ -290,7 +288,6 @@ class Image extends Okay {
             $watermark_y = min(($dst_h-$oheight)*$watermark_offet_y/100, $dst_h);
             
             imagecopy($dst_img, $overlay, $watermark_x, $watermark_y, 0, 0, $owidth, $oheight);
-            //imagecopymerge($dst_img, $overlay, $watermark_x, $watermark_y, 0, 0, $owidth, $oheight, $watermark_opacity*100);
         }
         
         // recalculate quality value for png image
@@ -356,8 +353,6 @@ class Image extends Okay {
         // Устанавливаем водяной знак
         if($watermark && is_readable($watermark)) {
             $overlay = new Imagick($watermark);
-            //$overlay->setImageOpacity($watermark_opacity);
-            //$overlay_compose = $overlay->getImageCompose();
             $overlay->evaluateImage(Imagick::EVALUATE_MULTIPLY, $watermark_opacity, Imagick::CHANNEL_ALPHA);
             
             // Get the size of overlay
@@ -382,8 +377,7 @@ class Image extends Okay {
             }
             
             if(isset($overlay) && is_object($overlay)) {
-            	// $frame->compositeImage($overlay, $overlay_compose, $watermark_x, $watermark_y, imagick::COLOR_ALPHA);
-            	$frame->compositeImage($overlay, imagick::COMPOSITE_OVER, $watermark_x, $watermark_y, imagick::COLOR_ALPHA);
+                $frame->compositeImage($overlay, imagick::COMPOSITE_OVER, $watermark_x, $watermark_y, imagick::COLOR_ALPHA);
             }
         }
         
@@ -459,7 +453,8 @@ class Image extends Okay {
         fclose($fp2);
         return $same;
     }
-    
+
+    /*Транслит названия изображения*/
     public function correct_filename($filename) {
         $ru = explode('-', "А-а-Б-б-В-в-Ґ-ґ-Г-г-Д-д-Е-е-Ё-ё-Є-є-Ж-ж-З-з-И-и-І-і-Ї-ї-Й-й-К-к-Л-л-М-м-Н-н-О-о-П-п-Р-р-С-с-Т-т-У-у-Ф-ф-Х-х-Ц-ц-Ч-ч-Ш-ш-Щ-щ-Ъ-ъ-Ы-ы-Ь-ь-Э-э-Ю-ю-Я-я");
         $en = explode('-', "A-a-B-b-V-v-G-g-G-g-D-d-E-e-E-e-E-e-ZH-zh-Z-z-I-i-I-i-I-i-J-j-K-k-L-l-M-m-N-n-O-o-P-p-R-r-S-s-T-t-U-u-F-f-H-h-TS-ts-CH-ch-SH-sh-SCH-sch---Y-y---E-e-YU-yu-YA-ya");
@@ -470,12 +465,12 @@ class Image extends Okay {
         $res = strtolower($res);
         return $res;
     }
-    
-    /*resizing_image*/
+
     /**
-    * id - id сущности
-    * field - поле в таблице
-    * table - имя таблицы без префиксов like "blog"(not "__blog" or "s_blog")
+     * Удаления изображения и его ресайзов
+     * id - id сущности
+     * field - поле в таблице
+     * table - имя таблицы без префиксов like "blog"(not "__blog" or "s_blog")
     */
     public function delete_image($id, $field = null, $table = null, $original_dir = null, $resized_dir = null, $lang_id = 0, $lang_field = '') {
         if (!$field || !$table || !$original_dir) {
@@ -483,22 +478,22 @@ class Image extends Okay {
         }
         if (!$lang_id) {
             $query = $this->db->placehold("SELECT $field FROM __$table WHERE id=?", $id);
-    		$this->db->query($query);
-    		$filename = $this->db->result($field);
+            $this->db->query($query);
+            $filename = $this->db->result($field);
     
             if (!empty($filename)) {
                 $query = $this->db->placehold("UPDATE __$table SET $field='' WHERE id=?", $id);
                 $this->db->query($query);
     
                 $query = $this->db->placehold("SELECT count(*) as count FROM __$table WHERE $field=? LIMIT 1", $filename);
-        		$this->db->query($query);
-        		$count = $this->db->result('count');
+                $this->db->query($query);
+                $count = $this->db->result('count');
                 if($count == 0) {
-        			$file = pathinfo($filename, PATHINFO_FILENAME);
-        			$ext = pathinfo($filename, PATHINFO_EXTENSION);
+                    $file = pathinfo($filename, PATHINFO_FILENAME);
+                    $ext = pathinfo($filename, PATHINFO_EXTENSION);
     
-        			// Удалить все ресайзы
-        			if (!empty($resized_dir)) {
+                    // Удалить все ресайзы
+                    if (!empty($resized_dir)) {
                         $rezised_images = glob($this->config->root_dir.$resized_dir.$file.".*x*.".$ext);
                         if(is_array($rezised_images)) {
                             foreach ($rezised_images as $f) {
@@ -507,27 +502,27 @@ class Image extends Okay {
                         }
                     }
     
-        			@unlink($this->config->root_dir.$original_dir.$filename);
-        		}
+                    @unlink($this->config->root_dir.$original_dir.$filename);
+                }
             }
         } else {
             $query = $this->db->placehold("SELECT $field FROM __lang_$table WHERE $lang_field=? and lang_id=?", $id, $lang_id);
-    		$this->db->query($query);
-    		$filename = $this->db->result($field);
+            $this->db->query($query);
+            $filename = $this->db->result($field);
     
             if (!empty($filename)) {
                 $query = $this->db->placehold("UPDATE __lang_$table SET $field='' WHERE $lang_field=? and lang_id=?", $id, $lang_id);
                 $this->db->query($query);
     
                 $query = $this->db->placehold("SELECT count(*) as count FROM __lang_$table WHERE $field=? LIMIT 1", $filename);
-        		$this->db->query($query);
-        		$count = $this->db->result('count');
+                $this->db->query($query);
+                $count = $this->db->result('count');
                 if($count == 0) {
-        			$file = pathinfo($filename, PATHINFO_FILENAME);
-        			$ext = pathinfo($filename, PATHINFO_EXTENSION);
+                    $file = pathinfo($filename, PATHINFO_FILENAME);
+                    $ext = pathinfo($filename, PATHINFO_EXTENSION);
     
-        			// Удалить все ресайзы
-        			if (!empty($resized_dir)) {
+                    // Удалить все ресайзы
+                    if (!empty($resized_dir)) {
                         $rezised_images = glob($this->config->root_dir.$resized_dir.$file.".*x*.".$ext);
                         if(is_array($rezised_images)) {
                             foreach ($rezised_images as $f) {
@@ -536,11 +531,9 @@ class Image extends Okay {
                         }
                     }
     
-        			@unlink($this->config->root_dir.$original_dir.$filename);
-        		}
+                    @unlink($this->config->root_dir.$original_dir.$filename);
+                }
             }
         }
     }
-    /*/resizing_image*/
-    
 }

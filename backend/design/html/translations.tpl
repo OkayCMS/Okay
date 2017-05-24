@@ -8,7 +8,7 @@
                 {$btr->translations_translate|escape}
             </div>
             <div class="box_btn_heading">
-                <a class="btn btn_small btn-info add" href="{url module=TranslationAdmin}">
+                <a class="btn btn_small btn-info add" href="{url module=TranslationAdmin return=$smarty.server.REQUEST_URI}">
                     {include file='svg_icon.tpl' svgId='plus'}
                     <span>{$btr->translations_add|escape}</span>
                 </a>

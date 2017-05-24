@@ -11,6 +11,7 @@ class ManagersAdmin extends Okay {
             if(is_array($ids)) {
                 switch($this->request->post('action')) {
                     case 'delete': {
+                        /*Удалить менеджера*/
                         foreach($ids as $id) {
                             $this->managers->delete_manager($id);
                         }

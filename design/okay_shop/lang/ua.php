@@ -237,3 +237,5 @@ $lang['email_comment_your_comment'] = "Ваш коментар";
 $lang['email_comment_admin_ans'] = "Відповідь";
 $lang['email_on_site'] = "Перейти на сайт";
 $lang['email_order_your_status'] = "Ваш статус замовлення";
+$lang['receipt_name'] = "П.І.Б платника";
+$lang['receipt_address'] = "Адреса платника";

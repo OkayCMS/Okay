@@ -18,15 +18,15 @@
                         {$btr->general_products|escape} - {$products_count}
                     {/if}
                 </div>
-                <div class="box_btn_heading">
-                    <a class="btn btn_small btn-info" href="{url module=ProductAdmin return=$smarty.server.REQUEST_URI}">
-                        {include file='svg_icon.tpl' svgId='plus'}
-                        <span>{$btr->products_add|escape}</span>
-                    </a>
-                </div>
             {else}
                 <div class="box_heading heading_page">{$btr->products_no|escape}</div>
             {/if}
+            <div class="box_btn_heading">
+                <a class="btn btn_small btn-info" href="{url module=ProductAdmin return=$smarty.server.REQUEST_URI}">
+                    {include file='svg_icon.tpl' svgId='plus'}
+                    <span>{$btr->products_add|escape}</span>
+                </a>
+            </div>
         </div>
     </div>
     <div class="col-md-12 col-lg-5 col-xs-12 float-xs-right">

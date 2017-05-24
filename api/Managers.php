@@ -3,7 +3,8 @@
 require_once('Okay.php');
 
 class Managers extends Okay {
-    
+
+    /*Список параметров доступа для менеджера сайта*/
     public $permissions_list = array('products', 'categories', 'brands', 'features', 'orders', 'order_settings',
         'users', 'groups', 'coupons', 'pages', 'blog', 'comments', 'feedbacks', 'import', 'export',
         'stats', 'design', 'settings', 'currency', 'delivery', 'payment', 'managers', 'license', 'languages',
@@ -15,6 +16,7 @@ class Managers extends Okay {
     
     public function __construct() {}
 
+    /*Инициализация менеджеров*/
     private function init_managers() {
         $this->all_managers = array();
         $this->db->query("SELECT * FROM __managers ORDER BY id");
@@ -31,17 +33,20 @@ class Managers extends Okay {
         }
     }
 
+    /*Выборка списка всех менеджеров*/
     public function get_managers() {
         if (empty($this->all_managers)) {
             $this->init_managers();
         }
         return $this->all_managers;
     }
-    
+
+    /*Подсчет количества менеджеров*/
     public function count_managers($filter = array()) {
         return count($this->all_managers);
     }
-    
+
+    /*Выборка конкретного менеджера*/
     public function get_manager($id = null) {
         if (empty($this->all_managers)) {
             $this->init_managers();
@@ -50,13 +55,7 @@ class Managers extends Okay {
         if(empty($id)) {
             if (!empty($_SESSION['admin'])) {
                 $id = $_SESSION['admin'];
-            }/* else {
-                // Тестовый менеджер, если отключена авторизация
-                $m = new stdClass();
-                $m->login = 'manager';
-                $m->permissions = $this->permissions_list;
-                return $m;
-            }*/
+            }
         }
         if(is_int($id) && isset($this->all_managers[$id])) {
             return $this->all_managers[$id];
@@ -69,7 +68,8 @@ class Managers extends Okay {
         }
         return false;
     }
-    
+
+    /*Добавление менеджера*/
     public function add_manager($manager) {
         $manager = (object)$manager;
         if(!empty($manager->password)) {
@@ -89,7 +89,8 @@ class Managers extends Okay {
         $this->init_managers();
         return $id;
     }
-    
+
+    /*Обновление менеджеров*/
     public function update_manager($id, $manager) {
         $manager = (object)$manager;
         if(!empty($manager->password)) {
@@ -110,7 +111,8 @@ class Managers extends Okay {
         $this->init_managers();
         return $id;
     }
-    
+
+    /*Удаление менеджера*/
     public function delete_manager($id) {
         if (!empty($id)) {
             $this->db->query("DELETE FROM __managers WHERE id=?", intval($id));
@@ -119,7 +121,8 @@ class Managers extends Okay {
         }
         return false;
     }
-    
+
+    /*Шифрование пароля*/
     private function crypt_apr1_md5($plainpasswd, $salt = '') {
         if (empty($salt)) {
             $salt = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz0123456789"), 0, 8);
@@ -150,7 +153,8 @@ class Managers extends Okay {
         "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
         return "$"."apr1"."$".$salt."$".$tmp;
     }
-    
+
+    /*Проверка доступа к определнному модулю сайта*/
     public function access($module) {
         $manager = $this->get_manager();
         if(is_array($manager->permissions)) {
@@ -160,6 +164,7 @@ class Managers extends Okay {
         }
     }
 
+    /*Проверка пароля*/
     public function check_password($password, $crypt_pass) {
         $salt = explode('$', $crypt_pass);
         $salt = $salt[2];

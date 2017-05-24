@@ -11,22 +11,27 @@ class FeaturesAdmin extends Okay {
             if(is_array($ids)) {
                 switch($this->request->post('action')) {
                     case 'set_in_filter': {
+                        /*Отображать в фильтре*/
                         $this->features->update_feature($ids, array('in_filter'=>1));
                         break;
                     }
                     case 'unset_in_filter': {
+                        /*Не отображать в фильтре*/
                         $this->features->update_feature($ids, array('in_filter'=>0));
                         break;
                     }
                     case 'to_yandex': {
+                        /*Выгружать с яндекс*/
                         $this->features->update_feature($ids, array('yandex'=>1));    
                         break;
                     }
                     case 'from_yandex': {
+                        /*Не выгружать в яндекс*/
                         $this->features->update_feature($ids, array('yandex'=>0));    
                         break;
                     }
                     case 'delete': {
+                        /*Удалить свойство*/
                         $current_cat = $this->request->get('category_id', 'integer');
                         foreach($ids as $id) {
                             // текущие категории

@@ -4,6 +4,7 @@ require_once('Okay.php');
 
 class Callbacks extends Okay {
 
+    /*Отправка емейла администратору о заказе обратного звонка*/
     public function email_callback_admin($callback_id) {
         if(!($callback = $this->callbacks->get_callback(intval($callback_id)))) {
             return false;
@@ -24,7 +25,8 @@ class Callbacks extends Okay {
         $subject = $this->design->get_var('subject');
         $this->notify->email($this->settings->comment_email, $subject, $email_template, "$callback->name <$callback->phone>", "$callback->name <$callback->phone>");
     }
-    
+
+    /*Выбираем конкретную заявку на обратный звонок*/
     public function get_callback($id) {
         $query = $this->db->placehold("SELECT 
                 c.id, 
@@ -45,7 +47,8 @@ class Callbacks extends Okay {
             return false;
         }
     }
-    
+
+    /*Выбираем заявки на обратный звонок*/
     public function get_callbacks($filter = array()) {
         // По умолчанию
         $limit = 1000;
@@ -86,6 +89,7 @@ class Callbacks extends Okay {
         return $this->db->results();
     }
 
+    /*Подсчитываем количество заявок на обратный звонок*/
     public function count_callbacks($filter = array()) {
         $processed_filter = '';
 
@@ -105,7 +109,8 @@ class Callbacks extends Okay {
             return false;
         }
     }
-    
+
+    /*Добавление заявки на обратный звонок*/
     public function add_callback($callback) {
         $query = $this->db->placehold('INSERT INTO __callbacks SET ?%, date = NOW()', $callback);
         
@@ -116,13 +121,15 @@ class Callbacks extends Okay {
         $id = $this->db->insert_id();
         return $id;
     }
-    
+
+    /*Обновление заявки на обратный звонок*/
     public function update_callback($id, $callback) {
         $query = $this->db->placehold("UPDATE __callbacks SET ?% WHERE id in(?@) LIMIT 1", $callback, (array)$id);
         $this->db->query($query);
         return $id;
     }
-    
+
+    /*Удаление заявки на обратный звонок*/
     public function delete_callback($id) {
         if(!empty($id)) {
             $query = $this->db->placehold("DELETE FROM __callbacks WHERE id=? LIMIT 1", intval($id));

@@ -6,8 +6,7 @@ class OrderSettingsAdmin extends Okay {
 
     public function fetch() {
 
-        /*Orders Status*/
-
+        /*Статусы заказов*/
         if($this->request->post('status')) {
             // Сортировка
             if($this->request->post('positions')){
@@ -19,7 +18,7 @@ class OrderSettingsAdmin extends Okay {
                 }
             }
 
-
+            /*Создание статуса*/
             if($this->request->post('new_name')){
                 $new_status = array();
                 $new_params = array();
@@ -36,6 +35,7 @@ class OrderSettingsAdmin extends Okay {
                 }
             }
 
+            /*Обновление статуса*/
             if($this->request->post('name')) {
                 $current_status = array();
                 $is_close = array();
@@ -51,12 +51,12 @@ class OrderSettingsAdmin extends Okay {
                 }
             }
 
-
             // Действия с выбранными
             $ids = $this->request->post('check');
             if(is_array($ids)) {
                 switch($this->request->post('action')) {
                     case 'delete': {
+                        /*Удалить статус*/
                         foreach($ids as $id) {
                             $result[$id][] = $this->orderstatus->delete_status($id);
                         }
@@ -70,7 +70,7 @@ class OrderSettingsAdmin extends Okay {
         $orders_status = $this->orderstatus->get_status();
         $this->design->assign('orders_status', $orders_status);
 
-        /*/Orders Status*/
+        /*Метки заказов*/
         if($this->request->post('labels')) {
             // Сортировка
             if($this->request->post('positions')){
@@ -82,7 +82,7 @@ class OrderSettingsAdmin extends Okay {
                 }
             }
 
-
+            /*Добавление метки*/
             if($this->request->post('new_name')){
                 $new_labels = array();
                 $new_colors = array();
@@ -98,6 +98,7 @@ class OrderSettingsAdmin extends Okay {
                 }
             }
 
+            /*Обновление метки*/
             if($this->request->post('name')) {
                 $current_labels = array();
                 $colors = array();
@@ -113,12 +114,12 @@ class OrderSettingsAdmin extends Okay {
                 }
             }
 
-
             // Действия с выбранными
             $ids = $this->request->post('check');
             if(is_array($ids)) {
                 switch($this->request->post('action')) {
                     case 'delete': {
+                        /*Удалить метку*/
                         foreach($ids as $id) {
                             $this->orderlabels->delete_label($id);
                         }
@@ -130,10 +131,9 @@ class OrderSettingsAdmin extends Okay {
         // Отображение
         $labels = $this->orderlabels->get_labels();
         $this->design->assign('labels', $labels);
-        /*/Orders Labels*/
+
         return $this->design->fetch('order_settings.tpl');
     }
 
 }
-
 ?>

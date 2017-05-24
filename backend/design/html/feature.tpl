@@ -50,6 +50,8 @@
                 <div class="heading_box">
                     {if $message_error=='empty_name'}
                         {$btr->general_enter_title|escape}
+                    {elseif $message_error == "duplicate_url"}
+                        {$btr->feature_duplicate_url|escape}
                     {elseif $message_error=='auto_name_id_exists'}
                         {$btr->feature_auto_name_id_exists|escape}
                     {elseif $message_error=='auto_value_id_exists'}

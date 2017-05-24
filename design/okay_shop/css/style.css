@@ -231,7 +231,7 @@ a:active {
 }
 .ya_map {
     width: 100%;
-    height: 400px;
+    min-height: 450px;
 }
 .promo_img {
     position: absolute;
@@ -1858,4 +1858,13 @@ header a {
 .compare_show a:hover span,
 .compare_show .active span {
     border-color: transparent;
+}
+.preorder_label{
+    padding: 0 5px;
+    color: #fff;
+    text-align: center;
+    font-size: 10px;
+    background: #f2bd0b;
+    border: none;
+    border-radius: 2px;
 }

@@ -45,7 +45,7 @@ file_put_contents('sitemap'.$l.'_'.$sitemap_index.'.xml', "\t</url>"."\n", FILE_
 // Страницы
 foreach($okay->pages->get_pages() as $p) {
     if($p->visible && $p->menu_id == 1 && $p->url) {
-		$url = $okay->config->root_url.'/'.$lang_link.esc($p->url);
+        $url = $okay->config->root_url.'/'.$lang_link.esc($p->url);
         $last_modify = array();
         if ($p->url == 'blog') {
             $okay->db->query("SELECT b.last_modify FROM __blog b");
@@ -54,13 +54,13 @@ foreach($okay->pages->get_pages() as $p) {
         }
         $last_modify[] = $p->last_modify;
         $last_modify = max($last_modify);
-		$last_modify = substr($last_modify, 0, 10);
-		file_put_contents('sitemap'.$l.'_'.$sitemap_index.'.xml', "\t<url>"."\n", FILE_APPEND);
+        $last_modify = substr($last_modify, 0, 10);
+        file_put_contents('sitemap'.$l.'_'.$sitemap_index.'.xml', "\t<url>"."\n", FILE_APPEND);
         file_put_contents('sitemap'.$l.'_'.$sitemap_index.'.xml', "\t\t<loc>$url</loc>"."\n", FILE_APPEND);
         file_put_contents('sitemap'.$l.'_'.$sitemap_index.'.xml', "\t\t<lastmod>$last_modify</lastmod>"."\n", FILE_APPEND);
         file_put_contents('sitemap'.$l.'_'.$sitemap_index.'.xml', "\t\t<changefreq>daily</changefreq>"."\n", FILE_APPEND);
         file_put_contents('sitemap'.$l.'_'.$sitemap_index.'.xml', "\t\t<priority>1.0</priority>"."\n", FILE_APPEND);
-		file_put_contents('sitemap'.$l.'_'.$sitemap_index.'.xml', "\t</url>"."\n", FILE_APPEND);
+        file_put_contents('sitemap'.$l.'_'.$sitemap_index.'.xml', "\t</url>"."\n", FILE_APPEND);
         if (++$url_index == 50000) {
             file_put_contents('sitemap'.$l.'_'.$sitemap_index.'.xml', '</urlset>'."\n", FILE_APPEND);
             $url_index=0;

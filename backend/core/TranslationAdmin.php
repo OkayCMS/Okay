@@ -3,7 +3,8 @@
 require_once('api/Okay.php');
 
 class TranslationAdmin extends Okay {
-    
+
+    /*Работа с переводом*/
     public function fetch() {
         $languages = $this->languages->get_languages();
         
@@ -30,6 +31,7 @@ class TranslationAdmin extends Okay {
             } elseif(!empty($okay_object)) {
                 $this->design->assign('message_error', 'label_is_class');
             } else {
+                /*Добавление/Удаление перевода*/
                 if(empty($translation->id)) {
                     $this->design->assign('message_success', 'added');
                 } else {
@@ -41,7 +43,7 @@ class TranslationAdmin extends Okay {
             $translation->id = $this->request->get('id');
             if(!empty($translation->id)) {
                 $translation = $this->translations->get_translation($translation->id);
-        	}
+            }
         }
         
         $this->design->assign('languages', $languages);

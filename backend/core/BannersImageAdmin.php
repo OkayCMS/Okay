@@ -8,6 +8,7 @@ class BannersImageAdmin extends Okay {
     
     public function fetch() {
         $banners_image = new stdClass;
+        /*Принимаем данные о слайде*/
         if($this->request->method('post')) {
             $banners_image->id = $this->request->post('id', 'integer');
             $banners_image->name = $this->request->post('name');
@@ -19,7 +20,7 @@ class BannersImageAdmin extends Okay {
             $banners_image->alt = $this->request->post('alt');
             $banners_image->description = $this->request->post('description');
             
-            
+            /*Добавляем/удаляем слайд*/
             if(empty($banners_image->id)) {
                 $banners_image->id = $this->banners->add_banners_image($banners_image);
                 $this->design->assign('message_success', 'added');
@@ -35,7 +36,6 @@ class BannersImageAdmin extends Okay {
                 $query = $this->db->placehold("UPDATE __banners_images SET image=NULL WHERE id=?", $banners_image->id);
                 $this->db->query($query);
                 @unlink($this->config->root_dir.$this->config->banners_images_dir.$filename);
-                //$this->banners->delete_image($banners_image->id);
             }
             // Загрузка изображения
             $image = $this->request->files('image');

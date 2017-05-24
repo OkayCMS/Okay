@@ -9,6 +9,7 @@ class MultiImportAdmin extends Okay {
     public $allowed_extensions = array('csv', 'txt');
     private $locale = 'ru_RU.UTF-8';
 
+    /*Импорт переводов*/
     public function fetch() {
         $this->design->assign('import_files_dir', $this->import_files_dir);
         if(!is_writable($this->import_files_dir)) {

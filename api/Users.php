@@ -6,7 +6,8 @@ class Users extends Okay {
     
     // осторожно, при изменении соли испортятся текущие пароли пользователей
     private $salt = '8e86a279d6e182b3c811c559e6b15484';
-    
+
+    /*Выборка пользователей*/
     public function get_users($filter = array()) {
         $limit = 1000;
         $page = 1;
@@ -80,7 +81,8 @@ class Users extends Okay {
         $this->db->query($query);
         return $this->db->results();
     }
-    
+
+    /*Подсчет пользователей*/
     public function count_users($filter = array()) {
         $group_id_filter = '';
         $keyword_filter = '';
@@ -111,7 +113,8 @@ class Users extends Okay {
         $this->db->query($query);
         return $this->db->result('count');
     }
-    
+
+    /*Выборка конкретного пользователя*/
     public function get_user($id) {
         if (empty($id)) {
             return false;
@@ -150,7 +153,8 @@ class Users extends Okay {
         $user->discount *= 1; // Убираем лишние нули, чтобы было 5 вместо 5.00
         return $user;
     }
-    
+
+    /*Добавление пользователя*/
     public function add_user($user) {
         $user = (array)$user;
         if(isset($user['password'])) {
@@ -168,7 +172,8 @@ class Users extends Okay {
         $this->db->query($query);
         return $this->db->insert_id();
     }
-    
+
+    /*Обновление пользователя*/
     public function update_user($id, $user) {
         $user = (array)$user;
         if(isset($user['password'])) {
@@ -178,7 +183,8 @@ class Users extends Okay {
         $this->db->query($query);
         return $id;
     }
-    
+
+    /*Удаление пользователя*/
     public function delete_user($id) {
         if(!empty($id)) {
             $query = $this->db->placehold("UPDATE __orders SET user_id=0 WHERE user_id=?", intval($id));
@@ -191,14 +197,16 @@ class Users extends Okay {
         }
         return false;
     }
-    
+
+    /*Выборка групп пользователей*/
     public function get_groups() {
         // Выбираем группы
         $query = $this->db->placehold("SELECT g.id, g.name, g.discount FROM __groups AS g ORDER BY g.discount");
         $this->db->query($query);
         return $this->db->results();
     }
-    
+
+    /*Выборка группы пользователей */
     public function get_group($id) {
         // Выбираем группу
         $query = $this->db->placehold("SELECT * FROM __groups WHERE id=? LIMIT 1", $id);
@@ -207,19 +215,22 @@ class Users extends Okay {
         
         return $group;
     }
-    
+
+    /*Добавление группы пользователей*/
     public function add_group($group) {
         $query = $this->db->placehold("INSERT INTO __groups SET ?%", $group);
         $this->db->query($query);
         return $this->db->insert_id();
     }
-    
+
+    /*Обновление группы пользователей*/
     public function update_group($id, $group) {
         $query = $this->db->placehold("UPDATE __groups SET ?% WHERE id=? LIMIT 1", $group, intval($id));
         $this->db->query($query);
         return $id;
     }
-    
+
+    /*Удаление группы пользователей*/
     public function delete_group($id) {
         if(!empty($id)) {
             $query = $this->db->placehold("UPDATE __users SET group_id=NULL WHERE group_id=? LIMIT 1", intval($id));
@@ -232,7 +243,8 @@ class Users extends Okay {
         }
         return false;
     }
-    
+
+    /*Проверка пароля*/
     public function check_password($email, $password) {
         $encpassword = md5($this->salt.$password.md5($password));
         $query = $this->db->placehold("SELECT id FROM __users WHERE email=? AND password=? LIMIT 1", $email, $encpassword);

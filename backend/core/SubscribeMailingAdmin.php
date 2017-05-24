@@ -5,8 +5,10 @@ require_once('api/Okay.php');
 class SubscribeMailingAdmin extends Okay {
     
     private $export_files_dir = 'backend/files/export_users/';
-    
+
+    /*Отображение подписчиков сайта*/
     public function fetch() {
+        /*Экспорт подписчиков*/
         if ($this->request->post('is_export')) {
             $this->design->assign('export_files_dir', $this->export_files_dir);
             $this->design->assign('sort', $this->request->get('sort'));
@@ -23,7 +25,7 @@ class SubscribeMailingAdmin extends Okay {
             if(is_array($ids)) {
                 switch($this->request->post('action')) {
                     case 'delete': {
-                        //$this->db->query('delete from __subscribe_mailing where id in(?@)', $ids);
+                        /*Удалить подписчика*/
                         $this->subscribes->delete_subscribe($ids);
                         break;
                     }

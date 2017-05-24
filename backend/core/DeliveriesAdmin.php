@@ -13,14 +13,17 @@ class DeliveriesAdmin extends Okay {
             if(is_array($ids)) {
                 switch($this->request->post('action')) {
                     case 'disable': {
+                        /*Выключить способ доставки*/
                         $this->delivery->update_delivery($ids, array('enabled'=>0));
                         break;
                     }
                     case 'enable': {
+                        /*Включить сопсоб доставки*/
                         $this->delivery->update_delivery($ids, array('enabled'=>1));
                         break;
                     }
                     case 'delete': {
+                        /*Удалить способ доставки*/
                         foreach($ids as $id) {
                             $this->delivery->delete_delivery($id);
                         }

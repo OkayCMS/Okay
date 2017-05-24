@@ -8,7 +8,7 @@
                 {$btr->payment_methods_methods|escape}
             </div>
             <div class="box_btn_heading">
-                <a class="btn btn_small btn-info" href="{url module=PaymentMethodAdmin}">
+                <a class="btn btn_small btn-info" href="{url module=PaymentMethodAdmin return=$smarty.server.REQUEST_URI}">
                     {include file='svg_icon.tpl' svgId='plus'}
                     <span>{$btr->payment_methods_add|escape}</span>
                 </a>

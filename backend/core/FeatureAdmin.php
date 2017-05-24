@@ -24,7 +24,7 @@ class FeatureAdmin extends Okay {
             
             // Не допустить одинаковые URL свойств.
             if(($c = $this->features->get_feature($feature->url)) && $c->id!=$feature->id) {
-                $this->design->assign('message_error', 'Свойство с таким url уже существует');
+                $this->design->assign('message_error', 'duplicate_url');
             } elseif(empty($feature->name)) {
                 $this->design->assign('message_error', 'empty_name');
             } elseif (!$this->features->check_auto_id($feature->id, $feature->auto_name_id)) {
@@ -32,6 +32,7 @@ class FeatureAdmin extends Okay {
             } elseif (!$this->features->check_auto_id($feature->id, $feature->auto_value_id, "auto_value_id")) {
                 $this->design->assign('message_error', 'auto_value_id_exists');
             } else {
+                /*Добавление/Обновление свойства*/
                 if(empty($feature->id)) {
                     $feature->id = $this->features->add_feature($feature);
                     $feature = $this->features->get_feature($feature->id);

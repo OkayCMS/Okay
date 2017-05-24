@@ -52,8 +52,8 @@ class LoginView extends View {
         }
         // Вход
         elseif($this->request->method('post') && $this->request->post('login')) {
-            $email			= $this->request->post('email');
-            $password		= $this->request->post('password');
+            $email           = $this->request->post('email');
+            $password        = $this->request->post('password');
             
             $this->design->assign('email', $email);
             

@@ -6,7 +6,8 @@ class ThemeAdmin extends Okay {
     
     private $themes_dir = 'design/';
     private $compiled_dir = 'compiled/';
-    
+
+    /*Работа с шаблонами сайта*/
     public function fetch() {
         if($this->request->method('post')) {
             $this->dir_delete($this->compiled_dir, false);
@@ -32,10 +33,12 @@ class ThemeAdmin extends Okay {
             
             switch($this->request->post('action')) {
                 case 'set_main_theme': {
+                    /*Установить тему*/
                     $this->settings->theme = $action_theme;
                     break;
                 }
                 case 'clone_theme': {
+                    /*Сдлать копию темы*/
                     $new_name = $this->settings->theme;
                     while(is_dir($this->themes_dir.$new_name) || is_file($this->themes_dir.$new_name)) {
                         if(preg_match('/(.+)_([0-9]+)$/', $new_name, $parts)) {
@@ -50,6 +53,7 @@ class ThemeAdmin extends Okay {
                     break;
                 }
                 case 'delete_theme': {
+                    /*Удалить тему*/
                     $this->dir_delete($this->themes_dir.$action_theme);
                     if($action_theme == $this->settings->theme) {
                         $t = current($this->get_themes());

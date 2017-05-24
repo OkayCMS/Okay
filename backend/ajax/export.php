@@ -1,8 +1,9 @@
 <?php
 
 class ExportAjax extends Okay {
-    
-	private $columns_names = array(
+
+    /*Поля(столбцы) для файла экспорта*/
+    private $columns_names = array(
         'category'=>         'Категория',
         'name'=>             'Товар',
         'price'=>            'Цена',

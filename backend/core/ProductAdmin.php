@@ -12,7 +12,8 @@ class ProductAdmin extends Okay {
         $spec_images = array();
         $product_features = array();
         $related_products = array();
-        
+
+        /*Прием данных о товаре*/
         if($this->request->method('post') && !empty($_POST)) {
             $product = new stdClass;
             $product->id = $this->request->post('id', 'integer');
@@ -31,6 +32,7 @@ class ProductAdmin extends Okay {
             $product->rating = $this->request->post('rating', 'float');
             $product->votes = $this->request->post('votes', 'integer');
             $product->special = $this->request->post('special','string');
+
             // Варианты товара
             if($this->request->post('variants')) {
                 foreach($this->request->post('variants') as $n=>$va) {
@@ -109,6 +111,7 @@ class ProductAdmin extends Okay {
                     $images = $this->products->get_images(array('product_id' => $product->id));
                 }
             } else {
+                /*Добавление/Обновление товара*/
                 if(empty($product->id)) {
                     //lastModify
                     if ($product->brand_id > 0) {
@@ -146,7 +149,7 @@ class ProductAdmin extends Okay {
                         }
                     }
                     
-                    // Варианты
+                    /*Работы с вариантами товара*/
                     if(is_array($variants)) {
                         $feed = $this->request->post('feed');
                         $variants_ids = array();

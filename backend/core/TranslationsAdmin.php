@@ -12,6 +12,7 @@ class TranslationsAdmin extends Okay {
             if(is_array($ids)) {
                 switch($this->request->post('action')) {
                     case 'delete': {
+                        /*Удалить перевод*/
                         foreach($ids as $id) {
                             $this->translations->delete_translation($id);
                         }

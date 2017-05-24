@@ -11,12 +11,14 @@ class UsersAdmin extends Okay {
             if(is_array($ids)) {
                 switch($this->request->post('action')) {
                     case 'delete': {
+                        /*Удалить пользователя*/
                         foreach($ids as $id) {
                             $this->users->delete_user($id);
                         }
                         break;
                     }
                     case 'move_to': {
+                        /*Переместить пользователя в группу*/
                         foreach($ids as $id) {
                             $this->users->update_user($id,array('group_id'=>$this->request->post('move_group', 'integer')));
                         }

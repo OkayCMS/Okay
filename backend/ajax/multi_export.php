@@ -2,6 +2,7 @@
 
 class ExportAjax extends Okay {
 
+    /*Поля(столбцы) для файла экспорта*/
     private $columns_names = array(
         'name'=>             'Товар',
         'variant_id'=>       'ID варианта',

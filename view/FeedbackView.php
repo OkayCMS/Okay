@@ -6,6 +6,7 @@ class FeedbackView extends View {
     
     public function fetch() {
         $feedback = new stdClass;
+        /*Принимаем заявку с формы обратной связи*/
         if($this->request->method('post') && $this->request->post('feedback')) {
             $feedback->name         = $this->request->post('name');
             $feedback->email        = $this->request->post('email');
@@ -15,7 +16,8 @@ class FeedbackView extends View {
             $this->design->assign('name',  $feedback->name);
             $this->design->assign('email', $feedback->email);
             $this->design->assign('message', $feedback->message);
-            
+
+            /*Валидация данных клиента*/
             if(!$this->validate->is_name($feedback->name, true)) {
                 $this->design->assign('error', 'empty_name');
             } elseif(!$this->validate->is_email($feedback->email, true)) {

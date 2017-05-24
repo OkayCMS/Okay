@@ -27,7 +27,11 @@
                                         <div class="col-md-5 col-lg-5 pr-0 pl-0">
                                             <div class="input-group">
                                                 <span class=" input-group-addon-date">{$btr->general_from|escape}</span>
-                                                <input class="fn_from_date form-control" name="date_from" value="{$date_from}" autocomplete="off">
+                                                {if $is_mobile || $is_tablet}
+                                                    <input type="date" class="fn_from_date form-control" name="date_from" value="{$date_from}" autocomplete="off">
+                                                    {else}
+                                                    <input type="text" class="fn_from_date form-control" name="date_from" value="{$date_from}" autocomplete="off">
+                                                {/if}
                                                 <div class="input-group-addon">
                                                     <i class="fa fa-calendar"></i>
                                                 </div>
@@ -36,7 +40,11 @@
                                         <div class="col-md-5 col-lg-5 pr-0 pl-0">
                                             <div class="input-group">
                                                 <span class=" input-group-addon-date">{$btr->general_to|escape}</span>
-                                                <input class="fn_to_date form-control" name="date_to" value="{$date_to}" autocomplete="off">
+                                                {if $is_mobile || $is_tablet}
+                                                    <input type="date" class="fn_to_date form-control" name="date_to" value="{$date_to}" autocomplete="off">
+                                                    {else}
+                                                    <input type="text" class="fn_to_date form-control" name="date_to" value="{$date_to}" autocomplete="off">
+                                                {/if}
                                                 <div class="input-group-addon">
                                                     <i class="fa fa-calendar"></i>
                                                 </div>

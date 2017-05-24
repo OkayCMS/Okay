@@ -7,14 +7,15 @@
     define('IS_CLIENT', true);
     $okay = new Okay();
     $limit = 10;
-    
+
+    /*Определяем язык*/
     $lang_id  = $okay->languages->lang_id();
     $language = $okay->languages->get_language($lang_id);
-    
     $lang_link = $okay->languages->get_lang_link();
-    $px = ($lang_id ? 'l' : 'p');
+    $px = ($lang_id ? 'l' : 'p'); /*Если язык существует выбираем с таблицы переводов, иначе - таблицы produtcs*/
     $lang_sql = $okay->languages->get_query(array('object'=>'product'));
-    
+
+    /*Ищем товар*/
     $keyword = $okay->request->get('query', 'string');
     $keyword_filter = '';
     if (!empty($keyword)) {
@@ -30,6 +31,7 @@
             }
         }
     }
+    /*Делаем выборку из БД*/
 	$okay->db->query("SELECT 
             p.id,
             p.url,
@@ -53,11 +55,13 @@
     foreach($products as $p){
         $ids[] = $p->id;
     }
+    /*Подставляем к найденым товарам их варианты*/
     $variants = array();
     foreach ($okay->variants->get_variants(array('product_id'=>$ids)) as $v) {
         $variants[$v->product_id][] = $v;
     }
 
+    /*Определяем валюту*/
     $currencies = $okay->money->get_currencies(array('enabled'=>1));
     if(isset($_SESSION['currency_id'])) {
         $currency = $okay->money->get_currency($_SESSION['currency_id']);
@@ -65,6 +69,7 @@
         $currency = reset($currencies);
     }
 
+    /*Подготавливаем данные для отображения в автокомплите*/
     foreach($products as $product) {
         $suggestion = new stdClass();
         if(!empty($product->image)) {

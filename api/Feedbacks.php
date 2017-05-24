@@ -3,7 +3,8 @@
 require_once('Okay.php');
 
 class Feedbacks extends Okay {
-    
+
+    /*Выборка конкретной заявки с формы обратной связи*/
     public function get_feedback($id) {
         if (empty($id)) {
             return false;
@@ -32,7 +33,8 @@ class Feedbacks extends Okay {
             return false;
         }
     }
-    
+
+    /*Выборка всех заявок с формы обратной связи*/
     public function get_feedbacks($filter = array(), $new_on_top = false) {
         // По умолчанию
         $limit = 100;
@@ -95,7 +97,8 @@ class Feedbacks extends Okay {
         $this->db->query($query);
         return $this->db->results();
     }
-    
+
+    /*Подсчет количества заявок с формы обратной связи*/
     public function count_feedbacks($filter = array()) {
         $keyword_filter = '';
         $processed_filter = '';
@@ -133,7 +136,8 @@ class Feedbacks extends Okay {
         $this->db->query($query);
         return $this->db->result('count');
     }
-    
+
+    /*Добавление заявки с формы обратной связи*/
     public function add_feedback($feedback) {
         $query = $this->db->placehold('INSERT INTO __feedbacks SET ?%, date = NOW()', $feedback);
         
@@ -143,19 +147,21 @@ class Feedbacks extends Okay {
         $id = $this->db->insert_id();
         return $id;
     }
-    
+
+    /*Обновление заявки с формы обратной связи*/
     public function update_feedback($id, $feedback) {
         $date_query = '';
         if(isset($feedback->date)) {
-        	$date = $feedback->date;
-        	unset($feedback->date);
-        	$date_query = $this->db->placehold(', date=STR_TO_DATE(?, ?)', $date, $this->settings->date_format);
+            $date = $feedback->date;
+            unset($feedback->date);
+            $date_query = $this->db->placehold(', date=STR_TO_DATE(?, ?)', $date, $this->settings->date_format);
         }
         $query = $this->db->placehold("UPDATE __feedbacks SET ?% $date_query WHERE id in(?@) LIMIT 1", $feedback, (array)$id);
         $this->db->query($query);
         return $id;
     }
-    
+
+    /*Удаление заявки с формы обратной связи*/
     public function delete_feedback($id) {
         if(!empty($id)) {
             $query = $this->db->placehold("DELETE FROM __feedbacks WHERE id=? LIMIT 1", intval($id));

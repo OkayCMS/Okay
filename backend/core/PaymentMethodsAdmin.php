@@ -21,14 +21,17 @@ class PaymentMethodsAdmin extends Okay {
             if(is_array($ids)) {
                 switch($this->request->post('action')) {
                     case 'disable': {
+                        /*Выключение способ оплаты*/
                         $this->payment->update_payment_method($ids, array('enabled'=>0));
                         break;
                     }
                     case 'enable': {
+                        /*Включение способа оплаты*/
                         $this->payment->update_payment_method($ids, array('enabled'=>1));
                         break;
                     }
                     case 'delete': {
+                        /*Удаление способа оплаты*/
                         foreach($ids as $id) {
                             $this->payment->delete_payment_method($id);
                         }

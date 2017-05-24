@@ -3,7 +3,8 @@
 require_once('Okay.php');
 
 class Payment extends Okay {
-	
+
+    /*Выборка всех способов оплаты*/
     public function get_payment_methods($filter = array()) {
         $delivery_filter = '';
         if(!empty($filter['delivery_id'])) {
@@ -36,7 +37,8 @@ class Payment extends Okay {
         $this->db->query($query);
         return $this->db->results();
     }
-    
+
+    /*Выборка конкретного способа оплаты*/
     public function get_payment_method($id) {
         if (empty($id)) {
             return false;
@@ -62,7 +64,8 @@ class Payment extends Okay {
         $this->db->query($query);
         return $this->db->result();
     }
-    
+
+    /*Выборка настроек способа оплаты*/
     public function get_payment_settings($method_id) {
         $query = $this->db->placehold("SELECT settings FROM __payment_methods WHERE id=? LIMIT 1", intval($method_id));
         $this->db->query($query);
@@ -71,7 +74,8 @@ class Payment extends Okay {
         $settings = unserialize($settings);
         return $settings;
     }
-    
+
+    /*Выборка модулей(обработчиков) способов оплаты*/
     public function get_payment_modules() {
         $modules_dir = $this->config->root_dir.'payment/';
         
@@ -103,13 +107,15 @@ class Payment extends Okay {
         closedir($handler);
         return $modules;
     }
-    
+
+    /*Выборка доступных способов доставки для конкретного способа оплаты*/
     public function get_payment_deliveries($id) {
         $query = $this->db->placehold("SELECT delivery_id FROM __delivery_payment WHERE payment_method_id=?", intval($id));
         $this->db->query($query);
         return $this->db->results('delivery_id');
     }
-    
+
+    /*Обновление способа оплаты*/
     public function update_payment_method($id, $payment_method) {
         $payment_method = (object)$payment_method;
         // Проверяем есть ли мультиязычность и забираем описания для перевода
@@ -124,7 +130,8 @@ class Payment extends Okay {
         }
         return $id;
     }
-    
+
+    /*Обновление настроек способа оплаты*/
     public function update_payment_settings($method_id, $settings) {
         if(!is_string($settings)) {
             $settings = serialize($settings);
@@ -133,7 +140,8 @@ class Payment extends Okay {
         $this->db->query($query);
         return $method_id;
     }
-    
+
+    /*Обновление доступных способов доставки*/
     public function update_payment_deliveries($id, $deliveries_ids) {
         $query = $this->db->placehold("DELETE FROM __delivery_payment WHERE payment_method_id=?", intval($id));
         $this->db->query($query);
@@ -143,7 +151,8 @@ class Payment extends Okay {
             }
         }
     }
-    
+
+    /*Добавление способа оплаты*/
     public function add_payment_method($payment_method) {
         $payment_method = (object)$payment_method;
         // Проверяем есть ли мультиязычность и забираем описания для перевода
@@ -164,7 +173,8 @@ class Payment extends Okay {
         $this->db->query("UPDATE __payment_methods SET position=id WHERE id=?", $id);
         return $id;
     }
-    
+
+    /*Удаление способа оплаты*/
     public function delete_payment_method($id) {
         // Удаляем связь метода оплаты с достаками
         $query = $this->db->placehold("DELETE FROM __delivery_payment WHERE payment_method_id=?", intval($id));

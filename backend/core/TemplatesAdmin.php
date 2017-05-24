@@ -3,7 +3,8 @@
 require_once('api/Okay.php');
 
 class TemplatesAdmin extends Okay {
-    
+
+    /*Чтение файлов шаблона*/
     public function fetch() {
         if($this->request->get("email")){
             $templates_dir = 'design/'.$this->settings->theme.'/html/email/';

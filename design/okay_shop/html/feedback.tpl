@@ -4,17 +4,17 @@
 
 <div class="wrap_block clearfix">
 
-	{* Page body *}
-	{if $page->description}
-		<div class="col-lg-6 no_padding">
-			{* The page heading *}
-			<h1 class="h1">{$page->name|escape}</h1>
+    {* Page body *}
+    {if $page->description}
+        <div class="col-lg-6 no_padding">
+            {* The page heading *}
+            <h1 class="h1">{$page->name|escape}</h1>
 
-			<div class="block padding">
-				{$page->description}
-			</div>
-		</div>
-	{/if}
+            <div class="block padding">
+                {$page->description}
+            </div>
+        </div>
+    {/if}
 
     {if $message_sent}
         <div class="message_success">
@@ -78,6 +78,6 @@
 
 {* Yandex map *}
 <div class="ya_map">
-    <script type="text/javascript" charset="utf-8" src="https://api-maps.yandex.ru/services/constructor/1.0/js/?sid=33OLs0Ell3u6mHqRQPSPPzVoGoVJGLmo&width=100%&height=400&lang={$lang->yandex_map_lang}&sourceType=constructor"></script>
+    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2241.7081645541616!2d37.5206056!3d55.8156667!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x944fd88cf96de197!2sOkayCMS!5e0!3m2!1sru!2sua!4v1495180474127" width="100%" height="450" frameborder="0" style="border:0;" allowfullscreen></iframe><br>
 </div>
 
