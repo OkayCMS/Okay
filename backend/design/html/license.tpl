@@ -1,4 +1,6 @@
 {$meta_title = $btr->license_lecense scope=parent}
+
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
@@ -15,6 +17,7 @@
     </div>
 </div>
 
+{*Главная форма страницы*}
 <form method="post" enctype="multipart/form-data">
     <input type=hidden name="session_id" value="{$smarty.session.id}">
 
@@ -28,7 +31,7 @@
                         </div>
                     {else}
                         <div class="text_warning">
-
+                            {$btr->index_not_valid|escape}
                         </div>
                     {/if}
                     <div class="toggle_arrow_wrap fn_toggle_card text-primary">
@@ -55,6 +58,7 @@
     </div>
 </form>
 
+{*Текст лицензии*}
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="boxed fn_toggle_wrap min_height_335px">

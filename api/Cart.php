@@ -67,7 +67,9 @@ class Cart extends Okay {
                             // Абсолютная скидка не более суммы заказа
                             $cart->coupon_discount = $cart->total_price>$cart->coupon->value?$cart->coupon->value:$cart->total_price;
                             $cart->total_price = max(0, $cart->total_price-$cart->coupon->value);
+                            $cart->coupon->coupon_percent = round(100-($cart->total_price*100)/($cart->total_price+$cart->coupon->value),2);
                         } else {
+                            $cart->coupon->coupon_percent = $cart->coupon->value;
                             $cart->coupon_discount = $cart->total_price * ($cart->coupon->value)/100;
                             $cart->total_price = $cart->total_price-$cart->coupon_discount;
                         }

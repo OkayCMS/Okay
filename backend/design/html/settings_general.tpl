@@ -1,5 +1,6 @@
 {$meta_title = $btr->settings_general_sites scope=parent}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="heading_page">{$btr->settings_general_sites|escape}</div>
@@ -7,6 +8,7 @@
     <div class="col-lg-5 col-md-5 text-xs-right float-xs-right"></div>
 </div>
 
+{*Вывод успешных сообщений*}
 {if $message_success}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -27,7 +29,7 @@
     </div>
 {/if}
 
-
+{*Главная форма страницы*}
 <form method="post" enctype="multipart/form-data">
     <input type=hidden name="session_id" value="{$smarty.session.id}">
 
@@ -40,6 +42,7 @@
                         <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
                     </div>
                 </div>
+                {*Параметры элемента*}
                 <div class="toggle_body_wrap on fn_card">
                     <div class="row">
                         <div class="col-md-6">
@@ -81,6 +84,58 @@
         </div>
     </div>
 
+    {*Логотип сайта*}
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="boxed fn_toggle_wrap ">
+                <div class="heading_box">
+                    {$btr->settings_general_site_logo|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
+                    </div>
+                </div>
+                <div>
+                    {$btr->settings_general_allow_ext|escape}
+                    {if $allow_ext}
+                        {foreach $allow_ext as $img_ext}
+                            <span class="tag tag-info">{$img_ext|escape}</span>
+                        {/foreach}
+                    {/if}
+                </div>
+                <div class="toggle_body_wrap on fn_card">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <div class="boxed">
+                                {if $settings->site_logo}
+                                    <div class="fn_parent_image txt_center">
+                                        <div class="banner_image fn_image_wrapper text-xs-center">
+                                            <a href="javascript:;" class="fn_delete_item remove_image"></a>
+                                            <input type="hidden" name="site_logo" value="{$settings->site_logo|escape}">
+                                            <img class="watermark_image" src="{$config->root_url}/design/{$settings->theme}/images/{$settings->site_logo}" alt="" />
+                                        </div>
+                                    </div>
+                                {else}
+                                    <div class="fn_parent_image"></div>
+                                {/if}
+
+                                <div class="fn_upload_image dropzone_block_image text-xs-center {if $settings->site_logo} hidden{/if}">
+                                    <i class="fa fa-plus font-5xl" aria-hidden="true"></i>
+                                    <input class="dropzone_image" name="site_logo" type="file" />
+                                </div>
+                                <div class="image_wrapper fn_image_wrapper fn_new_image text-xs-center">
+                                    <a href="javascript:;" class="fn_delete_item delete_image remove_image"></a>
+                                    <input type="hidden" name="site_logo" value="{$settings->site_logo|escape}">
+                                    <img src="" alt="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {*Параметры элемента*}
     <div class="row">
         <div class="col-lg-12 col-md-12">
             <div class="boxed fn_toggle_wrap min_height_230px">

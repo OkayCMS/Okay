@@ -80,6 +80,7 @@
     <div class="col-md-2 col-lg-2 col-sm-12 float-xs-right"></div>
 </div>
 
+{*Вывод ошибок*}
 {if $message_error}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">

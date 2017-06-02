@@ -35,7 +35,8 @@ class Callbacks extends Okay {
                 c.message, 
                 c.date, 
                 c.processed,
-                c.url
+                c.url,
+                c.admin_notes
             FROM __callbacks c 
             WHERE id=? 
             LIMIT 1
@@ -76,7 +77,8 @@ class Callbacks extends Okay {
                 c.date, 
                 c.message, 
                 c.processed,
-                c.url
+                c.url,
+                c.admin_notes
             FROM __callbacks c 
             WHERE 
                 1 

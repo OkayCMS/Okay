@@ -1,5 +1,6 @@
 {$meta_title=$btr->import_products scope=parent}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="heading_page">
@@ -15,8 +16,8 @@
 
 <div id="import_error" class="boxed boxed_warning" style="display: none;"></div>
 
+{*Вывод ошибок*}
 {if $message_error}
-    <!-- Системное сообщение -->
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="boxed boxed_warning">
@@ -36,9 +37,9 @@
             </div>
         </div>
     </div>
-    <!-- Системное сообщение (The End)-->
 {/if}
 
+{*Главная форма страницы*}
 {if $message_error != 'no_permission'}
     {if $filename}
     <div class="row">

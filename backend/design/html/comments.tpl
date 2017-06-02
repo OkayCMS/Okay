@@ -1,6 +1,7 @@
 {* Title *}
 {$meta_title=$btr->general_comments scope=parent}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
@@ -19,6 +20,7 @@
     </div>
 </div>
 
+{*Блок фильтров*}
 <div class="boxed fn_toggle_wrap">
     <div class="row">
         <div class="col-lg-12 col-md-12">
@@ -38,11 +40,12 @@
     </div>
     {if $comments}
         <div class="row">
-        {* Основная форма *}
+        {*Главная форма страницы*}
         <div class="col-lg-12 col-md-12 col-sm-12">
             <form class="fn_form_list" method="post">
                 <input type="hidden" name="session_id" value="{$smarty.session.id}">
                 <div class="post_wrap okay_list">
+                    {*Шапка таблицы*}
                     <div class="okay_list_head">
                         <div class="okay_list_heading okay_list_check">
                             <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value=""/>
@@ -52,6 +55,7 @@
                         <div class="okay_list_heading okay_list_comments_btn"></div>
                         <div class="okay_list_heading okay_list_close"></div>
                     </div>
+                    {*Параметры элемента*}
                     <div class="okay_list_body">
                         {function name=comments_tree level=0}
                             {foreach $comments as $comment}
@@ -92,7 +96,7 @@
                                                         {$btr->general_approve|escape}
                                                     </button>
                                                 {/if}
-                                                <div class="answer_wrap {if $level > 0}hidden{/if}">
+                                                <div class="answer_wrap {if $level > 0 || !$comment->approved}hidden{/if}">
                                                     <button type="button" data-parent_id="{$comment->id}" data-user_name="{$comment->name|escape}" data-toggle="modal" data-target="#answer_popup" class="btn btn_small btn-outline-info fn_answer">
                                                         {$btr->general_answer|escape}
                                                     </button>
@@ -131,6 +135,7 @@
                         {comments_tree comments=$comments}
                     </div>
 
+                    {*Блок массовых действий*}
                     <div class="okay_list_footer fn_action_block">
                         <div class="okay_list_foot_left">
                             <div class="okay_list_heading okay_list_check">
@@ -150,7 +155,6 @@
                         </button>
                     </div>
                 </div>
-
             </form>
         </div>
     </div>
@@ -161,7 +165,7 @@
     {/if}
 </div>
 
-
+{*Форма ответа на сообщение*}
 <div id="answer_popup" class="modal fade show" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -186,7 +190,6 @@
                     </button>
                 </form>
             </div>
-
         </div>
     </div>
 </div>

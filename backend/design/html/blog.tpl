@@ -1,5 +1,7 @@
 {* Title *}
 {$meta_title=$btr->blog_blog scope=parent}
+
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
@@ -36,6 +38,7 @@
 
 <div class="boxed fn_toggle_wrap">
     <div class="row">
+        {*Блок фильтров*}
         <div class="col-lg-12 col-md-12 ">
             <div class="boxed_sorting">
                 <div class="row">
@@ -52,13 +55,15 @@
             </div>
         </div>
     </div>
+
+    {*Главная форма страницы*}
     {if $posts}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <form class="fn_form_list" method="post">
                     <input type="hidden" name="session_id" value="{$smarty.session.id}">
-
                     <div class="post_wrap okay_list">
+                        {*Шапка таблицы*}
                         <div class="okay_list_head">
                             <div class="okay_list_heading okay_list_check">
                                 <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value=""/>
@@ -71,7 +76,7 @@
                             <div class="okay_list_heading okay_list_setting okay_list_blog_setting">{$btr->general_activities|escape}</div>
                             <div class="okay_list_heading okay_list_close"></div>
                         </div>
-
+                        {*Параметры элемента*}
                         <div class="okay_list_body">
                             {foreach $posts as $post}
                                 <div class="fn_row okay_list_body_item">
@@ -138,6 +143,7 @@
                             {/foreach}
                         </div>
 
+                        {*Блок массовых действий*}
                         <div class="okay_list_footer fn_action_block">
                             <div class="okay_list_foot_left">
                                 <div class="okay_list_heading okay_list_check">
@@ -161,11 +167,10 @@
 
                 </form>
             </div>
-
-    </div>
+        </div>
     {else}
         <div class="heading_box mt-1">
             <div class="text_grey">{$btr->blog_no_post|escape}</div>
         </div>
     {/if}
-    </div>
+</div>

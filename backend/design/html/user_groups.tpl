@@ -1,6 +1,7 @@
 {* Title *}
 {$meta_title=$btr->user_groups_groups scope=parent}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-8 col-md-8">
         <div class="wrap_heading">
@@ -17,6 +18,7 @@
     </div>
 </div>
 
+{*Главная форма страницы*}
 <div class="boxed fn_toggle_wrap">
     {if $groups}
         <div class="row">
@@ -25,6 +27,7 @@
                     <input type="hidden" name="session_id" value="{$smarty.session.id}">
 
                     <div class="groups_wrap okay_list">
+                        {*Шапка таблицы*}
                         <div class="okay_list_head">
                             <div class="okay_list_heading okay_list_check">
                                 <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value=""/>
@@ -35,6 +38,7 @@
                             <div class="okay_list_heading okay_list_usergroups_counts">{$btr->user_groups_number|escape}</div>
                             <div class="okay_list_heading okay_list_close"></div>
                         </div>
+                        {*Параметры элемента*}
                         <div class="okay_list_body">
                             {foreach $groups as $group}
                                 <div class="fn_row okay_list_body_item">
@@ -64,6 +68,8 @@
                                 </div>
                             {/foreach}
                         </div>
+
+                        {*Блок массовых действий*}
                         <div class="okay_list_footer fn_action_block">
                             <div class="okay_list_foot_left">
                                 <div class="okay_list_heading okay_list_check">

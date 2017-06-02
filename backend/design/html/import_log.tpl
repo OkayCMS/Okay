@@ -1,5 +1,8 @@
 {* Title *}
 {$meta_title=$btr->import_log_products scope=parent}
+
+
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
@@ -32,6 +35,7 @@
 </div>
 
 <div class="boxed fn_toggle_wrap">
+    {*Блок фильтров*}
     <div class="row">
         <div class="col-lg-12 col-md-12 ">
             <div class="boxed_sorting">
@@ -59,6 +63,8 @@
             </div>
         </div>
     </div>
+
+    {*Главная форма страницы*}
     {if $logs}
         <div class="row">
             <div class="col-md-12 col-lg-12 col-sm-12">
@@ -67,8 +73,8 @@
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <form method="post">
                     <input type="hidden" name="session_id" value="{$smarty.session.id}">
-
                     <div class="okay_list">
+                        {*Шапка таблицы*}
                         <div class="okay_list_head">
                            <div class="okay_list_heading okay_list_check">№</div>
                            <div class="okay_list_heading okay_list_photo">{$btr->general_photo|escape}</div>
@@ -77,6 +83,7 @@
                                <span>{$btr->general_status|escape}</span>
                             </div>
                         </div>
+                        {*Параметры элемента*}
                         <div class="okay_list_body">
                             {foreach $logs as $log}
                                 <div class="fn_row okay_list_body_item">

@@ -30,7 +30,7 @@
                             <tr>
                                 <td border="0" class="td" valign="top" width="1%" align="left" style="border: 0">
                                     <div>
-                                        <div style="text-align: left"><a><img src="{$config->root_url}/design/{$settings->theme}/images/logo.png" width="200" align="left" style="border: 0; display: block; margin: 0 auto" /></a></div>
+                                        <div style="text-align: left"><a><img src="{$config->root_url}/design/{$settings->theme}/images/{$settings->site_logo}" width="200" align="left" style="border: 0; display: block; margin: 0 auto" /></a></div>
                                     </div>
                                 </td>
 

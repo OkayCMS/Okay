@@ -1,6 +1,7 @@
 {* Title *}
 {$meta_title=$btr->payment_methods_methods scope=parent}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
@@ -17,11 +18,13 @@
     </div>
 </div>
 
+{*Главная форма страницы*}
 <div class="boxed fn_toggle_wrap">
     {if $payment_methods}
         <form class="fn_form_list" method="post">
             <div class="okay_list products_list fn_sort_list">
                 <input type="hidden" name="session_id" value="{$smarty.session.id}">
+                {*Шапка таблицы*}
                 <div class="okay_list_head">
                     <div class="okay_list_boding okay_list_drag"></div>
                     <div class="okay_list_heading okay_list_check">
@@ -34,6 +37,8 @@
                     <div class="okay_list_heading okay_list_status">{$btr->general_enable|escape}</div>
                     <div class="okay_list_heading okay_list_close"></div>
                 </div>
+
+                {*Параметры элемента*}
                 <div class="deliveries_wrap okay_list_body sortable">
                     {foreach $payment_methods as $payment_method}
                         <div class="fn_row okay_list_body_item fn_sort_item">
@@ -84,6 +89,8 @@
                         </div>
                     {/foreach}
                 </div>
+
+                {*Блок массовых действий*}
                 <div class="okay_list_footer fn_action_block">
                     <div class="okay_list_foot_left">
                         <div class="okay_list_boding okay_list_drag"></div>

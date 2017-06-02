@@ -1,5 +1,7 @@
 {* Title *}
 {$meta_title=$btr->support_support scope=parent}
+
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-10 col-md-10 col-sm-9 col-xs-12">
         <div class="wrap_heading">
@@ -28,7 +30,7 @@
     </div>
 </div>
 
-
+{*Главная форма страницы*}
 {if $topics}
     <div class="boxed fn_toggle_wrap">
         <div class="row">
@@ -40,12 +42,14 @@
                     <input type="hidden" name="session_id" value="{$smarty.session.id}">
 
                     <div class="orders_list okay_list fn_sort_list">
+                        {*Шапка таблицы*}
                         <div class="okay_list_head">
                             <div class="okay_list_heading okay_list_support_num">{$btr->support_number|escape}</div>
                             <div class="okay_list_heading okay_list_support_name">{$btr->support_theme|escape}</div>
                             <div class="okay_list_heading okay_list_support_status">{$btr->support_status|escape}</div>
                             <div class="okay_list_heading okay_list_support_time">{$btr->support_time|escape}</div>
                         </div>
+                        {*Параметры элемента*}
                         <div class="okay_list_body">
                             {foreach $topics as $topic}
                                 <div class="fn_row okay_list_body_item">
@@ -93,6 +97,7 @@
     </div>
 {else}
 
+    {*Вывод ошибок*}
     {if $message_error}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">

@@ -25,6 +25,13 @@ class CallbacksAdmin extends Okay {
                         }
                         break;
                     }
+                    case 'unprocessed': {
+                        /*Модерация заявок на обратный звонок*/
+                        foreach ($ids as $id) {
+                            $this->callbacks->update_callback($id, array('processed'=>0));
+                        }
+                        break;
+                    }
                 }
             }
         }

@@ -2,6 +2,7 @@
     {$meta_title = "`$btr->general_template` $template_file" scope=parent}
 {/if}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-10 col-md-10">
         <div class="wrap_heading">
@@ -13,6 +14,7 @@
     <div class="col-md-2 col-lg-2 col-sm-12 float-xs-right"></div>
 </div>
 
+{*Вывод ошибок*}
 {if $message_error}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -42,7 +44,7 @@
     </div>
 </div>
 
-<!-- Список файлов для выбора -->
+
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="boxed match fn_toggle_wrap tabs">
@@ -58,7 +60,7 @@
                 </div>
             </div>
         </div>
-	</div>
+    </div>
 </div>
 
 {if $template_file}

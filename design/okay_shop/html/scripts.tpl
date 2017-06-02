@@ -202,4 +202,12 @@
         });
     }
 
+    if($(".fn_share").size()>0) {
+        $(".fn_share").jsSocials({
+            showLabel: false,
+            showCount: false,
+            shares: ["twitter", "facebook", "googleplus", "vkontakte", 'telegram']
+        });
+    }
+
 </script>

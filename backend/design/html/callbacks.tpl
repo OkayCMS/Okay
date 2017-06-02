@@ -1,5 +1,7 @@
 {* Title *}
 {$meta_title=$btr->callbacks_order scope=parent}
+
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
@@ -10,14 +12,15 @@
     </div>
 </div>
 
+{*Главная форма страницы*}
 <div class="boxed fn_toggle_wrap">
     {if $callbacks}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <form class="fn_form_list" method="post">
                     <input type="hidden" name="session_id" value="{$smarty.session.id}">
-
                     <div class="post_wrap okay_list">
+                        {*Шапка таблицы*}
                         <div class="okay_list_head">
                             <div class="okay_list_heading okay_list_check">
                                 <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value=""/>
@@ -27,6 +30,8 @@
                             <div class="okay_list_heading okay_list_comments_btn"></div>
                             <div class="okay_list_heading okay_list_close"></div>
                         </div>
+
+                        {*Параметры элемента*}
                         <div class="okay_list_body">
                             {foreach $callbacks as $callback}
                                 <div class="fn_row okay_list_body_item">
@@ -51,21 +56,34 @@
                                                 {$btr->general_request_sent|escape} <span class="tag tag-default">{$callback->date|date} | {$callback->date|time}</span>
                                                 {$btr->general_from_page|escape} <a href="{$callback->url|escape}" target="_blank">{$callback->url|escape}</a>
                                             </div>
-                                            {if !$callback->processed}
-                                                <div class="hidden-md-up mt-q">
-                                                    <button type="button" class="btn btn_small btn-outline-warning fn_ajax_action {if $callback->processed}fn_active_class{/if}" data-module="callback" data-action="processed" data-id="{$callback->id}" onclick="$(this).hide();">
-                                                        {$btr->general_process|escape}
-                                                    </button>
-                                                 </div>
-                                            {/if}
+                                            <div class="hidden-md-up mt-q">
+                                                <button type="button" class="btn btn_small btn-outline-warning fn_ajax_action fn_callbacks_toggle {if $callback->processed}hidden{/if}" data-module="callback" data-action="processed" data-id="{$callback->id}">
+                                                    {$btr->general_process|escape}
+                                                </button>
+                                                <button type="button" class="btn btn_small btn-outline-warning fn_ajax_action fn_callbacks_toggle fn_active_class {if !$callback->processed}hidden{/if}" data-module="callback" data-action="processed" data-id="{$callback->id}">
+                                                    {$btr->general_unprocess|escape}
+                                                </button>
+                                             </div>
+                                            <div class="mb-q fn_ajax_block admin_note" data-id="{$callback->id}" data-module="callback">
+                                                <span class="text_dark text_bold">{$btr->callbacks_admin_notes|escape}</span>
+                                                <span class="fn_an_text">{$callback->admin_notes|escape|nl2br}</span>
+                                                <div>
+                                                    <a href="javascript:;" class="fn_an_edit">{$btr->callbacks_edit|escape}</a>
+                                                </div>
+                                                <div class="fn_an_edit_block hidden">
+                                                    <textarea class="fn_ajax_element" name="admin_notes">{$callback->admin_notes|escape|nl2br}</textarea>
+                                                    <p><a href="javascript:;" class="fn_an_save">{$btr->general_apply|escape}</a></p>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <div class="okay_list_boding okay_list_comments_btn">
-                                            {if !$callback->processed}
-                                                <button type="button" class="btn btn_small btn-outline-warning fn_ajax_action {if $callback->processed}fn_active_class{/if}" data-module="callback" data-action="processed" data-id="{$callback->id}" onclick="$(this).hide();">
-                                                    {$btr->general_process|escape}
-                                                </button>
-                                            {/if}
+                                            <button type="button" class="btn btn_small btn-outline-warning fn_ajax_action fn_callbacks_toggle {if $callback->processed}hidden{/if}" data-module="callback" data-action="processed" data-id="{$callback->id}">
+                                                {$btr->general_process|escape}
+                                            </button>
+                                            <button type="button" class="btn btn_small btn-outline-warning fn_ajax_action fn_callbacks_toggle fn_active_class {if !$callback->processed}hidden{/if}" data-module="callback" data-action="processed" data-id="{$callback->id}">
+                                                {$btr->general_unprocess|escape}
+                                            </button>
                                         </div>
 
                                         <div class="okay_list_boding okay_list_close">
@@ -79,6 +97,7 @@
                             {/foreach}
                         </div>
 
+                        {*Блок массовых действий*}
                         <div class="okay_list_footer fn_action_block">
                             <div class="okay_list_foot_left">
                                 <div class="okay_list_heading okay_list_check">
@@ -87,7 +106,8 @@
                                 </div>
                                 <div class="okay_list_option">
                                     <select name="action" class="selectpicker">
-                                        <option value="approve">{$btr->general_process|escape}</option>
+                                        <option value="processed">{$btr->general_process|escape}</option>
+                                        <option value="unprocessed">{$btr->general_unprocess|escape}</option>
                                         <option value="delete">{$btr->general_delete|escape}</option>
                                     </select>
                                 </div>
@@ -107,3 +127,20 @@
         </div>
     {/if}
 </div>
+<script>
+    $(function() {
+        $(document).on('click', '.fn_an_edit', function() {
+            var block = $(this).closest('.fn_ajax_block');
+            block.find('.fn_an_edit_block').removeClass("hidden");
+            $(this).addClass("hidden");
+        });
+        $(document).on('click', '.fn_an_save', function() {
+            var block = $(this).closest('.fn_ajax_block');
+            block.find('.fn_an_text').text(block.find('[name="admin_notes"]').val());
+            ajax_action(block);
+
+            block.find('.fn_an_edit_block').addClass("hidden");
+            block.find('.fn_an_edit').removeClass("hidden");
+        });
+    });
+</script>

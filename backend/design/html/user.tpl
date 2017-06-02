@@ -2,6 +2,7 @@
     {$meta_title = $user->name|escape scope=parent}
 {/if}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="wrap_heading">
@@ -13,6 +14,7 @@
     <div class="col-md-12 col-lg-12 col-sm-12 float-xs-right"></div>
 </div>
 
+{*Вывод успешных сообщений*}
 {if $message_success}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -35,6 +37,7 @@
     </div>
 {/if}
 
+{*Вывод ошибок*}
 {if $message_error}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -55,6 +58,7 @@
     </div>
 {/if}
 
+{*Главная форма страницы*}
 <form method="post" enctype="multipart/form-data" class="clearfix">
     <input type=hidden name="session_id" value="{$smarty.session.id}">
     <input type="hidden" name="lang_id" value="{$lang_id}" />
@@ -68,6 +72,7 @@
                         <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
                     </div>
                 </div>
+                {*Параметры элемента*}
                 <div class="toggle_body_wrap on fn_card">
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12">
@@ -130,6 +135,7 @@
         </div>
     </div>
 
+{*История покупок*}
 {if $orders}
     <div class="row">
         <div class="col-md-12">

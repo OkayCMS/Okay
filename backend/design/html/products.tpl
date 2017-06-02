@@ -5,6 +5,7 @@
 	{$meta_title=$btr->general_products scope=parent}
 {/if}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-12">
         <div class="wrap_heading">
@@ -43,6 +44,7 @@
         </div>
     </div>
 </div>
+{*Блок фильтров*}
 <div class="boxed fn_toggle_wrap">
     <div class="row">
         <div class="col-lg-12 col-md-12 ">
@@ -102,16 +104,17 @@
     </div>
     {if $products}
         <div class="row">
-            {* Основная форма *}
+            {*Главная форма страницы*}
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <form method="post" class="fn_form_list">
                     <input type="hidden" name="session_id" value="{$smarty.session.id}">
 
                     <div class="okay_list products_list fn_sort_list">
+                        {*Шапка таблицы*}
                         <div class="okay_list_head">
                             <div class="okay_list_boding okay_list_drag"></div>
                             <div class="okay_list_heading okay_list_check">
-                                <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value=""/>
+                                <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value="" />
                                 <label class="okay_ckeckbox" for="check_all_1"></label>
                             </div>
                             <div class="okay_list_heading okay_list_photo">{$btr->general_photo|escape}</div>
@@ -122,7 +125,8 @@
                             <div class="okay_list_heading okay_list_setting okay_list_products_setting">{$btr->general_activities|escape}</div>
                             <div class="okay_list_heading okay_list_close"></div>
                         </div>
-                        <div id="" class="okay_list_body sortable">
+                        {*Параметры элемента*}
+                        <div class="okay_list_body sortable">
                             {foreach $products as $product}
                                 <div class="fn_row okay_list_body_item fn_sort_item">
                                     <div class="okay_list_row">
@@ -177,7 +181,6 @@
                                                           {$currencies[$product->variants[0]->currency_id]->code|escape}
                                                       {/if}
                                                 </span>
-
                                             </div>
                                         </div>
                                         <div class="okay_list_boding okay_list_count">
@@ -276,6 +279,8 @@
                                 </div>
                             {/foreach}
                         </div>
+
+                        {*Блок массовых действий*}
                         <div class="okay_list_footer fn_action_block">
                             <div class="okay_list_foot_left">
                                 <div class="okay_list_boding okay_list_drag"></div>

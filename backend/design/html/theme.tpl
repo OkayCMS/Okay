@@ -2,6 +2,7 @@
     {$meta_title = "`$btr->general_theme` {$theme->name}" scope=parent}
 {/if}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-10 col-md-10">
         <div class="wrap_heading">
@@ -31,6 +32,7 @@
     </div>
 {/if}
 
+{*Вывод ошибок*}
 {if $message_error}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -49,6 +51,7 @@
     </div>
 {/if}
 
+{*Главная форма страницы*}
 <div class="boxed fn_toggle_wrap">
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -113,6 +116,7 @@
     </div>
 </div>
 
+{*Форма подтверждения действия*}
 <div id="fn_delete_theme" class="modal fade show" role="document">
     <div class="modal-dialog">
         <div class="modal-content">

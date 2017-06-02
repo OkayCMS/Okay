@@ -1,6 +1,7 @@
 {* Title *}
 {$meta_title=$btr->general_feedback scope=parent}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
@@ -15,14 +16,15 @@
     </div>
 </div>
 
+{*Главная форма страницы*}
 <div class="boxed fn_toggle_wrap">
     {if $feedbacks}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <form method="post" class="fn_form_list">
                     <input type="hidden" name="session_id" value="{$smarty.session.id}">
-
                     <div class="post_wrap okay_list">
+                        {*Шапка таблицы*}
                         <div class="okay_list_head">
                             <div class="okay_list_heading okay_list_check">
                                 <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value=""/>
@@ -33,6 +35,7 @@
                             <div class="okay_list_heading okay_list_close"></div>
                         </div>
 
+                        {*Параметры элемента*}
                         <div class="okay_list_body">
                             {function name=comments_tree level=0}
                                 {foreach $feedbacks as $feedback}
@@ -94,6 +97,7 @@
                             {comments_tree feedbacks=$feedbacks}
                         </div>
 
+                        {*Блок массовых действий*}
                         <div class="okay_list_footer fn_action_block">
                             <div class="okay_list_foot_left">
                                 <div class="okay_list_heading okay_list_check">
@@ -123,7 +127,7 @@
     {/if}
 </div>
 
-
+{*Форма ответа на сообщение*}
 <div id="answer_popup" class="modal fade show" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">

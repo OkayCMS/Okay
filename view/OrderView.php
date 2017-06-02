@@ -80,7 +80,15 @@ class OrderView extends View {
                 $purchase->variant = $variants[$purchase->variant_id];
             }
         }
-        
+        $order->coupon = $this->coupons->get_coupon($order->coupon_code);
+        if($order->coupon && $order->coupon->valid && $order->total_price>=$order->coupon->min_order_price) {
+            if($order->coupon->type=='absolute') {
+                // Абсолютная скидка не более суммы заказа
+                $order->coupon->coupon_percent = round(100-($order->total_price*100)/($order->total_price+$order->coupon->value),2);
+            } else {
+                $order->coupon->coupon_percent = $order->coupon->value;
+            }
+        }
         // Способ доставки
         $delivery = $this->delivery->get_delivery($order->delivery_id);
         $this->design->assign('delivery', $delivery);

@@ -1,4 +1,6 @@
 {$meta_title = $btr->currency_currencies scope=parent}
+
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
@@ -15,6 +17,7 @@
     </div>
 </div>
 
+{*Вывод ошибок*}
 {if $message_error}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -34,6 +37,7 @@
     </div>
 {/if}
 
+{*Главная форма страницы*}
 <div class="boxed fn_toggle_wrap">
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -42,6 +46,7 @@
                 <input type="hidden" name="lang_id" value="{$lang_id}" />
                 <div class="okay_list">
                     <div class="currencies_wrap clearfix">
+                        {*Шапка таблицы*}
                         <div class="okay_list_head">
                             <div class="okay_list_heading okay_list_drag"></div>
                             <div class="okay_list_heading okay_list_currency_num">ID</div>
@@ -53,6 +58,7 @@
                             <div class="okay_list_heading cur_settings">{$btr->general_activities|escape}</div>
                             <div class="okay_list_heading okay_list_close"></div>
                         </div>
+                        {*Параметры элемента*}
                         <div id="currencies_block" class="okay_list_body sortable">
                             {foreach $currencies as $c}
                                 <div class="okay_list_body_item">
@@ -152,6 +158,7 @@
                                     </div>
                                 </div>
                             {/foreach}
+                            {*СОздание нового элемента*}
                             <div id="new_currency" class="okay_list_body sortable" style="display: none">
                                 <div class="okay_list_body_item">
                                     <div class="okay_list_row">

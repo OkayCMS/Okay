@@ -72,7 +72,8 @@ class IndexAdmin extends Okay {
             'left_payment_title'    => 'PaymentMethodsAdmin',
             'left_managers_title'   => 'ManagersAdmin',
             'left_languages_title'  => 'LanguagesAdmin',
-            'left_translations_title'   => 'TranslationsAdmin'
+            'left_translations_title'   => 'TranslationsAdmin',
+            'left_system_title'   => 'SystemAdmin'
         ),
     );
 
@@ -116,6 +117,7 @@ class IndexAdmin extends Okay {
         'SettingsCatalogAdmin'       => 'settings',
         'SettingsCounterAdmin'       => 'settings',
         'SettingsFeedAdmin'       => 'settings',
+        'SystemAdmin'       => 'settings',
         'CurrencyAdmin'       => 'currency',
         'DeliveriesAdmin'     => 'delivery',
         'DeliveryAdmin'       => 'delivery',

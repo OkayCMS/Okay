@@ -18,6 +18,7 @@
                         {$btr->order_new|escape}
                     {/if}
                 </div>
+                {*Статус заказа*}
                 <div class="boxes_inline">
                     <select class="selectpicker" name="status_id">
                         {foreach $all_status as $status_item}
@@ -30,6 +31,7 @@
                         <i class="fa fa-print"></i>
                     </a>
                 </div>
+                {*Метки заказа*}
                 <div class="box_btn_heading ml-h hidden-xs-down">
                     <div class="add_order_marker">
                         <span class="fn_ajax_label_wrapper">
@@ -69,6 +71,7 @@
         </div>
     {/if}
 
+    {*Вывод ошибок*}
     {if $message_error}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
@@ -83,6 +86,7 @@
                 </div>
             </div>
         </div>
+    {*Вывод успешных сообщений*}
     {elseif $message_success}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
@@ -120,6 +124,7 @@
                 <div class="toggle_body_wrap on fn_card">
                     <div class="">
                         <div id="fn_purchase" class="okay_list">
+                            {*Шапка таблицы*}
                             <div class="okay_list_head">
                                 <div class="okay_list_heading okay_list_photo">{$btr->general_photo|escape}</div>
                                 <div class="okay_list_heading okay_list_order_name">{$btr->order_name_option|escape} </div>
@@ -128,6 +133,7 @@
                                 </div>
                                 <div class="okay_list_heading okay_list_order_amount_price">{$btr->general_sales_amount}</div>
                             </div>
+                            {*Список покупок*}
                             <div class="okay_list_body">
                                 {foreach $purchases as $purchase}
                                     <div class="fn_row okay_list_body_item purchases">
@@ -284,6 +290,7 @@
                 </div>
             </div>
 
+            {*Информация по заказу*}
             <div class="boxed fn_toggle_wrap min_height_230px">
                 <div class="heading_box">
                     {$btr->order_parameters|escape}
@@ -404,6 +411,7 @@
             </div>
         </div>
         {*right_column*}
+        {*Информация о заказчике/детали заказа*}
         <div class="col-xl-4 break_1300_12">
             <div class="boxed fn_toggle_wrap min_height_230px">
                 <div class="heading_box">

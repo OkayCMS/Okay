@@ -1,5 +1,7 @@
 {* Title *}
 {$meta_title = $btr->coupons_coupons scope=parent}
+
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
@@ -18,6 +20,7 @@
     </div>
 </div>
 
+{*Вывод успешных сообщений*}
 {if $message_success}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -40,6 +43,7 @@
     </div>
 {/if}
 
+{*Вывод ошибок*}
 {if $message_error}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -49,7 +53,6 @@
                         {$btr->coupons_exists|escape}
                     {elseif $message_error=='empty_code'}
                         {$btr->coupons_enter_code|escape}
-
                     {else}
                         {$message_error|escape}
                     {/if}
@@ -65,14 +68,13 @@
     </div>
 {/if}
 
-
-
+{*Главная форма страницы*}
 {if $coupons}
     <div class="boxed fn_toggle_wrap">
         <form class="fn_form_list" method="post">
             <input type="hidden" name="session_id" value="{$smarty.session.id}">
-
             <div class="okay_list products_list fn_sort_list">
+                {*Шапка таблицы*}
                 <div class="okay_list_head">
                     <div class="okay_list_heading okay_list_check">
                         <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value=""/>
@@ -86,6 +88,7 @@
                     <div class="okay_list_heading okay_list_coupon_count">{$btr->coupons_qty_uses|escape}</div>
                     <div class="okay_list_heading okay_list_close"></div>
                 </div>
+                {*Блок добавления нового элемента*}
                 <div class="okay_list_body fn_new_coupon">
                     <div class="okay_list_body_item">
                         <div class="okay_list_row ">
@@ -108,7 +111,6 @@
                                 <input class="form-control" type="text" name="new_min_order_price" value="" placeholder="{$btr->coupons_order_price|escape}">
                             </div>
                             <div class="okay_list_boding okay_list_coupon_validity">
-
                                 <div class="input-group">
                                     <input class="form-control" type=text name="new_expire" value="">
                                     <div class="input-group-addon">
@@ -125,6 +127,7 @@
                         </div>
                     </div>
                 </div>
+                {*Параметры элемента*}
                 <div class="okay_list_body fn_coupon_wrap">
                     {foreach $coupons as $coupon}
                         <div class="fn_row okay_list_body_item">
@@ -220,6 +223,8 @@
                         </div>
                     {/foreach}
                 </div>
+
+                {*Блок массовых действий*}
                 <div class="okay_list_footer fn_action_block">
                     <div class="okay_list_foot_left">
                         <div class="okay_list_heading okay_list_check">
@@ -241,11 +246,13 @@
         </form>
     </div>
 {else}
+    {*Главная форма страницы*}
     <div class="boxed fn_toggle_wrap">
         <form method="post" class="clearfix">
             <input type="hidden" name="session_id" value="{$smarty.session.id}">
 
             <div class="okay_list products_list fn_sort_list">
+                {*Шапка таблицы*}
                 <div class="okay_list_head">
                     <div class="okay_list_heading okay_list_check"></div>
                     <div class="okay_list_heading okay_list_coupon_name">{$btr->coupons_name|escape}</div>
@@ -256,6 +263,7 @@
                     <div class="okay_list_heading okay_list_coupon_count">{$btr->coupons_qty_uses|escape}</div>
                     <div class="okay_list_heading okay_list_close"></div>
                 </div>
+                {*Параметры элемента*}
                 <div class="okay_list_body">
                     <div class="okay_list_body_item">
                         <div class="okay_list_row ">
@@ -272,7 +280,6 @@
                                         <option value="absolute">{$currency->sign}</option>
                                     </select>
                                 </div>
-
                             </div>
                             <div class="okay_list_boding okay_list_coupon_condit">
                                 <input class="form-control" type="text" name="new_min_order_price" value="" placeholder="{$btr->coupons_order_price|escape}">

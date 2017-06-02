@@ -1,3 +1,4 @@
+{*id мультиязычных сущностей сайта*}
 {if $product->id}
     {$id = $product->id}
 {/if}
@@ -28,7 +29,11 @@
 {if $order->id}
     {$id = $order->id}
 {/if}
+{if $translation->id}
+    {$id = $translation->id}
+{/if}
 
+{*Список языков*}
 {if $languages}
     {foreach $languages as $lang}
         <a class="flag flag_{$lang->id} {if $lang->id == $lang_id} focus{/if} hint-bottom-middle-t-info-s-small-mobile  hint-anim" data-hint="{$lang->name|escape}" href="{url lang_id=$lang->id id=$id}" data-label="{$lang->label}">

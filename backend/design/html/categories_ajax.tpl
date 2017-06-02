@@ -1,3 +1,4 @@
+{*Параметры элемента*}
 {if $categories_ajax}
     {foreach $categories_ajax as $ajax_category}
         <div class="fn_row">
@@ -65,7 +66,7 @@
                 </div>
             </div>
             {if $ajax_category->subcategories}
-                    <div class="fn_ajax_categories categories_sub_block sortable subcategories_level_2"></div>
+                <div class="fn_ajax_categories categories_sub_block sortable subcategories_level_2"></div>
             {/if}
         </div>
     {/foreach}

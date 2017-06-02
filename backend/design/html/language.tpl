@@ -1,10 +1,10 @@
-
 {if $language->id}
     {$meta_title = $language->{'name_'|cat:$current_language->label}|escape scope=parent}
 {else}
     {$meta_title = $btr->language_new scope=parent}
 {/if}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-6 col-md-6">
         {if !$language->id}
@@ -16,6 +16,7 @@
     <div class="col-lg-4 col-md-3 text-xs-right float-xs-right"></div>
 </div>
 
+{*Вывод успешных сообщений*}
 {if $message_success}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -29,7 +30,10 @@
                         {/if}
                     </span>
                     {if $smarty.get.return}
-                        <a class="button" href="{$smarty.get.return}">{$btr->general_back|escape}</a>
+                        <a class="btn btn_return float-xs-right" href="{$smarty.get.return}">
+                            {include file='svg_icon.tpl' svgId='return'}
+                            <span>{$btr->general_back|escape}</span>
+                        </a>
                     {/if}
                 </div>
             </div>
@@ -37,6 +41,7 @@
     </div>
 {/if}
 
+{*Вывод ошибок*}
 {if $message_error}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -47,16 +52,13 @@
                     {elseif $message_error == 'label_exists'}
                         {$btr->language_used|escape}
                     {/if}
-                    {if $smarty.get.return}
-                        <a class="button" href="{$smarty.get.return}">{$btr->general_back|escape}</a>
-                    {/if}
                 </div>
             </div>
         </div>
     </div>
 {/if}
 
-<!-- Основная форма -->
+{*Главная форма страницы*}
 <form method="post" enctype="multipart/form-data">
     <input type=hidden name="session_id" value="{$smarty.session.id}">
     <input type="hidden" name="id" value="{$language->id|escape}"/>

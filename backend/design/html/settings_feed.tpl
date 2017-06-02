@@ -1,5 +1,6 @@
 {$meta_title = $btr->settings_feed_yml scope=parent}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-6 col-md-6">
         <div class="heading_page">{$btr->settings_feed_yml|escape}</div>
@@ -7,6 +8,7 @@
     <div class="col-lg-4 col-md-3 text-xs-right float-xs-right"></div>
 </div>
 
+{*Вывод успешных сообщений*}
 {if $message_success}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -26,7 +28,7 @@
     </div>
 {/if}
 
-
+{*Название элемента сайта*}
 <form method="post" enctype="multipart/form-data">
     <input type="hidden" name="session_id" value="{$smarty.session.id}">
 

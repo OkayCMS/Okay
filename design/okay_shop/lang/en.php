@@ -239,3 +239,4 @@ $lang['email_on_site'] = "On site";
 $lang['email_order_your_status'] = "Your order status";
 $lang['receipt_name'] = "Name, Surname";
 $lang['receipt_address'] = "Address";
+$lang['product_brand_name'] = "Brand:";

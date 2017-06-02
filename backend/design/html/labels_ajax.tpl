@@ -1,3 +1,4 @@
+{*Вывод меток*}
 {if $smarty.get.module == "OrderAdmin"}
     {foreach $labels as $l}
         {if in_array($l->id, $order_labels)}

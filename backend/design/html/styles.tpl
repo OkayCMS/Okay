@@ -14,39 +14,39 @@
 <style type="text/css">
 
 .CodeMirror{
-	font-family:'Courier New';
-	margin-bottom:10px;
-	border:1px solid #c0c0c0;
-	background-color: #ffffff;
-	height: auto;
-	min-height: 100px;
-	width:100%;
+    font-family:'Courier New';
+    margin-bottom:10px;
+    border:1px solid #c0c0c0;
+    background-color: #ffffff;
+    height: auto;
+    min-height: 100px;
+    width:100%;
 }
 .CodeMirror-scroll
 {
-	overflow-y: hidden;
-	overflow-x: auto;
+    overflow-y: hidden;
+    overflow-x: auto;
 }
 </style>
 
 <script>
-$(function() {	
-	// Сохранение кода аяксом
-	function save() {
-		$('.CodeMirror').css('background-color','#e0ffe0');
-		content = editor.getValue();
-		$.ajax({
-			type: 'POST',
-			url: 'ajax/save_style.php',
-			data: {'content': content, 'theme':'{/literal}{$theme}{literal}', 'style': '{/literal}{$style_file}{literal}', 'session_id': '{/literal}{$smarty.session.id}{literal}'},
-			success: function(data){
-				$('.CodeMirror').animate({'background-color': '#ffffff'});
+$(function() {    
+    // Сохранение кода аяксом
+    function save() {
+        $('.CodeMirror').css('background-color','#e0ffe0');
+        content = editor.getValue();
+        $.ajax({
+            type: 'POST',
+            url: 'ajax/save_style.php',
+            data: {'content': content, 'theme':'{/literal}{$theme}{literal}', 'style': '{/literal}{$style_file}{literal}', 'session_id': '{/literal}{$smarty.session.id}{literal}'},
+            success: function(data){
+                $('.CodeMirror').animate({'background-color': '#ffffff'});
                 $('.CodeMirror').animate({'background-color': '#272822'},500);
-			},
-			dataType: 'json'
-		});
-	}
-	// Нажали кнопку Сохранить
+            },
+            dataType: 'json'
+        });
+    }
+    // Нажали кнопку Сохранить
     $('.fn_save').on('click',function(){
         save();
     });
@@ -54,6 +54,7 @@ $(function() {
 </script>
 {/literal}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-10 col-md-10">
         <div class="wrap_heading">
@@ -65,6 +66,7 @@ $(function() {
     <div class="col-md-2 col-lg-2 col-sm-12 float-xs-right"></div>
 </div>
 
+{*Вывод ошибок*}
 {if $message_error}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -105,7 +107,7 @@ $(function() {
                 </div>
             </div>
         </div>
-	</div>
+    </div>
 </div>
 
 {if $style_file}
@@ -113,7 +115,6 @@ $(function() {
         <div class="col-lg-12 col-md-12">
             <div class="boxed fn_toggle_wrap min_height_230px">
                 <div class="heading_box">{$btr->styles_styles|escape} {$style_file|escape}</div>
-
                  <form>
                     <textarea id="content" name="content" style="width:100%;height:500px;">{$style_content|escape}</textarea>
                 </form>

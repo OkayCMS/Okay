@@ -1,5 +1,7 @@
 {* Title *}
 {$meta_title=$btr->brands_brands scope=parent}
+
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
@@ -16,12 +18,14 @@
     </div>
 </div>
 
+{*Главная форма страницы*}
 <div class="boxed fn_toggle_wrap">
     {if $brands}
         <form method="post" class="fn_form_list">
             <input type="hidden" name="session_id" value="{$smarty.session.id}" />
 
             <div class="okay_list products_list fn_sort_list">
+                {*Шапка таблицы*}
                 <div class="okay_list_head">
                     <div class="okay_list_boding okay_list_drag"></div>
                     <div class="okay_list_heading okay_list_check">
@@ -34,6 +38,8 @@
                     <div class="okay_list_heading okay_list_setting">{$btr->general_activities|escape}</div>
                     <div class="okay_list_heading okay_list_close"></div>
                 </div>
+
+                {*Параметры элемента*}
                 <div class="okay_list_body sortable">
                     {foreach $brands as $brand}
                         <div class="fn_row okay_list_body_item fn_sort_item">
@@ -44,25 +50,25 @@
                                     {include file='svg_icon.tpl' svgId='drag_vertical'}
                                 </div>
 
-                            <div class="okay_list_boding okay_list_check">
-                                <input class="hidden_check" type="checkbox" id="id_{$brand->id}" name="check[]" value="{$brand->id}" />
-                                <label class="okay_ckeckbox" for="id_{$brand->id}"></label>
-                            </div>
+                                <div class="okay_list_boding okay_list_check">
+                                    <input class="hidden_check" type="checkbox" id="id_{$brand->id}" name="check[]" value="{$brand->id}" />
+                                    <label class="okay_ckeckbox" for="id_{$brand->id}"></label>
+                                </div>
 
-                            <div class="okay_list_boding okay_list_photo">
-                                {if $brand->image}
+                                <div class="okay_list_boding okay_list_photo">
+                                    {if $brand->image}
+                                        <a href="{url module=BrandAdmin id=$brand->id return=$smarty.server.REQUEST_URI}">
+                                            <img src="{$brand->image|resize:55:55:false:$config->resized_brands_dir}" alt="" /></a>
+                                    {else}
+                                        <img height="55" width="55" src="design/images/no_image.png"/>
+                                    {/if}
+                                </div>
+
+                                <div class="okay_list_boding okay_list_brands_name">
                                     <a href="{url module=BrandAdmin id=$brand->id return=$smarty.server.REQUEST_URI}">
-                                        <img src="{$brand->image|resize:55:55:false:$config->resized_brands_dir}" alt="" /></a>
-                                {else}
-                                    <img height="55" width="55" src="design/images/no_image.png"/>
-                                {/if}
-                            </div>
-
-                            <div class="okay_list_boding okay_list_brands_name">
-                                <a href="{url module=BrandAdmin id=$brand->id return=$smarty.server.REQUEST_URI}">
-                                    {$brand->name|escape}
-                                </a>
-                            </div>
+                                        {$brand->name|escape}
+                                    </a>
+                                </div>
 
                                 <div class="okay_list_boding okay_list_status">
                                     {*visible*}
@@ -89,6 +95,8 @@
                         </div>
                     {/foreach}
                 </div>
+
+                {*Блок массовых действий*}
                 <div class="okay_list_footer fn_action_block">
                     <div class="okay_list_foot_left">
                         <div class="okay_list_boding okay_list_drag"></div>

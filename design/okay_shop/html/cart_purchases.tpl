@@ -78,7 +78,7 @@
                 <td></td>
                 <td class="text_left" data-language="cart_coupon">{$lang->cart_coupon}</td>
                 <td></td>
-                <td></td>
+                <td>{$cart->coupon->coupon_percent|escape} %</td>
                 <td>&minus; {$cart->coupon_discount|convert} {$currency->sign|escape}</td>
                 <td></td>
             </tr>

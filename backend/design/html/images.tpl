@@ -1,5 +1,6 @@
 {$meta_title = $btr->images_images scope=parent}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-10 col-md-10">
         <div class="wrap_heading">
@@ -11,6 +12,7 @@
     <div class="col-md-2 col-lg-2 col-sm-12 float-xs-right"></div>
 </div>
 
+{*Вывод ошибок*}
 {if $message_error}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -31,13 +33,13 @@
     </div>
 {/if}
 
+{*Главная форма страницы*}
 <div class="boxed fn_toggle_wrap">
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <form method="post" enctype="multipart/form-data">
             <input type="hidden" name="session_id" value="{$smarty.session.id}">
             <input type="hidden" name="delete_image" value="">
-                <!-- Список файлов для выбора -->
                 <div class="row">
                     <div class="col-md-12">
                         <div class="heading_box">
@@ -46,6 +48,7 @@
                                 <a class="btn-minimize" href="javascript:;" ><i class="icon-arrow-down"></i></a>
                             </div>
                         </div>
+                        {*Параметры элемента*}
                         <div class="toggle_body_wrap fn_card on">
                             <div class="row">
                                 {foreach $images as $image}
@@ -122,21 +125,21 @@ $(function() {
         $(this).prev().toggleClass('hidden');
         $(this).parent().find('.fn_rename_value > input').val($(this).data('old_name'))
     });
-	// Удалить
+    // Удалить
     $('.fn_delete_image').on('click',function(){
         $('input[name=delete_image]').val($(this).data('name'));
         $('form').submit();
     });
-	
-	// Загрузить
+    
+    // Загрузить
     $('.fn_add_image').on('click',function(){
         $(this).closest('div').append($('<input class="import_file" type="file" name="upload_images[]">'));
     });
-	
-	$("form").submit(function() {
-		if($('input[name="delete_image"]').val()!='' && !confirm(general_confirm_delete))
-			return false;	
-	});
+    
+    $("form").submit(function() {
+        if($('input[name="delete_image"]').val()!='' && !confirm(general_confirm_delete))
+            return false;    
+    });
 
 });
 </script>

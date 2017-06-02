@@ -1,6 +1,6 @@
-
 {$meta_title=$btr->multi_import_products scope=parent}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="heading_page">
@@ -16,6 +16,7 @@
 
 <div id="import_error" class="boxed boxed_warning" style="display: none;"></div>
 
+{*Вывод ошибок*}
 {if $message_error}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -40,6 +41,7 @@
     </div>
 {/if}
 
+{*Главная форма страницы*}
 {if $message_error != 'no_permission' && $message_error != 'no_languages'}
     {if $filename}
         <div class="row">

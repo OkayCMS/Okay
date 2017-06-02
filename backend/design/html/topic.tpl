@@ -5,6 +5,7 @@
     {$meta_title = $btr->topic_new scope=parent}
 {/if}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
@@ -25,6 +26,7 @@
     </div>
 </div>
 
+{*Вывод ошибок*}
 {if $message_error}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -56,6 +58,7 @@
 {/if}
 
 
+{*Главная форма страницы*}
 <form class="fn_form_list" method="post">
     <input type="hidden" name="session_id" value="{$smarty.session.id}">
 
@@ -81,11 +84,13 @@
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             {if $comments}
                                 <div class="okay_list">
+                                    {*Шапка таблицы*}
                                     <div class="okay_list_head">
                                         <div class="okay_list_heading okay_list_topic_name">{$btr->general_name|escape}</div>
                                         <div class="okay_list_heading okay_list_topic_message">{$btr->topic_message|escape}</div>
                                         <div class="okay_list_heading okay_list_topic_time">{$btr->topic_spent_time|escape}</div>
                                     </div>
+                                    {*Параметры элемента*}
                                     <div class="okay_list_body">
                                         {foreach $comments as $comment}
                                             <div class="fn_row okay_list_body_item">

@@ -3,6 +3,8 @@
 {else}
     {$meta_title = $btr->manager_new scope=parent}
 {/if}
+
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         {if !$m->id}
@@ -14,7 +16,7 @@
     <div class="col-lg-4 col-md-3 text-xs-right float-xs-right"></div>
 </div>
 
-
+{*Вывод успешных сообщений*}
 {if $message_success}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -39,6 +41,7 @@
     </div>
 {/if}
 
+{*Вывод ошибок*}
 {if $message_error}
    <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -59,6 +62,7 @@
     </div>
 {/if}
 
+{*Главная форма страницы*}
 <form method="post" enctype="multipart/form-data" class="fn_fast_button">
     <input type="hidden" name="session_id" value="{$smarty.session.id}">
     <div class="row">
@@ -144,6 +148,7 @@
         </div>
     </div>
 
+    {*Параметры элемента*}
    <div class="row">
         <div class="col-lg-12 col-md-12">
             <div class="boxed fn_toggle_wrap min_height_230px">
@@ -152,12 +157,18 @@
                     <div class="toggle_arrow_wrap fn_toggle_card text-primary">
                         <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
                     </div>
+                    <span class="font_14 text_600">{$btr->manager_all_access|escape}</span>
+                    <label class="switch switch-default">
+                        <input class="switch-input fn_all_perms" value="" type="checkbox" />
+                        <span class="switch-label"></span>
+                        <span class="switch-handle"></span>
+                    </label>
                 </div>
                 <div class="toggle_body_wrap on fn_card">
                     {foreach $permission as $title=>$items}
                         <div class="permission_block">
                             <div class="heading_box">{$btr->{$title}}</div>
-                            <div class="permission_boxes row">
+                            <div class="permission_boxes row fn_perms_wrap">
                                 {foreach $items as $key=>$item}
                                     <div class="col-xl-3 col-lg-4 col-md-6 {if $m->id==$manager->id}text-muted{/if}">
                                         <div class="permission_box">
@@ -193,3 +204,21 @@
         </div>
    </div>
 </form>
+
+<script>
+    $(document).on("change", ".fn_all_perms", function () {
+        if($(this).is(":checked")) {
+            $('.fn_item_perm').each(function () {
+                if(!$(this).is(":checked")) {
+                    $(this).trigger("click");
+                }
+            });
+        } else {
+            $('.fn_item_perm').each(function () {
+                if($(this).is(":checked")) {
+                    $(this).trigger("click");
+                }
+            })
+        }
+    })
+</script>

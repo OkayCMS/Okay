@@ -1,5 +1,7 @@
 {* Title *}
 {$meta_title=$btr->general_orders scope=parent}
+
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
@@ -33,7 +35,7 @@
     </div>
 </div>
 
-
+{*Вывод ошибок*}
 {if $message_error}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -60,6 +62,7 @@
 <div class="boxed fn_toggle_wrap">
     <div class="row">
         <div class="col-lg-12 col-md-12 ">
+            {*Блок фильтров*}
             <div class="hidden-md-up">
                 <div class="row mb-1">
                     {if $all_status}
@@ -79,6 +82,7 @@
                 <div class="row">
                     <div class="col-md-11 col-lg-11 col-xl-7 col-sm-12 mb-1">
                         <div class="date">
+                            {*Блок фильтров*}
                             <form class="date_filter row" method="get">
                                 <input type="hidden" name="module" value="OrdersAdmin">
                                 <input type="hidden" name="status" value="{$status}">
@@ -116,6 +120,7 @@
                         </div>
                     </div>
                 </div>
+                {*Блок фильтров*}
                 <div class="row">
                     {if $all_status}
                         <div class="col-md-6 col-lg-4 col-sm-12">
@@ -142,6 +147,7 @@
         </div>
     </div>
 
+    {*Главная форма страницы*}
     {if $orders}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
@@ -149,6 +155,7 @@
                     <input type="hidden" name="session_id" value="{$smarty.session.id}">
 
                     <div class="orders_list okay_list products_list">
+                        {*Шапка таблицы*}
                         <div class="okay_list_head">
                             <div class="okay_list_heading okay_list_check">
                                 <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value=""/>
@@ -162,6 +169,7 @@
                             <div class="okay_list_heading okay_list_order_marker">{$btr->orders_label|escape}</div>
                             <div class="okay_list_heading okay_list_close"></div>
                         </div>
+                        {*Параметры элемента*}
                         <div class="okay_list_body">
                             {foreach $orders as $order}
                             <div class="fn_row okay_list_body_item">
@@ -244,6 +252,7 @@
                                         </button>
                                     </div>
                                 </div>
+                                {*Список товаров из заказа*}
                                 <div class="okay_list_row">
                                     {if $order->purchases|count > 0}
                                         <div class="orders_purchases_block" style="display: none">
@@ -281,6 +290,7 @@
                             </div>
                             {/foreach}
                         </div>
+                        {*Блок массовых действий*}
                         <div class="okay_list_footer">
                             <div class="okay_list_foot_left">
                                 <div class="okay_list_heading okay_list_check">
@@ -355,7 +365,6 @@ $(function() {
 
 
     $(document).on("change", ".fn_change_orders", function () {
-        console.log($(this));
        var item = $(this).find("option:selected").data("item");
        if(item == "status") {
            $(".fn_show_label").hide();

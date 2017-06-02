@@ -68,8 +68,8 @@
             <meta property="og:image" content="{$post->image|resize:400:300:false:$config->resized_blog_dir}">
             <link rel="image_src" href="{$post->image|resize:400:300:false:$config->resized_blog_dir}">
         {else}
-            <meta property="og:image" content="{$config->root_url}/design/{$settings->theme}/images/logo.png">
-            <meta name="twitter:image" content="{$config->root_url}/design/{$settings->theme}/images/logo.png">
+            <meta property="og:image" content="{$config->root_url}/design/{$settings->theme}/images/{$settings->site_logo}">
+            <meta name="twitter:image" content="{$config->root_url}/design/{$settings->theme}/images/{$settings->site_logo}">
         {/if}
         <meta property="og:description" content='{$post->annotation|strip_tags}'>
         {*twitter*}
@@ -81,15 +81,15 @@
         <meta property="og:title" content="{$settings->site_name|escape}">
         <meta property="og:type" content="website">
         <meta property="og:url" content="{$config->root_url}">
-        <meta property="og:image" content="{$config->root_url}/design/{$settings->theme}/images/logo.png">
+        <meta property="og:image" content="{$config->root_url}/design/{$settings->theme}/images/{$settings->site_logo}">
         <meta property="og:site_name" content="{$settings->site_name|escape}">
         <meta property="og:description" content="{$meta_description|escape}">
-        <link rel="image_src" href="{$config->root_url}/design/{$settings->theme}/images/logo.png">
+        <link rel="image_src" href="{$config->root_url}/design/{$settings->theme}/images/{$settings->site_logo}">
         {*twitter*}
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="{$settings->site_name|escape}">
         <meta name="twitter:description" content="{$meta_description|escape}">
-        <meta name="twitter:image" content="{$config->root_url}/design/{$settings->theme}/images/logo.png">
+        <meta name="twitter:image" content="{$config->root_url}/design/{$settings->theme}/images/{$settings->site_logo}">
     {/if}
 
     {* The canonical address of the page *}
@@ -247,7 +247,7 @@
 
         {* Logo *}
         <a class="logo" href="{if $smarty.get.module=="MainView"}javascript:;{else}{$lang_link}{/if}">
-            <img src="design/{$settings->theme|escape}/images/logo.png" alt="{$settings->site_name|escape}"/>
+            <img src="design/{$settings->theme|escape}/images/{$settings->site_logo}" alt="{$settings->site_name|escape}"/>
         </a>
         {*Если вам нужно загружать разные логотипы на разных языках, закомментируйте код выше, и пользуйтесь кодом ниже*}
         {*<a class="logo" href="{$lang_link}">
@@ -521,12 +521,6 @@
 {* Autocomplete *}
 <script src="design/{$settings->theme}/js/jquery.autocomplete-min.js" defer></script>
 
-{* Yandex social share buttons *}
-{if $smarty.get.module == 'ProductView' || $smarty.get.module == "BlogView"}
-    <script type="text/javascript" src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js" defer></script>
-    <script type="text/javascript" src="//yastatic.net/share2/share.js" defer></script>
-{/if}
-
 {* Admin tooltips *}
 {if $smarty.session.admin}
     <script src ="backend/design/js/admintooltip/admintooltip.js"></script>
@@ -537,10 +531,17 @@
 <script src="design/{$settings->theme}/js/jquery.validate.min.js" ></script>
 <script src="design/{$settings->theme}/js/additional-methods.min.js"></script>
 
+{* Social share buttons *}
+{if $smarty.get.module == 'ProductView' || $smarty.get.module == "BlogView"}
+    <link href="design/{$settings->theme|escape}/css/font-awesome.min.css" rel="stylesheet">
+    <link href="design/{$settings->theme|escape}/css/jssocials.css" rel="stylesheet">
+    <link href="design/{$settings->theme|escape}/css/jssocials-theme-flat.css" rel="stylesheet">
+    <script src="design/{$settings->theme|escape}/js/jssocials.min.js" ></script>
+{/if}
+
 {* Okay *}
 {include file="scripts.tpl"}
 <script src="design/{$settings->theme}/js/okay.js"></script>
-
 {*template scripts*}
 </body>
 </html>

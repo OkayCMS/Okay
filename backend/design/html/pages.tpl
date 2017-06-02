@@ -1,5 +1,7 @@
 {* Title *}
 {$meta_title = {$menu->name} scope=parent}
+
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
@@ -16,7 +18,7 @@
     </div>
 </div>
 
-
+{*Главная форма страницы*}
 <div class="boxed fn_toggle_wrap">
     {if $pages}
         <div class="row">
@@ -25,6 +27,7 @@
                     <input type="hidden" name="session_id" value="{$smarty.session.id}">
 
                     <div class="pages_wrap okay_list">
+                        {*Шапка таблицы*}
                         <div class="okay_list_head">
                             <div class="okay_list_boding okay_list_drag"></div>
                             <div class="okay_list_heading okay_list_check">
@@ -38,6 +41,7 @@
                             <div class="okay_list_heading okay_list_close"></div>
                         </div>
 
+                        {*Параметры элемента*}
                         <div id="sortable" class="okay_list_body sortable">
                             {foreach $pages as $page}
                                 <div class="fn_row okay_list_body_item">
@@ -77,7 +81,7 @@
 
                                         <div class="okay_list_setting okay_list_pages_setting">
                                             {*open*}
-                                            <a href="../{$lang_link}{$page->url|escape}" target="_blank" data-hint="Просмотреть на сайте" class="setting_icon setting_icon_open hint-bottom-middle-t-info-s-small-mobile  hint-anim">
+                                            <a href="../{$lang_link}{$page->url|escape}" target="_blank" data-hint="{$btr->general_view|escape}" class="setting_icon setting_icon_open hint-bottom-middle-t-info-s-small-mobile  hint-anim">
                                                 {include file='svg_icon.tpl' svgId='icon_desktop'}
                                             </a>
                                         </div>
@@ -93,6 +97,7 @@
                             {/foreach}
                         </div>
 
+                        {*Блок массовых действий*}
                         <div class="okay_list_footer fn_action_block">
                             <div class="okay_list_foot_left">
                                 <div class="okay_list_boding okay_list_drag"></div>

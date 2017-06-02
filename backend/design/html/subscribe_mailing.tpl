@@ -1,12 +1,12 @@
-
 {* Title *}
-
 {$meta_title=$btr->subscribe_mailing_subscribes scope=parent}
+
 {if $subscribes_count>0}
     <div class="row">
         <progress id="progressbar" class="progress progress-xs progress-info mt-0" style="display: none" value="0" max="100"></progress>
     </div>
 {/if}
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="heading_page">
@@ -25,6 +25,7 @@
     </div>
 </div>
 
+{*Главная форма страницы*}
 <div class="boxed fn_toggle_wrap">
     {if $subscribes}
         <div class="row">
@@ -41,6 +42,7 @@
                             <div class="okay_list_heading okay_list_subscribe_name">{$btr->subscribe_mailing_email|escape}</div>
                             <div class="okay_list_heading okay_list_close"></div>
                         </div>
+                        {*Параметры элемента*}
                         <div class="okay_list_body sortable">
                             {foreach $subscribes as $subscribe}
                                 <div class="fn_row okay_list_body_item">

@@ -1,6 +1,6 @@
 {$meta_title = $btr->reportstats_orders scope=parent}
 
-{* Заголовок *}
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
@@ -11,6 +11,7 @@
     </div>
 </div>
 
+{*Главная форма страницы*}
 <div class="boxed fn_toggle_wrap">
     <div class="row">
         <div class="col-lg-12 col-md-12 ">
@@ -19,6 +20,7 @@
                    <div class="col-xs-12 mb-1">
                         <div class="row">
                             <div class="col-md-11 col-lg-11 col-xl-7 col-sm-12 ">
+                                {*Блок фильтров*}
                                <div class="date">
                                    <form class="date_filter row" method="get">
                                        <input type="hidden" name="module" value="ReportStatsAdmin">
@@ -114,12 +116,15 @@
         {assign 'total_summ' 0}
         {assign 'total_amount' 0}
         <div class="okay_list products_list fn_sort_list">
+            {*Шапка таблицы*}
             <div class="okay_list_head">
                 <div class="okay_list_heading okay_list_reportstats_categories">{$btr->general_category|escape}</div>
                 <div class="okay_list_heading okay_list_reportstats_products">{$btr->general_name|escape}</div>
                 <div class="okay_list_heading okay_list_reportstats_total">{$btr->general_sales_amount|escape}</div>
                 <div class="okay_list_heading okay_list_reportstats_setting">{$btr->general_amt|escape}</div>
             </div>
+
+            {*Параметры элемента*}
             <div class="okay_list_body">
                 {foreach $report_stat_purchases as $purchase}
                     {assign var='total_summ'  value=$total_summ+$purchase->sum_price}

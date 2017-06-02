@@ -239,3 +239,4 @@ $lang['email_on_site'] = "Перейти на сайт";
 $lang['email_order_your_status'] = "Сообщаем о состоянии Вашего заказа";
 $lang['receipt_name'] = "Ф.И.О плательщика";
 $lang['receipt_address'] = "Адрес плательщика";
+$lang['product_brand_name'] = "Бренд:";

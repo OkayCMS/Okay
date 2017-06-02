@@ -84,6 +84,7 @@ class PostAdmin extends Okay {
         if(empty($post)) {
             $post = new stdClass;
             $post->date = date($this->settings->date_format, time());
+            $post->visible = 1;
         }
 
         /*Связанные товары записи*/

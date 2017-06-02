@@ -1,6 +1,7 @@
 {* Title *}
 {$meta_title=$btr->general_categories scope=parent}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
@@ -17,11 +18,13 @@
     </div>
 </div>
 
+{*Главная форма страницы*}
 <div class="boxed fn_toggle_wrap">
     {if $categories}
         <form method="post" class="fn_form_list">
             <input type="hidden" name="session_id" value="{$smarty.session.id}" />
             <div class="okay_list products_list fn_sort_list">
+                {*Шапка таблицы*}
                 <div class="okay_list_head">
                     <div class="okay_list_heading okay_list_subicon"></div>
                     <div class="okay_list_heading okay_list_drag"></div>
@@ -35,6 +38,8 @@
                     <div class="okay_list_heading okay_list_setting">{$btr->general_activities|escape}</div>
                     <div class="okay_list_heading okay_list_close"></div>
                 </div>
+
+                {*Параметры элемента*}
                 <div class="okay_list_body categories_wrap sortable ">
                 {if $categories}
                     {foreach $categories as $category}
@@ -109,6 +114,8 @@
                     {/foreach}
                 {/if}
                 </div>
+
+                {*Блок массовых действий*}
                 <div class="okay_list_footer fn_action_block">
                     <div class="okay_list_foot_left">
                         <div class="okay_list_heading okay_list_subicon"></div>

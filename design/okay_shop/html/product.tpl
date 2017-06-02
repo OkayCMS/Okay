@@ -12,9 +12,16 @@
         </h1>
 
         {*  SKU (stock keeping unit) number *}
-        <div class="sku{if !$product->variant->sku} hidden{/if}">
-            <span data-language="product_sku">{$lang->product_sku}:</span>
-            <span class="fn_sku sku_nubmer">{$product->variant->sku|escape}</span>
+        <div class="sku clearfix">
+            {if $brand}
+                <div class="product_brand_block clearfix">
+                    <span>{$lang->product_brand_name} <a href="{$lang_link}brands/{$brand->url}">{$brand->name|escape}</a></span>
+                </div>
+            {/if}
+            <div class="{if !$product->variant->sku} hidden{/if}">
+                <span data-language="product_sku">{$lang->product_sku}:</span>
+                <span class="fn_sku sku_nubmer">{$product->variant->sku|escape}</span>
+            </div>
         </div>
 
         <div class="row fn_transfer">
@@ -197,7 +204,7 @@
                         <div class="share_text">
                             <span data-language="{$translate_id['product_share']}">{$lang->product_share}</span>
                         </div>
-                        <div class="ya-share2" data-services="vkontakte,facebook,twitter,viber"></div>
+                        <div class="fn_share jssocials"></div>
                     </div>
                     
                 </div>

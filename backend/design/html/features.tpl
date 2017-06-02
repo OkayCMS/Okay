@@ -1,6 +1,7 @@
 {* Title *}
 {$meta_title=$btr->features_features scope=parent}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
@@ -17,7 +18,7 @@
     </div>
 </div>
 
-
+{*Блок фильтров*}
 <div class="boxed fn_toggle_wrap">
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -41,11 +42,14 @@
             </div>
         </div>
     </div>
+
+    {*Главная форма страницы*}
     {if $features}
         <form method="post" class="fn_form_list">
             <input type="hidden" name="session_id" value="{$smarty.session.id}"/>
 
             <div class="okay_list products_list fn_sort_list">
+                {*Шапка таблицы*}
                 <div class="okay_list_head">
                     <div class="okay_list_heading okay_list_drag"></div>
                     <div class="okay_list_heading okay_list_check">
@@ -58,6 +62,7 @@
                     <div class="okay_list_heading okay_list_setting okay_list_features_setting">{$btr->general_activities|escape}</div>
                     <div class="okay_list_heading okay_list_close"></div>
                 </div>
+                {*Параметры элемента*}
                 <div class="okay_list_body features_wrap sortable">
                 {foreach $features as $feature}
                     <div class="fn_row okay_list_body_item fn_sort_item">
@@ -81,13 +86,16 @@
 
                             <div class="okay_list_boding okay_list_features_tag">
                                 <div class="wrap_tags">
+                                {assign var="index" value=0}
                                 {function name=category_feature}
                                     {foreach $category_features as $cat}
-                                        {if in_array($cat->id, $feature->features_categories)}
-                                            <span class="tag tag-info">{$cat->name|escape}</span>
-                                        {/if}
-                                        {if $cat->subcategories}
-                                            {category_feature category_features=$cat->subcategories}
+                                        {if $index++ < 12}
+                                            {if in_array($cat->id, $feature->features_categories)}
+                                                <span class="tag tag-info">{$cat->name|escape}</span>
+                                            {/if}
+                                            {if $cat->subcategories}
+                                                {category_feature category_features=$cat->subcategories}
+                                            {/if}
                                         {/if}
                                     {/foreach}
                                 {/function}
@@ -118,6 +126,8 @@
                     </div>
                 {/foreach}
                 </div>
+
+                {*Блок массовых действий*}
                 <div class="okay_list_footer fn_action_block">
                     <div class="okay_list_foot_left">
                         <div class="okay_list_heading okay_list_drag"></div>

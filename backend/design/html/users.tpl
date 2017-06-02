@@ -7,6 +7,7 @@
     </div>
 {/if}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="heading_page">
@@ -41,6 +42,7 @@
 </div>
 
 <div class="boxed fn_toggle_wrap">
+    {*Блок фильтров*}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="boxed_sorting action_options">
@@ -58,6 +60,7 @@
         </div>
     </div>
     {if $users}
+        {*Главная форма страницы*}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <form class="fn_form_list" method="post">
@@ -92,6 +95,7 @@
                             </div>
                             <div class="okay_list_heading okay_list_close"></div>
                         </div>
+                        {*Параметры элемента*}
                         <div class="okay_list_body sortable">
                             {foreach $users as $user}
                                 <div class="fn_row okay_list_body_item fn_sort_item">
@@ -136,6 +140,8 @@
                                 </div>
                             {/foreach}
                         </div>
+
+                        {*Блок массовых действий*}
                         <div class="okay_list_footer fn_action_block">
                             <div class="okay_list_foot_left">
                                 <div class="okay_list_heading okay_list_check">

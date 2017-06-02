@@ -1,5 +1,7 @@
 {* Title *}
 {$meta_title=$btr->managers_managers scope=parent}
+
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
@@ -16,14 +18,15 @@
     </div>
 </div>
 
+{*Главная форма страницы*}
 <div class="boxed fn_toggle_wrap">
     {if $managers}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <form method="post" class="fn_form_list">
                     <input type="hidden" name="session_id" value="{$smarty.session.id}">
-
                     <div class="managers_wrap okay_list">
+                        {*Шапка таблицы*}
                         <div class="okay_list_head">
                             <div class="okay_list_heading okay_list_check">
                                 <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value=""/>
@@ -33,6 +36,7 @@
                             <div class="okay_list_heading okay_list_close"></div>
                         </div>
 
+                        {*Параметры элемента*}
                         <div class="okay_list_body">
                             {foreach $managers as $manager_admin}
                                 <div class="fn_row okay_list_body_item">
@@ -64,6 +68,7 @@
                             {/foreach}
                         </div>
 
+                        {*Блок массовых действий*}
                         <div class="okay_list_footer fn_action_block">
                             <div class="okay_list_foot_left">
                                 <div class="okay_list_heading okay_list_check">

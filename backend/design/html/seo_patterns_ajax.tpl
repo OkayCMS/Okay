@@ -1,4 +1,4 @@
-
+{*Метаданные товаров категории (возвращаются аяксом)*}
 <div class="heading_box">{$category->name|escape}</div>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">

@@ -1,5 +1,6 @@
 {$meta_title = $btr->settings_notify_notifications scope=parent}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-6 col-md-6">
         <div class="heading_page">{$btr->settings_notify_notifications|escape}</div>
@@ -7,6 +8,7 @@
     <div class="col-lg-4 col-md-3 text-xs-right float-xs-right"></div>
 </div>
 
+{*Вывод успешных сообщений*}
 {if $message_success}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -27,6 +29,7 @@
     </div>
 {/if}
 
+{*Главная форма страницы*}
 <form method="post" enctype="multipart/form-data">
     <input type=hidden name="session_id" value="{$smarty.session.id}">
 
@@ -39,6 +42,7 @@
                         <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
                     </div>
                 </div>
+                {*Параметры элемента*}
                 <div class="toggle_body_wrap on fn_card">
                     <div class="row">
                         <div class="col-md-6">

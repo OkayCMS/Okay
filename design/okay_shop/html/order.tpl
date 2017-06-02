@@ -75,7 +75,7 @@
                 <span data-language="cart_coupon">{$lang->cart_coupon}</span>
             </td>
             <td></td>
-            <td></td>
+            <td>{$order->coupon->coupon_percent|escape} %</td>
             <td>{$order->coupon_discount|convert} {$currency->sign|escape}</td>
         </tr>
     {/if}

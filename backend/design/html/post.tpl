@@ -4,6 +4,7 @@
     {$meta_title = $btr->post_new scope=parent}
 {/if}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="wrap_heading">
@@ -27,6 +28,7 @@
     <div class="col-md-12 col-lg-12 col-sm-12 float-xs-right"></div>
 </div>
 
+{*Вывод успешных сообщений*}
 {if $message_success}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -49,6 +51,7 @@
     </div>
 {/if}
 
+{*Вывод ошибок*}
 {if $message_error}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -71,13 +74,15 @@
     </div>
 {/if}
 
-<form method=post enctype="multipart/form-data" class="fn_fast_button">
+{*Главная форма страницы*}
+<form method="post" enctype="multipart/form-data" class="fn_fast_button">
     <input type="hidden" name="session_id" value="{$smarty.session.id}" />
     <input type="hidden" name="lang_id" value="{$lang_id}" />
 
     <div class="row">
         <div class="col-xs-12 ">
             <div class="boxed match_matchHeight_true">
+                {*Название элемента сайта*}
                 <div class="row d_flex">
                     <div class="col-lg-10 col-md-9 col-sm-12">
                         <div class="heading_label">
@@ -124,6 +129,7 @@
             </div>
         </div>
     </div>
+    {*Параметры элемента*}
     <div class="row">
         <div class="col-lg-4 col-md-12 pr-0">
             <div class="boxed fn_toggle_wrap min_height_210px">
@@ -160,6 +166,7 @@
                 </div>
             </div>
         </div>
+        {*Параметры элемента*}
         <div class="col-lg-3 col-md-12 pr-0">
             <div class="boxed fn_toggle_wrap min_height_210px">
                 <div class="heading_box">
@@ -262,6 +269,7 @@
             </div>
         </div>
     </div>
+    {*Параметры элемента*}
     <div class="row">
         <div class="col-lg-12 col-md-12">
             <div class="boxed match fn_toggle_wrap">
@@ -287,6 +295,7 @@
             </div>
         </div>
     </div>
+    {*Описание элемента*}
     <div class="row">
         <div class="col-lg-12 col-md-12">
             <div class="boxed match fn_toggle_wrap tabs">
@@ -321,7 +330,6 @@
         </div>
     </div>
 </form>
-<!-- Основная форма (The End) -->
 
 {* Подключаем Tiny MCE *}
 {include file='tinymce_init.tpl'}

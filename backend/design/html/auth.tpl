@@ -29,6 +29,7 @@
                                     {/if}
                                 </div>
                             {/if}
+                            {*Форма авторизации*}
                             <form method="post">
                                 <input type=hidden name="session_id" value="{$smarty.session.id}">
                                 {if $recovery_mod}
@@ -120,7 +121,7 @@
                             $(".fn_email").remove();
                         }
                     }
-                } )
+                })
         });
     })
 </script>

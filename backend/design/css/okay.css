@@ -1751,7 +1751,7 @@ label.switch_label {
 
 .okay_list .okay_list_row{
     width: 100%;
-    height: 100%;
+    height: auto;
     display: flex;
     display: -webkit-box;
     display: -webkit-flex;
@@ -1884,7 +1884,7 @@ label.switch_label {
     text-align: center!important;
 }
 .okay_list .okay_list_comments_btn{
-    width: 140px;
+    width: 240px;
     text-align: center!important;
 }
 .okay_list .okay_list_brands_group{
@@ -2551,11 +2551,12 @@ label.switch_label {
     background-color: #fff;
     border: 1px solid #ccc;
     border-bottom: none;
+    height: auto;
 }
 .purchases_table .purchases_head{
     width: 100%;
     overflow: hidden;
-    height: 40px;
+    min-height: 30px;
     display: flex;
     display: -webkit-box;
     display: -webkit-flex;
@@ -2575,6 +2576,8 @@ label.switch_label {
 .purchases_table .purchases_body_items,
 .purchases_table .purchases_body{
     width: 100%;
+    min-height: 40px;
+    height: auto;
     display: flex;
     display: -webkit-box;
     display: -webkit-flex;
@@ -2596,6 +2599,7 @@ label.switch_label {
 .purchases_table .purchases_body_item {
     width: 100%;
     height: 100%;
+    min-height: 40px;
     display: flex;
     display: -webkit-box;
     display: -webkit-flex;
@@ -2617,22 +2621,28 @@ label.switch_label {
 
 .purchases_table .purchases_table_orders_num{
     width: 50px;
+    min-height: 30px;
 }
 .purchases_table .purchases_table_orders_sku{
     width: 150px;
+    min-height: 30px;
 }
 .purchases_table .purchases_table_orders_price{
     width: 100px;
+    min-height: 30px;
 }
 .purchases_table .purchases_table_orders_unit{
     width: 100px;
+    min-height: 30px;
 }
 .purchases_table .purchases_table_orders_total{
     width: 110px;
+    min-height: 30px;
 }
 .purchases_table .purchases_table_orders_name{
-     width: calc(100% - 520px);
+    width: calc(100% - 520px);
     text-align: left;
+    min-height: 30px;
 }
 
 /****************************************** Catalog menu  */
@@ -3507,7 +3517,7 @@ body.menu-pin .menu_switch .menu_hamburger::after {
 .orders_purchases_block {
     width: 100%;
     padding: 0px 10px 10px;
-
+    height: auto;
 }
 
 
@@ -5468,23 +5478,16 @@ div.mce-fullscreen {
 }
 .colorpicker {z-index: 100!important;}
 #ui-datepicker-div{z-index: 100!important;}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.system_header{
+    color: #fff;
+    background-color: #2b303b;
+    font-weight: 600;
+    font-family: 'Open Sans Condensed', sans-serif;
+    text-transform: uppercase;
+    font-size: 14px;
+    padding: 15px;
+}
+.system_information{
+    min-height: 50px;
+    text-align: left;
+}

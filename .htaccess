@@ -3,7 +3,6 @@
 #php_value session.cookie_httponly true
 AddDefaultCharset UTF-8
 ErrorDocument 404 /404
-ErrorDocument 401 /password.php
 RewriteEngine on
 #RewriteBase /
 

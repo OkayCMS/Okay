@@ -1,6 +1,7 @@
 {* Title *}
 {$meta_title=$btr->order_settings_labels scope=parent}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-6 col-md-6">
         <div class="heading_page">{$btr->order_settings_orders|escape}</div>
@@ -9,6 +10,7 @@
 </div>
 
 <div class="row">
+    {*Блок статусов заказов*}
     <div class="col-lg-6 col-md-12 pr-0">
         <div class="boxed fn_toggle_wrap">
             <div class="heading_box">
@@ -27,8 +29,8 @@
                 <form class="fn_form_list" method="post">
                     <input type="hidden" value="status" name="status">
                     <input type="hidden" name="session_id" value="{$smarty.session.id}">
-
                     <div class="okay_list">
+                        {*Шапка таблицы*}
                         <div class="okay_list_head">
                             <div class="okay_list_boding okay_list_drag"></div>
                             <div class="okay_list_heading okay_list_check">
@@ -107,7 +109,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="okay_list_footer ">
+
+                        {*Блок массовых действий*}
+                        <div class="okay_list_footer">
                             <div class="okay_list_foot_left">
                                 <div class="okay_list_boding okay_list_drag"></div>
                                 <div class="okay_list_heading okay_list_check">
@@ -131,6 +135,7 @@
         </div>
     </div>
 
+    {*Блок меток заказов*}
     <div class="col-lg-6 col-md-12 hidden-md-down">
         <div class="boxed fn_toggle_wrap">
             <div class="heading_box">
@@ -151,6 +156,7 @@
                     <input type="hidden" name="session_id" value="{$smarty.session.id}">
 
                     <div class="okay_list">
+                        {*Шапка таблицы*}
                         <div class="okay_list_head">
                             <div class="okay_list_heading okay_list_check">
                                 <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value=""/>
@@ -204,6 +210,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        {*Блок массовых действий*}
                         <div class="okay_list_footer ">
                             <div class="okay_list_foot_left">
                                 <div class="okay_list_heading okay_list_check">

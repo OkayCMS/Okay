@@ -4,6 +4,7 @@
     {$meta_title = $btr->translation_new scope=parent}
 {/if}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-6 col-md-6">
         {if !$translation->id}
@@ -15,7 +16,7 @@
     <div class="col-lg-4 col-md-3 text-xs-right float-xs-right"></div>
 </div>
 
-
+{*Вывод успешных сообщений*}
 {if $message_success}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -37,6 +38,7 @@
     </div>
 {/if}
 
+{*Вывод ошибок*}
 {if $message_error}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -55,8 +57,8 @@
 {/if}
 
 
-<!-- Основная форма -->
-<form method=post id=product enctype="multipart/form-data">
+{*Главная форма страницы*}
+<form method="post" enctype="multipart/form-data">
     <input type=hidden name="session_id" value="{$smarty.session.id}">
     <input name=id type="hidden" value="{$translation->id}"/>
 
@@ -64,6 +66,7 @@
         <div class="col-lg-12 ">
             <div class="boxed match_matchHeight_true">
                 <div class="row">
+                    {*Название элемента сайта*}
                     <div class="col-lg-12 col-md-12">
                         <div class="heading_label">
                             {$btr->translation_name|escape}
@@ -95,15 +98,12 @@
         </div>
     </div>
 </form>
-<!-- Основная форма (The End) -->
 
 {* On document load *}
 {literal}
     <script>
         $(function() {
-
             $('textarea').on( "focusout", function(){
-
                 label = $(this).val();
                 label = label.replace(/[\s]+/gi, '_');
                 label = translit(label);

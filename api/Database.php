@@ -168,6 +168,16 @@ class Database extends Okay {
     public function affected_rows() {
         return $this->mysqli->affected_rows;
     }
+
+    /*
+     * Вовзвращает информацию о MySQL
+     *
+      */
+    public function get_mysql_info() {
+        $info = array();
+        $info['server_info'] = $this->mysqli->server_info;
+        return $info;
+    }
     
     /**
      * Компиляция плейсхолдера

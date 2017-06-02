@@ -318,9 +318,12 @@ class ImportAjax extends Okay {
             $imported_item->product = $this->products->get_product(intval($product_id));
             
             // Добавляем категории к товару
+            $this->db->query("SELECT MAX(position) as pos FROM __products_categories WHERE product_id=?", $product_id);
+            $pos = $this->db->result('pos');
+            $pos = $pos === false ? 0 : $pos+1;
             if(!empty($categories_ids)) {
                 foreach($categories_ids as $c_id) {
-                    $this->categories->add_product_category($product_id, $c_id);
+                    $this->categories->add_product_category($product_id, $c_id, $pos++);
                 }
             }
             

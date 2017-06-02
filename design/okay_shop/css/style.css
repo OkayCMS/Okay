@@ -1282,6 +1282,11 @@ header a {
 .sku_nubmer {
     color: #adaaaa;
 }
+.product_brand_block{
+    font-size: 13px;
+    float: left;
+    margin-right: 25px;
+}
 .product_image {
     position: relative;
     border: 1px solid #e8e8e1;

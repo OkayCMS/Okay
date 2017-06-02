@@ -1,11 +1,12 @@
 {* Title *}
 {if $banner}
-	{$meta_title=$banner->name scope=parent}
+    {$meta_title=$banner->name scope=parent}
 {else}
-	{$meta_title=$btr->banners_images_banners  scope=parent}
+    {$meta_title=$btr->banners_images_banners  scope=parent}
 {/if}
-<div class="row">
 
+{*Название страницы*}
+<div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
             <div class="box_heading heading_page">
@@ -26,9 +27,7 @@
         </div>
     </div>
 </div>
-
-
-
+{*Блок фильтров*}
 <div class="boxed fn_toggle_wrap">
     <div class="row">
         <div class="col-lg-12 col-md-12 ">
@@ -57,12 +56,15 @@
             </div>
         </div>
     </div>
+
+    {*Главная форма страницы*}
     <div class="row">
         {if $banners_images}
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <form class="fn_form_list" method="post">
                     <div id="main_list" class=" okay_list products_list fn_sort_list">
                         <input type="hidden" name="session_id" value="{$smarty.session.id}" />
+                        {*Шапка таблицы*}
                         <div class="okay_list_head">
                             <div class="okay_list_heading okay_list_drag"></div>
                             <div class="okay_list_heading okay_list_check">
@@ -76,6 +78,7 @@
                             <div class="okay_list_heading okay_list_close"></div>
                         </div>
 
+                        {*Параметры элемента*}
                         <div class="banners_wrap okay_list_body features_wrap sortable">
                             {foreach $banners_images as $banners_image}
                                 <div class="fn_row okay_list_body_item fn_sort_item">
@@ -138,6 +141,8 @@
                                 </div>
                             {/foreach}
                         </div>
+
+                        {*Блок массовых действий*}
                         <div class="okay_list_footer fn_action_block">
                             <div class="okay_list_foot_left">
                                 <div class="okay_list_heading okay_list_drag"></div>

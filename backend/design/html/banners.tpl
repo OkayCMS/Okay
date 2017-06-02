@@ -1,6 +1,6 @@
 {* Title *}
 {$meta_title=$btr->banners_groups scope=parent}
-
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
@@ -18,12 +18,14 @@
     <div class="col-md-5 col-lg-5 col-sm-12 float-xs-right"></div>
 </div>
 
+{*Главная форма страницы*}
 <div class="boxed fn_toggle_wrap">
     {if $banners}
         <div class="categories">
             <form class="fn_form_list" method="post">
                 <input type="hidden" name="session_id" value="{$smarty.session.id}">
                     <div class="okay_list products_list fn_sort_list">
+                        {*Шапка таблицы*}
                         <div class="okay_list_head">
                             <div class="okay_list_heading okay_list_drag"></div>
                             <div class="okay_list_heading okay_list_check">
@@ -35,6 +37,7 @@
                             <div class="okay_list_heading okay_list_status">{$btr->general_enable|escape}</div>
                             <div class="okay_list_heading okay_list_close"></div>
                         </div>
+                        {*Параметры элемента*}
                         <div class="banners_groups_wrap okay_list_body features_wrap sortable">
                         {foreach $banners as $banner}
                             <div class="fn_row okay_list_body_item fn_sort_item">
@@ -108,6 +111,7 @@
                             </div>
                         {/foreach}
                     </div>
+                        {*Блок массовых действий*}
                         <div class="okay_list_footer fn_action_block">
                             <div class="okay_list_foot_left">
                                 <div class="okay_list_heading okay_list_drag"></div>

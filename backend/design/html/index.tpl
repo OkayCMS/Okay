@@ -27,7 +27,7 @@
     <nav id="admin_catalog" class="fn_left_menu">
         <div id="mob_menu"></div>
         <div class="sidebar_header">
-            <a class="logo_box" a class="">
+            <a class="logo_box">
                 <img src="design/images/logo_title.png" alt="OkayCMS"/>
             </a>
             {if $is_mobile === false && $is_tablet === false}
@@ -40,6 +40,7 @@
                 </span>
             {/if}
         </div>
+        {*Меню админ. панели*}
         <div class="sidebar sidebar-menu">
             <div class="scrollbar-inner menu_items">
                 <div>
@@ -54,9 +55,7 @@
                                     {if is_array($menu) && $menu|count >1}
                                         <span class="arrow"></span>
                                     {/if}
-
                                 </a>
-
                                 {if is_array($menu) && $menu|count > 1}
                                     <ul class="fn_submenu_toggle submenu">
                                         {foreach $menu as $sub_title=>$sub_menu}
@@ -79,6 +78,7 @@
             </div>
         </div>
     </nav>
+    {*Верхняя шапка*}
     <div class="page-container">
         <a href='{$config->root_url}/{$lang_link}' class='admin_bookmark'></a>
         <header class="navbar">
@@ -112,6 +112,7 @@
                             {include file='svg_icon.tpl' svgId='exit'}
                         </a>
                     </div>
+                    {*Техподдержка*}
                     <div class="admin_techsupport">
                         <div class="techsupport_inner">
                             <a {if $support_info->public_key} data-hint="{$support_info->balance|balance:false}"{else} data-hint="Not active" {/if}  class="hint-bottom-middle-t-info-s-small-mobile  hint-anim"  href="index.php?module=SupportAdmin">
@@ -130,6 +131,7 @@
                             </div>
                         </div>
                     </div>
+                    {*Счетчики уведомлений*}
                     <div class="admin_notification">
                         <div class="notification_inner">
                             <span class="notification_title" href="">
@@ -216,7 +218,6 @@
                             </div>
                         </div>
                     </div>
-
                 {/if}
 
             </div>
@@ -240,6 +241,7 @@
                 </div>
             </div>
         </footer>
+        {*Форма подтверждения действий*}
         <div id="fn_action_modal" class="modal fade show" role="document">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -262,6 +264,7 @@
         </div>
     </div>
 
+    {*Быстрое сохранение*}
     <div class="fn_fast_save">
         <button type="submit" class="btn btn_small btn_blue ">
             {include file='svg_icon.tpl' svgId='checked'}
@@ -489,20 +492,33 @@
         }
     }
     {literal}
-        if($(".fn_ajax_action").size()>0) {
+        if($(".fn_ajax_action,.fn_ajax_block").size()>0) {
             /* Функция аяксового обновления полей
             * state - состояние объекта (включен/выключен)
             * id - id обновляемой сущности
             * module - типо сущности
             * action - обновляемое поле (поле в БД)
+            * класс "fn_ajax_block" у елемента - означает массовое обновление;
+            * если нужно:
+            * 1) добавить класс "fn_ajax_block" к блоку в котором хотите обновить несколько полей,
+            * 2) добавить класс "fn_ajax_element" к елементам, в блоке("fn_ajax_block"), которые хотите обновить
+            * .fn_ajax_element: аттрибут "name" - поле БД; val() - значение.
             * */
             function ajax_action($this) {
-                var state, module, session_id,action,id;
+                var state, module, session_id, action, id, values = {};
                 state = $this.hasClass("fn_active_class") ? 0:1;
                 id = parseInt($this.data('id'));
                 module = $this.data("module");
                 action = $this.data("action");
                 session_id = '{/literal}{$smarty.session.id}{literal}';
+                if (!$this.hasClass("fn_ajax_block")) {
+                    values = {[action]: state};
+                } else {
+                    $this.find('.fn_ajax_element').each(function() {
+                        var elem = $(this);
+                        values[elem.attr('name')] = elem.val();
+                    });
+                }
                 toastr.options = {
                     closeButton: true,
                     newestOnTop: true,
@@ -518,16 +534,20 @@
                     data: {
                         object : module,
                         id : id,
-                        values: {[action]: state},
+                        values: values,
                         session_id : session_id
                     },
                     success: function(data){
                         var msg = "";
                         if(data){
-                            $this.toggleClass("fn_active_class");
                             toastr.success(msg, "Success");
-                            if(action == "approved" || action == "processed") {
-                                $this.closest("div").find(".fn_answer_btn").show();
+                            if (action == "processed" && module == "callback") {
+                                $this.closest(".fn_row").find(".fn_callbacks_toggle").toggleClass("hidden");
+                            } else {
+                                $this.toggleClass("fn_active_class");
+                                if (action == "approved" || action == "processed") {
+                                    $this.closest("div").find(".fn_answer_btn").show();
+                                }
                             }
                         } else {
                             toastr.error(msg, "Error");
@@ -610,7 +630,6 @@
                 } else {
                     cat = $(".fn_product_categories_list .fn_category_item:first");
                     c = cat.find("input").data("cat_name");
-                    console.log(c);
                     if (typeof(c) == 'string' && c != '')
                         result += ', ' + c;
                 }
@@ -649,6 +668,7 @@
         }
     }
     /*функции генерации мета данных end*/
+
     $(window).on('load',function () {
 
         $("#countries_select").msDropdown({
@@ -707,6 +727,7 @@
             $("#block_translit").trigger("click");
         });
         /*Блокировка автоформирования ссылки end*/
+
         if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
             $('.selectpicker').selectpicker('mobile');
         }
@@ -714,4 +735,3 @@
 
 </script>
 </html>
-

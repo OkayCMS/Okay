@@ -4,6 +4,7 @@
     {$meta_title = $btr->user_group_new scope=parent}
 {/if}
 
+{*Название страницы*}
 <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="wrap_heading">
@@ -19,6 +20,7 @@
     <div class="col-md-12 col-lg-12 col-sm-12 float-xs-right"></div>
 </div>
 
+{*Вывод успешных сообщений*}
 {if $message_success}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -43,6 +45,7 @@
     </div>
 {/if}
 
+{*Вывод ошибок*}
 {if $message_error}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -59,6 +62,7 @@
     </div>
 {/if}
 
+{*Главная форма страницы*}
 <form method="post" enctype="multipart/form-data">
     <input type="hidden" name="session_id" value="{$smarty.session.id}">
 

@@ -1,5 +1,6 @@
 {$meta_title=$btr->multi_export_products scope=parent}
 
+{*Название страницы*}
 <div class="row">
     <progress id="progressbar" class="progress progress-xs progress-info mt-0" style="display: none" value="0" max="100"></progress>
     <div class="col-lg-7 col-md-7">
@@ -8,6 +9,7 @@
     <div class="col-lg-5 col-md-5 float-xs-right"></div>
 </div>
 
+{*Вывод ошибок*}
 {if $message_error}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -26,6 +28,7 @@
     </div>
 {/if}
 
+{*Главная форма страницы*}
 {if $message_error != 'no_permission'}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">

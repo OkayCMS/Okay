@@ -100,6 +100,9 @@ class ManagerAdmin extends Okay {
             'left_seo' => array(
                 'seo_patterns' => 'Автоматизация SEO'
             ),
+            'left_support' => array(
+                'support' => 'Техподдержка'
+            ),
             'left_design' => array(
                 'design'      => 'Дизайн',
                 'robots'    => 'Rotbots.txt'
