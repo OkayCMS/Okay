@@ -158,7 +158,7 @@ foreach($products as $p) {
     ";
     
     if (!in_array($p->product_id, array_keys($features))) {
-        $features[$p->product_id] = $okay->features->get_product_options(array('product_id'=>$p->product_id));
+        $features[$p->product_id] = $okay->features->get_product_options(array('product_id'=>$p->product_id,'yandex'=>1));
     }
     if (!empty($features[$p->product_id])) {
         foreach($features[$p->product_id] as $feature) {

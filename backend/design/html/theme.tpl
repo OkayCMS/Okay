@@ -83,9 +83,11 @@
                                                     <i class="fa fa-pencil fn_rename_theme rename_theme p-h" data-old_name="{$t->name|escape}"></i>
                                                 {/if}
 
-                                                <button data-theme_name="{$t->name|escape}" type="button" class="btn_close float-xs-right fn_remove_theme" data-toggle="modal" data-target="#fn_delete_theme">
-                                                    {include file='svg_icon.tpl' svgId='delete'}
-                                                </button>
+                                                {if !$t@first}
+                                                    <button data-theme_name="{$t->name|escape}" type="button" class="btn_close float-xs-right fn_remove_theme" data-toggle="modal" data-target="#fn_delete_theme">
+                                                        {include file='svg_icon.tpl' svgId='delete'}
+                                                    </button>
+                                                {/if}
                                             </div>
                                             <div class="banner_card_block">
                                                 <div class="theme_block_image" style="position:relative;">
@@ -104,7 +106,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-12 hidden">
+                    <div class="col-lg-12">
                         <button type="submit" name="save" class="btn btn_small btn_blue fn_chek_all float-md-right ">
                             {include file='svg_icon.tpl' svgId='checked'}
                             <span>{$btr->general_apply|escape}</span>

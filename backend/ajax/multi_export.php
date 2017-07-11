@@ -4,17 +4,17 @@ class ExportAjax extends Okay {
 
     /*Поля(столбцы) для файла экспорта*/
     private $columns_names = array(
-        'name'=>             'Товар',
-        'variant_id'=>       'ID варианта',
-        'variant'=>          'Вариант',
-        'price'=>            'Цена',
-        'currency'=>         'ID валюты',
-        'compare_price'=>    'Старая цена',
-        'meta_title'=>       'Заголовок страницы',
-        'meta_keywords'=>    'Ключевые слова',
-        'meta_description'=> 'Описание страницы',
-        'annotation'=>       'Аннотация',
-        'description'=>             'Описание'
+        'name'=>             'Product',
+        'variant_id'=>       'Variant ID',
+        'variant'=>          'Variant',
+        'price'=>            'Price',
+        'compare_price'=>    'Old price',
+        'currency'=>         'Currency ID',
+        'meta_title'=>       'Meta title',
+        'meta_keywords'=>    'Meta keywords',
+        'meta_description'=> 'Meta description',
+        'annotation'=>       'Annotation',
+        'description'=>      'Description'
 
     );
 

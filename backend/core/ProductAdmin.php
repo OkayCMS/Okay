@@ -220,27 +220,14 @@ class ProductAdmin extends Okay {
                             $i++;
                         }
                     }
-                    // Загрузка изображений
-                    if($images = $this->request->files('images')) {
-                        for($i=0; $i<count($images['name']); $i++) {
-                            if ($image_name = $this->image->upload_image($images['tmp_name'][$i], $images['name'][$i])) {
-                                $this->products->add_image($product->id, $image_name);
-                            } else {
-                                $this->design->assign('error', 'error uploading image');
-                            }
-                        }
-                    }
-                    // Загрузка изображений из интернета и drag-n-drop файлов
-                    if($images = $this->request->post('images_urls')) {
+                    // Загрузка изображений drag-n-drop файлов
+                    $images = $this->request->post('images_urls');
+                    $dropped_images = $this->request->files('dropped_images');
+                    if (!empty($images) && !empty($dropped_images)) {
                         foreach($images as $url) {
-                            // Если не пустой адрес и файл не локальный
-                            if(!empty($url) && $url != 'http://' && strstr($url,'/')!==false) {
-                                $this->products->add_image($product->id, $url);
-                            } elseif($dropped_images = $this->request->files('dropped_images')) {
-                                $key = array_search($url, $dropped_images['name']);
-                                if ($key!==false && $image_name = $this->image->upload_image($dropped_images['tmp_name'][$key], $dropped_images['name'][$key])) {
-                                    $this->products->add_image($product->id, $image_name);
-                                }
+                            $key = array_search($url, $dropped_images['name']);
+                            if ($key!==false && $image_name = $this->image->upload_image($dropped_images['tmp_name'][$key], $dropped_images['name'][$key])) {
+                                $this->products->add_image($product->id, $image_name);
                             }
                         }
                     }

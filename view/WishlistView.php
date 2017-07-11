@@ -42,30 +42,31 @@ class WishlistView extends View {
         
         $products = array();
         
-        if(count($products_ids)) {
-            foreach($this->products->get_products(array('id'=>$products_ids)) as $p) {
+        if (count($products_ids)) {
+            foreach ($this->products->get_products(array('id'=>$products_ids, 'visible'=>1)) as $p) {
                 $products[$p->id] = $p;
             }
-            
-            foreach($this->products->get_images(array('product_id'=>$products_ids)) as $image) {
-                if(isset($products[$image->product_id])) {
-                    $products[$image->product_id]->images[] = $image;
-                }
-            }
-            
-            foreach($this->variants->get_variants(array('product_id'=>$products_ids)) as $variant) {
-                if(isset($products[$variant->product_id])) {
-                    $products[$variant->product_id]->variants[] = $variant;
-                }
-            }
-            
-            foreach($products_ids as $id) {
-                if(isset($products[$id])) {
-                    if(isset($products[$id]->images[0])) {
-                        $products[$id]->image = $products[$id]->images[0];
+            if (!empty($products)) {
+                foreach ($this->products->get_images(array('product_id' => $products_ids)) as $image) {
+                    if (isset($products[$image->product_id])) {
+                        $products[$image->product_id]->images[] = $image;
                     }
-                    if(isset($products[$id]->variants[0])) {
-                        $products[$id]->variant = $products[$id]->variants[0];
+                }
+
+                foreach ($this->variants->get_variants(array('product_id' => $products_ids)) as $variant) {
+                    if (isset($products[$variant->product_id])) {
+                        $products[$variant->product_id]->variants[] = $variant;
+                    }
+                }
+
+                foreach ($products_ids as $id) {
+                    if (isset($products[$id])) {
+                        if (isset($products[$id]->images[0])) {
+                            $products[$id]->image = $products[$id]->images[0];
+                        }
+                        if (isset($products[$id]->variants[0])) {
+                            $products[$id]->variant = $products[$id]->variants[0];
+                        }
                     }
                 }
             }

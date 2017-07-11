@@ -1,86 +1,34 @@
 <?php
 
-class ImportAjax extends Okay {
-    
-    /*Соответствие полей в базе и имён колонок в файле*/
-    private $columns_names = array(
-        'name'=>             array('product', 'name', 'товар', 'название', 'наименование'),
-        'url'=>              array('url', 'адрес'),
-        'visible'=>          array('visible', 'published', 'видим'),
-        'featured'=>         array('featured', 'hit', 'хит', 'рекомендуемый'),
-        'category'=>         array('category', 'категория'),
-        'brand'=>            array('brand', 'бренд'),
-        'variant'=>          array('variant', 'вариант'),
-        'price'=>            array('price', 'цена'),
-        'currency'=>         array('currency_id', 'currency', 'ID валюты'),
-        'weight'=>           array('weight', 'вес варианта'),
-        'compare_price'=>    array('compare price', 'старая цена'),
-        'sku'=>              array('sku', 'артикул'),
-        'stock'=>            array('stock', 'склад', 'на складе'),
-        'meta_title'=>       array('meta title', 'заголовок страницы'),
-        'meta_keywords'=>    array('meta keywords', 'ключевые слова'),
-        'meta_description'=> array('meta description', 'описание страницы'),
-        'annotation'=>       array('annotation', 'аннотация', 'краткое описание'),
-        'description'=>      array('description', 'описание'),
-        'images'=>           array('images', 'изображения')
-        
-    );
-    
-    // Соответствие имени колонки и поля в базе
-    private $internal_columns_names = array();
-    
-    private $import_files_dir      = 'backend/files/import/'; // Временная папка
-    private $import_file           = 'import.csv';           // Временный файл
-    private $category_delimiter = ',,';                       // Разделитель каегорий в файле
-    private $subcategory_delimiter = '/';                    // Разделитель подкаегорий в файле
-    private $column_delimiter      = ';';
-    private $products_count        = 100;
-    private $columns               = array();
+require_once('api/Import.php');
+
+class ImportAjax extends Import {
     
     public function import() {
         if(!$this->managers->access('import')) {
             return false;
         }
+        $fields = $_SESSION['csv_fields'];
         session_write_close();
         unset($_SESSION['lang_id']);
         unset($_SESSION['admin_lang_id']);
         
         // Для корректной работы установим локаль UTF-8
-        setlocale(LC_ALL, 'ru_RU.UTF-8');
+        setlocale(LC_ALL, $this->locale);
         
-        $result = new stdClass;
+        $result = new stdClass();
         
         // Определяем колонки из первой строки файла
         $f = fopen($this->import_files_dir.$this->import_file, 'r');
         $this->columns = fgetcsv($f, null, $this->column_delimiter);
         
-        // Заменяем имена колонок из файла на внутренние имена колонок
-        foreach($this->columns as &$column) {
-            if($internal_name = $this->internal_column_name($column)) {
-                $this->internal_columns_names[$column] = $internal_name;
-                $column = $internal_name;
-            }
-        }
+        $this->init_internal_columns();
 
-        $required_fields = array_keys($this->columns_names);
-        $import_fields = array_values($this->internal_columns_names);
-        $diff = array_diff($required_fields, $import_fields);
-        if (count($diff)) {
-            fclose($f);
-            $result = new stdClass();
-            $result->error = 1;
-            $result->missing_fields = array();
-            foreach ($diff as $field) {
-                $result->missing_fields[] = $this->columns_names[$field][count($this->columns_names[$field])-1];
-            }
-            return $result;
-        }
-        
         // Если нет названия товара - не будем импортировать
-        if(!in_array('name', $this->columns) && !in_array('sku', $this->columns)) {
+        if (empty($fields) || !in_array('sku', $fields) && !in_array('name', $fields)) {
             return false;
         }
-        
+
         // Переходим на заданную позицию, если импортируем не сначала
         if($from = $this->request->get('from')) {
             fseek($f, $from);
@@ -96,16 +44,17 @@ class ImportAjax extends Okay {
         for($k=0; !feof($f) && $k<$this->products_count; $k++) {
             // Читаем строку
             $line = fgetcsv($f, 0, $this->column_delimiter);
-            
+
             $product = null;
-            
-            if(is_array($line)) {
+            if(is_array($line) && !empty($line)) {
+                $i = 0;
                 // Проходимся по колонкам строки
-                foreach($this->columns as $i=>$col) {
+                foreach ($fields as $csv=>$inner) {
                     // Создаем массив item[название_колонки]=значение
-                    if(isset($line[$i]) && !empty($line) && !empty($col)) {
-                        $product[$col] = $line[$i];
+                    if (isset($line[$i]) && !empty($inner)) {
+                        $product[$inner] = $line[$i];
                     }
+                    $i++;
                 }
             }
             // Импортируем этот товар
@@ -141,62 +90,54 @@ class ImportAjax extends Okay {
     
     // Импорт одного товара $item[column_name] = value;
     private function import_item($item) {
-        $imported_item = new stdClass;
+        $imported_item = new stdClass();
         
         // Проверим не пустое ли название и артинкул (должно быть хоть что-то из них)
-        if(empty($item['name']) && empty($item['sku'])) {
+        if (empty($item['sku']) && empty($item['name'])) {
             return false;
         }
         
         // Подготовим товар для добавления в базу
         $product = array();
         
-        if(isset($item['name'])) {
+        if (isset($item['name'])) {
             $product['name'] = trim($item['name']);
         }
         
-        if(isset($item['meta_title'])) {
+        if (isset($item['meta_title'])) {
             $product['meta_title'] = trim($item['meta_title']);
-        } else {
-            $product['meta_title'] = $product['name'];
         }
         
-        if(isset($item['meta_keywords'])) {
+        if (isset($item['meta_keywords'])) {
             $product['meta_keywords'] = trim($item['meta_keywords']);
-        } else {
-            $product['meta_keywords'] = $product['name'];
         }
         
-        if(isset($item['meta_description'])) {
+        if (isset($item['meta_description'])) {
             $product['meta_description'] = trim($item['meta_description']);
-        } else {
-            $product['meta_description'] = $product['name'];
         }
         
-        if(isset($item['annotation'])) {
+        if (isset($item['annotation'])) {
             $product['annotation'] = trim($item['annotation']);
         }
         
-        if(isset($item['description'])) {
+        if (isset($item['description'])) {
             $product['description'] = trim($item['description']);
         }
         
-        if(isset($item['visible'])) {
+        if (isset($item['visible'])) {
             $product['visible'] = intval($item['visible']);
         }
         
-        if(isset($item['featured'])) {
+        if (isset($item['featured'])) {
             $product['featured'] = intval($item['featured']);
         }
         
-        if(!empty($item['url'])) {
+        if (!empty($item['url'])) {
             $product['url'] = trim($item['url']);
-        } elseif(!empty($item['name'])) {
-            $product['url'] = $this->translit($item['name']);
         }
         
         // Если задан бренд
-        if(!empty($item['brand'])) {
+        if (!empty($item['brand'])) {
             $item['brand'] = trim($item['brand']);
             // Найдем его по имени
             if ($this->languages->lang_id()) {
@@ -204,7 +145,7 @@ class ImportAjax extends Okay {
             } else {
                 $this->db->query("SELECT id FROM __brands WHERE name=?", $item['brand']);
             }
-            if(!$product['brand_id'] = $this->db->result('id')) {
+            if (!$product['brand_id'] = $this->db->result('id')) {
                 // Создадим, если не найден
                 $product['brand_id'] = $this->brands->add_brand(array('name'=>$item['brand'], 'meta_title'=>$item['brand'], 'meta_keywords'=>$item['brand'], 'meta_description'=>$item['brand']));
             }
@@ -213,8 +154,8 @@ class ImportAjax extends Okay {
         // Если задана категория
         $category_id = null;
         $categories_ids = array();
-        if(!empty($item['category'])) {
-            foreach(explode($this->category_delimiter, $item['category']) as $c) {
+        if (!empty($item['category'])) {
+            foreach (explode($this->category_delimiter, $item['category']) as $c) {
                 $categories_ids[] = $this->import_category($c);
             }
             $category_id = reset($categories_ids);
@@ -223,27 +164,27 @@ class ImportAjax extends Okay {
         // Подготовим вариант товара
         $variant = array();
         
-        if(isset($item['variant'])) {
+        if (isset($item['variant'])) {
             $variant['name'] = trim($item['variant']);
         }
-        
-        if(isset($item['price'])) {
+
+        if (isset($item['price'])) {
             $variant['price'] = str_replace(',', '.', str_replace(' ', '', trim($item['price'])));
         }
         
-        if(isset($item['compare_price'])) {
-            $variant['compare_price'] = trim($item['compare_price']);
+        if (isset($item['compare_price'])) {
+            $variant['compare_price'] = str_replace(',', '.', str_replace(' ', '', trim($item['compare_price'])));
         }
         
-        if(isset($item['stock'])) {
-            if($item['stock'] == '') {
+        if (isset($item['stock'])) {
+            if ($item['stock'] == '') {
                 $variant['stock'] = null;
             } else {
                 $variant['stock'] = trim($item['stock']);
             }
         }
         
-        if(isset($item['sku'])) {
+        if (isset($item['sku'])) {
             $variant['sku'] = trim($item['sku']);
         }
         
@@ -251,67 +192,89 @@ class ImportAjax extends Okay {
             $variant['currency_id'] = intval($item['currency']);
         }
         if (isset($item['weight'])) {
-            $variant['weight'] = floatval($item['weight']);
+            $variant['weight'] = str_replace(',', '.', str_replace(' ', '', trim($item['weight'])));
+        }
+
+        if (isset($item['units'])) {
+            $variant['units'] = $item['units'];
         }
         
         // Если задан артикул варианта, найдем этот вариант и соответствующий товар
-        if(!empty($variant['sku'])) {
-            $this->db->query('SELECT v.id as variant_id, v.product_id FROM __variants v, __products p WHERE v.sku=? AND v.product_id = p.id LIMIT 1', $variant['sku']);
+        if (!empty($variant['sku'])) {
+            $this->db->query('SELECT v.id as variant_id, v.product_id, p.url FROM __variants v, __products p WHERE v.sku=? AND v.product_id = p.id LIMIT 1', $variant['sku']);
             $result = $this->db->result();
-            if($result) {
-                // и обновим товар
-                if(!empty($product)) {
-                    $this->products->update_product($result->product_id, $product);
-                }
-                // и вариант
-                if(!empty($variant)) {
-                    $this->variants->update_variant($result->variant_id, $variant);
-                }
-                
+            if ($result) {
                 $product_id = $result->product_id;
                 $variant_id = $result->variant_id;
-                // Обновлен
                 $imported_item->status = 'updated';
-            }
-        }
-        
-        // Если на прошлом шаге товар не нашелся, и задано хотя бы название товара
-        if((empty($product_id) || empty($variant_id)) && isset($item['name'])) {
-            if(!empty($variant['sku']) && empty($variant['name'])) {
-                $this->db->query('SELECT v.id as variant_id, p.id as product_id FROM __products p LEFT JOIN __variants v ON v.product_id=p.id WHERE v.sku=? LIMIT 1', $variant['sku']);
-            } elseif(isset($item['variant'])) {
-                $this->db->query('SELECT v.id as variant_id, p.id as product_id FROM __products p LEFT JOIN __variants v ON v.product_id=p.id AND v.name=? WHERE p.name=? LIMIT 1', $item['variant'], $item['name']);
-            } else {
-                $this->db->query('SELECT v.id as variant_id, p.id as product_id FROM __products p LEFT JOIN __variants v ON v.product_id=p.id WHERE p.name=? LIMIT 1', $item['name']);
-            }
-            
-            $r =  $this->db->result();
-            if($r) {
-                $product_id = $r->product_id;
-                $variant_id = $r->variant_id;
-            }
-            // Если вариант найден - обновляем,
-            if(!empty($variant_id)) {
-                $this->variants->update_variant($variant_id, $variant);
-                $this->products->update_product($product_id, $product);
-                $imported_item->status = 'updated';
-            }
-            // Иначе - добавляем
-            elseif(empty($variant_id)) {
-                if(empty($product_id)) {
-                    $product_id = $this->products->add_product($product);
+            } elseif (!empty($product['name'])) {
+                // если по артикулу не нашли попробуем по названию(если он задано)
+                $this->db->query('SELECT p.id as product_id, p.url FROM __products p WHERE p.name=? LIMIT 1', $product['name']);
+                $result = $this->db->result();
+                if ($result) {
+                    $product_id = $result->product_id;
+                    $imported_item->status = 'added';
+                } else {
+                    $imported_item->status = 'added';
                 }
-                
-                $this->db->query('SELECT max(v.position) as pos FROM __variants v WHERE v.product_id=? LIMIT 1', $product_id);
-                $pos =  $this->db->result('pos');
-                
-                $variant['position'] = $pos+1;
-                $variant['product_id'] = $product_id;
-                $variant_id = $this->variants->add_variant($variant);
+            }
+        } else {
+            // если нет артикула попробуем по названию товара
+            $this->db->query('SELECT v.id as variant_id, p.id as product_id, p.url
+                FROM __products p
+                LEFT JOIN __variants v ON v.product_id=p.id AND v.name=?
+                WHERE p.name=?
+                LIMIT 1', isset($variant['name']) ? $variant['name'] : "", $product['name']);
+            $result = $this->db->result();
+            if ($result) {
+                $product_id = $result->product_id;
+                $variant_id = $result->variant_id;
+                if (empty($variant_id)) {
+                    $imported_item->status = 'added';
+                } else {
+                    $imported_item->status = 'updated';
+                    unset($variant['sku']);
+                }
+            } else {
                 $imported_item->status = 'added';
             }
         }
-        
+
+        if (isset($imported_item->status)) {
+            if (!empty($product)) {
+                if (!isset($product['url']) && !empty($product['name']) && empty($result->url)) {
+                    $product['url'] = $this->translit($product['name']);
+                }
+                if (empty($product_id)) {
+                    $product_id = $this->products->add_product($product);
+                } else {
+                    $this->products->update_product($product_id, $product);
+                }
+            }
+
+            if (empty($variant_id) && !empty($product_id)) {
+                $this->db->query('SELECT max(v.position) as pos FROM __variants v WHERE v.product_id=? LIMIT 1', $product_id);
+                $pos =  $this->db->result('pos');
+                $variant['position'] = $pos+1;
+                $variant['product_id'] = $product_id;
+                if (!isset($variant['currency_id'])) {
+                    $currency = $this->money->get_currency();
+                    $variant['currency_id'] = $currency->id;
+                }
+
+                // нужно хотяб одно поле из переводов
+                $fields = $this->languages->get_fields('variants');
+                $tm = array_intersect(array_keys($variant), $fields);
+                if (empty($tm) && !empty($fields)) {
+                    $variant[$fields[0]] = "";
+                }
+
+                $variant_id = $this->variants->add_variant($variant);
+            } elseif (!empty($variant_id) && !empty($variant)) {
+                $this->variants->update_variant($variant_id, $variant);
+            }
+        }
+
         if(!empty($variant_id) && !empty($product_id)) {
             // Нужно вернуть обновленный товар
             $imported_item->variant = $this->variants->get_variant(intval($variant_id));
@@ -405,21 +368,6 @@ class ImportAjax extends Okay {
         $res = preg_replace('/[^\p{L}\p{Nd}\d-]/ui', '', $res);
         $res = strtolower($res);
         return $res;
-    }
-    
-    // Фозвращает внутреннее название колонки по названию колонки в файле
-    private function internal_column_name($name) {
-        $name = trim($name);
-        $name = str_replace('/', '', $name);
-        $name = str_replace('\/', '', $name);
-        foreach($this->columns_names as $i=>$names) {
-            foreach($names as $n) {
-                if(!empty($name) && preg_match("/^".preg_quote($name)."$/ui", $n)) {
-                    return $i;
-                }
-            }
-        }
-        return false;
     }
     
 }

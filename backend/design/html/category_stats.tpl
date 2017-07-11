@@ -124,7 +124,7 @@
                                         {if $category->price}<span class="text_dark">{$category->price} {$currency->sign}</span>{else}{$category->price} {$currency->sign}{/if}
                                     </div>
                                     <div class="okay_list_boding okay_list_categorystats_setting">
-                                        {if $category->amount}<span class="text_dark">{$category->amount} {$settings->units}</span>{else}{$category->amount} {$settings->units}{/if}
+                                        {if $category->amount}<span class="text_dark">{$category->amount} {$btr->reportstats_units}</span>{else}{$category->amount} {$btr->reportstats_units}{/if}
                                     </div>
                                 </div>
                             </div>
@@ -138,7 +138,7 @@
         <div class="row mt-1">
             <div class="col-lg-12 col-md-12">
                 <div class="text_dark text_500 text-xs-right mr-1 mt-h">
-                    <div class="h5">{$btr->general_total|escape} {$total_price} {$currency->sign|escape} <span class="text_grey">({$total_amount} {$settings->units|escape})</span></div>
+                    <div class="h5">{$btr->general_total|escape} {$total_price} {$currency->sign|escape} <span class="text_grey">({$total_amount} {$btr->reportstats_units|escape})</span></div>
                 </div>
             </div>
         </div>

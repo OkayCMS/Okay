@@ -47,20 +47,7 @@ if($sign !== $my_sign)
 
 if($amount != $okay->money->convert($order->total_price, $method->currency_id, false) || $amount<=0)
 	die("incorrect price\n");
-	
-////////////////////////////////////
-// Проверка наличия товара
-////////////////////////////////////
-$purchases = $okay->orders->get_purchases(array('order_id'=>intval($order->id)));
-foreach($purchases as $purchase)
-{
-	$variant = $okay->variants->get_variant(intval($purchase->variant_id));
-	if(empty($variant) || (!$variant->infinity && $variant->stock < $purchase->amount))
-	{
-		die("Нехватка товара $purchase->product_name $purchase->variant_name");
-	}
-}
-       
+
 // Установим статус оплачен
 $okay->orders->update_order(intval($order->id), array('paid'=>1));
 

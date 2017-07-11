@@ -1,13 +1,8 @@
 <?php
 
-require_once('api/Okay.php');
+require_once('api/Import.php');
 
-class ImportAdmin extends Okay {
-    
-    public $import_files_dir = 'backend/files/import/';
-    public $import_file = 'import.csv';
-    public $allowed_extensions = array('csv', 'txt');
-    private $locale = 'ru_RU.UTF-8';
+class ImportAdmin extends Import {
 
     /*Импорт товаров*/
     public function fetch() {
@@ -15,7 +10,7 @@ class ImportAdmin extends Okay {
         if(!is_writable($this->import_files_dir)) {
             $this->design->assign('message_error', 'no_permission');
         }
-        
+
         // Проверяем локаль
         $old_locale = setlocale(LC_ALL, 0);
         setlocale(LC_ALL, $this->locale);
@@ -24,21 +19,64 @@ class ImportAdmin extends Okay {
             $this->design->assign('locale', $this->locale);
         }
         setlocale(LC_ALL, $old_locale);
-        
-        if($this->request->method('post') && ($this->request->files("file"))) {
-            $uploaded_name = $this->request->files("file", "tmp_name");
-            $temp = tempnam($this->import_files_dir, 'temp_');
-            if(!move_uploaded_file($uploaded_name, $temp)) {
-                $this->design->assign('message_error', 'upload_error');
+
+        if($this->request->method('post')) {
+            if (($this->request->files("file"))) {
+                $uploaded_name = $this->request->files("file", "tmp_name");
+                $temp = tempnam($this->import_files_dir, 'temp_');
+                if (!move_uploaded_file($uploaded_name, $temp)) {
+                    $this->design->assign('message_error', 'upload_error');
+                }
+
+                if (!$this->convert_file($temp, $this->import_files_dir . $this->import_file)) {
+                    $this->design->assign('message_error', 'convert_error');
+                } else {
+                    $this->init_columns();
+                    $lc_columns = array_map("mb_strtolower", $this->columns);
+                    $duplicated_columns = array_diff_assoc($lc_columns, array_unique($lc_columns));
+                    $duplicated_columns = array_unique($duplicated_columns);
+                    $duplicated_columns_pairs = array();
+                    foreach ($this->columns_names as $columns) {
+                        $cnt = 0;
+                        foreach ($columns as $column) {
+                            if (in_array(mb_strtolower($column), $lc_columns) && ++$cnt > 1) {
+                                $duplicated_columns_pairs[] = $columns;
+                            }
+                        }
+                    }
+                    if (!empty($duplicated_columns)) {
+                        $this->design->assign('message_error', 'duplicated_columns');
+                        $this->design->assign('duplicated_columns', $duplicated_columns);
+                    } elseif (!empty($duplicated_columns_pairs)) {
+                        $this->design->assign('message_error', 'duplicated_columns_pairs');
+                        $this->design->assign('duplicated_columns_pairs', $duplicated_columns_pairs);
+                    } else {
+                        $this->design->assign('filename', $this->request->files("file", "name"));
+                        $this->assign_columns_info();
+                    }
+                }
+                unlink($temp);
+            } elseif ($this->request->post('import')) {
+                unset($_SESSION['csv_fields']);
+                $fields = $this->request->post('csv_fields');
+                if (empty($fields) || !in_array('sku', $fields) && !in_array('name', $fields)) {
+                    $this->design->assign('message_error', 'required_fields');
+                    $this->design->assign('filename', 1);
+                    $this->init_columns();
+                    $this->assign_columns_info($fields);
+                } else {
+                    $_SESSION['csv_fields'] = $fields;
+                    $this->design->assign('import', 1);
+                }
             }
-            
-            if(!$this->convert_file($temp, $this->import_files_dir.$this->import_file)) {
-                $this->design->assign('message_error', 'convert_error');
-            } else {
-                $this->design->assign('filename',  $this->request->files("file", "name"));
-            }
-            unlink($temp);
         }
+        $file = new stdClass();
+        if (file_exists($this->import_files_dir . $this->import_file)) {
+            $file->name = $this->import_file;
+            $file->date = date("d.m.Y H:i:s", filemtime($this->import_files_dir . $this->import_file));
+            $file->size = filesize($this->import_files_dir . $this->import_file);
+        }
+        $this->design->assign('file', $file);
         
         return $this->design->fetch('import.tpl');
     }
@@ -98,6 +136,39 @@ class ImportAdmin extends Okay {
             }
             return $t;
         }
+    }
+
+    private function assign_columns_info($fields = array()) {
+        $source_columns = $this->columns;
+        $this->design->assign('columns_names', array_keys($this->columns_names));
+
+        $this->db->query('SELECT f.name FROM __features f ORDER BY f.position');
+        $features = $this->db->results('name');
+        $this->design->assign('features', $features);
+
+        $this->init_internal_columns();
+        $internal_columns = array_keys($this->internal_columns_names);
+
+        if (empty($fields)) {
+            $selected = array();
+            foreach ($features as $f) {
+                $selected[$f] = $f;
+            }
+            $selected = array_merge($selected, $this->internal_columns_names);
+        } else {
+            $selected = $fields;
+        }
+
+        foreach ($source_columns as &$column) {
+            $c = new stdClass();
+            $c->name = $column;
+            $c->value = $selected[$c->name];
+            $c->is_feature = in_array($c->name, $features);
+            $c->is_exist = in_array($c->name, $internal_columns) || $c->is_feature;
+            $c->is_nf_selected = !$c->is_exist && $c->value==$c->name;
+            $column = $c;
+        }
+        $this->design->assign('source_columns', $source_columns);
     }
     
 }

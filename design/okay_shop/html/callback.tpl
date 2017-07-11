@@ -24,7 +24,7 @@
 
         {* Submit button *}
         <div class="center">
-            <input class="button" type="submit" name="callback" data-language="{$translate_id['callback_order']}" value="{$lang->callback_order}">
+            <input class="button" type="submit" name="callback" data-language="callback_order" value="{$lang->callback_order}">
         </div>
 
     </form>

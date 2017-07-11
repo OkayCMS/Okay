@@ -3,6 +3,8 @@
 require_once('api/Okay.php');
 
 class FeatureAdmin extends Okay {
+
+    private $forbidden_names = array();
     
     public function fetch() {
         $feature = new stdClass;
@@ -21,7 +23,7 @@ class FeatureAdmin extends Okay {
                 $feature->url = $this->translit_alpha($feature->name);
             }
             $feature_categories = $this->request->post('feature_categories');
-            
+
             // Не допустить одинаковые URL свойств.
             if(($c = $this->features->get_feature($feature->url)) && $c->id!=$feature->id) {
                 $this->design->assign('message_error', 'duplicate_url');
@@ -31,6 +33,9 @@ class FeatureAdmin extends Okay {
                 $this->design->assign('message_error', 'auto_name_id_exists');
             } elseif (!$this->features->check_auto_id($feature->id, $feature->auto_value_id, "auto_value_id")) {
                 $this->design->assign('message_error', 'auto_value_id_exists');
+            } elseif ($this->is_name_forbidden($feature->name)) {
+                $this->design->assign('forbidden_names', $this->forbidden_names);
+                $this->design->assign('message_error', 'forbidden_name');
             } else {
                 /*Добавление/Обновление свойства*/
                 if(empty($feature->id)) {
@@ -61,6 +66,19 @@ class FeatureAdmin extends Okay {
         $this->design->assign('feature', $feature);
         $this->design->assign('feature_categories', $feature_categories);
         return $this->body = $this->design->fetch('feature.tpl');
+    }
+
+    private function is_name_forbidden($name) {
+        $result = false;
+        foreach($this->import->columns_names as $i=>$names) {
+            $this->forbidden_names = array_merge($this->forbidden_names, $names);
+            foreach($names as $n) {
+                if(preg_match("~^".preg_quote($name)."$~ui", $n)) {
+                    $result = true;
+                }
+            }
+        }
+        return $result;
     }
     
 }

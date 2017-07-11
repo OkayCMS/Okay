@@ -5,11 +5,11 @@ class ImportAjax extends Okay {
     /*Соответствие полей в базе и имён колонок в файле*/
     private $columns_names = array(
         'name'=>             array('product', 'name', 'товар', 'название', 'наименование'),
+        'variant_id'=>       array('variant_id', 'ID варианта', 'variant id'),
         'variant'=>          array('variant', 'вариант'),
-        'variant_id'=>       array('variant_id', 'ID варианта'),
         'price'=>            array('price', 'цена'),
-        'currency'=>         array('currency_id', 'currency', 'ID валюты'),
-        'compare_price'=>    array('compare price', 'старая цена'),
+        'compare_price'=>    array('compare price', 'old price', 'старая цена'),
+        'currency'=>         array('currency_id', 'currency', 'currency id', 'ID валюты'),
         'meta_title'=>       array('meta title', 'заголовок страницы'),
         'meta_keywords'=>    array('meta keywords', 'ключевые слова'),
         'meta_description'=> array('meta description', 'описание страницы'),

@@ -86,20 +86,13 @@
 
                             <div class="okay_list_boding okay_list_features_tag">
                                 <div class="wrap_tags">
-                                {assign var="index" value=0}
-                                {function name=category_feature}
-                                    {foreach $category_features as $cat}
-                                        {if $index++ < 12}
-                                            {if in_array($cat->id, $feature->features_categories)}
-                                                <span class="tag tag-info">{$cat->name|escape}</span>
-                                            {/if}
-                                            {if $cat->subcategories}
-                                                {category_feature category_features=$cat->subcategories}
-                                            {/if}
+                                {if $feature->features_categories}
+                                    {foreach $feature->features_categories as $feature_cat}
+                                        {if $feature_cat@iteration <= 12 && isset($categories[$feature_cat])}
+                                           <span class="tag tag-info">{$categories[$feature_cat]->name|escape}</span>
                                         {/if}
                                     {/foreach}
-                                {/function}
-                                {category_feature category_features=$categories}
+                                {/if}
                                 </div>
                             </div>
                             <div class="okay_list_boding okay_list_status">

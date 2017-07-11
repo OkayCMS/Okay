@@ -4,25 +4,26 @@ class ExportAjax extends Okay {
 
     /*Поля(столбцы) для файла экспорта*/
     private $columns_names = array(
-        'category'=>         'Категория',
-        'name'=>             'Товар',
-        'price'=>            'Цена',
-        'currency'=>         'ID валюты',
-        'weight'=>           'Вес варианта',
-        'url'=>              'Адрес',
-        'visible'=>          'Видим',
-        'featured'=>         'Рекомендуемый',
-        'brand'=>            'Бренд',
-        'variant'=>          'Вариант',
-        'compare_price'=>    'Старая цена',
-        'sku'=>              'Артикул',
-        'stock'=>            'Склад',
-        'meta_title'=>       'Заголовок страницы',
-        'meta_keywords'=>    'Ключевые слова',
-        'meta_description'=> 'Описание страницы',
-        'annotation'=>       'Аннотация',
-        'description'=>             'Описание',
-        'images'=>           'Изображения'
+        'category'=>         'Category',
+        'brand'=>            'Brand',
+        'name'=>             'Product',
+        'variant'=>          'Variant',
+        'sku'=>              'SKU',
+        'price'=>            'Price',
+        'compare_price'=>    'Old price',
+        'currency'=>         'Currency ID',
+        'weight'=>           'Weight',
+        'stock'=>            'Stock',
+        'units'=>            'Units',
+        'visible'=>          'Visible',
+        'featured'=>         'Featured',
+        'meta_title'=>       'Meta title',
+        'meta_keywords'=>    'Meta keywords',
+        'meta_description'=> 'Meta description',
+        'annotation'=>       'Annotation',
+        'description'=>      'Description',
+        'images'=>           'Images',
+        'url'=>              'URL'
         
     );
     
@@ -135,6 +136,7 @@ class ExportAjax extends Okay {
                 $v['sku']             = $variant->sku;
                 $v['stock']           = $variant->stock;
                 $v['weight']           = $variant->weight;
+                $v['units']           = $variant->units;
                 $v['currency']        = $variant->currency_id;
                 if($variant->infinity) {
                     $v['stock']           = '';

@@ -7,73 +7,73 @@ class IndexAdmin extends Okay {
     /*Массив с меню сайта (из него автоматически формируется главное меню админки)*/
     private $left_menu = array(
         'left_catalog' => array(
-            'left_products_title'     => 'ProductsAdmin',
-            'left_categories_title'   => 'CategoriesAdmin',
-            'left_brands_title'       => 'BrandsAdmin',
-            'left_features_title'     => 'FeaturesAdmin',
+            'left_products_title'       => array('ProductsAdmin', 'ProductAdmin'),
+            'left_categories_title'     => array('CategoriesAdmin', 'CategoryAdmin'),
+            'left_brands_title'         => array('BrandsAdmin', 'BrandAdmin'),
+            'left_features_title'       => array('FeaturesAdmin', 'FeatureAdmin'),
         ),
         'left_orders' => array(
-            'left_orders_title'     => 'OrdersAdmin',
-            'left_orders_settings_title'     => 'OrderSettingsAdmin',
+            'left_orders_title'         => array('OrdersAdmin', 'OrderAdmin'),
+            'left_orders_settings_title'=> array('OrderSettingsAdmin'),
         ),
         'left_users' => array(
-            'left_users_title'      => 'UsersAdmin',
-            'left_groups_title'     => 'UserGroupsAdmin',
-            'left_coupons_title'    => 'CouponsAdmin',
-            'left_subscribe_title'  => 'SubscribeMailingAdmin',
+            'left_users_title'          => array('UsersAdmin', 'UserAdmin'),
+            'left_groups_title'         => array('UserGroupsAdmin', 'UserGroupAdmin'),
+            'left_coupons_title'        => array('CouponsAdmin'),
+            'left_subscribe_title'      => array('SubscribeMailingAdmin'),
         ),
         'left_pages' => array(
-            'left_pages_title'      => 'PagesAdmin',
+            'left_pages_title'          => array('PagesAdmin', 'PageAdmin'),
         ),
         'left_blog' => array(
-            'left_blog_title'       => 'BlogAdmin',
+            'left_blog_title'           => array('BlogAdmin', 'PostAdmin'),
         ),
         'left_comments' => array(
-            'left_comments_title'   => 'CommentsAdmin',
-            'left_feedbacks_title'   => 'FeedbacksAdmin',
-            'left_callbacks_title'   => 'CallbacksAdmin',
+            'left_comments_title'       => array('CommentsAdmin'),
+            'left_feedbacks_title'      => array('FeedbacksAdmin'),
+            'left_callbacks_title'      => array('CallbacksAdmin'),
         ),
         'left_auto' => array(
-            'left_import_title'     => 'ImportAdmin',
-            'left_export_title'     => 'ExportAdmin',
-            'left_multiimport_title'     => 'MultiImportAdmin',
-            'left_multiexport_title'     => 'MultiExportAdmin',
-            'left_log_title'     => 'ImportLogAdmin',
+            'left_import_title'         => array('ImportAdmin'),
+            'left_export_title'         => array('ExportAdmin'),
+            'left_multiimport_title'    => array('MultiImportAdmin'),
+            'left_multiexport_title'    => array('MultiExportAdmin'),
+            'left_log_title'            => array('ImportLogAdmin'),
         ),
         'left_stats' => array(
-            'left_stats_title'      => 'StatsAdmin',
-            'left_products_stat_title'      => 'ReportStatsAdmin',
-            'left_categories_stat_title'      => 'CategoryStatsAdmin',
+            'left_stats_title'          => array('StatsAdmin'),
+            'left_products_stat_title'  => array('ReportStatsAdmin'),
+            'left_categories_stat_title'=> array('CategoryStatsAdmin'),
         ),
         'left_seo' => array(
-            'left_robots_title'      => 'RobotsAdmin',
-            'left_setting_counter_title'   => 'SettingsCounterAdmin',
-            'left_metrika_title'      => 'YametrikaAdmin',
-            'left_seo_patterns_title'      => 'SeoPatternsAdmin',
+            'left_robots_title'         => array('RobotsAdmin'),
+            'left_setting_counter_title'=> array('SettingsCounterAdmin'),
+            'left_metrika_title'        => array('YametrikaAdmin'),
+            'left_seo_patterns_title'   => array('SeoPatternsAdmin'),
         ),
         'left_design' => array(
-            'left_theme_title'      => 'ThemeAdmin',
-            'left_template_title'      => 'TemplatesAdmin',
-            'left_style_title'      => 'StylesAdmin',
-            'left_script_title'      => 'ScriptsAdmin',
-            'left_images_title'      => 'ImagesAdmin',
+            'left_theme_title'          => array('ThemeAdmin'),
+            'left_template_title'       => array('TemplatesAdmin'),
+            'left_style_title'          => array('StylesAdmin'),
+            'left_script_title'         => array('ScriptsAdmin'),
+            'left_images_title'         => array('ImagesAdmin'),
         ),
         'left_banners' => array(
-            'left_banners_title' => 'BannersAdmin',
-            'left_banners_images_title' => 'BannersImagesAdmin',
+            'left_banners_title'        => array('BannersAdmin', 'BannerAdmin'),
+            'left_banners_images_title' => array('BannersImagesAdmin', 'BannersImageAdmin'),
         ),
         'left_settings' => array(
-            'left_setting_general_title'   => 'SettingsGeneralAdmin',
-            'left_setting_notify_title'   => 'SettingsNotifyAdmin',
-            'left_setting_catalog_title'   => 'SettingsCatalogAdmin',
-            'left_setting_feed_title'   => 'SettingsFeedAdmin',
-            'left_currency_title'   => 'CurrencyAdmin',
-            'left_delivery_title'   => 'DeliveriesAdmin',
-            'left_payment_title'    => 'PaymentMethodsAdmin',
-            'left_managers_title'   => 'ManagersAdmin',
-            'left_languages_title'  => 'LanguagesAdmin',
-            'left_translations_title'   => 'TranslationsAdmin',
-            'left_system_title'   => 'SystemAdmin'
+            'left_setting_general_title'=> array('SettingsGeneralAdmin'),
+            'left_setting_notify_title' => array('SettingsNotifyAdmin'),
+            'left_setting_catalog_title'=> array('SettingsCatalogAdmin'),
+            'left_setting_feed_title'   => array('SettingsFeedAdmin'),
+            'left_currency_title'       => array('CurrencyAdmin'),
+            'left_delivery_title'       => array('DeliveriesAdmin', 'DeliveryAdmin'),
+            'left_payment_title'        => array('PaymentMethodsAdmin', 'PaymentMethodAdmin'),
+            'left_managers_title'       => array('ManagersAdmin', 'ManagerAdmin'),
+            'left_languages_title'      => array('LanguagesAdmin', 'LanguageAdmin'),
+            'left_translations_title'   => array('TranslationsAdmin', 'TranslationAdmin'),
+            'left_system_title'         => array('SystemAdmin')
         ),
     );
 
@@ -166,6 +166,7 @@ class IndexAdmin extends Okay {
         $this->manager = $this->managers->get_manager();
         $this->design->assign('mаnаgеr', $this->manager);
         if (!$this->manager && $module!='AuthAdmin') {
+            $_SESSION['before_auth_url'] = $this->config->protocol.'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
             header('location: '.$this->config->root_url.'/backend/index.php?module=AuthAdmin');
             exit();
         } elseif ($this->manager && $module == 'AuthAdmin') {
@@ -249,20 +250,25 @@ class IndexAdmin extends Okay {
 
         /*Формирование меню*/
         if($module != "AuthAdmin") {
-            foreach ($this->left_menu as $key => $val) {
-                foreach ($val as $ind => $menu_items) {
-                    if (!in_array($this->modules_permissions[$menu_items], $this->manager->permissions)) {
-                        unset($this->left_menu[$key][$ind]);
+            $menu_selected = '';
+            foreach ($this->left_menu as $section => &$items) {
+                foreach ($items as $title => &$modules) {
+                    if (in_array($module, $modules)) {
+                        $menu_selected = $title;
+                    }
+                    $modules = reset($modules);
+                    if (!in_array($this->modules_permissions[$modules], $this->manager->permissions)) {
+                        unset($this->left_menu[$section][$title]);
                     }
                 }
-                if (count($this->left_menu[$key]) == 0) {
-                    unset($this->left_menu[$key]);
-                } elseif (count($this->left_menu[$key]) == 1) {
-                    $this->left_menu[$key] = reset($this->left_menu[$key]);
+                if (count($this->left_menu[$section]) == 0) {
+                    unset($this->left_menu[$section]);
                 }
-
+                unset($modules);
             }
+            unset($items);
             $this->design->assign('left_menu', $this->left_menu);
+            $this->design->assign('menu_selected', $menu_selected);
 
             $support_info = $this->supportinfo->get_info();
             if (empty($support_info->public_key) && $support_info->is_auto && !in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1', '0:0:0:0:0:0:0:1'))) {
@@ -309,7 +315,6 @@ class IndexAdmin extends Okay {
             $this->design->assign("content", $content);
         } else {
             $this->design->assign("content", false);
-            $this->design->assign('menu_selected', '');
         }
 
         $all_status = $this->orderstatus->get_status();

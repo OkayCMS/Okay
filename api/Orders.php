@@ -391,6 +391,10 @@ class Orders extends Okay {
         if(!isset($purchase->amount)) {
             $purchase->amount = 1;
         }
+
+        if(!isset($purchase->units) && !empty($variant)) {
+            $purchase->units = $variant->units;
+        }
         
         // Если заказ закрыт, нужно обновить склад при добавлении покупки
         if($order->closed && !empty($purchase->amount) && !empty($variant->id)) {

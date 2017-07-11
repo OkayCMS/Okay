@@ -73,6 +73,7 @@
     
     foreach($variants as $variant) {
         if(isset($products[$variant->product_id])) {
+            $variant->units = $variant->units ? $variant->units : $okay->settings->units;
             $products[$variant->product_id]->variants[] = $variant;
             if ($variant->currency_id && ($currency = $okay->money->get_currency(intval($variant->currency_id)))) {
                 if ($currency->rate_from != $currency->rate_to) {

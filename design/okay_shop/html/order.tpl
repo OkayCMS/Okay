@@ -37,7 +37,7 @@
                 <i>{$purchase->variant_name|escape}</i>
                 {if $purchase->variant->stock == 0}<span class="preorder_label">{$lang->product_pre_order}</span>{/if}
                 {if $order->paid && $purchase->variant->attachment}
-                    <a class="button" href="{$lang_link}order/{$order->url}/{$purchase->variant->attachment}" data-language="{$translate_id['order_download_file']}">{$lang->order_download_file}</a>
+                    <a class="button" href="{$lang_link}order/{$order->url}/{$purchase->variant->attachment}" data-language="order_download_file">{$lang->order_download_file}</a>
                 {/if}
             </td>
 
@@ -81,24 +81,11 @@
     {/if}
 
     {* Delivery price *}
-    {if !$order->separate_delivery && $order->delivery_price > 0}
+    {if $order->separate_delivery || !$order->separate_delivery && $order->delivery_price > 0}
         <tr>
             <td></td>
             <td class="text_left">
-                <span data-language="order_delivery">{$lang->order_delivery}</span>
-            </td>
-            <td></td>
-            <td></td>
-            <td>{$order->delivery_price|convert} {$currency->sign|escape}</td>
-        </tr>
-    {/if}
-
-    {* Delivery price *}
-    {if $order->separate_delivery}
-        <tr>
-            <td></td>
-            <td class="text_left">
-                <span data-language="order_delivery">{$lang->order_delivery}</span>
+                <span>{$delivery->name|escape}</span>
             </td>
             <td></td>
             <td></td>
@@ -176,6 +163,14 @@
                             <span data-language="order_comment">{$lang->order_comment}</span>
                         </td>
                         <td>{$order->comment|escape|nl2br}</td>
+                    </tr>
+                {/if}
+                {if $delivery}
+                    <tr>
+                        <td>
+                            <span data-language="order_delivery">{$lang->order_delivery}</span>
+                        </td>
+                        <td>{$delivery->name|escape}</td>
                     </tr>
                 {/if}
             </table>

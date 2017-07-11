@@ -207,7 +207,7 @@
             </td>
             <td class="align_right">            
                 <span class=view_purchase>
-                    {$purchase->amount} {$settings->units|escape}
+                    {$purchase->amount} {if $purchase->units}{$purchase->units|escape}{else}{$settings->units|escape}{/if}
                 </span>
             </td>
             <td class="align_right">

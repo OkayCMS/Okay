@@ -49,7 +49,7 @@
                                     </div>
                                     <div class="row mb-1">
                                         <div class="col-xs-6 float-xs-right text-xs-right">
-                                            <button type="submit" value="login" class="btn btn-primary px-2" tabindex="3">Login</button>
+                                            <button type="submit" value="login" class="btn btn-primary px-2" tabindex="3">Вход</button>
                                         </div>
                                     </div>
                                 {else}
@@ -68,7 +68,7 @@
                                             <a class="btn btn-link px-0 fn_recovery" href="">Напомнить пароль</a>
                                         </div>
                                         <div class="col-xs-6 float-xs-right text-xs-right">
-                                            <button type="submit" value="login" class="btn btn-primary px-2" tabindex="3">Login</button>
+                                            <button type="submit" value="login" class="btn btn-primary px-2" tabindex="3">Вход</button>
                                         </div>
                                     </div>
                                 {/if}

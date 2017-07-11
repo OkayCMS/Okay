@@ -88,7 +88,7 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="heading_label">{$btr->settings_notify_ym|escape}</div>
+                            <div class="heading_label">{$btr->settings_notify_ym_webmaster|escape}</div>
                             <div class="mb-1">
                                 <input type="text" name="y_webmaster" value="{$settings->y_webmaster}" class="form-control">
                             </div>

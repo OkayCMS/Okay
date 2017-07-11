@@ -129,7 +129,7 @@
                                 <div class="okay_list_heading okay_list_photo">{$btr->general_photo|escape}</div>
                                 <div class="okay_list_heading okay_list_order_name">{$btr->order_name_option|escape} </div>
                                 <div class="okay_list_heading okay_list_price">{$btr->general_price|escape} {$currency->sign|escape}</div>
-                                <div class="okay_list_heading okay_list_count">{$btr->order_qty|escape} {$settings->units|escape}
+                                <div class="okay_list_heading okay_list_count">{$btr->order_qty|escape}
                                 </div>
                                 <div class="okay_list_heading okay_list_order_amount_price">{$btr->general_sales_amount}</div>
                             </div>
@@ -170,7 +170,7 @@
                                                     <div class="hidden-lg-up mt-q">
                                                         <span class="text_primary text_600">{$purchase->price}</span>
                                                         <span class="hidden-md-up text_500">
-                                                        {$purchase->amount} {$settings->units|escape}</span>
+                                                        {$purchase->amount} {if $purchase->units}{$purchase->units|escape}{else}{$settings->units|escape}{/if}</span>
                                                     </div>
                                                 </div>
 
@@ -180,7 +180,7 @@
                                                     <div class="boxes_inline">
                                                         <select name="purchases[variant_id][{$purchase->id}]" class="selectpicker {if $purchase->product->variants|count == 1}hidden{/if} fn_purchase_variant">
                                                             {foreach $purchase->product->variants as $v}
-                                                                <option data-price="{$v->price|convert}" data-amount="{$v->stock}" value="{$v->id}" {if $v->id == $purchase->variant_id}selected{/if} >
+                                                                <option data-price="{$v->price}" data-units="{$v->units|escape}" data-amount="{$v->stock}" value="{$v->id}" {if $v->id == $purchase->variant_id}selected{/if} >
                                                                     {if $v->name}
                                                                         {$v->name|escape}
                                                                     {else}
@@ -201,8 +201,8 @@
                                             <div class="okay_list_boding okay_list_count">
                                                 <div class="input-group">
                                                     <input class="form-control fn_purchase_amount" type="text" name="purchases[amount][{$purchase->id}]" value="{$purchase->amount}"/>
-                                                    <span class="input-group-addon p-0">
-                                                         {$settings->units|escape}
+                                                    <span class="input-group-addon p-0 fn_purchase_units">
+                                                         {if $purchase->units}{$purchase->units|escape}{else}{$settings->units|escape}{/if}
                                                     </span>
                                                 </div>
                                             </div>
@@ -250,8 +250,7 @@
                                     <div class="okay_list_boding okay_list_count">
                                         <div class="input-group">
                                             <input class="form-control fn_purchase_amount" type="text" name="purchases[amount][]" value="1"/>
-                                            <span class="input-group-addon p-0">
-                                                 {$settings->units|escape}
+                                            <span class="input-group-addon p-0 fn_purchase_units">
                                             </span>
                                         </div>
                                     </div>
@@ -599,7 +598,7 @@ $(function() {
             var variants_select = new_item.find("select.fn_new_variant");
 
             for(var i in suggestion.data.variants) {
-                variants_select.append("<option value='"+suggestion.data.variants[i].id+"' data-price='"+suggestion.data.variants[i].price+"' data-amount='"+suggestion.data.variants[i].stock+"'>"+suggestion.data.variants[i].name+"</option>");
+                variants_select.append("<option value='"+suggestion.data.variants[i].id+"' data-price='"+suggestion.data.variants[i].price+"' data-amount='"+suggestion.data.variants[i].stock+"' data-units='"+suggestion.data.variants[i].units+"'>"+suggestion.data.variants[i].name+"</option>");
             }
 
             if(suggestion.data.variants.length> 1 || suggestion.data.variants[0].name != '') {
@@ -637,7 +636,9 @@ $(function() {
     function change_variant(element) {
         var price = element.find('option:selected').data('price');
         var amount = element.find('option:selected').data('amount');
+        var units = element.find('option:selected').data('units');
         element.closest('.fn_row').find('input.fn_purchase_price').val(price);
+        element.closest('.fn_row').find('.fn_purchase_units').text(units);
         var amount_input = element.closest('.fn_row').find('input.fn_purchase_amount');
         amount_input.val('1');
         amount_input.data('max',amount);

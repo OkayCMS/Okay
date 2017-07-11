@@ -240,3 +240,5 @@ $lang['email_order_your_status'] = "Сообщаем о состоянии Ва�
 $lang['receipt_name'] = "Ф.И.О плательщика";
 $lang['receipt_address'] = "Адрес плательщика";
 $lang['product_brand_name'] = "Бренд:";
+$lang['order_delivery'] = "Доставка";
+$lang['order_download_file'] = "Скачать";

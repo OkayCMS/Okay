@@ -138,7 +138,7 @@
     {*Параметры элемента*}
     <div class="row">
         <div class="col-lg-12 col-md-12">
-            <div class="boxed fn_toggle_wrap min_height_230px">
+            <div class="boxed fn_toggle_wrap min_height_210px">
                 <div class="heading_box">
                     {$btr->settings_general_capcha|escape}
                     <div class="toggle_arrow_wrap fn_toggle_card text-primary">
@@ -197,6 +197,36 @@
                                     <span>{$btr->settings_general_contact_form|escape}</span>
                                     <label class="switch switch-default">
                                         <input class="switch-input" name="captcha_feedback" value='1' type="checkbox" {if $settings->captcha_feedback}checked=""{/if}/>
+                                        <span class="switch-label"></span>
+                                        <span class="switch-handle"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="boxed fn_toggle_wrap min_height_210px">
+                <div class="heading_box">
+                    {$btr->settings_general_gathering_data}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
+                    </div>
+                </div>
+                <div class="toggle_body_wrap on fn_card">
+                    <div class="permission_block">
+                        <div class="permission_boxes row">
+                            <div class="col-xl-12 col-lg-12 col-md-12">
+                                <div class="permission_box">
+                                    <span>{$btr->settings_general_gather_enabled}</span>
+                                    <label class="switch switch-default">
+                                        <input class="switch-input" name="gather_enabled" value='1' type="checkbox" {if $settings->gather_enabled}checked=""{/if}/>
                                         <span class="switch-label"></span>
                                         <span class="switch-handle"></span>
                                     </label>

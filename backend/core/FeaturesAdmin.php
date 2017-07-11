@@ -59,7 +59,7 @@ class FeaturesAdmin extends Okay {
             }
         }
         
-        $categories = $this->categories->get_categories_tree();
+        $categories = $this->categories->get_categories();
         $category = null;
         
         $filter = array();
@@ -71,8 +71,7 @@ class FeaturesAdmin extends Okay {
         
         $features = $this->features->get_features($filter);
         foreach ($features as $f){
-            $cats = $this->features->get_feature_categories($f->id);
-            $f->features_categories = $cats;
+            $f->features_categories = $this->features->get_feature_categories($f->id);
         }
         $this->design->assign('categories', $categories);
         $this->design->assign('category', $category);

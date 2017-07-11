@@ -184,7 +184,7 @@
                                                                     </div>
                                                                 {/if}
                                                             </td>
-                                                            <td style=";padding-right:10px;white-space:nowrap" valign="middle">{$purchase->amount} {$settings->units}</td>
+                                                            <td style=";padding-right:10px;white-space:nowrap" valign="middle">{$purchase->amount} {if $purchase->units}{$purchase->units|escape}{else}{$settings->units}{/if}</td>
                                                             <td align="right" nowrap="nowrap" valign="middle">
                                                                 <b>{$purchase->price|convert:$currency->id}&nbsp;{$currency->sign}</b>
                                                             </td>

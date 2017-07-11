@@ -41,6 +41,7 @@ class Okay {
         ,'orderstatus'    => 'OrderStatus'
         ,'supportinfo'=> 'SupportInfo'
         ,'support'   => 'Support'
+        ,'import'    => 'Import'
     );
     
     private static $objects = array();

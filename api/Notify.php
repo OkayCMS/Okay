@@ -1,6 +1,40 @@
 <?php
 
+require_once(dirname(dirname(__FILE__)).'/lib/PHPMailer/class.phpmailer.php');
+require_once(dirname(dirname(__FILE__)).'/lib/PHPMailer/class.smtp.php');
+
 class Notify extends Okay {
+
+    /* SMTP отправка емейла*/
+    public function SMTP($to, $subject, $message) {
+        $mail = new PHPMailer();
+        $mail->IsSMTP(); // telling the class to use SMTP
+        $mail->Host       = $this->settings->smtp_server;
+        $mail->SMTPDebug  = 0;
+        $mail->SMTPAuth   = true;
+        $mail->Port       = $this->settings->smtp_port;
+        $mail->Username   = $this->settings->smtp_user;
+        $mail->Password   = $this->settings->smtp_pass;
+        $mail->SetFrom($this->settings->smtp_user, $this->settings->notify_from_name);
+        $mail->AddReplyTo($this->settings->smtp_user, $this->settings->notify_from_name);
+        $mail->Subject    = $subject;
+
+        $mail->MsgHTML($message);
+        $mail->addCustomHeader("MIME-Version: 1.0\n");
+
+        $recipients = explode(',',$to);
+        if (!empty($recipients)) {
+            foreach ($recipients as $i=>$r) {
+                $mail->AddAddress($r);
+            }
+        } else {
+            $mail->AddAddress($to);
+        }
+
+        if (!$mail->Send()) {
+            //file_put_contents('error_log.txt',$mail->ErrorInfo);
+        }
+    }
 
     /*Отправка емейла*/
     public function email($to, $subject, $message, $from = '', $reply_to = '') {
@@ -12,8 +46,12 @@ class Notify extends Okay {
         }
         
         $subject = "=?utf-8?B?".base64_encode($subject)."?=";
-        
-        mail($to, $subject, $message, $headers);
+
+        if ($this->settings->use_smtp) {
+            $this->SMTP($to, $subject, $message);
+        } else {
+            mail($to, $subject, $message, $headers);
+        }
     }
 
     /*Отправка емейла клиенту о заказе*/
@@ -234,6 +272,9 @@ class Notify extends Okay {
             $comment->product = $parent_comment->product = $this->products->get_product(intval($comment->object_id));
         }
         if($comment->type == 'blog') {
+            $comment->post = $parent_comment->post = $this->blog->get_post(intval($comment->object_id));
+        }
+        if($comment->type == 'news') {
             $comment->post = $parent_comment->post = $this->blog->get_post(intval($comment->object_id));
         }
 

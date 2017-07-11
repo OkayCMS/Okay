@@ -202,7 +202,7 @@
                     {* Share buttons *}
                     <div class="product_share">
                         <div class="share_text">
-                            <span data-language="{$translate_id['product_share']}">{$lang->product_share}</span>
+                            <span data-language="product_share">{$lang->product_share}</span>
                         </div>
                         <div class="fn_share jssocials"></div>
                     </div>
@@ -390,7 +390,7 @@
             <div class="blog_item no_padding col-sm-6 col-lg-4 col-xl-3">
 
                 {* The post image *}
-                <a class="blog_image" href="{$lang_link}blog/{$r_p->url}">
+                <a class="blog_image" href="{$lang_link}{$r_p->type_post}/{$r_p->url}">
                     {if $r_p->image}
                         <img class="blog_img" src="{$r_p->image|resize:360:360:false:$config->resized_blog_dir}" />
                     {/if}
@@ -399,7 +399,7 @@
                 <div class="blog_content">
                     {* The post name *}
                     <div class="h5">
-                        <a href="{$lang_link}blog/{$r_p->url}" data-post="{$r_p->id}">{$r_p->name|escape}</a>
+                        <a href="{$lang_link}{$r_p->type_post}/{$r_p->url}" data-post="{$r_p->id}">{$r_p->name|escape}</a>
                     </div>
 
                     {* The post date *}

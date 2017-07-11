@@ -2,28 +2,6 @@
 {* The canonical address of the page *}
 {$canonical="" scope=parent}
 
-{* Banners *}
-{if $is_mobile === false && $is_tablet === false}
-    {get_banner var=banner_group1 group='group1'}
-    {if $banner_group1->items}
-        <div class="fn_banner_group1 banners container">
-            {foreach $banner_group1->items as $bi}
-                <div>
-                    {if $bi->url}
-                    <a href="{$bi->url}" target="_blank">
-                    {/if}
-                        {if $bi->image}
-                            <img src="{$config->banners_images_dir}{$bi->image}" alt="{$bi->alt}" title="{$bi->title}"/>
-                        {/if}
-                    {if $bi->url}
-                    </a>
-                    {/if}
-                </div>
-            {/foreach}
-        </div>
-    {/if}
-{/if}
-
 <div class="container">
     {if $is_mobile === false && $is_tablet === false}
         <div class="advantages">

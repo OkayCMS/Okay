@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html {if $language->label}lang="{$language->href_lang|escape}"{/if} prefix="og: http://ogp.me/ns#">
+<html {if $language->href_lang}lang="{$language->href_lang|escape}"{/if} prefix="og: http://ogp.me/ns#">
 <head>
     {* Full base address *}
     <base href="{$config->root_url}/">
@@ -45,6 +45,27 @@
         <meta name='yandex-verification' content="{$settings->y_webmaster}">
     {/if}
 
+    {* rel prev next для блога *}
+    {if $smarty.get.module == "BlogView" && $total_pages_num > 1}
+        {if $current_page_num == $total_pages_num}
+            {if $current_page_num == 2}
+                <link rel="prev" href="{url page=null}"/>
+            {else}
+                <link rel="prev" href="{url page=$current_page_num-1}"/>
+            {/if}
+        {elseif $current_page_num == 1}
+            <link rel="next" href="{url page=2}"/>
+        {else}
+            {if $current_page_num == 2}
+                <link rel="prev" href="{url page=null}"/>
+            {else}
+                <link rel="prev" href="{url page=$current_page_num-1}"/>
+            {/if}
+            <link rel="next" href="{url page=$current_page_num+1}"/>
+        {/if}
+    {/if}
+
+    {* rel prev next для каталога товаров *}
     {$rel_prev_next}
 
     {* Product image/Post image for social networks *}
@@ -319,6 +340,27 @@
 
 {* Тело сайта *}
 <div id="fn_content" class="main">
+    {* Banners *}
+    {if $is_mobile === false && $is_tablet === false}
+        {get_banner var=banner_group1 group='group1'}
+        {if $banner_group1->items}
+            <div class="fn_banner_group1 banners container">
+                {foreach $banner_group1->items as $bi}
+                    <div>
+                        {if $bi->url}
+                        <a href="{$bi->url}" target="_blank">
+                            {/if}
+                            {if $bi->image}
+                                <img src="{$config->banners_images_dir}{$bi->image}" alt="{$bi->alt}" title="{$bi->title}"/>
+                            {/if}
+                            {if $bi->url}
+                        </a>
+                        {/if}
+                    </div>
+                {/foreach}
+            </div>
+        {/if}
+    {/if}
     {if $module == "MainView"}
         {$content}
     {else}

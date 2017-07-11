@@ -59,6 +59,9 @@
                         {$btr->feature_auto_name_id_exists|escape}
                     {elseif $message_error=='auto_value_id_exists'}
                         {$btr->feature_auto_value_id_exists|escape}
+                    {elseif $message_error == 'forbidden_name'}
+                        {$btr->feature_forbidden_name|escape}:<BR>
+                        {implode(", ", $forbidden_names)}
                     {else}
                         {$message_error|escape}
                     {/if}

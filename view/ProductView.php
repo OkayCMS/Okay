@@ -24,7 +24,7 @@ class ProductView extends View {
         $product->images = $this->products->get_images(array('product_id'=>$product->id));
         $product->image = reset($product->images);
         foreach ($product->images as $image) {
-            if(substr($image->filename, 0, 7) == 'http://') {
+            if (preg_match("~^https?://~", $image->filename)) {
                 if($filename = $this->image->download_image($image->filename)) {
                     $image->filename = $filename;
                 }

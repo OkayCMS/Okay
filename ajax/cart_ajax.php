@@ -68,11 +68,11 @@
                 $okay->cart->apply_coupon($coupon_code);
             }
         }
-
         if($okay->coupons->count_coupons(array('valid'=>1))>0) {
             $okay->design->assign('coupon_request', true);
         }
-        
+        $cart = $okay->cart->get_cart();
+        $okay->design->assign('cart', $cart);
         $result = array('result'=>1);
         $result['cart_informer'] = $okay->design->fetch('cart_informer.tpl');
         $result['cart_purchases'] = $okay->design->fetch('cart_purchases.tpl');

@@ -276,7 +276,7 @@
                                                                     {if $purchase->variant_name}({$purchase->variant_name|escape}){/if}
                                                                 </div>
                                                                 <div class="purchases_bodyng purchases_table_orders_price">{$purchase->price|convert} {$currency->sign|escape}</div>
-                                                                <div class="purchases_bodyng purchases_table_orders_unit"> {$purchase->amount}{$settings->units|escape}</div>
+                                                                <div class="purchases_bodyng purchases_table_orders_unit"> {$purchase->amount}{if $purchase->units}{$purchase->units|escape}{else}{$settings->units|escape}{/if}</div>
                                                                 <div class="purchases_bodyng purchases_table_orders_total"> {($purchase->amount*$purchase->price)|convert} {$currency->sign|escape}</div>
 
                                                              </div>
@@ -330,6 +330,11 @@
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm 12 txt_center">
+                {include file='pagination.tpl'}
             </div>
         </div>
     {else}

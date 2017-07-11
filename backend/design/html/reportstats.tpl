@@ -34,7 +34,6 @@
                                                    {else}
                                                    <input type="text" class="fn_from_date form-control" name="date_from" value="{$date_from}" autocomplete="off">
                                                {/if}
-                                               <input class="fn_from_date form-control" name="date_from" value="{$date_from}" autocomplete="off">
                                                <div class="input-group-addon">
                                                    <i class="fa fa-calendar"></i>
                                                </div>
@@ -153,7 +152,7 @@
                             </div>
 
                             <div class="okay_list_reportstats_setting">
-                                {$purchase->amount} {$settings->units}
+                                {$purchase->amount} {if $purchase->units}{$purchase->units|escape}{else}{$settings->units}{/if}
                             </div>
                         </div>
                     </div>
@@ -163,7 +162,7 @@
         <div class="row mt-1">
             <div class="col-lg-12 col-md-12">
                 <div class="text_dark text_500 text-xs-right mr-1 mt-h">
-                    <div class="h5">{$btr->general_total|escape} {$total_summ|string_format:'%.2f'} {$currency->sign|escape}  <span class="text_grey">({$total_amount}  {$settings->units})</span></div>
+                    <div class="h5">{$btr->general_total|escape} {$total_summ|string_format:'%.2f'} {$currency->sign|escape}  <span class="text_grey">({$total_amount}  {$btr->reportstats_units})</span></div>
                 </div>
             </div>
         </div>

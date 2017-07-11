@@ -2,7 +2,8 @@
 
 require_once(dirname(__FILE__).'/'.'Okay.php');
 require_once(dirname(dirname(__FILE__)).'/Smarty/libs/Smarty.class.php');
-require_once 'Mobile_Detect.php';
+require_once(dirname(dirname(__FILE__)).'/lib/Mobile_Detect.php');
+
 class Design extends Okay {
     
     public $smarty;
@@ -99,8 +100,8 @@ class Design extends Okay {
             $image_sizes[] = $size;
             $this->settings->image_sizes = implode('|', $image_sizes);
         }
-        
-        if(substr($resized_filename_encoded, 0, 7) == 'http://') {
+
+        if (preg_match("~^https?://~", $resized_filename_encoded)) {
             $resized_filename_encoded = rawurlencode($resized_filename_encoded);
         }
         

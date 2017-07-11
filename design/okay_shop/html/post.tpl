@@ -23,7 +23,7 @@
 
     {* Social share *}
     <div class="post_share">
-        <div class="ya-share2" data-services="vkontakte,facebook,twitter,viber"></div>
+        <div class="fn_share jssocials"></div>
     </div>
 
     {* Previous/Next posts *}

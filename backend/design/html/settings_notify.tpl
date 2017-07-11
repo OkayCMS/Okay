@@ -82,6 +82,48 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-md-6">
+                            <div class="heading_label">{$btr->settings_notify_use_smtp}</div>
+                            <div class="mb-1">
+                                <select name="use_smtp" class="selectpicker">
+                                    <option value="0" {if $settings->use_smtp=='0'}selected{/if}>
+                                        {$btr->settings_notify_turn_off}
+                                    </option>
+                                    <option value="1" {if $settings->use_smtp=='1'}selected{/if}>
+                                        {$btr->settings_notify_turn_on}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="heading_label">{$btr->settings_notify_smtp_server}</div>
+                            <div class="mb-1">
+                                <input name="smtp_server" class="form-control" type="text" value="{$settings->smtp_server|escape}" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="heading_label">{$btr->settings_notify_smtp_port}</div>
+                            <div class="mb-1">
+                                <input name="smtp_port" class="form-control" type="text" value="{$settings->smtp_port|escape}" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="heading_label">{$btr->settings_notify_smtp_user}</div>
+                            <div class="mb-1">
+                                <input name="smtp_user" class="form-control" type="text" value="{$settings->smtp_user|escape}" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="heading_label">{$btr->settings_notify_smtp_pass}</div>
+                            <div class="mb-1">
+                                <input name="smtp_pass" class="form-control" type="password" value="{$settings->smtp_pass|escape}" />
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 ">

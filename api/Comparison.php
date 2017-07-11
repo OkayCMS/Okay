@@ -10,12 +10,12 @@ class Comparison extends Okay {
         $comparison->products = array();
         $comparison->features = array();
         $comparison->ids = array();
-        
-        if(!empty($_SESSION['comparison'])) {
-            $session_items = $_SESSION['comparison'];
+
+        $items = !empty($_COOKIE['comparison']) ? unserialize($_COOKIE['comparison']) : array();
+        if(!empty($items) && is_array($items)) {
             $products = array();
-            foreach($session_items as $v) {
-                $products[intval($v)]=$this->products->get_product(intval($v));
+            foreach ($this->products->get_products(array('id'=>$items, 'visible'=>1)) as $p) {
+                $products[$p->id] = $p;
             }
             if(!empty($products)) {
                 $products_ids = array_keys($products);
@@ -86,28 +86,36 @@ class Comparison extends Okay {
 
     /*Добавление товара в список сравнения*/
     public function add_item($product_id) {
-        if(is_array($_SESSION['comparison']) && !in_array($product_id,$_SESSION['comparison'])) {
-            $_SESSION['comparison'][] = $product_id;
-            if($this->settings->comparison_count && $this->settings->comparison_count < count($_SESSION['comparison'])) {
-                array_shift($_SESSION['comparison']);
+        $items = !empty($_COOKIE['comparison']) ? unserialize($_COOKIE['comparison']) : array();
+        $items = $items && is_array($items) ? $items : array();
+        if (!in_array($product_id, $items)) {
+            $items[] = $product_id;
+            if ($this->settings->comparison_count && $this->settings->comparison_count < count($items)) {
+                array_shift($items);
             }
-        } else {
-            $_SESSION['comparison'][] = $product_id;
         }
+        $_COOKIE['comparison'] = serialize($items);
+        setcookie('comparison', $_COOKIE['comparison'], time()+30*24*3600, '/');
     }
 
     /*Удаление товара из списка сравнения*/
     public function delete_item($product_id) {
-        foreach($_SESSION['comparison'] as $k=>$id) {
-            if($id == $product_id) {
-                unset($_SESSION['comparison'][$k]);
-            }
+        $items = !empty($_COOKIE['comparison']) ? unserialize($_COOKIE['comparison']) : array();
+        if (!is_array($items)) {
+            return;
         }
+        $i = array_search($product_id, $items);
+        if ($i !== false) {
+            unset($items[$i]);
+        }
+        $_COOKIE['comparison'] = serialize($items);
+        setcookie('comparison', $_COOKIE['comparison'], time()+30*24*3600, '/');
     }
 
     /*Очистка списка сравнения*/
     public function empty_comparison() {
-        unset($_SESSION['comparison']);
+        unset($_COOKIE['comparison']);
+        setcookie('comparison', '', time()-3600, '/');
     }
     
 }

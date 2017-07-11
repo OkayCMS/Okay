@@ -82,17 +82,18 @@ class ThemeAdmin extends Okay {
     
     private function dir_copy($src, $dst) {
         if(is_dir($src)) {
-            mkdir($dst, 0777);
+            mkdir($dst, 0755);
             $files = scandir($src);
             foreach ($files as $file) {
                 if ($file != "." && $file != "..") {
                     $this->dir_copy("$src/$file", "$dst/$file");
                 }
             }
+            @chmod($dst, 0755);
         } elseif(file_exists($src)) {
             copy($src, $dst);
+            @chmod($dst, 0664);
         }
-        @chmod($dst, 0777);
     }
     
     private function dir_delete($path, $delete_self = true) {

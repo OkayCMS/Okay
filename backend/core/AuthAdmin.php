@@ -63,7 +63,9 @@ class AuthAdmin extends Okay {
                     /*Входим в админку*/
                     $_SESSION['admin'] = $manager->login;
                     $this->managers->update_manager((int)$manager->id, array('cnt_try'=>0, 'last_try'=>null));
-                    header('location: '.$this->config->root_url.'/backend/index.php');
+                    $url = $_SESSION['before_auth_url'];
+                    unset($_SESSION['before_auth_url']);
+                    header('location: ' . ($url ? $url : $this->config->root_url . '/backend/index.php'));
                     exit();
                 } else {
                     /*неверный пароль менеджера*/

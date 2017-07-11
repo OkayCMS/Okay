@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="okay_list_boding okay_list_check">
-                    <input class="hidden_check" type="checkbox" id="id_{$category->id}" name="check[]" value="{$ajax_category->id}" />
+                    <input class="hidden_check" type="checkbox" id="id_{$ajax_category->id}" name="check[]" value="{$ajax_category->id}" />
                     <label class="okay_ckeckbox" for="id_{$ajax_category->id}"></label>
                 </div>
 

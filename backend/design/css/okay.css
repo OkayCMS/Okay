@@ -99,6 +99,8 @@ body:not(.top-nav) header.navbar {
 /********************************************************* Text  */
 .text-success,
 .text_success{color: #10cfbd;}
+.text-green,
+.text_green{color: green;}
 .text-danger,
 .text_warning{color:  #F55753!important;}
 .text-primary,
@@ -1752,14 +1754,13 @@ label.switch_label {
 .okay_list .okay_list_row{
     width: 100%;
     height: auto;
+    min-height: 80px;
     display: flex;
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
     align-items: center;
-    -webkit-box-align: center;
     -webkit-align-items: center;
-    -ms-flex-align: center;
 }
 .okay_list .okay_list_body_item_child_comments{
     border-bottom: 0px;
@@ -1803,9 +1804,12 @@ label.switch_label {
     width: 90px;
 }
 .okay_list .variants_item_amount{
-   width: 145px;
+   width: 90px;
 }
 .okay_list .variants_item_weight{
+    width: 90px;
+}
+.okay_list .variants_item_units{
     width: 90px;
 }
 .okay_list .variants_item_yandex{
@@ -1828,8 +1832,8 @@ label.switch_label {
 .okay_list .remove_variant{
    position: absolute;
     width: 50px;
-    right: 10px;
-    top: 32px;
+    right: 0px;
+    top: 0px;
 }
 
 .okay_list .okay_list_subicon{
@@ -5490,4 +5494,7 @@ div.mce-fullscreen {
 .system_information{
     min-height: 50px;
     text-align: left;
+}
+.import_row{
+    min-height: 35px
 }

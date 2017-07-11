@@ -68,7 +68,7 @@
                                 <div class="okay_switch clearfix">
                                     <label class="switch_label">{$btr->general_enable|escape}</label>
                                     <label class="switch switch-default">
-                                        <input class="switch-input" name="visible" value='1' type="checkbox" id="visible_checkbox" {if $banners_image->visible}checked=""{/if}/>
+                                        <input class="switch-input" name="visible" value='1' type="checkbox" id="visible_checkbox" {if $banners_image->visible || !$banners_image->id}checked=""{/if}/>
                                         <span class="switch-label"></span>
                                         <span class="switch-handle"></span>
                                     </label>

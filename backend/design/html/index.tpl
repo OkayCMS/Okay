@@ -21,8 +21,26 @@
     {/if}
     <script src="design/js/toastr.min.js"></script>
     <script src="design/js/Sortable.js"></script>
+    <!-- Google Tag Manager -->
+    {if $settings->gather_enabled}
+        {literal}
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                    })(window,document,'script','dataLayer','GTM-P6T2LJP');
+        </script>
+        {/literal}
+    {/if}
+    <!-- End Google Tag Manager -->
 </head>
 <body class="navbar-fixed {if $manager->menu_status && $is_mobile === false && $is_tablet === false}menu-pin{/if}">
+    <!-- Google Tag Manager (noscript) -->
+    {if $settings->gather_enabled}
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P6T2LJP" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    {/if}
+    <!-- End Google Tag Manager (noscript) -->
+
     <a href="javascript:;" id="fix_logo" class="hidden-lg-down"></a>
     <nav id="admin_catalog" class="fn_left_menu">
         <div id="mob_menu"></div>
@@ -45,27 +63,27 @@
             <div class="scrollbar-inner menu_items">
                 <div>
                     <ul class="menu_items">
-                        {foreach $left_menu as $title=>$menu}
-                            <li class="{if (is_array($menu) && in_array($smarty.get.module,$menu)) || $smarty.get.module == $menu}open active{/if} {if $menu|count > 1} fn_item_sub_switch nav-dropdown{/if}">
-                                <a class="nav-link {if $menu|count > 1}fn_item_switch nav-dropdown-toggle{/if}" href="{if $menu|count > 1}javascript:;{else}index.php?module={$menu}{/if}">
-                                    <span class="{$title} title">{$btr->{$title}}</span>
+                        {foreach $left_menu as $section=>$items}
+                            <li class="{if isset($items.$menu_selected)}open active{/if} {if $items|count > 1} fn_item_sub_switch nav-dropdown{/if}">
+                                <a class="nav-link {if $items|count > 1}fn_item_switch nav-dropdown-toggle{/if}" href="{if $items|count > 1}javascript:;{else}index.php?module={$items|reset}{/if}">
+                                    <span class="{$section} title">{$btr->{$section}}</span>
                                     <span class="icon-thumbnail">
-                                       {include file='svg_icon.tpl' svgId=$title}
+                                       {include file='svg_icon.tpl' svgId=$section}
                                     </span>
-                                    {if is_array($menu) && $menu|count >1}
+                                    {if $items|count >1}
                                         <span class="arrow"></span>
                                     {/if}
                                 </a>
-                                {if is_array($menu) && $menu|count > 1}
+                                {if $items|count > 1}
                                     <ul class="fn_submenu_toggle submenu">
-                                        {foreach $menu as $sub_title=>$sub_menu}
-                                            <li class="{if $sub_menu == $smarty.get.module}active{/if}">
-                                                <a class="nav-link" href="index.php?module={$sub_menu}">
+                                        {foreach $items as $title=>$mod}
+                                            <li class="{if $title == $menu_selected}active{/if}">
+                                                <a class="nav-link" href="index.php?module={$mod}">
                                                     <span class="icon-thumbnail">
-                                                        {assign var="letter" value=$btr->{$sub_title}}
-                                                       {$letter[0]}{$letter[1]}
+                                                        {assign var="letter" value=$btr->{$title}}
+                                                        {$letter[0]}{$letter[1]}
                                                     </span>
-                                                    <span class="{$sub_title} title">{$btr->{$sub_title}}</span>
+                                                    <span class="{$title} title">{$btr->{$title}}</span>
                                                 </a>
                                             </li>
                                         {/foreach}

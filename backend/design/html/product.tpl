@@ -292,12 +292,11 @@
                                         </div>
                                         <div class="okay_list_boding variants_item_amount">
                                             <div class="heading_label">{$btr->general_qty|escape}</div>
-                                            <div class="input-group">
-                                                 <input class="form-control" name="variants[stock][]" type="text" value="{if $variant->infinity || $variant->stock == ''}∞{else}{$variant->stock|escape}{/if}"/>
-                                                <span class="input-group-addon p-0">
-                                                    {$settings->units|escape}
-                                                </span>
-                                            </div>
+                                            <input class="variant_input" name="variants[stock][]" type="text" value="{if $variant->infinity || $variant->stock == ''}∞{else}{$variant->stock|escape}{/if}"/>
+                                        </div>
+                                        <div class="okay_list_boding variants_item_units">
+                                            <div class="heading_label">{$btr->products_variant_units|escape}</div>
+                                            <input class="variant_input" name="variants[units][]" type="text" value="{$variant->units|escape}"/>
                                         </div>
                                     </div>
                                     <div class="okay_list_row">
@@ -372,12 +371,11 @@
                                     </div>
                                     <div class="okay_list_boding variants_item_amount">
                                         <div class="heading_label">{$btr->general_qty|escape}</div>
-                                        <div class="input-group">
-                                             <input class="form-control" name="variants[stock][]" type="text" value=""/>
-                                            <span class="input-group-addon p-0">
-                                                {$settings->units|escape}
-                                            </span>
-                                        </div>
+                                        <input class="variant_input" name="variants[stock][]" type="text" value=""/>
+                                    </div>
+                                    <div class="okay_list_boding variants_item_units">
+                                        <div class="heading_label">{$btr->products_variant_units|escape}</div>
+                                        <input class="variant_input" name="variants[units][]" type="text" value=""/>
                                     </div>
                                 </div>
                                 <div class="okay_list_row">
@@ -524,6 +522,14 @@
                             <span class="fn_delete_feature btn_close delete_feature">
                                 {include file='svg_icon.tpl' svgId='delete'}
                             </span>
+                        </div>
+                    </div>
+                    <div class="fn_new_feature_category feature_row clearfix">
+                        <div class="feature_name">
+                            <span title="" class="fn_feature_name"></span>
+                        </div>
+                        <div class="feature_value">
+                            <input class="feature_input fn_auto_option" data-id="" type="text" name="" value=""/>
                         </div>
                     </div>
                 </div>
@@ -678,7 +684,7 @@
     <link rel="stylesheet" type="text/css" href="design/js/chosen/chosen.min.css" media="screen" />
 <script>
     $(window).on("load", function() {
-        new_feature = $(".fn_new_feature").clone(true);
+
         $(document).on("click", ".fn_show_images",function () {
            $(this).prev().find($(".fn_toggle_hidden")).toggleClass("hidden");
         });
@@ -808,8 +814,9 @@
 
         var clone_cat = $(".fn_new_category_item").clone();
         $(".fn_new_category_item").remove();
+        clone_cat.removeClass("fn_new_category_item");
         $(document).on("change", ".fn_product_category select", function () {
-            clone = clone_cat.clone();
+            var clone = clone_cat.clone();
             clone.find("label").attr("for","id_"+$(this).find("option:selected").val());
             clone.find("span").html($(this).find("option:selected").data("category_name"));
             clone.find("input").attr("id","id_"+$(this).find("option:selected").val());
@@ -817,9 +824,17 @@
             clone.find("input").attr("checked",true);
             clone.find("input").attr("data-cat_name",$(this).find("option:selected").data("category_name"));
             $(".fn_product_categories_list").append(clone);
+            if ($(".fn_category_item").size() == 1) {
+                change_product_category();
+            }
         });
         $(document).on("click", ".fn_delete_product_cat", function () {
-            $(this).closest(".fn_category_item").remove();
+            var item = $(this).closest(".fn_category_item"),
+                is_first = item.hasClass("first_category");
+            item.remove();
+            if (is_first && $(".fn_category_item").size() > 0) {
+                change_product_category();
+            }
         });
 
         var el = document.getElementById('sortable_cat');
@@ -836,7 +851,7 @@
             // Changed sorting within list
             onUpdate: function (evt) {
                 change_product_category();
-            },
+            }
         });
 
         function change_product_category() {
@@ -848,6 +863,9 @@
             show_category_features(first_category);
         }
 
+        var new_feature_category = $(".fn_new_feature_category").clone(true);
+        $(".fn_new_feature_category").remove();
+        new_feature_category.removeClass("fn_new_feature_category");
         function show_category_features(category_id)
         {
             $("div.fn_features_wrap").empty();
@@ -859,21 +877,22 @@
                     for(i=0; i<data.length; i++)
                     {
                         feature = data[i];
-                        var new_line = new_feature.clone(true);
-                        new_line.find("input[name='new_features_names[]']").val(feature.name);
-                        new_line.find("input[name='new_features_names[]']").attr("disabled",true);
-                        new_line.find("input[name='new_features_values[]']").val(feature.value);
-                        new_line.find(".fn_delete_feature").hide();
-                        new_line.appendTo("div.fn_features_wrap").find("input[name='new_features_values[]']")
-                        .autocomplete({
+                        var new_line = new_feature_category.clone(true);
+                        new_line.find(".fn_feature_name").text(feature.name).attr('title', feature.name);
+                        var value = new_line.find(".fn_auto_option");
+                        value.data('id', feature.id);
+                        value.attr('name', "options["+feature.id+"][value]");
+                        value.val(feature.value);
+                        value.autocomplete({
                             serviceUrl:'ajax/options_autocomplete.php',
                             minChars:0,
                             params: {feature_id:feature.id},
                             noCache: false,
-                            onSelect:function(sugestion){
+                            onSelect:function(suggestion){
                                 $(this).trigger('change');
                             }
                         });
+                        new_line.appendTo("div.fn_features_wrap");
                     }
                 }
             });
@@ -895,7 +914,9 @@
         });
 
         // Добавление нового свойства товара
-        $(".fn_new_feature").remove().removeAttr("class");
+        var new_feature = $(".fn_new_feature").clone(true);
+        $(".fn_new_feature").remove();
+        new_feature.removeClass("fn_new_feature");
         $(document).on("click",".fn_add_feature",function () {
             $(new_feature).clone(true).appendTo(".features_wrap").fadeIn('slow');
             return false;
@@ -907,8 +928,8 @@
 
         // Добавление связанного товара
         var new_related_product = $('#new_related_product').clone(true);
-        $('#new_related_product').remove().removeAttr('id');
-
+        $('#new_related_product').remove();
+        new_related_product.removeAttr('id');
         $("input#related_products").autocomplete({
             serviceUrl:'ajax/search_products.php',
             minChars:0,
@@ -917,7 +938,6 @@
                 function(suggestion){
                     $("input#related_products").val('').focus().blur();
                     new_item = new_related_product.clone().appendTo('.related_products');
-                    new_item.removeAttr('id');
                     new_item.find('a.related_product_name').html(suggestion.data.name);
                     new_item.find('a.related_product_name').attr('href', 'index.php?module=ProductAdmin&id='+suggestion.data.id);
                     new_item.find('input[name*="related_products"]').val(suggestion.data.id);

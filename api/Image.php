@@ -31,7 +31,7 @@ class Image extends Okay {
         }
         
         // Если вайл удаленный (http://), зальем его себе
-        if(substr($source_file, 0, 7) == 'http://') {
+        if (preg_match("~^https?://~", $source_file)) {
             // Имя оригинального файла
             if(!$original_file = $this->download_image($source_file)) {
                 return false;

@@ -138,6 +138,7 @@ class OrderAdmin extends Okay {
                     $v->price = number_format($v->price*$v->rate_to/$v->rate_from, 2, '.', '');
                     $v->compare_price = number_format($v->compare_price*$v->rate_to/$v->rate_from, 2, '.', '');
                 }
+                $v->units = $v->units ? $v->units : $this->settings->units;
                 $variants[$v->id] = $v;
             }
             

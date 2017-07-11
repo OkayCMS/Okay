@@ -445,14 +445,13 @@ class ProductsView extends View {
             $category_id_filter = $this->db->placehold('INNER JOIN __products_categories pc ON pc.product_id = p.id AND pc.category_id in(?@)', (array)$filter['category_id']);
             $last_modify[] = $category->last_modify;
         }
-        $this->db->query("SELECT p.last_modify
+        $this->db->query("SELECT MAX(p.last_modify) as last_modify
             FROM __products p
             $category_id_filter
-            WHERE 1 $brand_id_filter
-            GROUP BY p.id");
-        $res = $this->db->results('last_modify');
+            WHERE 1 $brand_id_filter");
+        $res = $this->db->result('last_modify');
         if (!empty($res)) {
-            $last_modify = array_merge($last_modify, $res);
+            $last_modify[] = $res;
         }
         if ($this->page) {
             $last_modify[] = $this->page->last_modify;
