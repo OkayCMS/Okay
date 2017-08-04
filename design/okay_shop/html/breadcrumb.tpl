@@ -94,7 +94,7 @@
                     </a>
                 </li>
                 <li>
-                    {$post->name}
+                    {$post->name|escape}
                 </li>
             {else}
                 <li data-language="breadcrumbs_blog">

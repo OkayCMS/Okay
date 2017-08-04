@@ -9,7 +9,7 @@
 
         {* User's name *}
         <div class="form_group">
-            <input class="form_input" type="text" name="name" value="{if $user->name}{$user->name}{else}{$name|escape}{/if}" data-language="form_name" placeholder="{$lang->form_name}*">
+            <input class="form_input" type="text" name="name" value="{if $user->name}{$user->name|escape}{else}{$name|escape}{/if}" data-language="form_name" placeholder="{$lang->form_name}*">
         </div>
 
         {* User's phone *}

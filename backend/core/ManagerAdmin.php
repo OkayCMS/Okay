@@ -61,63 +61,64 @@ class ManagerAdmin extends Okay {
             }
         }
 
+        $btr = $this->design->get_var('btr');
         /*Группировка списка доступов менеджера*/
         $permission = array(
-            'left_catalog' => array(
-                'products'     => 'Товары',
-                'categories'   => 'Категории',
-                'brands'       => 'Бренды',
-                'features'     => 'Свойства',
+            'left_catalog'  => array(
+                'products'      => $btr->left_products_title,
+                'categories'    => $btr->left_categories_title,
+                'brands'        => $btr->left_brands_title,
+                'features'      => $btr->left_features_title,
             ),
-            'left_orders' => array(
-                'orders'     => 'Заказы',
-                'order_settings'     => 'Настройки заказов',
+            'left_orders'   => array(
+                'orders'        => $btr->left_orders,
+                'order_settings'=> $btr->left_orders_settings_title,
             ),
-            'left_users' => array(
-                'users'      => 'Пользователи',
-                'groups'     => 'Группы пользователей',
-                'coupons'    => 'Купоны',
+            'left_users'    => array(
+                'users'         => $btr->left_users,
+                'groups'        => $btr->left_groups_title,
+                'coupons'       => $btr->left_coupons_title,
             ),
-            'left_pages' => array(
-                'pages'      => 'Страницы',
+            'left_pages'    => array(
+                'pages'         => $btr->left_pages,
             ),
-            'left_blog' => array(
-                'blog'       => 'Блог',
+            'left_blog'     => array(
+                'blog'          => $btr->left_blog,
             ),
             'left_comments' => array(
-                'comments'   => 'Комментарии',
-                'feedbacks'   => 'Обратная связь',
-                'callbacks' => 'Заявки обратного звонка'
+                'comments'      => $btr->left_comments_title,
+                'feedbacks'     => $btr->left_feedbacks_title,
+                'callbacks'     => $btr->left_callbacks_title,
             ),
-            'left_auto' => array(
-                'import'     => 'Импорт',
-                'export'     => 'Экспорт',
+            'left_auto'     => array(
+                'import'        => $btr->left_import_title,
+                'export'        => $btr->left_export_title,
             ),
-            'left_stats' => array(
-                'stats'      => 'Статистика',
-                'yametrika' => 'Яндекс метрика'
+            'left_stats'    => array(
+                'stats'         => $btr->left_stats,
             ),
-            'left_seo' => array(
-                'seo_patterns' => 'Автоматизация SEO'
+            'left_seo'      => array(
+                'robots'        => $btr->left_robots_title,
+                'yametrika'     => $btr->left_metrika_title,
+                'seo_patterns'  => $btr->left_seo_patterns_title,
             ),
-            'left_support' => array(
-                'support' => 'Техподдержка'
+            'left_support'  => array(
+                'support'       => $btr->left_support,
             ),
-            'left_design' => array(
-                'design'      => 'Дизайн',
-                'robots'    => 'Rotbots.txt'
+            'left_design'   => array(
+                'design'        => $btr->left_design,
             ),
-            'left_banners' => array(
-                'banners' => 'Баннера',
+            'left_banners'  => array(
+                'banners'       => $btr->left_banners,
             ),
             'left_settings' => array(
-                'settings'   => 'Настройки',
-                'currency'   => 'Валюты',
-                'delivery'   => 'Способы доставки',
-                'payment'    => 'Способы оплаты',
-                'managers'   => 'Менеджеры',
-                'license'    => 'Лицензия',
-                'languages'  => 'Языки',
+                'settings'      => $btr->left_settings,
+                'currency'      => $btr->left_currency_title,
+                'delivery'      => $btr->left_delivery_title,
+                'payment'       => $btr->left_payment_title,
+                'managers'      => $btr->left_managers_title,
+                'license'       => $btr->left_license_title,
+                'languages'     => $btr->left_languages_title,
             ),
         );
 

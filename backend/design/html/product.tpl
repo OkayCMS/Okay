@@ -427,11 +427,7 @@
                                 <li class="product_image_item {if $special@iteration > 4}fn_toggle_hidden hidden{/if} fn_sort_item {if $product->special == $special->filename}product_special{/if}">
                                     <button type="button" class=" fn_remove_image remove_image"></button>
                                     <i class="move_zone">
-                                        {if $special}
-                                              <img class="product_icon" title="{$special->name}" src="../{$config->special_images_dir}{$special->filename}" alt="{$special->filename}" />
-                                        {else}
-                                            <img class="product_icon" src="design/images/no_image.png" width="40">
-                                        {/if}
+                                        <img class="product_icon" title="{$special->name}" src="../{$config->special_images_dir}{$special->filename}" alt="{$special->filename}" />
                                         <span class="fn_change_special change_special" data-origin="{$btr->general_select|escape}" data-result="{$btr->general_unselect|escape}">
                                             {if $product->special == $special->filename}
                                                 {$btr->general_unselect|escape}
@@ -439,7 +435,7 @@
                                                 {$btr->general_select|escape}
                                             {/if}
                                         </span>
-                                        <input type="radio" name="special" value="{$special->filename|escape}" class="hidden">
+                                        <input type="radio" name="special" value="{$special->filename|escape}" class="hidden" {if $product->special == $special->filename}checked{/if}>
                                     </i>
                                     <input type="hidden" name="spec_images[]" value="{$special->id}" />
                                 </li>

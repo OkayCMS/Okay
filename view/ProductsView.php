@@ -503,7 +503,7 @@ class ProductsView extends View {
         
         // Выбираем бренды, они нужны нам в шаблоне
         if(!empty($category)) {
-            $this->category_brands = $this->brands->get_brands(array('category_id'=>$category->children, 'visible'=>1));
+            $this->category_brands = $this->brands->get_brands(array('category_id'=>$category->children, 'visible'=>1, 'features'=>$filter['features']));
             $category->brands = $this->category_brands;
         }
         

@@ -59,7 +59,7 @@
         {if $features}
             {foreach $features as $key=>$f}
                 {* Feature name *}
-                <div class="h2 filter_name" data-feature="{$f->id}">{$f->name}</div>
+                <div class="h2 filter_name" data-feature="{$f->id}">{$f->name|escape}</div>
 
                 <div class="filter_group">
                     {* Display all features *}

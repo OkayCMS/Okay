@@ -77,7 +77,8 @@ class Support extends Okay {
             'temp_key'      => $info->temp_key,
             'version'       => $this->config->version,
             'version_type'  => (!empty($this->config->version_type) ? $this->config->version_type : null),
-            'owner_email'   => $this->settings->admin_email
+            'owner_email'   => $this->settings->admin_email,
+            'owner_phone'   => $this->settings->admin_phone ? $this->settings->admin_phone : ''
         );
         return $this->support_request($params);
     }

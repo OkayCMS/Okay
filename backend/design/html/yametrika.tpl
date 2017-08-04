@@ -10,12 +10,12 @@
 </div>
 
 {*Вывод ошибок*}
-{if !$settings->yandex_metrika_app_id || !$settings->yandex_metrika_token}
+{if !$settings->yandex_metrika_counter_id || !$settings->yandex_metrika_token}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="boxed boxed_warning">
                 <div class="heading_box">
-                   Заполните поля (ID приложения) и/или (Токен) в настройках магазина
+                   Заполните поля (ID счетчика) и/или (Токен) в настройках магазина
                 </div>
             </div>
         </div>
@@ -83,8 +83,7 @@
                                         Шаг 4. Нажимаем «Сохранить»
                                     </li>
                                     <li>
-                                        Шаг 5. На открывшейся странице копируем ID приложения и сохраняем его в настройках Яндекс
-                                        Метрики в административной части
+                                        Шаг 5. Вставляем в поле "ID счетчика" код вашего счетчика метрики
                                     </li>
                                     <li>
                                         Шаг 6. Авторизуемся на Яндексе под учетной записью пользователя, от имени которого будет
@@ -116,9 +115,9 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="heading_label">ID приложения</div>
+                            <div class="heading_label">ID Счетчика</div>
                             <div class="mb-1">
-                                <input name="yandex_metrika_app_id" class="form-control" type="text" value="{$settings->yandex_metrika_app_id|escape}" />
+                                <input name="yandex_metrika_counter_id" class="form-control" type="text" value="{$settings->yandex_metrika_counter_id|escape}" />
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -200,19 +199,21 @@
                 dataType: "jsonp",
                 async: false,
                 jsonp: "callback",
-                jsonpCallback: 'jsonCallback2',
+                jsonpCallback: 'jsonCallback',
                 contentType: "application/json",
                 success: function(json) {
-                    $.each(json.data.reverse(), function (index,value){
-                        var data = value.date[6]+value.date[7] + '-'+ value.date[4]+value.date[5]+'-'+value.date[2]+ value.date[3];
-                        var metrika = {
-                            'date2': data,
-                            'visits2': value.visits,  /*Визиты*/
-                            'visitors2': value.visitors,  /*Посетители*/
-                            'page_views': value.page_views,  /*Просмотры*/
-                            'new_visitors': value.new_visitors, /*Новые посетители*/
-                            'denial': value.denial /*Отказы*/
-                        };
+                    $.each(json.data, function (index,value){
+					console.log(value);
+
+						var metrika = {
+							'date2': value.dimensions[0]['name'],
+							'visits2': value.metrics[0],
+							'visitors2': value.metrics[1],
+							'page_views': value.metrics[2],
+							'denial': value.metrics[3],
+							'new_visitors': value.metrics[4]
+						};
+
                         counter.push(metrika);
                         console.log(metrika);
                     });
@@ -232,6 +233,8 @@
                 "type": "serial",
                 "theme": "light",
                 "dataDateFormat": "DD:MM:YY",
+				"color": "#2B303B",
+				"plotAreaBorderColor": "#FFFFFF",
                 "language": "ru",
                 "titles": [{
                     "text": "Я.Метрика",
@@ -258,9 +261,17 @@
                     "position": "right",
                     "title": "Количество"
                 }],
+				"balloon": {
+					"animationDuration": 0.76,
+					"fadeOutDuration": 1.36
+				},
                 "graphs": [  {
                     "bullet": "round",
                     "bulletBorderAlpha": 1,
+					"bulletSize": 10,
+					"type": "smoothedLine",
+					"lineAlpha": 1,
+					"lineThickness": 3,
                     "balloonText": "Посетителей:[[value]]",
 
                     "legendPeriodValueText": "Всего: [[value.sum]]",

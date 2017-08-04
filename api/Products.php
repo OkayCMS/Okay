@@ -159,7 +159,7 @@ class Products extends Okay {
             }
         }
         
-        if(!empty($filter['features']) && !empty($filter['features'])) {
+        if(!empty($filter['features'])) {
             foreach($filter['features'] as $feature=>$value) {
                 $features_filter .= $this->db->placehold('AND p.id in (SELECT product_id FROM __options WHERE feature_id=? AND translit in(?@) ) ', $feature, (array)$value);
             }
@@ -316,7 +316,7 @@ class Products extends Okay {
             $visible_filter = $this->db->placehold('AND p.visible=?', intval($filter['visible']));
         }
         
-        if(!empty($filter['features']) && !empty($filter['features'])) {
+        if(!empty($filter['features'])) {
             foreach($filter['features'] as $feature=>$value) {
                 $features_filter .= $this->db->placehold('AND p.id in (SELECT product_id FROM __options WHERE feature_id=? AND translit in(?@) ) ', $feature, (array)$value);
             }

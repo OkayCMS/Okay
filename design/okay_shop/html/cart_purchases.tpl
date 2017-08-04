@@ -33,7 +33,7 @@
 
             {* Price per unit *}
             <td>
-                <span class="nowrap">{($purchase->variant->price)|convert} {$currency->sign}</span>
+                <span class="nowrap">{($purchase->variant->price)|convert} {$currency->sign} {if $purchase->variant->units}/ {$purchase->variant->units|escape}{/if}</span>
             </td>
 
             {* Quantity *}

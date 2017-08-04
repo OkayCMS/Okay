@@ -2063,5 +2063,5 @@ i.mce-i-backcolor {
 }
 .mce-tinymce iframe{
     border: 1px solid rgba(0, 0, 0, 0.15);
-    min-height: 150px;
+    min-height: 400px;
 }

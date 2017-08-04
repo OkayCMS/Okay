@@ -121,13 +121,15 @@
                                 {* Product variants *}
                                 <select name="variant" class="fn_variant variant_select{if $product->variants|count < 2} hidden{/if}">
                                     {foreach $product->variants as $v}
-                                        <option value="{$v->id}" data-price="{$v->price|convert}" data-stock="{$v->stock}"{if $v->compare_price > 0} data-cprice="{$v->compare_price|convert}"{/if}{if $v->sku} data-sku="{$v->sku}"{/if}>{if $v->name}{$v->name}{else}{$product->name|escape}{/if}</option>
+                                        <option value="{$v->id}" data-price="{$v->price|convert}" data-stock="{$v->stock}"{if $v->compare_price > 0} data-cprice="{$v->compare_price|convert}"{/if}{if $v->sku} data-sku="{$v->sku|escape}"{/if} {if $v->units}data-units="{$v->units}"{/if}>{if $v->name}{$v->name|escape}{else}{$product->name|escape}{/if}</option>
                                     {/foreach}
                                 </select>
                             </div>
 
                             <div class="col-sm-6 fn_is_stock{if $product->variant->stock < 1} hidden{/if}">
-                                <span class="details_label quontity_label" data-language="product_quantity">{$lang->product_quantity}:</span>
+                                <span class="details_label quontity_label" data-language="product_quantity">
+                                    {$lang->product_quantity}<span class="fn_units">{if $product->variant->units}, {$product->variant->units|escape}{/if}</span>:
+                                </span>
 
                                 {* Quantity *}
                                 <div class="amount fn_product_amount">
@@ -236,8 +238,8 @@
                         <ul class="features">
                             {foreach $product->features as $f}
                                 <li>
-                                    <span class="features_name"><span>{$f->name}</span></span>
-                                    <span class="features_value">{$f->value}</span>
+                                    <span class="features_name"><span>{$f->name|escape}</span></span>
+                                    <span class="features_value">{$f->value|escape}</span>
                                 </li>
                             {/foreach}
                         </ul>
@@ -424,7 +426,7 @@
 "name": "{/literal}{$product->name|escape}{literal}",
 "image": "{/literal}{$product->image->filename|resize:330:300}{literal}",
 "description": "{/literal}{$product->annotation|strip_tags}{literal}",
-"mpn": "{/literal}{if $product->variant->sku}{$product->variant->sku}{else}Не указано{/if}{literal}",
+"mpn": "{/literal}{if $product->variant->sku}{$product->variant->sku|escape}{else}Не указано{/if}{literal}",
 {/literal}
 {if $brand->name}
 {literal}

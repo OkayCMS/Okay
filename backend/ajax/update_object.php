@@ -61,6 +61,9 @@ switch ($object) {
         break;
     case 'currency':
         if($okay->managers->access('currency')) {
+            if (!empty($values['cents'])) {
+                $values['cents'] = 2;
+            }
             $result = $okay->money->update_currency($id, $values);
         }
         break;

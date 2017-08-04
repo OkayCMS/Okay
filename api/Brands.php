@@ -12,13 +12,15 @@ class Brands extends Okay {
         $product_id_filter = '';
         $product_join = '';
         $visible_brand_filter = '';
+        $features_filter = '';
+
         if(isset($filter['visible'])) {
             $visible_filter = $this->db->placehold('AND p.visible=?', intval($filter['visible']));
         }
+
         if(isset($filter['visible_brand'])) {
             $visible_brand_filter = $this->db->placehold('AND b.visible=?', intval($filter['visible_brand']));
         }
-
 
         if(isset($filter['product_id'])) {
             $product_id_filter = $this->db->placehold('AND p.id in (?@)', (array)$filter['product_id']);
@@ -29,6 +31,17 @@ class Brands extends Okay {
             $category_join = $this->db->placehold("LEFT JOIN __products p ON p.brand_id=b.id LEFT JOIN __products_categories pc ON p.id = pc.product_id");
             $category_id_filter = $this->db->placehold("AND pc.category_id in(?@) $visible_filter", (array)$filter['category_id']);
         }
+
+        if(!empty($filter['features'])) {
+            foreach($filter['features'] as $feature=>$value) {
+                $features_filter .= $this->db->placehold('AND p.id in (SELECT product_id FROM __options WHERE feature_id=? AND translit in(?@) ) ', $feature, (array)$value);
+            }
+            $features_filter .= $visible_filter;
+            if (empty($category_join)) {
+                $category_join = $this->db->placehold("LEFT JOIN __products p ON (p.brand_id=b.id)");
+            }
+        }
+
         $lang_sql = $this->languages->get_query(array('object'=>'brand'));
         // Выбираем все бренды
         $query = $this->db->placehold("SELECT 
@@ -46,6 +59,7 @@ class Brands extends Okay {
             WHERE 
                 1 
                 $category_id_filter
+                $features_filter
                 $visible_brand_filter
                 $product_id_filter
             ORDER BY b.position

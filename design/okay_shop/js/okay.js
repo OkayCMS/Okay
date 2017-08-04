@@ -45,7 +45,8 @@ $(document).on('change', '.fn_variant', function() {
         sku = parent.find( '.fn_sku' ),
         stock = parseInt( selected.data( 'stock' ) ),
         amount = parent.find( 'input[name="amount"]' ),
-        camoun = parseInt( amount.val() );
+        camoun = parseInt( amount.val()),
+        units = selected.data('units');
     price.html( selected.data( 'price' ) );
     amount.data('max', stock);
     /* Количество товаров */
@@ -90,6 +91,12 @@ $(document).on('change', '.fn_variant', function() {
     } else {
         parent.find('.fn_is_stock').removeClass('hidden');
         parent.find('.fn_is_preorder, .fn_not_preorder').addClass('hidden');
+    }
+
+    if( typeof(units) != 'undefined' ) {
+        parent.find('.fn_units').text(', ' + units);
+    } else {
+        parent.find('.fn_units').text('');
     }
 });
 

@@ -18,7 +18,7 @@
 {elseif $payment_module == "Liqpay"}
     {* Способ оплаты Liqpay *}
     <div class="row">
-        <form class="col-lg-7" method="post" action="https://www.liqpay.com/api/pay">
+        <form class="col-lg-7" method="post" action="https://www.liqpay.ua/api/pay">
             <input type="hidden" name="public_key"  value="{$public_key|escape}"/>
             <input type="hidden" name="amount"      value="{$price|escape}"/>
             <input type="hidden" name="currency"    value="{$payment_currency->code|escape}"/>

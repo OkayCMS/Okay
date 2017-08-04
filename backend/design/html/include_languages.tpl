@@ -1,35 +1,35 @@
 {*id мультиязычных сущностей сайта*}
 {if $product->id}
     {$id = $product->id}
-{/if}
-{if $category->id}
+{elseif $category->id}
     {$id = $category->id}
-{/if}
-{if $brand->id}
+{elseif $brand->id}
     {$id = $brand->id}
-{/if}
-{if $feature->id}
+{elseif $feature->id}
     {$id = $feature->id}
-{/if}
-{if $post->id}
-    {$id = $post->id}
-{/if}
-{if $page->id}
-    {$id = $page->id}
-{/if}
-{if $payment_method->id}
-    {$id = $payment_method->id}
-{/if}
-{if $delivery->id}
-    {$id = $delivery->id}
-{/if}
-{if $language->id}
-    {$id = $language->id}
-{/if}
-{if $order->id}
+{elseif $order->id}
     {$id = $order->id}
-{/if}
-{if $translation->id}
+{elseif $user->id}
+    {$id = $user->id}
+{elseif $group->id}
+    {$id = $group->id}
+{elseif $page->id}
+    {$id = $page->id}
+{elseif $post->id}
+    {$id = $post->id}
+{elseif $banner->id}
+    {$id = $banner->id}
+{elseif $banners_image->id}
+    {$id = $banners_image->id}
+{elseif $delivery->id}
+    {$id = $delivery->id}
+{elseif $payment_method->id}
+    {$id = $payment_method->id}
+{elseif $manager->id}
+    {$id = $manager->id}
+{elseif $language->id}
+    {$id = $language->id}
+{elseif $translation->id}
     {$id = $translation->id}
 {/if}
 
