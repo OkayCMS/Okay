@@ -46,7 +46,6 @@ print ">".htmlspecialchars($c->name)."</category>
 print "</categories>
 ";
 
-$features = array();
 $stock_filter = $okay->settings->yandex_export_not_in_stock ? '' : ' AND (v.stock >0 OR v.stock is NULL) ';
 
 // Товары
@@ -99,6 +98,11 @@ foreach ($products as $p) {
 $p_images = array();
 foreach($okay->products->get_images(array('product_id' => $p_ids)) as $image) {
     $p_images[$image->product_id][] = $image->filename;
+}
+
+$features = array();
+foreach ($okay->features->get_product_options(array('product_id'=>$p_ids, 'yandex'=>1)) as $option) {
+    $features[$option->product_id][] = $option;
 }
 
 foreach($products as $p) {
@@ -157,9 +161,6 @@ foreach($products as $p) {
     <seller_warranty>".($okay->settings->yandex_has_seller_warranty ? 'true' : 'false')."</seller_warranty>
     ";
     
-    if (!in_array($p->product_id, array_keys($features))) {
-        $features[$p->product_id] = $okay->features->get_product_options(array('product_id'=>$p->product_id,'yandex'=>1));
-    }
     if (!empty($features[$p->product_id])) {
         foreach($features[$p->product_id] as $feature) {
             print "

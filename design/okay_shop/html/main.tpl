@@ -88,28 +88,6 @@
         </div>
     {/if}
 
-    {* Banners *}
-    {if $is_mobile === false && $is_tablet === false}
-        {get_banner var=banner_group2 group='group2'}
-        {if $banner_group2->items}
-            <div class="fn_banner_group2 banners clearfix">
-                {foreach $banner_group2->items as $bi}
-                    <div class="no_padding col-sm-6">
-                        {if $bi->url}
-                            <a href="{$bi->url}" target="_blank">
-                        {/if}
-                        {if $bi->image}
-                            <img src="{$config->banners_images_dir}{$bi->image}" alt="{$bi->alt}" title="{$bi->title}"/>
-                        {/if}
-                        {if $bi->url}
-                            </a>
-                        {/if}
-                    </div>
-                {/foreach}
-            </div>
-        {/if}
-    {/if}
-
     {* Brand list *}
     {get_brands var=all_brands visible_brand=1}
     {if $all_brands}

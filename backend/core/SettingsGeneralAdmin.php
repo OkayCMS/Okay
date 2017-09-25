@@ -18,6 +18,7 @@ class SettingsGeneralAdmin extends Okay {
             $this->settings->captcha_cart = $this->request->post('captcha_cart', 'boolean');
             $this->settings->captcha_register = $this->request->post('captcha_register', 'boolean');
             $this->settings->captcha_feedback = $this->request->post('captcha_feedback', 'boolean');
+            $this->settings->captcha_callback = $this->request->post('captcha_callback', 'boolean');
             $this->settings->gather_enabled = $this->request->post('gather_enabled', 'boolean');
             if(is_null($this->request->post('site_logo'))) {
                if(file_exists($this->config->root_dir .'/design/'. $this->settings->theme . '/images/'.$this->settings->site_logo)) {

@@ -203,6 +203,11 @@ $( document ).on( 'click', '.fn_sub_coupon', function(e) {
 /* Document ready */
 $(function(){
 
+    $(document).on("click", ".fn_filter_link", function() {
+        location.href = location.protocol + "//" + location.hostname + $(this).attr("href");
+        return false;
+    });
+
     $(function(){
         $(window).scroll(function() {
             var screen = $(document);
@@ -459,9 +464,14 @@ $(function(){
     $( ".fn_search" ).autocomplete( {
         serviceUrl: 'ajax/search_products.php',
         minChars: 1,
-        noCache: false,
+        noCache: true,
         onSelect: function(suggestion) {
             $( "#fn_search" ).submit();
+        },
+        transformResult: function(result, query) {
+            var data = JSON.parse(result);
+            $(".fn_search").autocomplete('setOptions', {triggerSelectOnValidInput: data.suggestions.length == 1});
+            return data;
         },
         formatResult: function(suggestion, currentValue) {
             var reEscape = new RegExp( '(\\' + ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'].join( '|\\' ) + ')', 'g' );
@@ -494,7 +504,6 @@ $(function(){
             } );
 
         resize_comparison();
-        $( '.fancy_zoom' ).fancybox();
 
         /* Показать / скрыть одинаковые характеристики в сравнении */
         $( document ).on( 'click', '.fn_show a', function(e) {

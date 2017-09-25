@@ -27,7 +27,10 @@ class ProductsAdmin extends Okay {
         $category_id = $this->request->get('category_id', 'integer');
         if($category_id && $category = $this->categories->get_category($category_id)) {
             $filter['category_id'] = $category->children;
+        } elseif ($category_id==-1) {
+            $filter['without_category'] = 1;
         }
+        $this->design->assign('category_id', $category_id);
         
         // Бренды категории
         $brands = $this->brands->get_brands(array('category_id'=>$filter['category_id']));
@@ -41,7 +44,10 @@ class ProductsAdmin extends Okay {
         $brand_id = $this->request->get('brand_id', 'integer');
         if($brand_id && $brand = $this->brands->get_brand($brand_id)) {
             $filter['brand_id'] = $brand->id;
+        } elseif ($brand_id==-1) {
+            $filter['brand_id'] = array(0);
         }
+        $this->design->assign('brand_id', $brand_id);
         
         /*Фильтр по товарам*/
         if($f = $this->request->get('filter', 'string')) {

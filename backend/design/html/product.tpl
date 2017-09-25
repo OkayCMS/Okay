@@ -896,7 +896,7 @@
         }
 
         // Автодополнение свойств
-        $(document).on("keypress", ".fn_auto_option", function () {
+        $(".fn_auto_option").each(function() {
             feature_id = $(this).data("id");
             $(this).autocomplete({
                 serviceUrl:'ajax/options_autocomplete.php',

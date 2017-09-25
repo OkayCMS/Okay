@@ -55,7 +55,7 @@
                 <div class="form_group">
                     <p class="change_pass" onclick="$('#password').toggle();return false;"><span data-language="user_change_password">{$lang->user_change_password}</span></p>
 
-                    <input class="form_input" id="password" value="" name="password" type="password" style="display:none;"/>
+                    <input class="form_input" id="password" value="" name="password" type="password" style="display:none;" placeholder="{$lang->user_change_password}"/>
                 </div>
 
                 <div class="form_group">

@@ -65,14 +65,21 @@
     <div class="row">
         <div class="col-lg-12 col-md-12">
             <div class="boxed fn_toggle_wrap ">
-                <div class="">
+                <div class="row">
                     {if $topic->id}
                         {$topic->header|escape}{if $topic->status=='closed'} (Closed){/if}
-                        <span class="text_500">
-                            ({$topic->created|date} {$topic->created|time})
-                        </span>
+                        <div class="col-md-6">
+                            <span class="text_500">
+                                ({$topic->created|date} {$topic->created|time})
+                            </span>
+                        </div>
                     {else}
-                        <input class="name" name="header" type="text" value="{$topic_header|escape}"/>
+                        <div class="col-md-6">
+                            <div class="heading_label">{$btr->topic_new_theme|escape}</div>
+                            <div class="mb-1">
+                                <input name="header" class="name form-control" value="{$topic_header|escape}" type="text">
+                            </div>
+                        </div>
                     {/if}
                     <input name="id" type="hidden" value="{$topic->id|escape}"/>
                 </div>

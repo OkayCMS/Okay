@@ -170,7 +170,7 @@
 </head>
 
 <body>
-<header>
+<header class="header">
     <nav class="top_nav">
         <div class="container">
             {* Main menu toggle button*}
@@ -362,7 +362,9 @@
         {/if}
     {/if}
     {if $module == "MainView"}
-        {$content}
+        <div class="fn_ajax_content">
+            {$content}
+        </div>
     {else}
         <div class="container">
             {include file='breadcrumb.tpl'}
@@ -376,7 +378,7 @@
 <div class="to_top"></div>
 
 {* Footer *}
-<footer>
+<footer class="footer">
     <div class="footer_top">
         <div class="container">
             <span class="payments_text tablet-hidden" data-language="index_payments">{$lang->index_payments}</span>
@@ -399,7 +401,7 @@
                         <form class="subscribe_form fn_validate_subscribe" method="post">
                             <input type="hidden" name="subscribe" value="1"/>
 
-                            <input class="subscribe_input" type="email" name="subscribe_email" value="" data-format="email" data-notice="{$lang->form_enter_email}" placeholder="{$lang->form_email}"/>
+                            <input class="subscribe_input" type="email" name="subscribe_email" value="" data-format="email" placeholder="{$lang->form_email}"/>
 
                             <button class="subscribe_button" type="submit"><span data-language="subscribe_button">{$lang->subscribe_button}</span></button>
 

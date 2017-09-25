@@ -75,7 +75,7 @@
 {/if}
 
 {*Главная форма страницы*}
-<form method="post" enctype="multipart/form-data" class="fn_fast_button">
+<form method="post" enctype="multipart/form-data" class="fn_fast_button fn_is_translit_alpha">
     <input type=hidden name="session_id" value="{$smarty.session.id}">
     <input type="hidden" name="lang_id" value="{$lang_id}" />
 

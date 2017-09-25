@@ -313,15 +313,12 @@
             </div>
         </form>
        <script>
-           $('input[name="new_expire"]').datepicker({
-               regional:'ru'
-           });
+           $('input[name="new_expire"]').datepicker();
        </script>
     </div>
 {/if}
 
 
-<script src="design/js/jquery/datepicker/jquery.ui.datepicker-ru.js"></script>
 {literal}
     <script>
         $(function() {
@@ -331,9 +328,7 @@
             $(document).on("click", ".fn_add_coupon", function () {
                 $(this).remove();
                 new_coupon.find("select").selectpicker();
-                new_coupon.find('input[name="new_expire"]').datepicker({
-                    regional:'ru'
-                });
+                new_coupon.find('input[name="new_expire"]').datepicker();
                 $(".fn_coupon_wrap").prepend(new_coupon);
             })
         });

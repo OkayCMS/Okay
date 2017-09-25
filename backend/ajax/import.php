@@ -22,7 +22,7 @@ class ImportAjax extends Import {
         $f = fopen($this->import_files_dir.$this->import_file, 'r');
         $this->columns = fgetcsv($f, null, $this->column_delimiter);
         
-        $this->init_internal_columns();
+        $this->init_internal_columns($fields);
 
         // Если нет названия товара - не будем импортировать
         if (empty($fields) || !in_array('sku', $fields) && !in_array('name', $fields)) {
@@ -357,17 +357,6 @@ class ImportAjax extends Import {
             }
         }
         return $id;
-    }
-    
-    public function translit($text) {
-        $ru = explode('-', "А-а-Б-б-В-в-Ґ-ґ-Г-г-Д-д-Е-е-Ё-ё-Є-є-Ж-ж-З-з-И-и-І-і-Ї-ї-Й-й-К-к-Л-л-М-м-Н-н-О-о-П-п-Р-р-С-с-Т-т-У-у-Ф-ф-Х-х-Ц-ц-Ч-ч-Ш-ш-Щ-щ-Ъ-ъ-Ы-ы-Ь-ь-Э-э-Ю-ю-Я-я");
-        $en = explode('-', "A-a-B-b-V-v-G-g-G-g-D-d-E-e-E-e-E-e-ZH-zh-Z-z-I-i-I-i-I-i-J-j-K-k-L-l-M-m-N-n-O-o-P-p-R-r-S-s-T-t-U-u-F-f-H-h-TS-ts-CH-ch-SH-sh-SCH-sch---Y-y---E-e-YU-yu-YA-ya");
-        
-        $res = str_replace($ru, $en, $text);
-        $res = preg_replace("/[\s]+/ui", '-', $res);
-        $res = preg_replace('/[^\p{L}\p{Nd}\d-]/ui', '', $res);
-        $res = strtolower($res);
-        return $res;
     }
     
 }

@@ -25,8 +25,8 @@
     {$id = $delivery->id}
 {elseif $payment_method->id}
     {$id = $payment_method->id}
-{elseif $manager->id}
-    {$id = $manager->id}
+{elseif $m->id && $smarty.get.module == "ManagerAdmin"}
+    {$id = $m->id}
 {elseif $language->id}
     {$id = $language->id}
 {elseif $translation->id}

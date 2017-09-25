@@ -210,7 +210,7 @@
                         {get_banner var={/literal}banner_{$banner->group_id}{literal} group={/literal}{$banner->group_id}{literal}}
                         {if {/literal}$banner_{$banner->group_id}{literal}->items}
                         <div class="container hidden-md-down">
-                            <div class="fn-slick-banner_group1 okaycms slick-banner">
+                            <div class="fn_banner_{/literal}{$banner->group_id}{literal} slick-banner">
                                 {foreach {/literal}$banner_{$banner->group_id}{literal}->items as $bi}
                                 <div>
                                     {if $bi->url}
@@ -245,7 +245,7 @@
                        {$btr->banner_instruction2|escape}
                     </div>
                     <textarea disabled id="fn_banner_js">
-                       $('.fn-slick-{$banner->group_id}.okaycms').slick({
+                       $('.fn_banner_{$banner->group_id}').slick({
                             infinite: true,
                             speed: 500,
                             slidesToShow: 1,

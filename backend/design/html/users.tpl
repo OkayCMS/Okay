@@ -87,7 +87,7 @@
                                 <span>{$btr->general_registration_date|escape}</span>
                                 <a href="{url sort=date}" {if $sort == 'date'}class="selected"{/if}>{include file='svg_icon.tpl' svgId='sorts'}</a>
                             </div>
-                            <div class="okay_list_heading okay_list_users_group">Группа</div>
+                            <div class="okay_list_heading okay_list_users_group">{$btr->general_group|escape}</div>
                             <div class="okay_list_heading okay_list_count">
                                 <span>{$btr->users_orders|escape}</span>
                                 <a href="{url sort=cnt_order}" {if $sort == 'cnt_order'}}class="selected"{/if}>{include file='svg_icon.tpl' svgId='sorts'}</a>

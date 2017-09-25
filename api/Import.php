@@ -57,12 +57,19 @@ class Import extends Okay {
     }
 
     // Заменяем имена колонок из файла на внутренние имена колонок
-    protected function init_internal_columns() {
+    protected function init_internal_columns($fields = array()) {
         if (isset($this->internal_columns_names)) {
             return true;
         }
         if (empty($this->columns)) {
             return false;
+        }
+        if (!empty($fields)) {
+            foreach ($fields as $csv=>$inner) {
+                if (isset($this->columns_names[$inner]) && !in_array(mb_strtolower($csv), array_map("mb_strtolower", $this->columns_names[$inner]))) {
+                    $this->columns_names[$inner][] = $csv;
+                }
+            }
         }
         $this->internal_columns_names = array();
         foreach($this->columns as &$column) {

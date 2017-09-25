@@ -17,14 +17,14 @@
         {/if}
 
         {* Product image *}
-        <a class="preview_image{if $smarty.get.module=='ComparisonView'} fn_zoom{/if}" href="{if $smarty.get.module=='ComparisonView'}{$product->image->filename|resize:800:600:w}{else}{$lang_link}products/{$product->url}{/if}" {if $smarty.get.module=='ComparisonView'}data-fancybox="group" data-caption="{$product->name|escape}"{/if}>
+        <a class="preview_image" href="{if $smarty.get.module=='ComparisonView'}{$product->image->filename|resize:800:600:w}{else}{$lang_link}products/{$product->url}{/if}" {if $smarty.get.module=='ComparisonView'}data-fancybox="group" data-caption="{$product->name|escape}"{/if}>
             {if $product->image->filename}
                 <img class="fn_img preview_img" src="{$product->image->filename|resize:200:200}" alt="{$product->name|escape}" title="{$product->name|escape}"/>
             {else}
                 <img class="fn_img preview_img" src="design/{$settings->theme}/images/no_image.png" width="250" height="250" alt="{$product->name|escape}"/>
             {/if}
             {if $product->special}
-                <img class="promo_img" src='files/special/{$product->special}' alt='{$product->special}' title="{$product->special}"/>
+                <img class="promo_img" src='files/special/{$product->special}' alt='{$product->special|escape}' title="{$product->special|escape}"/>
             {/if}
         </a>
 

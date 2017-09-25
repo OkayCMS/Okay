@@ -33,11 +33,10 @@
 
                 <div class="form_group">
                     {* User's e-mail *}
-                    <label>
+                    <label for="password_remind">
                         <span class="label_block" data-language="password_remind_enter_your_email">{$lang->password_remind_enter_your_email}</span>
-
-                        <input class="form_input" type="text" name="email" value="{$email|escape}" data-language="form_email" placeholder="{$lang->form_email}*">
                     </label>
+                    <input id="password_remind" class="form_input" type="text" name="email" value="{$email|escape}" data-language="form_email" placeholder="{$lang->form_email}*">
                 </div>
         
                 {* Submit button *}

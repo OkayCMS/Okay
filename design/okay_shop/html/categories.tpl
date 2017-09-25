@@ -1,7 +1,7 @@
 <nav class="categories_nav">
     {function name=categories_tree}
         {if $categories}
-            <ul class="{if $level == 1}categories_menu level_{$level}{else}subcategory level_{$level} {/if}">
+            <ul class="level_{$level} {if $level == 1}categories_menu {else}subcategory {/if}">
                 {foreach $categories as $c}
                     {if $c->visible}
                         {if $c->subcategories && $c->has_children_visible}

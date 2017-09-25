@@ -38,18 +38,20 @@
             <div class="filter_group">
                 {* Display all brands *}
                 <div class="filter_item">
-                    <a class="filter_link{if !$brand->id && !$smarty.get.b} checked{/if}" href="{furl params=[brand=>null, page=>null]}">
+                    {$furl = {furl params=[brand=>null, page=>null]}}
+                    <{$link_tag} class="filter_link{if $link_tag=='span'} fn_filter_link{/if}{if !$brand->id && !$smarty.get.b} checked{/if}" href="{$furl}">
                         <i class="filter_indicator"></i>
                         <span data-language="features_all">{$lang->features_all}</span>
-                    </a>
+                    </{$link_tag}>
                 </div>
                 {* Brand list *}
                 {foreach $category->brands as $b}
                     <div class="filter_item">
-                        <a class="filter_link{if $brand->id == $b->id || $smarty.get.b && in_array($b->id,$smarty.get.b)} checked{/if}" href="{furl params=[brand=>$b->url, page=>null]}">
+                        {$furl = {furl params=[brand=>$b->url, page=>null]}}
+                        <{$link_tag} class="filter_link{if $link_tag=='span'} fn_filter_link{/if}{if $brand->id == $b->id || $smarty.get.b && in_array($b->id,$smarty.get.b)} checked{/if}" href="{$furl}">
                              <i class="filter_indicator"></i>
                             <span>{$b->name|escape}</span>
-                        </a>
+                        </{$link_tag}>
                     </div>
                 {/foreach}
             </div>
@@ -64,18 +66,20 @@
                 <div class="filter_group">
                     {* Display all features *}
                     <div class="filter_item">
-                        <a class="filter_link{if !$smarty.get.$key} checked{/if}" href="{furl params=[$f->url=>null, page=>null]}">
+                        {$furl = {furl params=[$f->url=>null, page=>null]}}
+                        <{$link_tag} class="filter_link{if $link_tag=='span'} fn_filter_link{/if}{if !$smarty.get.$key} checked{/if}" href="{$furl}">
                             <i class="filter_indicator"></i>
                             <span data-language="features_all">{$lang->features_all}</span>
-                        </a>
+                        </{$link_tag}>
                     </div>
                     {* Feture value *}
                     {foreach $f->options as $o}
                         <div class="filter_item">
-                            <a class="filter_link{if $smarty.get.{$f@key} && in_array($o->translit,$smarty.get.{$f@key})} checked{/if}" href="{furl params=[$f->url=>$o->translit, page=>null]}">
+                            {$furl = {furl params=[$f->url=>$o->translit, page=>null]}}
+                            <{$link_tag} class="filter_link{if $link_tag=='span'} fn_filter_link{/if}{if $smarty.get.{$f@key} && in_array($o->translit,$smarty.get.{$f@key})} checked{/if}" href="{$furl}">
                                 <i class="filter_indicator"></i>
                                 <span>{$o->value|escape}</span>
-                            </a>
+                            </{$link_tag}>
                         </div>
                     {/foreach}
 

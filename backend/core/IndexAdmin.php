@@ -278,6 +278,7 @@ class IndexAdmin extends Okay {
                 }
             }
             $this->design->assign('support_info', $support_info);
+            $this->design->assign('translit_pairs', $this->translit_pairs);
         }
         
         // Подключаем файл с необходимым модулем

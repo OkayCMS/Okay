@@ -192,7 +192,7 @@
                 }
             });
         } else {
-            elem.closest(".fn_row").find(".fn_ajax_categories").slideToggle(500);
+            elem.closest(".fn_row").children(".fn_ajax_categories").slideToggle(500);
             elem.find("i").toggleClass("fa-minus-square");
         }
     });

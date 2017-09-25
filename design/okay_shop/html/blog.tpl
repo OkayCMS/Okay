@@ -8,7 +8,7 @@
 {/if}
 
 {* The page heading *}
-<h1 class="h1"><span data-page="{$page->id}">{$page->name}</span></h1>
+<h1 class="h1"><span data-page="{$page->id}">{$page->name|escape}</span></h1>
 
 {* The list of the blog posts *}
 <div class="blog clearfix">

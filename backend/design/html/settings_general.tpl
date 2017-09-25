@@ -202,7 +202,18 @@
                                     </label>
                                 </div>
                             </div>
-                        </div>
+
+                            <div class="col-xl-3 col-lg-4 col-md-6">
+                                <div class="permission_box">
+                                    <span>{$btr->settings_general_callback|escape}</span>
+                                    <label class="switch switch-default">
+                                        <input class="switch-input" name="captcha_callback" value='1' type="checkbox" {if $settings->captcha_callback}checked=""{/if}/>
+                                        <span class="switch-label"></span>
+                                        <span class="switch-handle"></span>
+                                    </label>
+                                </div>
+
+                            </div>
                     </div>
                     <div class="col-xs-12 clearfix"></div>
                 </div>

@@ -291,7 +291,7 @@ class ProductAdmin extends Okay {
                     if(is_array($options)) {
                         foreach($options as $option) {
                             if(in_array($option->feature_id, $category_features)) {
-                                $this->features->update_option($product->id, $option->feature_id, $option->value, $option->translit);
+                                $this->features->update_option($product->id, $option->feature_id, $option->value);
                             }
                         }
                     }

@@ -12,6 +12,7 @@ class Products extends Okay {
         $limit = 100;
         $page = 1;
         $category_id_filter = '';
+        $without_category_filter = '';
         $brand_id_filter = '';
         $product_id_filter = '';
         $features_filter = '';
@@ -45,6 +46,10 @@ class Products extends Okay {
         if(!empty($filter['category_id'])) {
             $category_id_filter = $this->db->placehold('INNER JOIN __products_categories pc ON pc.product_id = p.id AND pc.category_id in(?@)', (array)$filter['category_id']);
             $group_by = "GROUP BY p.id";
+        }
+
+        if (isset($filter['without_category'])) {
+            $without_category_filter = $this->db->placehold('AND (SELECT count(*)=0 FROM __products_categories pc WHERE pc.product_id=p.id) = ?', intval($filter['without_category']));
         }
         
         if(!empty($filter['brand_id'])) {
@@ -98,6 +103,9 @@ class Products extends Okay {
         
         if(!empty($filter['sort'])) {
             switch ($filter['sort']) {
+                case 'rand':
+                    $order = 'RAND()';
+                    break;
                 case 'position':
                     $order = 'p.position DESC';
                     break;
@@ -188,6 +196,7 @@ class Products extends Okay {
                 1
                 $product_id_filter
                 $brand_id_filter
+                $without_category_filter
                 $features_filter
                 $keyword_filter
                 $is_featured_filter
@@ -223,6 +232,7 @@ class Products extends Okay {
     /*Подсчет количества товаров*/
     public function count_products($filter = array()) {
         $category_id_filter = '';
+        $without_category_filter = '';
         $brand_id_filter = '';
         $product_id_filter = '';
         $keyword_filter = '';
@@ -239,6 +249,10 @@ class Products extends Okay {
         
         if(!empty($filter['category_id'])) {
             $category_id_filter = $this->db->placehold('INNER JOIN __products_categories pc ON pc.product_id = p.id AND pc.category_id in(?@)', (array)$filter['category_id']);
+        }
+
+        if (isset($filter['without_category'])) {
+            $without_category_filter = $this->db->placehold('AND (SELECT count(*)=0 FROM __products_categories pc WHERE pc.product_id=p.id) = ?', intval($filter['without_category']));
         }
         
         if(!empty($filter['brand_id'])) {
@@ -333,6 +347,7 @@ class Products extends Okay {
             WHERE 
                 1
                 $brand_id_filter
+                $without_category_filter
                 $product_id_filter
                 $keyword_filter
                 $is_featured_filter
@@ -461,10 +476,7 @@ class Products extends Okay {
             }
             
             // Удаляем свойства
-            $options = $this->features->get_options(array('product_id'=>$id));
-            foreach($options as $o) {
-                $this->features->delete_option($id, $o->feature_id);
-            }
+            $this->db->query("DELETE FROM __options WHERE product_id=?", intval($id));
             
             // Удаляем связанные товары
             $related = $this->get_related_products($id);
@@ -554,13 +566,13 @@ class Products extends Okay {
         // Дублируем свойства
         $options = $this->features->get_options(array('product_id'=>$id));
         foreach($options as $o) {
-            $this->features->update_option($new_id, $o->feature_id, $o->value);
+            $this->features->update_option($new_id, $o->feature_id, $o->value, $o->translit);
         }
         
         // Дублируем связанные товары
         $related = $this->get_related_products($id);
         foreach($related as $r) {
-            $this->add_related_product($new_id, $r->related_id);
+            $this->add_related_product($new_id, $r->related_id, $r->position);
         }
         
         $this->multi_duplicate_product($id, $new_id);
@@ -753,7 +765,7 @@ class Products extends Okay {
                     // Дублируем свойства
                     $options = $this->features->get_options(array('product_id'=>$id));
                     foreach($options as $o) {
-                        $this->features->update_option($new_id, $o->feature_id, $o->value);
+                        $this->features->update_option($new_id, $o->feature_id, $o->value, $o->translit);
                     }
                     
                     $this->languages->set_lang_id($lang_id);

@@ -46,6 +46,7 @@ class Design extends Okay {
         $this->smarty->registerPlugin('modifier', 'time',        array($this, 'time_modifier'));
         $this->smarty->registerPlugin('modifier', 'balance',    array($this, 'balance_modifier'));
         $this->smarty->registerPlugin('function', 'api',        array($this, 'api_plugin'));
+        $this->smarty->registerPlugin('modifier', 'first_letter', array($this, 'first_letter_modifier'));
         
         if($this->config->smarty_html_minify) {
             $this->smarty->loadFilter('output', 'trimwhitespace');
@@ -189,6 +190,11 @@ class Design extends Okay {
         $hours = intval(floor($minutes/60));
         $minutes -= $hours*60;
         return $sign.($hours < 10 ? '0' : '').$hours.':'.($minutes < 10 ? '0' : '').$minutes;
+    }
+
+    /*Функция оторбажения первой буквы строки*/
+    public function first_letter_modifier($str) {
+        return function_exists("mb_substr") ? mb_substr($str, 0, 1) : "";
     }
 
     /*Функция вызова методов внутри шаблонов клиента*/

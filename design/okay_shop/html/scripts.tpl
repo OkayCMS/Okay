@@ -22,6 +22,13 @@
                 type : 'inline',
             } );
         } );
+    {elseif $call_error}
+        $(function() {
+            $.fancybox.open({
+                src: '#fn_callback',
+                type : 'inline'
+            });
+        });
     {/if}
 
     {* Карточка товара, ошибка в форме *}
@@ -31,7 +38,6 @@
             $( '.tab' ).hide();
             $( 'a[href="#comments"]' ).addClass( 'selected' );
              $( '#comments').show();
-            location.href = location.href + '#fn-product_comment';
         } );
     {* Карточка товара, отправка комментария *}
     {elseif $smarty.get.module == 'ProductView'}
@@ -206,7 +212,7 @@
         $(".fn_share").jsSocials({
             showLabel: false,
             showCount: false,
-            shares: ["twitter", "facebook", "googleplus", "vkontakte", 'telegram']
+            shares: ["twitter", "facebook", "googleplus", "vkontakte"]
         });
     }
 

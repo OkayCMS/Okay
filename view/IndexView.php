@@ -18,9 +18,10 @@ class IndexView extends View {
             $callback->name         = $this->request->post('name');
             $callback->url          = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
             $callback->message      = $this->request->post('message');
+            $captcha_code =  $this->request->post('captcha_code', 'string');
             
             $this->design->assign('callname',  $callback->name);
-            $this->design->assign('callemail', $callback->phone);
+            $this->design->assign('callphone', $callback->phone);
             $this->design->assign('callmessage', $callback->message);
 
             /*Валидация данных клиента*/
@@ -30,6 +31,8 @@ class IndexView extends View {
                 $this->design->assign('call_error', 'empty_phone');
             } elseif(!$this->validate->is_comment($callback->message)) {
                 $this->design->assign('call_error', 'empty_comment');
+            } elseif($this->settings->captcha_callback && (($_SESSION['captcha_callback'] != $captcha_code || empty($captcha_code)) || empty($_SESSION['captcha_callback']))) {
+                $this->design->assign('call_error', 'captcha');
             } elseif($callback_id = $this->callbacks->add_callback($callback)) {
                 $this->design->assign('call_sent', true);
                 // Отправляем email

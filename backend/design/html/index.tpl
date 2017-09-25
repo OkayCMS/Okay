@@ -16,8 +16,8 @@
     <script src="design/js/bootstrap.min.js"></script>
     <script src="design/js/bootstrap-select.js"></script>
     <script src="design/js/jquery.dd.min.js"></script>
-    {if $smarty.get.module == "OrdersAdmin"}
-        <script src="design/js/jquery/datepicker/jquery.ui.datepicker-ru.js"></script>
+    {if in_array($smarty.get.module, array("OrdersAdmin", "PostAdmin", "ReportStatsAdmin", "CouponsAdmin", "CategoryStatsAdmin"))}
+        <script src="design/js/jquery/datepicker/jquery.ui.datepicker-{$manager->lang}.js"></script>
     {/if}
     <script src="design/js/toastr.min.js"></script>
     <script src="design/js/Sortable.js"></script>
@@ -49,7 +49,7 @@
                 <img src="design/images/logo_title.png" alt="OkayCMS"/>
             </a>
             {if $is_mobile === false && $is_tablet === false}
-                <span class="fn_switch_menu menu_switch fn_ajax_action {if $manager->menu_status}fn_active_class{/if} hint-left-middle-t-white-s-small-mobile  hint-anim" data-module="managers" data-action="menu_status" data-id="{$manager->id}" data-hint="Фиксация каталога">
+                <span class="fn_switch_menu menu_switch fn_ajax_action {if $manager->menu_status}fn_active_class{/if} hint-left-middle-t-white-s-small-mobile  hint-anim" data-module="managers" data-action="menu_status" data-id="{$manager->id}" data-hint="{$btr->catalog_fixation}">
                     <span class="menu_hamburger"></span>
                 </span>
             {else}
@@ -80,8 +80,7 @@
                                             <li class="{if $title == $menu_selected}active{/if}">
                                                 <a class="nav-link" href="index.php?module={$mod}">
                                                     <span class="icon-thumbnail">
-                                                        {assign var="letter" value=$btr->{$title}}
-                                                        {$letter[0]}{$letter[1]}
+                                                        {$btr->{$title}|first_letter}
                                                     </span>
                                                     <span class="{$title} title">{$btr->{$title}}</span>
                                                 </a>
@@ -404,9 +403,8 @@
         /* Initializing sorting */
         if($(".sortable").size()>0) {
             {literal}
-            var el = document.querySelectorAll(".sortable");
-            for (var i = 0; i < el.length; i++) {
-                var sortable = Sortable.create(el[i], {
+            $(".sortable").each(function() {
+                Sortable.create(this, {
                     handle: ".move_zone",  // Drag handle selector within list items
                     sort: true,  // sorting inside list
                     animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
@@ -425,9 +423,9 @@
                                 $(".product_images_list").find("li:nth-child(2)").addClass("first_image");
                             }
                         }
-                    },
+                    }
                 });
-            }
+            });
             {/literal}
         }
 
@@ -494,12 +492,11 @@
         function success_action ($this){
             $(document).on('click','.fn_submit_delete',function(){
                 $('.fn_form_list input[type="checkbox"][name*="check"]').attr('checked', false);
-                $this.closest(".fn_form_list").find('select[name="action"] option[value=delete]').attr('selected', true);
                 $this.closest(".fn_row").find('input[type="checkbox"][name*="check"]').attr('checked', true);
                 if ( !(/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) ) {
                     $this.closest(".fn_row").find('input[type="checkbox"][name*="check"]').trigger("click");
                 }
-
+                $this.closest(".fn_form_list").find('select[name="action"] option[value=delete]').attr('selected', true);
                 $this.closest(".fn_form_list").submit();
             });
             $(document).on('click','.fn_dismiss_delete',function(){
@@ -580,6 +577,14 @@
     /*
     * функции генерации мета данных
     * */
+    var is_translit_alpha = $(".fn_is_translit_alpha");
+    var translit_pairs = [];
+    {foreach $translit_pairs as $i=>$pair}
+        translit_pairs[{$i}] = {
+            from: "{$pair['from']}".split("-"),
+            to: "{$pair['to']}".split("-")
+        };
+    {/foreach}
     if($('input').is('.fn_meta_field')) {
         $(window).on("load", function() {
 
@@ -664,26 +669,34 @@
                 return $('.fn_editor_class').val().replace(/(<([^>]+)>)/ig," ").replace(/(\&nbsp;)/ig," ").replace(/^\s+|\s+$/g, '').substr(0, 512);
             }
         }
+    }
 
-        function generate_url() {
-            url = $('input[name="name"]').val();
+    function generate_url() {
+        url = $('input[name="name"]').val();
+        url = translit(url);
+        if (is_translit_alpha.size() > 0) {
+            url = url.replace(/[^0-9a-z]+/gi, '').toLowerCase();
+        } else {
             url = url.replace(/[\s]+/gi, '-');
-            url = translit(url);
             url = url.replace(/[^0-9a-z_\-]+/gi, '').toLowerCase();
-            return url;
         }
+        return url;
+    }
 
-        function translit(str) {
-            var ru=("А-а-Б-б-В-в-Ґ-ґ-Г-г-Д-д-Е-е-Ё-ё-Є-є-Ж-ж-З-з-И-и-І-і-Ї-ї-Й-й-К-к-Л-л-М-м-Н-н-О-о-П-п-Р-р-С-с-Т-т-У-у-Ф-ф-Х-х-Ц-ц-Ч-ч-Ш-ш-Щ-щ-Ъ-ъ-Ы-ы-Ь-ь-Э-э-Ю-ю-Я-я").split("-")
-            var en=("A-a-B-b-V-v-G-g-G-g-D-d-E-e-E-e-E-e-ZH-zh-Z-z-I-i-I-i-I-i-J-j-K-k-L-l-M-m-N-n-O-o-P-p-R-r-S-s-T-t-U-u-F-f-H-h-TS-ts-CH-ch-SH-sh-SCH-sch-'-'-Y-y-'-'-E-e-YU-yu-YA-ya").split("-")
-            var res = '';
-            for(var i=0, l=str.length; i<l; i++) {
-                var s = str.charAt(i), n = ru.indexOf(s);
-                if(n >= 0) { res += en[n]; }
+    function translit(str) {
+        var str_tm = str;
+        for (var j in translit_pairs) {
+            var from = translit_pairs[j].from,
+                to = translit_pairs[j].to,
+                res = '';
+            for(var i=0, l=str_tm.length; i<l; i++) {
+                var s = str_tm.charAt(i), n = from.indexOf(s);
+                if(n >= 0) { res += to[n]; }
                 else { res += s; }
             }
-            return res;
+            str_tm = res;
         }
+        return str_tm;
     }
     /*функции генерации мета данных end*/
 

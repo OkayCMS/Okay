@@ -36,8 +36,8 @@ class Brands extends Okay {
             foreach($filter['features'] as $feature=>$value) {
                 $features_filter .= $this->db->placehold('AND p.id in (SELECT product_id FROM __options WHERE feature_id=? AND translit in(?@) ) ', $feature, (array)$value);
             }
-            $features_filter .= $visible_filter;
             if (empty($category_join)) {
+                $features_filter .= $visible_filter;
                 $category_join = $this->db->placehold("LEFT JOIN __products p ON (p.brand_id=b.id)");
             }
         }

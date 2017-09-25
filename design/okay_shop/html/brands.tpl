@@ -4,22 +4,22 @@
 {$canonical="/brands" scope=parent}
 
 {* The page heading *}
-<h1 class="h1"><span data-page="{$page->id}">{$page->name}</span></h1>
+<h1 class="h1"><span data-page="{$page->id}">{$page->name|escape}</span></h1>
 
 {* The list of the brands *}
 {if $brands}
     <div class="brands clearfix block">
         {foreach $brands as $b}
             <div class="brand_item no_padding col-xs-6 col-sm-4 col-lg-3">
-                <a class="brand_link" href="{$lang_link}brands/{$b->url}">
+                <a class="brand_link" data-brand="{$b->id}" href="{$lang_link}brands/{$b->url}">
                     {if $b->image}
                         <div class="brand_image">
                             <img class="brand_img" src="{$b->image|resize:250:250:false:$config->resized_brands_dir}" alt="{$b->name|escape}" title="{$b->name|escape}">
                         </div>
-                        <span data-brand="{$b->id}">{$b->name}</span>
+                        <span>{$b->name|escape}</span>
                     {else}
                         <div class="brand_name">
-                            <span data-brand="{$b->id}">{$b->name}</span>
+                            <span>{$b->name|escape}</span>
                         </div>
                     {/if}    
                 </a>

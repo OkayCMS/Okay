@@ -98,7 +98,7 @@
 
             <div class="col-lg-5">
                {* Comment form *}
-               <form id="fn-blog_comment" class="fn_validate_post"  method="post" action="">
+               <form id="fn_blog_comment" class="fn_validate_post"  method="post" action="">
                 
                     <div class="h3">
                         <span data-language="post_write_comment">{$lang->post_write_comment}</span>

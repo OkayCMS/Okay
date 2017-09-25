@@ -69,7 +69,7 @@ body {
     padding-bottom: 70px;
     min-height: 100%;
     position: relative;
-
+    z-index:2;
 }
 .main {
     width: 100%;
@@ -3248,6 +3248,7 @@ body.menu-pin .menu_switch .menu_hamburger::after {
     bottom: 0;
     background-color: RGB(251, 251, 251);
     height: 50px;
+    z-index: 1;
 }
 
 

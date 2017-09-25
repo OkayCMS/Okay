@@ -578,6 +578,7 @@ $backend_translations->topic_close = 'Close theme';
 $backend_translations->topic_closed = 'Topic is closed';
 $backend_translations->topic_message = 'Message';
 $backend_translations->topic_new = 'New topic';
+$backend_translations->topic_new_theme = 'Message subject';
 $backend_translations->topic_no_theme = 'Theme is not found';
 $backend_translations->topic_no_messages = 'No messages';
 $backend_translations->topic_number = 'Topic №';
@@ -844,3 +845,7 @@ $backend_translations->import_info = 'When loading an import file, the system au
   <br> Clicking on the labels in the "System Fields" column, you can independently specify what the column from the file in the OkayCMS system will match';
 $backend_translations->settings_general_gathering_data = 'Gathering data';
 $backend_translations->settings_general_gather_enabled = 'Allow the gathering and processing of data about my actions in administrative panel to improve system performance.';
+$backend_translations->catalog_fixation = 'Catalog fixation';
+$backend_translations->products_without_brand = 'Without brand';
+$backend_translations->products_without_category = 'Without category';
+$backend_translations->settings_general_callback = 'In callback form';

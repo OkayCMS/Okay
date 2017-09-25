@@ -709,6 +709,9 @@ body.openmenu::before {
 .informers {
     margin-right: -15px;
 }
+.tab_navigation a + a    {
+    border-top: none;
+}
 }
 
 

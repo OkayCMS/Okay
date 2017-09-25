@@ -11,7 +11,7 @@
 {if $comparison->products}
     <div class="comparison_page clearfix block">
         <div class="comparison_left">
-            <div class="fn_product fn_resize compare_controls">
+            <div class="fn_resize compare_controls">
 
                 {* Show all/different product features *}
                 {if $comparison->products|count > 1}

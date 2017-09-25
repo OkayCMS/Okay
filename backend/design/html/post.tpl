@@ -335,13 +335,10 @@
 {include file='tinymce_init.tpl'}
 {* On document load *}
 {literal}
-    <script src="design/js/jquery/datepicker/jquery.ui.datepicker-ru.js"></script>
     <script src="design/js/autocomplete/jquery.autocomplete-min.js"></script>
     <script>
         $(window).on("load", function() {
-            $('input[name="date"]').datepicker({
-                regional:'ru'
-            });
+            $('input[name="date"]').datepicker();
 
             // Удаление товара
         $(document).on( "click", ".fn_remove_item", function() {

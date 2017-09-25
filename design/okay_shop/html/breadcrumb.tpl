@@ -38,7 +38,7 @@
 
         {* Brand list page *}
         {elseif $smarty.get.module == "BrandsView"}
-            <li>{$page->name}</li>
+            <li>{$page->name|escape}</li>
 
         {* Product page *}
         {elseif $smarty.get.module == "ProductView"}

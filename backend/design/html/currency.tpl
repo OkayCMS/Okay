@@ -264,7 +264,7 @@
             if($('input[type="hidden"][name="action"]').val()=='delete' && !confirm(general_confirm_delete)) {
                 return false;
             }
-            if(base_currency_id != $('input[name*="currency[id]"]:first').val() && confirm(сurrency_recalculate +$('input[name*="name"]:first').val()+ сurrency_recalculate_rate, 'msgBox Title'))
+            if(base_currency_id != $('input[name*="currency[id]"]:first').val() && confirm(сurrency_recalculate + ' ' +$('input[name*="name"]:first').val() + ' ' + сurrency_recalculate_rate, 'msgBox Title'))
                 $('input[name="recalculate"]').val(1);
         });
 

@@ -16,6 +16,9 @@ class ProductsView extends View {
     private $is_wrong_params = 0;
     private $features_urls = array();
     private $category_brands = array();
+    private $max_filter_brands = 1;
+    private $max_filter_options = 1;
+    private $max_filter_features = 2;
         
     public function __construct() {
         parent::__construct();
@@ -111,7 +114,7 @@ class ProductsView extends View {
             foreach($this->meta_array as $type=>$_meta_array) {
                 switch($type) {
                     case 'brand': {
-                        if(count($_meta_array) > 1) {
+                        if(count($_meta_array) > $this->max_filter_brands) {
                             $this->set_canonical = true;
                         }
                         $this->meta['h1'] = $this->meta['title'] = $this->meta['keywords'] = $this->meta['description'] = implode($this->meta_delimiter,$_meta_array);
@@ -119,7 +122,7 @@ class ProductsView extends View {
                     }
                     case 'options': {
                         foreach($_meta_array as $f_id=>$f_array) {
-                            if(count($f_array) > 1 || count($_meta_array) > 2) {
+                            if(count($f_array) > $this->max_filter_options || count($_meta_array) > $this->max_filter_features) {
                                 $this->set_canonical = true;
                             }
                             $this->meta['h1']           .= (!empty($this->meta['h1'])           ? $this->meta_delimiter : '') . implode($this->meta_delimiter,$f_array);
@@ -156,7 +159,7 @@ class ProductsView extends View {
         $this->design->smarty->registerPlugin('function', 'furl', array($this, 'filter_chpu_url'));
     }
 
-    public function filter_chpu_url($params) {
+    public function filter_chpu_url($params, &$smarty) {
         if(is_array(reset($params))) {
             $params = reset($params);
         }
@@ -212,6 +215,9 @@ class ProductsView extends View {
                     } else {
                         $result_array['features'][$k][] = $v;
                     }
+                    if(empty($result_array['features'][$k])) {
+                        unset($result_array['features'][$k]);
+                    }
                 break;
             }
         }
@@ -227,14 +233,18 @@ class ProductsView extends View {
         if(!empty($_GET['brand'])) {
             $result_string .= '/' . $_GET['brand'];
         }
-        
+
+        $link_tag = "a";
         if(!empty($result_array['brand'])) {
+            if (count($result_array['brand']) > $this->max_filter_brands) {
+                $link_tag = "span";
+            }
             $result_string .= '/brand-' . implode('_',$this->filter_chpu_sort_brands($result_array['brand'])); // - это с сортировкой по брендам
             //$result_string .= '/brand-' . implode('_',$result_array['brand']); // - это без сортировки по брендам
         }
         foreach($result_array['features'] as $k=>$v) {
-            if(empty($result_array['features'][$k])) {
-                unset($result_array['features'][$k]);
+            if (count($result_array['features'][$k]) > $this->max_filter_options || count($result_array['features']) > $this->max_filter_features) {
+                $link_tag = "span";
             }
         }
         if(!empty($result_array['features'])) {
@@ -250,6 +260,7 @@ class ProductsView extends View {
         if (!empty($keyword)) {
             $result_string .= '?keyword='.$keyword;
         }
+        $smarty->assign('link_tag', $link_tag);
         //отдаем сформированную ссылку
         return $result_string;
     }
@@ -544,7 +555,7 @@ class ProductsView extends View {
 
         $rel_prev_next = $this->design->fetch('products_rel_prev_next.tpl');
         $this->design->assign('rel_prev_next', $rel_prev_next);
-        $this->design->assign('sort_canonical', $this->filter_chpu_url(array('sort'=>null)));
+        $this->design->assign('sort_canonical', $this->filter_chpu_url(array('sort'=>null), $this->design));
 
         $this->body = $this->design->fetch('products.tpl');
         return $this->body;
