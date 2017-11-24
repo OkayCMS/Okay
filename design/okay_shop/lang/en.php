@@ -242,3 +242,4 @@ $lang['receipt_address'] = "Address";
 $lang['product_brand_name'] = "Brand:";
 $lang['order_delivery'] = "Delivery";
 $lang['order_download_file'] = "Download";
+$lang['order_text_of'] = "of";

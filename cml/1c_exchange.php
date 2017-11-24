@@ -6,8 +6,26 @@ $dir = 'cml/temp/';
 // Обновлять все данные при каждой синхронизации
 $full_update = true;
 
+// Очищать всю базу товаров при каждой выгрузке true:false
+// PLEASE BE CAREFULL
+$delete_all	= false;
+
 // Название параметра товара, используемого как бренд
 $brand_option_name = 'Производитель';
+
+// Переменная для определения будем пересчитывать при выгрузке или нет
+// true сайт много валютный НЕ ПЕРЕСЧИТЫВАЕМ false сайт с одной валютой ПЕРЕСЧИТЫВАЕМ
+// меняется в зависимости от количества валют в админке и $only_enabled_currencies
+$is_multi_currency = false;// just a default value, will be overwritten in any case
+
+// Учитывает все валюты(false) или только включенные(true)
+$only_enabled_currencies = false;
+
+// Переменная Базовая валюта 
+$base_currency = '';// just a default value, will be overwritten in any case
+
+// TRUE Учитывать количество товара из 1с FALSE установить доступность в бесконечное количество
+$stock_from_1c = true;
 
 $start_time = microtime(true);
 $max_exec_time = min(30, @ini_get("max_execution_time"));
@@ -200,7 +218,7 @@ if($okay->request->get('type') == 'sale' && $okay->request->get('mode') == 'quer
 
 
         $purchases = $okay->orders->get_purchases(array('order_id'=>intval($order->id)));
-
+		
         $t1 = $doc->addChild ( 'Товары' );
         foreach($purchases as $purchase) {
             if(!empty($purchase->product_id) && !empty($purchase->variant_id)) {
@@ -353,7 +371,11 @@ if($okay->request->get('type') == 'catalog' && $okay->request->get('mode') == 'i
     unset($_SESSION['last_1c_imported_product_num']);
     unset($_SESSION['features_mapping']);
     unset($_SESSION['categories_mapping']);
-    unset($_SESSION['brand_id_option']);
+	unset($_SESSION['brand_option_id']);
+	// Если установлен $delete_all = true очистить ВСЕ!
+    if ($delete_all) {
+        flush_database();
+    }
     print "zip=no\n";
     print "file_limit=1000000\n";
 }
@@ -421,6 +443,18 @@ if($okay->request->get('type') == 'catalog' && $okay->request->get('mode') == 'i
         //unlink($dir.$filename);
         unset($_SESSION['last_1c_imported_product_num']);
     } elseif($filename === 'offers.xml') {
+        // Смотрим сколько валют будет использоваться
+        // Получаем все валюты
+        $currency_filter = array();
+        if ($only_enabled_currencies) {
+            $currency_filter['enabled'] = 1;
+        }
+        $base_currency = $okay->money->get_currencies($currency_filter);
+        // Смотрим одна валюта или больше
+        $is_multi_currency = (count($base_currency) > 1 ? true : false);
+        // Берём 1ую валюту как основную
+        $base_currency = reset($base_currency);
+
         // Варианты
         $z = new XMLReader;
         $z->open($dir.$filename);
@@ -481,7 +515,7 @@ function import_features($xml) {
     global $okay;
     global $dir;
     global $brand_option_name;
-
+	
     $property = array();
     if(isset($xml->Свойства->СвойствоНоменклатуры)) {
         $property = $xml->Свойства->СвойствоНоменклатуры;
@@ -499,10 +533,15 @@ function import_features($xml) {
         }
         // Иначе обрабатываем как обычной свойство товара
         else {
-            $okay->db->query('SELECT id FROM __features WHERE name=?', strval($xml_feature->Наименование));
-            $feature_id = $okay->db->result('id');
-            if(empty($feature_id)) {
-                $feature_id = $okay->features->add_feature(array('name'=>strval($xml_feature->Наименование)));
+			// Проверяем существует ли свойство не по наименованию а по коду 1С
+			$okay->db->query('SELECT id FROM __features WHERE external_id=?', strval($xml_feature->Ид));
+			$feature_id = $okay->db->result('id');
+            // По умолчанию свойство АКТИВИРУЕМ для фильтра
+			if(empty($feature_id)) {
+                // Добавляем свойство и Код 1С
+                $feature_id = $okay->features->add_feature(array('name'=>strval($xml_feature->Наименование), 'external_id'=>strval($xml_feature->Ид), 'in_filter'=>1));
+            } else {
+                $feature_id = $okay->features->update_feature($feature_id, array('name'=>strval($xml_feature->Наименование)));
             }
             $_SESSION['features_mapping'][strval($xml_feature->Ид)] = $feature_id;
             if($xml_feature->ТипЗначений == 'Справочник') {
@@ -518,15 +557,20 @@ function import_product($xml_product) {
     global $okay;
     global $dir;
     global $brand_option_name;
-    global $full_update;
+	global $full_update;
     // Товары
 
+    /* Какую ф-ию обновления значений св-тв вызывать:
+     * если это новый товар то нужно значения добавить во все языки
+     * иначе - только для текущего - вызываем старую добрую update_option()
+    */
+    $update_option_function = "update_option";
 
     //  Id товара и варианта (если есть) по 1С
     @list($product_1c_id, $variant_1c_id) = explode('#', $xml_product->Ид);
     if(empty($variant_1c_id)) {
         $variant_1c_id = '';
-    }
+	}
 
     // Ид категории
     if(isset($xml_product->Группы->Ид)) {
@@ -545,6 +589,9 @@ function import_product($xml_product) {
     }
     if(!empty($values)) {
         $variant->name = implode(', ', $values);
+    } else {
+        // Нет вариантов товара поэтому сделаем пустым
+        $variant->name='';
     }
     $variant->sku = (string)$xml_product->Артикул;
     $variant->external_id = $variant_1c_id;
@@ -563,6 +610,7 @@ function import_product($xml_product) {
 
     // Если такого товара не нашлось
     if(empty($product_id)) {
+        $update_option_function = "update_option_all_languages";
         // Добавляем товар
         $description = '';
         if(!empty($xml_product->Описание)) {
@@ -576,7 +624,8 @@ function import_product($xml_product) {
             'meta_keywords'=>$xml_product->Наименование,
             'meta_description'=>$description,
             'annotation'=>$description,
-            'body'=>$description
+            'description'=>$description,
+            'visible'=>1
         ));
 
         // Добавляем товар в категории
@@ -612,7 +661,7 @@ function import_product($xml_product) {
                 $description = strval($xml_product->Описание);
                 $p->meta_description = $description;
                 $p->annotation = $description;
-                $p->body = $description;
+                $p->description = $description;
             }
             $p->external_id = $product_1c_id;
             $p->url = translit($xml_product->Наименование);
@@ -651,6 +700,7 @@ function import_product($xml_product) {
     if(empty($variant_id)) {
         $variant->product_id = $product_id;
         $variant->stock = 0;
+        $variant->units = $xml_product->БазоваяЕдиница;
         $variant_id = $okay->variants->add_variant($variant);
     } elseif(!empty($variant_id)) {
         $okay->variants->update_variant($variant_id, $variant);
@@ -670,18 +720,18 @@ function import_product($xml_product) {
                             $values[] = strval($xml_value);
                         }
                     }
-                    $okay->features->update_option($product_id, $feature_id, implode(' ,', $values));
+                    $okay->features->{$update_option_function}($product_id, $feature_id, implode(' ,', $values));
                 }
             }
             // Если свойство оказалось названием бренда
-            elseif(isset($_SESSION['brand_option_id']) && !empty($xml_option->Значение)) {
+            elseif(isset($_SESSION['brand_option_id']) && !empty($xml_option->Значение) && $_SESSION['brand_option_id']==strval($xml_option->Ид)) {
                 $brand_name = strval($xml_option->Значение);
                 // Добавим бренд
                 // Найдем его по имени
                 $okay->db->query('SELECT id FROM __brands WHERE name=?', $brand_name);
                 if(!$brand_id = $okay->db->result('id')) {
                     // Создадим, если не найден
-                    $brand_id = $okay->brands->add_brand(array('name'=>$brand_name, 'meta_title'=>$brand_name, 'meta_keywords'=>$brand_name, 'meta_description'=>$brand_name, 'url'=>translit($brand_name)));
+                    $brand_id = $okay->brands->add_brand(array('name'=>$brand_name, 'meta_title'=>$brand_name, 'meta_keywords'=>$brand_name, 'meta_description'=>$brand_name, 'url'=>translit($brand_name), 'visible'=>intval(1)));
                 }
                 if(!empty($brand_id)) {
                     $okay->products->update_product($product_id, array('brand_id'=>$brand_id));
@@ -704,10 +754,15 @@ function import_variant($xml_variant) {
     global $okay;
     global $dir;
     $variant = new stdClass;
+
+    global $is_multi_currency;
+    global $base_currency;
+    global $stock_from_1c;
+
     //  Id товара и варианта (если есть) по 1С
     @list($product_1c_id, $variant_1c_id) = explode('#', $xml_variant->Ид);
     if(empty($variant_1c_id)) {
-        $variant_1c_id = '';
+         $variant_1c_id = '';
     }
     if(empty($product_1c_id)) {
         return false;
@@ -750,12 +805,22 @@ function import_variant($xml_variant) {
             $variant_currency = $okay->db->result();
         }
         // Если нашли валюту - конвертируем из нее в базовую
-        if($variant_currency && $variant_currency->rate_from>0 && $variant_currency->rate_to>0) {
+        if($variant_currency && $variant_currency->rate_from>0 && $variant_currency->rate_to>0 && !$is_multi_currency) {
             $variant->price = floatval($variant->price)*$variant_currency->rate_to/$variant_currency->rate_from;
         }
     }
 
-    $variant->stock = $xml_variant->Количество;
+    // Если $stock_from_1c = true берем кол-во из 1с  или  у нас бесконечное количество товара.
+    if ($stock_from_1c) {
+        $variant->stock = $xml_variant->Количество;
+    } else {
+        $variant->stock = NULL;
+    }
+    // Устанавливаем валюту товара или оригинал или если пересчитали то базовую (единственную активную)
+    $variant->currency_id = ($is_multi_currency ? $variant_currency->id : $base_currency->id);
+
+    // Устанавливаем единицу измерения
+    $variant->units = $xml_variant->БазоваяЕдиница;
 
     if(empty($variant_id)) {
         $okay->variants->add_variant($variant);
@@ -785,4 +850,36 @@ function console_log() {
         else $s = $arg;
         fwrite($f,$s.' '); # вывод аргументов разделяется пробелом
     }
+}
+
+function flush_database() {
+    global $okay;
+    // Очищаем  производителей
+    $okay->db->query('TRUNCATE TABLE __brands');
+
+    // Очищаем категории и свойства категорий
+    $okay->db->query('TRUNCATE TABLE __categories');
+    $okay->db->query('TRUNCATE TABLE __categories_features');
+
+    // Очищаем свойства и свойства товара
+    $okay->db->query('TRUNCATE TABLE __features');
+    $okay->db->query('TRUNCATE TABLE __options');
+
+    // Очищаем переводы
+    $okay->db->query('TRUNCATE TABLE __lang_brands');
+    $okay->db->query('TRUNCATE TABLE __lang_categories');
+    $okay->db->query('TRUNCATE TABLE __lang_features');
+    $okay->db->query('TRUNCATE TABLE __lang_products');
+    $okay->db->query('TRUNCATE TABLE __lang_variants');
+
+    // Очищаем продукты
+    $okay->db->query('TRUNCATE TABLE __products');
+    $okay->db->query('TRUNCATE TABLE __related_products');
+    $okay->db->query('TRUNCATE TABLE __products_categories');
+    $okay->db->query('TRUNCATE TABLE __variants');
+    $okay->db->query('TRUNCATE TABLE __images');
+
+    // Очищаем заказы
+    $okay->db->query('TRUNCATE TABLE __orders');
+    $okay->db->query('TRUNCATE TABLE __purchases');
 }

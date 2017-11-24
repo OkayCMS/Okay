@@ -30,26 +30,13 @@ class BannersImageAdmin extends Okay {
             }
             // Удаление изображения
             if($this->request->post('delete_image')) {
-                $query = $this->db->placehold("SELECT image FROM __banners_images WHERE id=?", $banners_image->id);
-                $this->db->query($query);
-                $filename = $this->db->result('image');
-                $query = $this->db->placehold("UPDATE __banners_images SET image=NULL WHERE id=?", $banners_image->id);
-                $this->db->query($query);
-                @unlink($this->config->root_dir.$this->config->banners_images_dir.$filename);
+                $this->image->delete_image($banners_image->id, 'image', 'banners_images', $this->config->banners_images_dir);
             }
             // Загрузка изображения
             $image = $this->request->files('image');
-            if(!empty($image['name']) && in_array(strtolower(pathinfo($image['name'], PATHINFO_EXTENSION)), $this->allowed_image_extentions)) {
-                if($banners_image->id){
-                    $query = $this->db->placehold("SELECT image FROM __banners_images WHERE id=?", $banners_image->id);
-                    $this->db->query($query);
-                    $filename = $this->db->result('image');
-                    $query = $this->db->placehold("UPDATE __banners_images SET image=NULL WHERE id=?", $banners_image->id);
-                    $this->db->query($query);
-                    @unlink($this->config->root_dir.$this->config->banners_images_dir.$filename);
-                }
-                move_uploaded_file($image['tmp_name'], $this->root_dir.$this->config->banners_images_dir.$image['name']);
-                $this->banners->update_banners_image($banners_image->id, array('image'=>$image['name']));
+            if (!empty($image['name']) && ($filename = $this->image->upload_image($image['tmp_name'], $image['name'], $this->config->banners_images_dir))) {
+                $this->image->delete_image($banners_image->id, 'image', 'banners_images', $this->config->banners_images_dir);
+                $this->banners->update_banners_image($banners_image->id, array('image'=>$filename));
             }
             $banners_image = $this->banners->get_banners_image(intval($banners_image->id));
         } else {

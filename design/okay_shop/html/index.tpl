@@ -121,11 +121,13 @@
     {/if}
 
     {* Language attribute *}
-    {foreach $languages as $l}
-        {if $l->enabled}
-            <link rel="alternate" hreflang="{$l->href_lang}" href="{$config->root_url}/{$l->url}">
-        {/if}
-    {/foreach}
+    {if $show_alternate}
+        {foreach $languages as $l}
+            {if $l->enabled}
+                <link rel="alternate" hreflang="{$l->href_lang}" href="{$config->root_url}/{$l->url}">
+            {/if}
+        {/foreach}
+    {/if}
 
     {* Favicon *}
     <link href="design/{$settings->theme}/images/favicon.png" type="image/x-icon" rel="icon">

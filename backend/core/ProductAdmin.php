@@ -112,6 +112,11 @@ class ProductAdmin extends Okay {
                 }
             } else {
                 /*Добавление/Обновление товара*/
+                /* Какую ф-ию обновления значений св-тв вызывать:
+                 * если это новый товар то нужно значения добавить во все языки
+                 * иначе - только для текущего - вызываем старую добрую update_option()
+                */
+                $update_option_function = "update_option";
                 if(empty($product->id)) {
                     //lastModify
                     if ($product->brand_id > 0) {
@@ -121,6 +126,7 @@ class ProductAdmin extends Okay {
                     $product->id = $this->products->add_product($product);
                     $product = $this->products->get_product($product->id);
                     $this->design->assign('message_success', 'added');
+                    $update_option_function = "update_option_all_languages";
                 } else {
                     //lastModify                    
                     $this->db->query('select brand_id from __products where id=?', $product->id);
@@ -291,7 +297,7 @@ class ProductAdmin extends Okay {
                     if(is_array($options)) {
                         foreach($options as $option) {
                             if(in_array($option->feature_id, $category_features)) {
-                                $this->features->update_option($product->id, $option->feature_id, $option->value);
+                                $this->features->{$update_option_function}($product->id, $option->feature_id, $option->value);
                             }
                         }
                     }
@@ -310,7 +316,7 @@ class ProductAdmin extends Okay {
                                     $feature_id = $this->features->add_feature(array('name'=>trim($name)));
                                 }
                                 $this->features->add_feature_category($feature_id, reset($product_categories)->id);
-                                $this->features->update_option($product->id, $feature_id, $value);
+                                $this->features->{$update_option_function}($product->id, $feature_id, $value);
                             }
                         }
                         // Свойства товара

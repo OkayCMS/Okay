@@ -134,6 +134,7 @@ a:active {
 }
 .form_input {
     line-height: 44px;
+    height:44px
     background-color: #f5f8f9;
     border: 1px solid #e8e8e1;
     border-radius: 2px;
@@ -161,6 +162,7 @@ a:active {
     width: 130px;
     line-height: 38px;
     vertical-align: top;
+    height:40px
     margin: 0 0 0 17px;
 }
 .secret_number {
@@ -1578,11 +1580,11 @@ header a {
     padding-left: 7px;
 }
 .features_value {
-    width: 70%;
+    width: 50%;
     padding-right: 15px;
 }
 .features_name {
-    width: 30%;
+    width: 50%;
     position: relative;
 }
 .features_name span {

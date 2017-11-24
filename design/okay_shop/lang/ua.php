@@ -242,3 +242,4 @@ $lang['receipt_address'] = "Адреса платника";
 $lang['product_brand_name'] = "Бренд:";
 $lang['order_delivery'] = "Доставка";
 $lang['order_download_file'] = "Скачати";
+$lang['order_text_of'] = "від";

@@ -1,7 +1,7 @@
 {* The Categories page *}
 
 {* The canonical address of the page *}
-{if $set_canonical}
+{if $set_canonical || $self_canonical}
     {if $category}
         {$canonical="/catalog/{$category->url}" scope=parent}
     {elseif $brand}

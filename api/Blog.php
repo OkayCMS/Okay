@@ -197,9 +197,15 @@ class Blog extends Okay {
     public function delete_post($id) {
         if(!empty($id)) {
             $this->image->delete_image($id, 'image', 'blog', $this->config->original_blog_dir, $this->config->resized_blog_dir);
+            $this->db->query("SELECT type_post FROM __blog WHERE id=? LIMIT 1", (int)$id);
+            $type_post = $this->db->result("type_post");
             $query = $this->db->placehold("DELETE FROM __blog WHERE id=? LIMIT 1", intval($id));
             if($this->db->query($query)) {
-                $this->settings->lastModifyPosts = date("Y-m-d H:i:s");
+                if ($type_post == "news") {
+                    $this->settings->lastModifyNews = date("Y-m-d H:i:s");
+                } else {
+                    $this->settings->lastModifyPosts = date("Y-m-d H:i:s");
+                }
                 $this->db->query("DELETE FROM __lang_blog WHERE blog_id=?", intval($id));
                 $query = $this->db->placehold("DELETE FROM __comments WHERE type='blog' AND object_id=?", intval($id));
                 if($this->db->query($query)) {

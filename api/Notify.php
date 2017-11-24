@@ -13,6 +13,9 @@ class Notify extends Okay {
         $mail->SMTPDebug  = 0;
         $mail->SMTPAuth   = true;
         $mail->Port       = $this->settings->smtp_port;
+        if ($mail->Port == 465) {
+            $mail->SMTPSecure = "ssl";
+        }
         $mail->Username   = $this->settings->smtp_user;
         $mail->Password   = $this->settings->smtp_pass;
         $mail->SetFrom($this->settings->smtp_user, $this->settings->notify_from_name);

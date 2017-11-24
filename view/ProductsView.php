@@ -155,6 +155,10 @@ class ProductsView extends View {
         
         $this->design->assign('set_canonical',$this->set_canonical);
         $this->design->assign('filter_meta',(object)$this->meta);
+        $this->design->assign('show_alternate', empty($this->meta_array['options']));
+        if (empty($this->meta_array)) {
+            $this->design->assign('self_canonical', true);
+        }
         
         $this->design->smarty->registerPlugin('function', 'furl', array($this, 'filter_chpu_url'));
     }
@@ -293,10 +297,10 @@ class ProductsView extends View {
 
     private function filter_chpu_parse_url() {
         $uri = @parse_url($_SERVER["REQUEST_URI"]);
-        preg_match("~$this->subdir(/?$this->lang_label)?/?(catalog|all-products|brands|discounted|bestsellers)/?~", $uri['path'], $this->catalog_type);
+        preg_match("~^$this->subdir(/?$this->lang_label)?/?(catalog|all-products|brands|discounted|bestsellers)/?~", $uri['path'], $this->catalog_type);
         $this->catalog_type = $this->catalog_type[2];
         //убираем модификатор каталога
-        $uri = preg_replace("~$this->subdir(/?$this->lang_label)?/?(catalog|all-products|brands|discounted|bestsellers)/?~",'',$uri['path']);
+        $uri = preg_replace("~^$this->subdir(/?$this->lang_label)?/?(catalog|all-products|brands|discounted|bestsellers)/?~",'',$uri['path']);
         $this->uri_array = (empty($uri) ? array() : explode('/',$uri));
         if ($this->catalog_type == 'catalog' || $this->catalog_type == 'brands') {
             array_shift($this->uri_array);

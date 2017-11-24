@@ -169,7 +169,7 @@ class Products extends Okay {
         
         if(!empty($filter['features'])) {
             foreach($filter['features'] as $feature=>$value) {
-                $features_filter .= $this->db->placehold('AND p.id in (SELECT product_id FROM __options WHERE feature_id=? AND translit in(?@) ) ', $feature, (array)$value);
+                $features_filter .= $this->db->placehold('AND p.id in (SELECT product_id FROM __options WHERE feature_id=? AND translit in(?@) AND lang_id=? ) ', $feature, (array)$value, (int)$lang_id);
             }
         }
         
@@ -332,7 +332,7 @@ class Products extends Okay {
         
         if(!empty($filter['features'])) {
             foreach($filter['features'] as $feature=>$value) {
-                $features_filter .= $this->db->placehold('AND p.id in (SELECT product_id FROM __options WHERE feature_id=? AND translit in(?@) ) ', $feature, (array)$value);
+                $features_filter .= $this->db->placehold('AND p.id in (SELECT product_id FROM __options WHERE feature_id=? AND translit in(?@) AND lang_id=? ) ', $feature, (array)$value, (int)$lang_id);
             }
         }
         

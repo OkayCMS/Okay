@@ -1210,7 +1210,6 @@ label.switch_label {
     line-height: 1;
     color: rgb(255, 255, 255);
     text-align: center;
-    white-space: nowrap;
     vertical-align: baseline;
     border-radius: 3px;
     margin-right: 1px;

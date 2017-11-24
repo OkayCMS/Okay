@@ -128,10 +128,12 @@ class BlogView extends View {
 
     /*Отображение записей на странице*/
     private function fetch_blog() {
+        $type_post = $this->request->get('type_post');
+        $type_post_filter = $type_post ? $this->db->placehold("AND b.type_post=?", $type_post) : "";
         //lastModify
-        $this->db->query("SELECT b.last_modify FROM __blog b");
+        $this->db->query("SELECT b.last_modify FROM __blog b WHERE 1 $type_post_filter");
         $last_modify = $this->db->results('last_modify');
-        $last_modify[] = $this->settings->lastModifyPosts;
+        $last_modify[] = $type_post == "news" ? $this->settings->lastModifyNews : $this->settings->lastModifyPosts;
         if ($this->page) {
             $last_modify[] = $this->page->last_modify;
         }
@@ -144,7 +146,7 @@ class BlogView extends View {
         
         // Выбираем только видимые посты
         $filter['visible'] = 1;
-        if($this->request->get('type_post')) {
+        if($type_post) {
             $filter['type_post'] = $this->request->get('type_post');
         }
         

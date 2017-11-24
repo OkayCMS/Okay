@@ -696,22 +696,6 @@
             $(".fn_rating_value").val($(this).val());
         });
 
-        // Добавление категории
-        $('a.fn_add_category').click(function() {
-            var clone = $("#product_cats select:first").clone(false);
-            clone.appendTo('#product_cats');
-            $("#product_cats select").selectpicker('refresh');
-            return false;
-        });
-
-        // Удаление категории
-        $(".fn_delete_category").on('click', function() {
-            $(this).prev().remove();
-            $(this).remove();
-            return false;
-        });
-
-
         var image_item_clone = $(".fn_new_image_item").clone(true);
         $(".fn_new_image_item").remove();
         var new_image_tem_clone = $(".fn_new_spec_image_item").clone(true);

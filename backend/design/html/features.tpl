@@ -35,7 +35,7 @@
                                     {category_select categories=$c->subcategories level=$level+1}
                                 {/foreach}
                             {/function}
-                            {category_select categories=$categories}
+                            {category_select categories=$categories_tree}
                         </select>
                     </div>
                 </div>

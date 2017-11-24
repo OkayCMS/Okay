@@ -74,6 +74,7 @@ class FeaturesAdmin extends Okay {
             $f->features_categories = $this->features->get_feature_categories($f->id);
         }
         $this->design->assign('categories', $categories);
+        $this->design->assign('categories_tree', $this->categories->get_categories_tree());
         $this->design->assign('category', $category);
         $this->design->assign('features', $features);
         return $this->body = $this->design->fetch('features.tpl');

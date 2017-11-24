@@ -758,6 +758,22 @@ body.openmenu::before {
 .product_details {
     text-align: center;
 }
+.features li {
+    background-color: rgb(255, 255, 255);
+    border-bottom: 1px solid rgb(186, 186, 186);
+    padding-bottom: 8px;
+}    
+.features_name {
+    font-weight: bold;
+    font-size: 16px;
+}    
+.features_name::before {
+    content: none;
+}    
+.features_name, .features_value {
+    width: 100%;
+    float: none;
+ }    
 }
 
 @media (max-width: 419px) {

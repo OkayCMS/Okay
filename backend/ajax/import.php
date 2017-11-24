@@ -240,6 +240,11 @@ class ImportAjax extends Import {
             }
         }
 
+        /* Какую ф-ию обновления значений св-тв вызывать:
+         * если это новый товар то нужно значения добавить во все языки
+         * иначе - только для текущего - вызываем старую добрую update_option()
+        */
+        $update_option_function = "update_option";
         if (isset($imported_item->status)) {
             if (!empty($product)) {
                 if (!isset($product['url']) && !empty($product['name']) && empty($result->url)) {
@@ -247,6 +252,7 @@ class ImportAjax extends Import {
                 }
                 if (empty($product_id)) {
                     $product_id = $this->products->add_product($product);
+                    $update_option_function = "update_option_all_languages";
                 } else {
                     $this->products->update_product($product_id, $product);
                 }
@@ -320,7 +326,7 @@ class ImportAjax extends Import {
                         }
                         
                         $this->features->add_feature_category($feature_id, $category_id);
-                        $this->features->update_option($product_id, $feature_id, $feature_value);
+                        $this->features->{$update_option_function}($product_id, $feature_id, $feature_value);
                     }
                 }
             }

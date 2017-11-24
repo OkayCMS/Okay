@@ -201,6 +201,21 @@ class Features extends Okay {
         return true;
     }
 
+    public function update_option_all_languages($product_id, $feature_id, $value, $translit = '') {
+        $current_lang_id = $this->languages->lang_id();
+        // если нету lang_id значит нету языков вообще - обновим один раз
+        if (!$current_lang_id) {
+            $this->update_option($product_id, $feature_id, $value, $translit);
+            return true;
+        }
+        foreach ($this->languages->get_languages() as $language) {
+            $this->languages->set_lang_id($language->id);
+            $this->update_option($product_id, $feature_id, $value, $translit);
+        }
+        $this->languages->set_lang_id($current_lang_id);
+        return true;
+    }
+
     /*Добавление связки категории и свойства*/
     public function add_feature_category($id, $category_id) {
         $query = $this->db->placehold("INSERT IGNORE INTO __categories_features SET feature_id=?, category_id=?", $id, $category_id);

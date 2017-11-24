@@ -72,7 +72,7 @@
                                             </span>
                                             <br />
                                             <span style="font-family:trebuchet ms,helvetica,sans-serif;">
-                                                <span style="font-size:14px;">{$lang->email_order_your_status} <strong>{$order->id}</strong><strong>{$order->date|date}:{$order->date|time}</strong>.</span></span><br />
+                                                <span style="font-size:14px;">{$lang->email_order_your_status} <strong>№{$order->id}</strong> {$lang->order_text_of} <strong>{$order->date|date}:{$order->date|time}</strong>.</span></span><br />
                                             <br />
                                             <table border="0" cellpadding="3" cellspacing="0" style="font-family: 'Trebuchet MS'; font-size: 14px; color: rgb(51, 51, 51); line-height: 1.5; width:100%; border-collapse: collapse">
                                                 <tbody>

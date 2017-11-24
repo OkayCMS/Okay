@@ -385,6 +385,8 @@ $(function(){
             protect: true
         }
     });
+    
+    $.fancybox.defaults.hash = false;
 
     /* Аяксовый фильтр по цене */
     if( $( '#fn_slider_price' ).size() ) {
