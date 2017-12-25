@@ -79,12 +79,13 @@ class Image extends Okay {
 
     /*Добавление параметров ресайза для изображения*/
     public function add_resize_params($filename, $width=0, $height=0, $set_watermark=false) {
-        if('.' != ($dirname = pathinfo($filename,  PATHINFO_DIRNAME))) {
-            $file = $dirname.'/'.pathinfo($filename, PATHINFO_FILENAME);
+        $path_parts = pathinfo($filename);
+        if('.' != $path_parts["dirname"]) {
+            $file = $path_parts["dirname"].'/'.$path_parts["filename"];
         } else {
-            $file = pathinfo($filename, PATHINFO_FILENAME);
+            $file = $path_parts["filename"];
         }
-        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        $ext = $path_parts["extension"];
         
         if($width>0 || $height>0) {
             $resized_filename = $file.'.'.($width>0?$width:'').'x'.($height>0?$height:'').($set_watermark?'w':'').'.'.$ext;
