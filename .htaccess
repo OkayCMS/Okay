@@ -117,5 +117,5 @@ RewriteRule ^([^/]*)/?$	index.php?module=PageView&page_url=$1 [L,QSA]
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 #resizing_image
-RewriteRule ^files/(.+)/(.+) resize/resize.php?object=$1&file=$2&token=%{QUERY_STRING}
+RewriteRule ^files/([^/]+)/(.+) resize/resize.php?object=$1&file=$2&token=%{QUERY_STRING}
 ##resizing_image
