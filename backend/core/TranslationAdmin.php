@@ -7,9 +7,12 @@ class TranslationAdmin extends Okay {
     /*Работа с переводом*/
     public function fetch() {
         $languages = $this->languages->get_languages();
-        
+
+        $locked_theme = is_file('design/'.$this->settings->theme.'/locked');
+        $this->design->assign('locked_theme', $locked_theme);
+
         $translation = new stdClass();
-        if($this->request->method('post')) {
+        if(!$locked_theme && $this->request->method('post')) {
             // id - предыдущий label
             $translation->id    = $this->request->post('id');
             $translation->label = trim($this->request->post('label'));

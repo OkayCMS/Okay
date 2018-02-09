@@ -60,7 +60,7 @@ class ProductsView extends View {
                         foreach(explode('_',$param_values) as $bv) {
                             if(($brand = $this->brands->get_brand((string)$bv)) && !in_array($brand->id, $_GET['b'])) {
                                 $_GET['b'][] = $brand->id;
-                                $this->meta_array['brand'][] = $translations->products_brand.' '. $brand->name;
+                                $this->meta_array['brand'][$brand->id] = $translations->products_brand.' '. $brand->name;
                             } else {
                                 $this->is_wrong_params = 1;
                             }
@@ -82,7 +82,7 @@ class ProductsView extends View {
                         break;
                     }
                     default: {
-                        if(($feature = $this->features->get_feature($param_name)) && !isset($_GET[$feature->id])) {
+                        if(($feature = $this->features->get_feature($param_name)) && $feature->in_filter && !isset($_GET[$feature->id])) {
                             $_GET[$feature->id] = explode('_',$param_values);
                             // если нет повторяющихся значений свойства - ок, иначе 404
                             if (count($_GET[$feature->id]) == count(array_unique($_GET[$feature->id]))) {
@@ -134,8 +134,17 @@ class ProductsView extends View {
                     }
                 }
             }
+
+            if ($languages = $this->design->get_var('languages')) {
+                $first_lang = $this->languages->get_first_language();
+                $lang_url = $this->filter_chpu_url(array('sort'=>null, 'brand'=>null), $this->design);
+                foreach ($languages as $l) {
+                    $l->url = ($first_lang->id != $l->id ? $l->label : '') . $lang_url;
+                }
+                $this->design->assign('languages', $languages);
+            }
         }
-        
+
         if(!empty($this->meta['h1'])) {
             $this->meta['h1']           = !empty($translations->ceo_filter_s_harakteristikami) ? ' ' : ''.$translations->ceo_filter_s_harakteristikami.' '.$this->meta['h1'];
         }
@@ -155,11 +164,11 @@ class ProductsView extends View {
         
         $this->design->assign('set_canonical',$this->set_canonical);
         $this->design->assign('filter_meta',(object)$this->meta);
-        $this->design->assign('show_alternate', empty($this->meta_array['options']));
+        $this->design->assign('hide_alternate', !empty($this->meta_array));
         if (empty($this->meta_array)) {
             $this->design->assign('self_canonical', true);
         }
-        
+
         $this->design->smarty->registerPlugin('function', 'furl', array($this, 'filter_chpu_url'));
     }
 
@@ -171,24 +180,22 @@ class ProductsView extends View {
         $result_array = array('brand'=>array(),'features'=>array(),'sort'=>null,'page'=>null);
         //Определяем, что у нас уже есть в строке
         foreach($this->uri_array as $k=>$v) {
-            if($k>0 || !($brand=$this->brands->get_brand((string)$v))) {
-                list($param_name, $param_values) = explode('-',$v);
-                switch($param_name) {
-                    case 'brand': {
-                        $result_array['brand'] = explode('_',$param_values);
-                        break;
-                    }
-                    case 'sort': {
-                        $result_array['sort'] = strval($param_values);
-                        break;
-                    }
-                    case 'page': {
-                        $result_array['page'] = $param_values;
-                        break;
-                    }
-                    default: {
-                        $result_array['features'][$param_name] = explode('_',$param_values);
-                    }
+            list($param_name, $param_values) = explode('-',$v);
+            switch($param_name) {
+                case 'brand': {
+                    $result_array['brand'] = explode('_',$param_values);
+                    break;
+                }
+                case 'sort': {
+                    $result_array['sort'] = strval($param_values);
+                    break;
+                }
+                case 'page': {
+                    $result_array['page'] = $param_values;
+                    break;
+                }
+                default: {
+                    $result_array['features'][$param_name] = explode('_',$param_values);
                 }
             }
         }
@@ -243,8 +250,10 @@ class ProductsView extends View {
             if (count($result_array['brand']) > $this->max_filter_brands) {
                 $link_tag = "span";
             }
-            $result_string .= '/brand-' . implode('_',$this->filter_chpu_sort_brands($result_array['brand'])); // - это с сортировкой по брендам
-            //$result_string .= '/brand-' . implode('_',$result_array['brand']); // - это без сортировки по брендам
+            $brands_string = $this->filter_chpu_sort_brands($result_array['brand']); // - это с сортировкой по брендам
+            if (!empty($brands_string)) {
+                $result_string .= '/brand-' . implode("_", $brands_string);
+            }
         }
         foreach($result_array['features'] as $k=>$v) {
             if (count($result_array['features'][$k]) > $this->max_filter_options || count($result_array['features']) > $this->max_filter_features) {
@@ -388,7 +397,18 @@ class ProductsView extends View {
                     $filter['features'][$feature->id] = $val;
                 }
             }
-            
+
+            // Выбираем бренды, они нужны нам в шаблоне
+            foreach ($this->brands->get_brands(array('category_id'=>$category->children, 'visible'=>1)) as $b) {
+                $this->category_brands[$b->id] = $b;
+            }
+            $category->brands = $this->brands->get_brands(array('category_id'=>$category->children, 'visible'=>1, 'features'=>$filter['features']));
+            // Если в строке есть параметры которые не должны быть в фильтре, либо параметры с другой категории, бросаем 404
+            if (!empty($this->meta_array['options']) && array_intersect_key($this->meta_array['options'], $features) !== $this->meta_array['options'] ||
+                !empty($this->meta_array['brand']) && array_intersect_key($this->meta_array['brand'], $this->category_brands) !== $this->meta_array['brand']) {
+                return false;
+            }
+
             $options_filter['visible'] = 1;
             
             $features_ids = array_keys($features);
@@ -514,12 +534,6 @@ class ProductsView extends View {
                 }
             }
             $this->design->assign('products', $products);
-        }
-        
-        // Выбираем бренды, они нужны нам в шаблоне
-        if(!empty($category)) {
-            $this->category_brands = $this->brands->get_brands(array('category_id'=>$category->children, 'visible'=>1, 'features'=>$filter['features']));
-            $category->brands = $this->category_brands;
         }
         
         if(isset($prices['current'])) {

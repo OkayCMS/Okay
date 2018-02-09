@@ -3385,6 +3385,23 @@ body.menu-pin .menu_switch .menu_hamburger::after {
     content: '\f00c';
     font-family: "FontAwesome";
 }
+.neighbors_orders {
+    float: right;
+}
+.neighbors_orders .prev_order,
+.neighbors_orders .next_order {
+    background-color: #ffffff;
+    background-image: none;
+    border: 1px solid #ccc;
+    -webkit-appearance: none;
+    color: #2c2c2c;
+    outline: 0;
+    width: 35px;
+    height: 35px;
+    line-height: 32px;
+    text-align: center;
+    display: inline-block;
+}
 
 
 

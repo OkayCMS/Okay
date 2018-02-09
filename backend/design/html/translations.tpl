@@ -8,16 +8,30 @@
             <div class="box_heading heading_page">
                 {$btr->translations_translate|escape}
             </div>
-            <div class="box_btn_heading">
-                <a class="btn btn_small btn-info add" href="{url module=TranslationAdmin return=$smarty.server.REQUEST_URI}">
-                    {include file='svg_icon.tpl' svgId='plus'}
-                    <span>{$btr->translations_add|escape}</span>
-                </a>
-            </div>
+            {if !$locked_theme}
+                <div class="box_btn_heading">
+                    <a class="btn btn_small btn-info add" href="{url module=TranslationAdmin return=$smarty.server.REQUEST_URI}">
+                        {include file='svg_icon.tpl' svgId='plus'}
+                        <span>{$btr->translations_add|escape}</span>
+                    </a>
+                </div>
+            {/if}
         </div>
     </div>
     <div class="col-md-5 col-lg-4 col-sm-12 float-xs-right"></div>
 </div>
+
+{if $locked_theme}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="boxed boxed_warning">
+                <div class="">
+                    {$btr->general_protected|escape}
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
 
 {*Главная форма страницы*}
 <div class="boxed fn_toggle_wrap">
@@ -61,33 +75,37 @@
                                  <a href="{url module=TranslationAdmin id=$label return=$smarty.server.REQUEST_URI}">{$label|escape}</a>
                             </div>
                             <div class="okay_list_boding okay_list_close">
-                                <button data-hint="{$btr->general_delete|escape}" type="button" class="btn_close fn_remove hint-bottom-right-t-info-s-small-mobile  hint-anim" data-toggle="modal" data-target="#fn_action_modal" onclick="success_action($(this));">
-                                    {include file='svg_icon.tpl' svgId='delete'}
-                                </button>
+                                {if !$locked_theme}
+                                    <button data-hint="{$btr->general_delete|escape}" type="button" class="btn_close fn_remove hint-bottom-right-t-info-s-small-mobile  hint-anim" data-toggle="modal" data-target="#fn_action_modal" onclick="success_action($(this));">
+                                        {include file='svg_icon.tpl' svgId='delete'}
+                                    </button>
+                                {/if}
                             </div>
                         </div>
                     </div>
                 {/foreach}
             </div>
 
-            {*Блок массовых действий*}
-            <div class="okay_list_footer fn_action_block">
-                <div class="okay_list_foot_left">
-                    <div class="okay_list_heading okay_list_check">
-                        <input class="hidden_check fn_check_all" type="checkbox" id="check_all_2" name="" value=""/>
-                        <label class="okay_ckeckbox" for="check_all_2"></label>
+            {if !$locked_theme}
+                {*Блок массовых действий*}
+                <div class="okay_list_footer fn_action_block">
+                    <div class="okay_list_foot_left">
+                        <div class="okay_list_heading okay_list_check">
+                            <input class="hidden_check fn_check_all" type="checkbox" id="check_all_2" name="" value=""/>
+                            <label class="okay_ckeckbox" for="check_all_2"></label>
+                        </div>
+                        <div class="okay_list_option">
+                            <select name="action" class="selectpicker">
+                                <option value="delete">{$btr->general_delete|escape}</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="okay_list_option">
-                        <select name="action" class="selectpicker">
-                            <option value="delete">{$btr->general_delete|escape}</option>
-                        </select>
-                    </div>
+                    <button id="apply_action" type="submit" class="btn btn_small btn_blue">
+                        {include file='svg_icon.tpl' svgId='checked'}
+                        <span>{$btr->general_apply|escape}</span>
+                    </button>
                 </div>
-                <button id="apply_action" type="submit" class="btn btn_small btn_blue">
-                    {include file='svg_icon.tpl' svgId='checked'}
-                    <span>{$btr->general_apply|escape}</span>
-                </button>
-            </div>
+            {/if}
         </div>
     </form>
 </div>

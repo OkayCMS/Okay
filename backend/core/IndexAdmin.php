@@ -57,6 +57,7 @@ class IndexAdmin extends Okay {
             'left_style_title'          => array('StylesAdmin'),
             'left_script_title'         => array('ScriptsAdmin'),
             'left_images_title'         => array('ImagesAdmin'),
+            'left_translations_title'   => array('TranslationsAdmin', 'TranslationAdmin'),
         ),
         'left_banners' => array(
             'left_banners_title'        => array('BannersAdmin', 'BannerAdmin'),
@@ -72,7 +73,6 @@ class IndexAdmin extends Okay {
             'left_payment_title'        => array('PaymentMethodsAdmin', 'PaymentMethodAdmin'),
             'left_managers_title'       => array('ManagersAdmin', 'ManagerAdmin'),
             'left_languages_title'      => array('LanguagesAdmin', 'LanguageAdmin'),
-            'left_translations_title'   => array('TranslationsAdmin', 'TranslationAdmin'),
             'left_system_title'         => array('SystemAdmin')
         ),
     );

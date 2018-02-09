@@ -121,7 +121,7 @@
     {/if}
 
     {* Language attribute *}
-    {if $show_alternate}
+    {if !$hide_alternate}
         {foreach $languages as $l}
             {if $l->enabled}
                 <link rel="alternate" hreflang="{$l->href_lang}" href="{$config->root_url}/{$l->url}">
@@ -569,6 +569,7 @@
 
 {* Admin tooltips *}
 {if $smarty.session.admin}
+    <script>lang_id = {$language->id}</script>
     <script src ="backend/design/js/admintooltip/admintooltip.js"></script>
     <link href="backend/design/js/admintooltip/styles/admin.css" rel="stylesheet">
 {/if}

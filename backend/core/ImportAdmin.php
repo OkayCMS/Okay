@@ -21,7 +21,7 @@ class ImportAdmin extends Import {
         setlocale(LC_ALL, $old_locale);
 
         if($this->request->method('post')) {
-            if (($this->request->files("file"))) {
+            if ($this->request->files("file") && $this->request->files("file")['error'] == UPLOAD_ERR_OK) {
                 $uploaded_name = $this->request->files("file", "tmp_name");
                 $temp = tempnam($this->import_files_dir, 'temp_');
                 if (!move_uploaded_file($uploaded_name, $temp)) {

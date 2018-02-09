@@ -54,6 +54,20 @@
                         </span>
                     </div>
                 </div>
+                {if $neighbors_orders}
+                    <div class="neighbors_orders">
+                        {if $neighbors_orders['prev']->id}
+                            <span>
+                                <a title="{$btr->order_prev}" class="prev_order" href="{url id=$neighbors_orders.prev->id}">&lt;</a>
+                            </span>
+                        {/if}
+                        {if $neighbors_orders['next']}
+                            <span>
+                                <a title="{$btr->order_next}" class="next_order" href="{url id=$neighbors_orders.next->id}">&gt;</a>
+                            </span>
+                        {/if}
+                    </div>
+                {/if}
             </div>
         </div>
     </div>
@@ -79,6 +93,8 @@
                     <div class="heading_box">
                         {if $message_error=='error_closing'}
                             {$btr->order_shortage|escape}
+                        {elseif $message_error == 'empty_purchase'}
+                            {$btr->general_empty_purchases|escape}
                         {else}
                             {$message_error|escape}
                         {/if}

@@ -24,6 +24,8 @@ class Languages extends Okay {
     private $first_language;
     private $lang_id;
     private $available_languages;
+    private $has_languages;
+    private $check_languages = false;
 
     /*Выборка списка языков сайта*/
     public function lang_list() {
@@ -67,11 +69,14 @@ class Languages extends Okay {
         } else {
             $px = $object[0];
         }
-        
-        $this->db->query("SHOW TABLES LIKE '%__languages%'");
-        $exist = $this->db->result();
 
-        if (!empty($lang) && $exist && !empty($this->languages)) {
+        if (!$this->check_languages) {
+            $this->db->query("SHOW TABLES LIKE '%__languages%'");
+            $this->has_languages = $this->db->result();
+            $this->check_languages = true;
+        }
+
+        if (!empty($lang) && $this->has_languages && !empty($this->languages)) {
             $f = (isset($params['px_lang']) && $params['px_lang'] ? $params['px_lang'] : 'l');
             $lang_join = 'LEFT JOIN __lang_'.$this->tables[$object].' '.$f.' ON '.$f.'.'.$object.'_id='.$px.'.id AND '.$f.'.lang_id = '.(int)$lang;
         } else {

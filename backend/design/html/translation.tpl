@@ -16,6 +16,18 @@
     <div class="col-lg-4 col-md-3 text-xs-right float-xs-right"></div>
 </div>
 
+{if $locked_theme}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="boxed boxed_warning">
+                <div class="">
+                    {$btr->general_protected|escape}
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
+
 {*Вывод успешных сообщений*}
 {if $message_success}
     <div class="row">
@@ -72,7 +84,7 @@
                             {$btr->translation_name|escape}
                         </div>
                         <div class="form-group">
-                            <input name="label" class="form-control" type="text" value="{$translation->label}" />
+                            <input name="label" class="form-control" type="text" value="{$translation->label}" {if $locked_theme}readonly=""{/if} />
                         </div>
                     </div>
                 </div>
@@ -81,19 +93,21 @@
                         <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mb-h">
                             <div class="heading_label">{$lang->name|escape}</div>
                             <div class="">
-                                <textarea name="lang_{$lang->label}" class="form-control okay_textarea">{$translation->lang_{$lang->label}}</textarea>
+                                <textarea name="lang_{$lang->label}" class="form-control okay_textarea" {if $locked_theme}readonly=""{/if}>{$translation->lang_{$lang->label}}</textarea>
                             </div>
                         </div>
                     {/foreach}
                 </div>
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 mt-1">
-                        <button type="submit" class="btn btn_small btn_blue float-md-right">
-                            {include file='svg_icon.tpl' svgId='checked'}
-                            <span>{$btr->general_apply|escape}</span>
-                        </button>
+                {if !$locked_theme}
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 mt-1">
+                            <button type="submit" class="btn btn_small btn_blue float-md-right">
+                                {include file='svg_icon.tpl' svgId='checked'}
+                                <span>{$btr->general_apply|escape}</span>
+                            </button>
+                        </div>
                     </div>
-                </div>
+                {/if}
             </div>
         </div>
     </div>

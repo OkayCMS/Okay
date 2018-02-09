@@ -28,71 +28,76 @@ class OrderAdmin extends Okay {
                 $order_labels = array();
             }
 
-            /*Добавление/Обновление заказа*/
-            if(empty($order->id)) {
-                $order->id = $this->orders->add_order($order);
-                $this->design->assign('message_success', 'added');
-            } else {
-                $this->orders->update_order($order->id, $order);
-                $this->design->assign('message_success', 'updated');
+            $purchases = array();
+            if ($this->request->post('purchases')) {
+                foreach ($this->request->post('purchases') as $n => $va) foreach ($va as $i => $v) {
+                    if (empty($purchases[$i])) {
+                        $purchases[$i] = new stdClass;
+                    }
+                    $purchases[$i]->$n = $v;
+                }
             }
-            
-            $this->orderlabels->update_order_labels($order->id, $order_labels);
-            
-            if($order->id) {
-                /*Работа с покупками заказа*/
-                $purchases = array();
-                if($this->request->post('purchases')) {
-                    foreach($this->request->post('purchases') as $n=>$va) foreach($va as $i=>$v) {
-                        if(empty($purchases[$i])) {
-                            $purchases[$i] = new stdClass;
-                        }
-                        $purchases[$i]->$n = $v;
-                    }
-                }
-                $posted_purchases_ids = array();
-                foreach($purchases as $purchase) {
-                    $variant = $this->variants->get_variant($purchase->variant_id);
-                    
-                    if(!empty($purchase->id)) {
-                        if(!empty($variant)) {
-                            $this->orders->update_purchase($purchase->id, array('variant_id'=>$purchase->variant_id, 'variant_name'=>$variant->name, 'sku'=>$variant->sku,'price'=>$purchase->price, 'amount'=>$purchase->amount));
-                        } else {
-                            $this->orders->update_purchase($purchase->id, array('price'=>$purchase->price, 'amount'=>$purchase->amount));
-                        }
-                    } elseif(!$purchase->id = $this->orders->add_purchase(array('order_id'=>$order->id, 'variant_id'=>$purchase->variant_id, 'price'=>$purchase->price, 'amount'=>$purchase->amount))) {
-                        $this->design->assign('message_error', 'error_closing');
-                    }
-                    
-                    $posted_purchases_ids[] = $purchase->id;
-                }
-                
-                // Удалить непереданные товары
-                foreach($this->orders->get_purchases(array('order_id'=>$order->id)) as $p) {
-                    if(!in_array($p->id, $posted_purchases_ids)) {
-                        $this->orders->delete_purchase($p->id);
-                    }
-                }
-                
-                $new_status_id = $this->request->post('status_id', 'integer');
-                $new_status_info = $this->orderstatus->get_status(array("status"=>intval($new_status_id)));
 
-                if($new_status_info[0]->is_close == 1){
-                    if(!$this->orders->close(intval($order->id))) {
-                        $this->design->assign('message_error', 'error_closing');
-                    } else {
-                        $this->orders->update_order($order->id, array('status_id'=>$new_status_id));
-                    }
+            if (empty($purchases)) {
+                $this->design->assign('message_error', 'empty_purchase');
+            } else {
+                /*Добавление/Обновление заказа*/
+                if(empty($order->id)) {
+                    $order->id = $this->orders->add_order($order);
+                    $this->design->assign('message_success', 'added');
                 } else {
-                    if($this->orders->open(intval($order->id))) {
-                        $this->orders->update_order($order->id, array('status_id'=>$new_status_id));
-                    }
+                    $this->orders->update_order($order->id, $order);
+                    $this->design->assign('message_success', 'updated');
                 }
-                $order = $this->orders->get_order($order->id);
-                
-                // Отправляем письмо пользователю
-                if($this->request->post('notify_user')) {
-                    $this->notify->email_order_user($order->id);
+
+                $this->orderlabels->update_order_labels($order->id, $order_labels);
+
+                if($order->id) {
+                    /*Работа с покупками заказа*/
+                    $posted_purchases_ids = array();
+                    foreach ($purchases as $purchase) {
+                        $variant = $this->variants->get_variant($purchase->variant_id);
+
+                        if (!empty($purchase->id)) {
+                            if (!empty($variant)) {
+                                $this->orders->update_purchase($purchase->id, array('variant_id' => $purchase->variant_id, 'variant_name' => $variant->name, 'sku' => $variant->sku, 'price' => $purchase->price, 'amount' => $purchase->amount));
+                            } else {
+                                $this->orders->update_purchase($purchase->id, array('price' => $purchase->price, 'amount' => $purchase->amount));
+                            }
+                        } elseif (!$purchase->id = $this->orders->add_purchase(array('order_id' => $order->id, 'variant_id' => $purchase->variant_id, 'price' => $purchase->price, 'amount' => $purchase->amount))) {
+                            $this->design->assign('message_error', 'error_closing');
+                        }
+
+                        $posted_purchases_ids[] = $purchase->id;
+                    }
+
+                    // Удалить непереданные товары
+                    foreach ($this->orders->get_purchases(array('order_id' => $order->id)) as $p) {
+                        if (!in_array($p->id, $posted_purchases_ids)) {
+                            $this->orders->delete_purchase($p->id);
+                        }
+                    }
+
+                    $new_status_id = $this->request->post('status_id', 'integer');
+                    $new_status_info = $this->orderstatus->get_status(array("status" => intval($new_status_id)));
+
+                    if ($new_status_info[0]->is_close == 1) {
+                        if (!$this->orders->close(intval($order->id))) {
+                            $this->design->assign('message_error', 'error_closing');
+                        } else {
+                            $this->orders->update_order($order->id, array('status_id' => $new_status_id));
+                        }
+                    } else {
+                        if ($this->orders->open(intval($order->id))) {
+                            $this->orders->update_order($order->id, array('status_id' => $new_status_id));
+                        }
+                    }
+                    $order = $this->orders->get_order($order->id);
+
+                    // Отправляем письмо пользователю
+                    if ($this->request->post('notify_user')) {
+                        $this->notify->email_order_user($order->id);
+                    }
                 }
             }
         } else {
@@ -113,7 +118,7 @@ class OrderAdmin extends Okay {
         
         $subtotal = 0;
         $purchases_count = 0;
-        if($order && $purchases = $this->orders->get_purchases(array('order_id'=>$order->id))) {
+        if($order->id && $purchases = $this->orders->get_purchases(array('order_id'=>$order->id))) {
             // Покупки
             $products_ids = array();
             $variants_ids = array();
@@ -210,6 +215,14 @@ class OrderAdmin extends Okay {
                 $order_user->group = $this->users->get_group(intval($order_user->group_id));
                 $this->design->assign('user', $order_user);
             }
+        }
+
+        if (!empty($order->id)) {
+            $neighbors_filter = array();
+            $neighbors_filter['id'] = $order->id;
+            $neighbors_filter['status'] = $this->request->get('status');
+            $neighbors_filter['label'] = $this->request->get('label');
+            $this->design->assign('neighbors_orders', $this->orders->get_neighbors_orders($neighbors_filter));
         }
 
         //все статусы

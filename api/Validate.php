@@ -47,9 +47,6 @@ class Validate {
         if (preg_match("~([^0-9 _\+\-\(\)]+)~", $phone)) {
             return false;
         }
-        if (strlen(preg_replace("~[^\d]~", "", $phone)) < 7) {
-            return false;
-        }
         return true;
     }
 

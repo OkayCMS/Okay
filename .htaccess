@@ -91,6 +91,7 @@ RewriteRule ^([a-z]{2}/)?user/?$	index.php?module=UserView&lang_label=$1  [L,QSA
 RewriteRule ^([a-z]{2}/)?sitemap\.xml?$	sitemap.php?lang_label=$1  [L,QSA]
 
 # XML
+RewriteRule ^yandex\.xml$	/feed.xml? [L,R=301]
 RewriteRule ^feed\.xml?$	feed.php  [L,QSA]
 
 # feedback

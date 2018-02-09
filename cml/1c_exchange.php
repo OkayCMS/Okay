@@ -504,7 +504,7 @@ function import_categories($xml, $parent_id = 0) {
             $okay->db->query('SELECT id FROM __categories WHERE external_id=?', $xml_group->Ид);
             $category_id = $okay->db->result('id');
             if(empty($category_id)) {
-                $category_id = $okay->categories->add_category(array('parent_id'=>$parent_id, 'external_id'=>$xml_group->Ид, 'url'=>translit($xml_group->Наименование), 'name'=>$xml_group->Наименование, 'meta_title'=>$xml_group->Наименование, 'meta_keywords'=>$xml_group->Наименование, 'meta_description'=>$xml_group->Наименование ));
+                $category_id = $okay->categories->add_category(array('parent_id'=>$parent_id, 'external_id'=>$xml_group->Ид, 'url'=>$okay->translit($xml_group->Наименование), 'name'=>$xml_group->Наименование, 'meta_title'=>$xml_group->Наименование, 'meta_keywords'=>$xml_group->Наименование, 'meta_description'=>$xml_group->Наименование ));
             }
             $_SESSION['categories_mapping'][strval($xml_group->Ид)] = $category_id;
             import_categories($xml_group, $category_id);
@@ -558,6 +558,7 @@ function import_product($xml_product) {
     global $dir;
     global $brand_option_name;
 	global $full_update;
+    $xml_product->Наименование = trim($xml_product->Наименование);
     // Товары
 
     /* Какую ф-ию обновления значений св-тв вызывать:
@@ -618,7 +619,7 @@ function import_product($xml_product) {
         }
         $product_id = $okay->products->add_product(array(
             'external_id'=>$product_1c_id,
-            'url'=>translit($xml_product->Наименование),
+            'url'=>$okay->translit($xml_product->Наименование),
             'name'=>$xml_product->Наименование,
             'meta_title'=>$xml_product->Наименование,
             'meta_keywords'=>$xml_product->Наименование,
@@ -664,7 +665,7 @@ function import_product($xml_product) {
                 $p->description = $description;
             }
             $p->external_id = $product_1c_id;
-            $p->url = translit($xml_product->Наименование);
+            $p->url = $okay->translit($xml_product->Наименование);
             $p->name = $xml_product->Наименование;
             $p->meta_title = $xml_product->Наименование;
             $p->meta_keywords = $xml_product->Наименование;
@@ -731,7 +732,7 @@ function import_product($xml_product) {
                 $okay->db->query('SELECT id FROM __brands WHERE name=?', $brand_name);
                 if(!$brand_id = $okay->db->result('id')) {
                     // Создадим, если не найден
-                    $brand_id = $okay->brands->add_brand(array('name'=>$brand_name, 'meta_title'=>$brand_name, 'meta_keywords'=>$brand_name, 'meta_description'=>$brand_name, 'url'=>translit($brand_name), 'visible'=>intval(1)));
+                    $brand_id = $okay->brands->add_brand(array('name'=>$brand_name, 'meta_title'=>$brand_name, 'meta_keywords'=>$brand_name, 'meta_description'=>$brand_name, 'url'=>$okay->translit_alpha($brand_name), 'visible'=>intval(1)));
                 }
                 if(!empty($brand_id)) {
                     $okay->products->update_product($product_id, array('brand_id'=>$brand_id));
@@ -827,17 +828,6 @@ function import_variant($xml_variant) {
     } else {
         $okay->variants->update_variant($variant_id, $variant);
     }
-}
-
-function translit($text) {
-    $ru = explode('-', "А-а-Б-б-В-в-Ґ-ґ-Г-г-Д-д-Е-е-Ё-ё-Є-є-Ж-ж-З-з-И-и-І-і-Ї-ї-Й-й-К-к-Л-л-М-м-Н-н-О-о-П-п-Р-р-С-с-Т-т-У-у-Ф-ф-Х-х-Ц-ц-Ч-ч-Ш-ш-Щ-щ-Ъ-ъ-Ы-ы-Ь-ь-Э-э-Ю-ю-Я-я");
-    $en = explode('-', "A-a-B-b-V-v-G-g-G-g-D-d-E-e-E-e-E-e-ZH-zh-Z-z-I-i-I-i-I-i-J-j-K-k-L-l-M-m-N-n-O-o-P-p-R-r-S-s-T-t-U-u-F-f-H-h-TS-ts-CH-ch-SH-sh-SCH-sch---Y-y---E-e-YU-yu-YA-ya");
-
-    $res = str_replace($ru, $en, $text);
-    $res = preg_replace("/[\s]+/ui", '-', $res);
-    $res = strtolower(preg_replace("/[^0-9a-zа-я\-]+/ui", '', $res));
-
-    return $res;
 }
 
 function console_log() {

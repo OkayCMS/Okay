@@ -17,16 +17,16 @@ class Image extends Okay {
      * @param max_h максимальная высота
      * @return $string имя файла превью
      */
-    public function resize($filename,$original_images_dir = null, $resized_images_dir = null) {
+    public function resize($filename, $original_images_dir = null, $resized_images_dir = null) {
         list($source_file, $width , $height, $set_watermark) = $this->get_resize_params($filename);
-        
+
         $size = $width.'x'.$height;
         $image_sizes = array();
         if ($this->settings->image_sizes) {
             $image_sizes = explode('|', $this->settings->image_sizes);
         }
         if (!in_array($size, $image_sizes)){
-            header("http/1.0 404 not found");
+            header("http/1.1 404 not found");
             exit();
         }
         
@@ -36,7 +36,6 @@ class Image extends Okay {
             if(!$original_file = $this->download_image($source_file)) {
                 return false;
             }
-            $resized_file = $this->add_resize_params($original_file, $width, $height, $set_watermark);
         } else {
             $original_file = $source_file;
         }

@@ -42,6 +42,11 @@ class View extends Okay {
             if (!empty($languages)) {
                 if($_GET['lang_label']) {
                     $this->language = $this->languages->get_language($this->languages->lang_id());
+                    if ($this->language->enabled == 0) {
+                        header('HTTP/1.1 503 Service Temporarily Unavailable');
+                        header('Status: 503 Service Temporarily Unavailable');
+                        header('Retry-After: 300');
+                    }
                     if(!is_object($this->language)) {
                         $_GET['page_url'] = '404';
                         $_GET['module'] = 'PageView';
@@ -65,7 +70,7 @@ class View extends Okay {
                 }
                 $ruri = explode('/', $ruri);
                 $as = $first_lang->id != $this->languages->lang_id() ? 2 : 1;
-                
+
                 if(is_array($ruri) && $first_lang->id == $this->languages->lang_id() && $ruri[1] == $first_lang->label) {
                     header("HTTP/1.1 301 Moved Permanently");
                     header('Location: '.$this->config->root_url.'/'.implode('/',array_slice($ruri, 2)));

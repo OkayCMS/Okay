@@ -57,51 +57,55 @@ function show_tooltip()
 
     from = encodeURIComponent(window.location);
     tooltipcontent = '';
+    var lang = '';
+    if(typeof  lang_id != 'undefined') {
+        lang = '&lang_id=' + lang_id;
+    }
 
     if(id = $(this).attr('data-page'))
     {
-        tooltipcontent = "<a href='backend/index.php?module=PageAdmin&id="+id+"&return="+from+"' class=admin_tooltip_edit>Редактировать страницу</a>";
-        tooltipcontent += "<a href='backend/index.php?module=PageAdmin&return="+from+"' class=admin_tooltip_add>Добавить страницу</a>";
+        tooltipcontent = "<a href='backend/index.php?module=PageAdmin&id="+id+"&return="+from+lang+"' class=admin_tooltip_edit>Редактировать страницу</a>";
+        tooltipcontent += "<a href='backend/index.php?module=PageAdmin&return="+from+lang+"' class=admin_tooltip_add>Добавить страницу</a>";
     }
 
     if(id = $(this).attr('data-category'))
     {
-        tooltipcontent = "<a href='backend/index.php?module=CategoryAdmin&id="+id+"&return="+from+"' class=admin_tooltip_edit>Редактировать категорию</a>";
-	    tooltipcontent += "<a href='backend/index.php?module=CategoryAdmin&return="+from+"' class=admin_tooltip_add>Добавить категорию</a>";
-	    tooltipcontent += "<a href='backend/index.php?module=ProductAdmin&category_id="+id+"&return="+from+"' class=admin_tooltip_add>Добавить товар</a>";
+        tooltipcontent = "<a href='backend/index.php?module=CategoryAdmin&id="+id+"&return="+from+lang+"' class=admin_tooltip_edit>Редактировать категорию</a>";
+	    tooltipcontent += "<a href='backend/index.php?module=CategoryAdmin&return="+from+lang+"' class=admin_tooltip_add>Добавить категорию</a>";
+	    tooltipcontent += "<a href='backend/index.php?module=ProductAdmin&category_id="+id+"&return="+from+lang+"' class=admin_tooltip_add>Добавить товар</a>";
     }
 
     if(id = $(this).attr('data-brand'))
     {
-        tooltipcontent = "<a href='backend/index.php?module=BrandAdmin&id="+id+"&return="+from+"' class=admin_tooltip_edit>Редактировать бренд</a>";
-	    tooltipcontent += "<a href='backend/index.php?module=BrandAdmin&return="+from+"' class=admin_tooltip_add>Добавить бренд</a>";
+        tooltipcontent = "<a href='backend/index.php?module=BrandAdmin&id="+id+"&return="+from+lang+"' class=admin_tooltip_edit>Редактировать бренд</a>";
+	    tooltipcontent += "<a href='backend/index.php?module=BrandAdmin&return="+from+lang+"' class=admin_tooltip_add>Добавить бренд</a>";
     }
 
     if(id = $(this).attr('data-product'))
     {
-        tooltipcontent = "<a href='backend/index.php?module=ProductAdmin&id="+id+"&return="+from+"' class=admin_tooltip_edit>Редактировать товар</a>";
-	    tooltipcontent += "<a href='backend/index.php?module=ProductAdmin&category_id="+id+"&return="+from+"' class=admin_tooltip_add>Добавить товар</a>";
+        tooltipcontent = "<a href='backend/index.php?module=ProductAdmin&id="+id+"&return="+from+lang+"' class=admin_tooltip_edit>Редактировать товар</a>";
+	    tooltipcontent += "<a href='backend/index.php?module=ProductAdmin&category_id="+id+"&return="+from+lang+"' class=admin_tooltip_add>Добавить товар</a>";
     }
 
     if(id = $(this).attr('data-post'))
     {
-        tooltipcontent = "<a href='backend/index.php?module=PostAdmin&id="+id+"&return="+from+"' class=admin_tooltip_edit>Редактировать новость</a>";
+        tooltipcontent = "<a href='backend/index.php?module=PostAdmin&id="+id+"&return="+from+lang+"' class=admin_tooltip_edit>Редактировать новость</a>";
     }
 
     if(id = $(this).attr('data-feature'))
     {
-        tooltipcontent = "<a href='backend/index.php?module=FeatureAdmin&id="+id+"&return="+from+"' class=admin_tooltip_edit>Редактировать свойство</a>";
-	    tooltipcontent += "<a href='backend/index.php?module=FeatureAdmin&return="+from+"' class=admin_tooltip_add>Добавить свойство</a>";
+        tooltipcontent = "<a href='backend/index.php?module=FeatureAdmin&id="+id+"&return="+from+lang+"' class=admin_tooltip_edit>Редактировать свойство</a>";
+	    tooltipcontent += "<a href='backend/index.php?module=FeatureAdmin&return="+from+lang+"' class=admin_tooltip_add>Добавить свойство</a>";
     }
 
 	if(id = $(this).attr('data-language'))
 	{
-		tooltipcontent = "<a href='backend/index.php?module=TranslationAdmin&id="+id+"&return="+from+"' class=admin_tooltip_edit>Редактировать перевод</a>";
+		tooltipcontent = "<a href='backend/index.php?module=TranslationAdmin&id="+id+"&return="+from+lang+"' class=admin_tooltip_edit>Редактировать перевод</a>";
 	}
 
 	if(id = $(this).attr('data-languages'))
 	{
-		tooltipcontent = "<a href='backend/index.php?module=LanguagesAdmin&return="+from+"' class=admin_tooltip_edit>Редактировать языки</a>";
+		tooltipcontent = "<a href='backend/index.php?module=LanguagesAdmin&return="+from+lang+"' class=admin_tooltip_edit>Редактировать языки</a>";
 	}
 
     $('.tooltip').html(tooltipcontent);

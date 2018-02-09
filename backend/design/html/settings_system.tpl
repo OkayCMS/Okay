@@ -87,6 +87,7 @@
                                <div>
                                    <ul class="mb-0 pl-1">
                                        <li>display_errors - {$btr->system_display_errors|escape}</li>
+                                       <li>memory_limit - {$btr->system_memory_limit|escape}</li>
                                        <li>post_max_size - {$btr->system_post_max_size|escape}</li>
                                        <li>max_input_time - {$btr->system_max_input_time|escape}</li>
                                        <li>max_file_uploads - {$btr->system_max_file_uploads|escape}</li>

@@ -507,4 +507,61 @@ class Orders extends Okay {
         return $order->id;
     }
 
+    public function get_neighbors_orders($filter)
+    {
+        if (empty($filter['id'])) {
+            return false;
+        }
+        $status_filter = '';
+        $label_filter = '';
+
+        if(!empty($filter['status'])) {
+            $status_filter = $this->db->placehold('AND status_id=?', (int)$filter['status']);
+        }
+
+        if(!empty($filter['label'])) {
+            $label_filter = $this->db->placehold('INNER JOIN __orders_labels AS ol ON o.id=ol.order_id AND label_id=?', (int)$filter['label']);
+        }
+
+        $oids = array();
+        $this->db->query("SELECT MIN(o.id) as id
+                  FROM __orders o
+                  $label_filter
+                  WHERE o.id>?
+                  $status_filter
+                  LIMIT 1", (int)$filter['id']);
+        $id = $this->db->result('id');
+        $oids[$id] = 'next';
+
+        $this->db->query("SELECT MAX(o.id) as id
+                  FROM __orders o
+                  $label_filter
+                  WHERE o.id<?
+                  $status_filter
+                  LIMIT 1", (int)$filter['id']);
+        $id = $this->db->result('id');
+        $oids[$id] = 'prev';
+
+        $result = array('next'=>null, 'prev'=>null);
+        if (!empty($oids)) {
+            foreach ($this->get_orders(array('id'=>array_keys($oids))) as $o) {
+                $result[$oids[$o->id]] = $o;
+            }
+        }
+        return $result;
+    }
+
+    public function get_prev_order($id, $status = null)
+    {
+        $f = '';
+        if($status !== null)
+            $f = $this->db->placehold('AND status=?', $status);
+        $this->db->query("SELECT MAX(id) as id FROM __orders WHERE id<? $f LIMIT 1", $id);
+        $prev_id = $this->db->result('id');
+        if($prev_id)
+            return $this->get_order(intval($prev_id));
+        else
+            return false;
+    }
+
 }

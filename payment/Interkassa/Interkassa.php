@@ -2,7 +2,7 @@
 
 require_once('api/Okay.php');
 
-class Interkassa2 extends Okay
+class Interkassa extends Okay
 {	
 	public function checkout_form($order_id, $button_text = null)
 	{

@@ -11,6 +11,11 @@ class Categories extends Okay {
 
     /*Выбираем все категории*/
     public function get_categories($filter = array()) {
+
+        $parent_filter = '';
+        $date_from_filter = '';
+        $level_depth_filter = '';
+
         if(!isset($this->categories_tree)) {
             $this->init_categories();
         }
@@ -34,18 +39,30 @@ class Categories extends Okay {
         }
         
         if (!empty($filter['level_depth'])) {
-            $parent_filter = '';
             if ($parent) {
                 $parent_filter = $this->db->placehold('AND c.id in(?@)', (array)$parent->children);
             }
-            
-            $this->db->query("select c.id 
-                from __categories c 
-                where c.level_depth=? 
-                $parent_filter 
-                order by c.name", intval($filter['level_depth']));
+            $level_depth_filter = $this->db->placehold("AND c.level_depth = ?", (int)$filter['level_depth']);
+        }
+
+        if (!empty($filter['date_from'])) {
+            $from = date('Y-m-d H:i:s', strtotime($filter['date_from']));
+            $date_from_filter = $this->db->placehold("AND c.created >= ?", $from);
+        }
+
+        if (!empty($filter['level_depth']) || !empty($filter['date'])) {
+            $this->db->query("SELECT c.id
+                FROM __categories c
+                WHERE 1
+                $level_depth_filter
+                $parent_filter
+                $date_from_filter
+                ORDER BY c.position");
+
+            $categories_ids = $this->db->results('id');
+
             $result = array();
-            foreach ($this->db->results('id') as $cid) {
+            foreach ($categories_ids as $cid) {
                 if (isset($this->all_categories[$cid])) {
                     $result[$cid] = $this->all_categories[$cid];
                 }
@@ -122,7 +139,11 @@ class Categories extends Okay {
         } else {
             $category->level_depth = 1;
         }
-        
+
+        if (empty($category->created)) {
+            $category->created = date("Y-m-d H:i:s");
+        }
+
         $result = $this->languages->get_description($category, 'category');
         
         $category->last_modify = date("Y-m-d H:i:s");
@@ -239,6 +260,7 @@ class Categories extends Okay {
                 c.level_depth, 
                 c.yandex_name, 
                 c.last_modify, 
+                c.created,
                 $lang_sql->fields
             FROM __categories c 
             $lang_sql->join 

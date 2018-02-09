@@ -425,7 +425,7 @@
 "@type": "Product",
 "name": "{/literal}{$product->name|escape}{literal}",
 "image": "{/literal}{$product->image->filename|resize:330:300}{literal}",
-"description": "{/literal}{$product->annotation|strip_tags}{literal}",
+"description": "{/literal}{$product->annotation|strip_tags|escape}{literal}",
 "mpn": "{/literal}{if $product->variant->sku}{$product->variant->sku|escape}{else}Не указано{/if}{literal}",
 {/literal}
 {if $brand->name}
@@ -449,13 +449,13 @@
 "offers": {
 "@type": "Offer",
 "priceCurrency": "{/literal}{$currency->code|escape}{literal}",
-"price": "{/literal}{$product->variant->price|convert:'':false}{literal}",
+"price": "{/literal}{$product->variant->price|convert:null:false}{literal}",
 "priceValidUntil": "{/literal}{$smarty.now|date_format:'%Y-%m-%d'}{literal}",
 "itemCondition": "http://schema.org/UsedCondition",
 "availability": "http://schema.org/InStock",
 "seller": {
 "@type": "Organization",
-"name": "{/literal}{$settings->company_name}{literal}"
+"name": "{/literal}{$settings->company_name|escape}{literal}"
 }
 }
 }

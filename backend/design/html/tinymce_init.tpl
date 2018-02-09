@@ -8,15 +8,17 @@
     $(function(){
         tinyMCE.init({literal}{{/literal}
             selector: "textarea.editor_large, textarea.editor_small",
+            height: '300',
             plugins: [
                 "advlist autolink lists link image preview anchor responsivefilemanager",
+                "hr visualchars autosave noneditable searchreplace wordcount visualblocks",
                 "code fullscreen save textcolor colorpicker charmap nonbreaking",
                 "insertdatetime media table contextmenu paste imagetools"
             ],
             toolbar_items_size : 'small',
             menubar:'file edit insert view format table tools',
-            toolbar1: "fontselect formatselect fontsizeselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | forecolor backcolor | table | link unlink anchor media image | fullscreen code",
-            statusbar: false,
+            toolbar1: "restoredraft save fontselect formatselect fontsizeselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | forecolor backcolor | table | link unlink anchor media image | fullscreen visualblocks visualchars code",
+            statusbar: true,
             font_formats: "Andale Mono=andale mono,times;"+
             "Arial=arial,helvetica,sans-serif;"+
             "Arial Black=arial black,avant garde;"+

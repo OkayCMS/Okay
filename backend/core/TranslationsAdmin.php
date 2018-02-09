@@ -5,8 +5,12 @@ require_once('api/Okay.php');
 class TranslationsAdmin extends Okay {
     
     public function fetch() {
+
+        $locked_theme = is_file('design/'.$this->settings->theme.'/locked');
+        $this->design->assign('locked_theme', $locked_theme);
+
         // Обработка действий
-        if($this->request->method('post')) {
+        if(!$locked_theme && $this->request->method('post')) {
             // Действия с выбранными
             $ids = $this->request->post('check');
             if(is_array($ids)) {

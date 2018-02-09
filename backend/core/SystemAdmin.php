@@ -10,6 +10,7 @@ class SystemAdmin extends Okay {
         $all_extensions = get_loaded_extensions();
         $ini_params = array();
         $request_ini = array('display_errors',
+                            'memory_limit',
                             'post_max_size',
                             'max_input_time',
                             'max_file_uploads',
