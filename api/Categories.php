@@ -19,7 +19,17 @@ class Categories extends Okay {
         if(!isset($this->categories_tree)) {
             $this->init_categories();
         }
-        
+
+        if (!empty($filter['id'])) {
+            $result = array();
+            foreach ((array)$filter['id'] as $id) {
+                if (isset($this->all_categories[$id])) {
+                    $result[$id] = $this->all_categories[$id];
+                }
+            }
+            return $result;
+        }
+
         if(!empty($filter['product_id'])) {
             $query = $this->db->placehold("SELECT category_id FROM __products_categories WHERE product_id in(?@) ORDER BY position", (array)$filter['product_id']);
             $this->db->query($query);

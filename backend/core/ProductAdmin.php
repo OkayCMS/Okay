@@ -51,7 +51,7 @@ class ProductAdmin extends Okay {
                 foreach($product_categories as $c) {
                     $x = new stdClass;
                     $x->id = $c;
-                    $pc[] = $x;
+                    $pc[$x->id] = $x;
                 }
                 $product_categories = $pc;
             }
@@ -332,16 +332,13 @@ class ProductAdmin extends Okay {
                             $this->products->add_related_product($product->id, $related_product->related_id, $pos++);
                         }
                     }
-                    $product_categories = $this->categories->get_categories(array('product_id'=>$product->id));
                 }
             }
         } else {
             $id = $this->request->get('id', 'integer');
             $product = $this->products->get_product(intval($id));
             if($product) {
-                // Категории товара
-                $product_categories = $this->categories->get_categories(array('product_id'=>$product->id));
-                
+
                 // Варианты товара
                 $variants = $this->variants->get_variants(array('product_id'=>$product->id));
                 
@@ -359,7 +356,14 @@ class ProductAdmin extends Okay {
                 $product->visible = 1;
             }
         }
-        
+
+        // Категории товара
+        if (!empty($product_categories)) {
+            $product_categories = $this->categories->get_categories(array('id'=>array_keys($product_categories)));
+        } elseif (!empty($product->id)) {
+            $product_categories = $this->categories->get_categories(array('product_id'=>$product->id));
+        }
+
         if(empty($variants)) {
             $variants = array(1);
         }

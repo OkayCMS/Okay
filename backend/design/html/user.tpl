@@ -77,7 +77,7 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <div class="mb-1">
-                                <div class="heading_label">{$btr->general_name|escape}</div>
+                                <div class="heading_label">{$btr->index_name|escape}</div>
                                 <div class="">
                                     <input class="form-control mb-h" name="name" type="text" value="{$user->name|escape}"/>
                                     <input name="id" type="hidden" value="{$user->id|escape}"/>

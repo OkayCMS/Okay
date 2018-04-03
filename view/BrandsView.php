@@ -7,7 +7,7 @@ class BrandsView extends View {
     /*Отображение страницы всех брендов*/
     public function fetch() {
         /*Выбираем все бренды*/
-        $brands = $this->brands->get_brands();
+        $brands = $this->brands->get_brands(array('visible_brand'=>1));
         $this->design->assign('brands', $brands);
         if($this->page) {
             $this->design->assign('meta_title', $this->page->meta_title);

@@ -29,12 +29,14 @@
 
                 <div class="form_group">
                     {* User's email *}
-                    <input class="form_input" type="text" name="email" value="{$email|escape}" data-language="form_email" placeholder="{$lang->form_email}*"/>
+                    <input class="form_input placeholder_focus" type="text" name="email" value="{$email|escape}" data-language="form_email" />
+                    <span class="form_placeholder">{$lang->form_email}*</span>
                 </div>
 
                 <div class="form_group">
                     {* User's password *}
-                    <input class="form_input" type="password" name="password" data-notice="{$lang->form_enter_password}" value="" data-language="form_password" placeholder="{$lang->form_password}*"/>
+                    <input class="form_input placeholder_focus" type="password" name="password" data-notice="{$lang->form_enter_password}" value="" data-language="form_password"/>
+                    <span class="form_placeholder">{$lang->form_password}*</span>
                 </div>
 
                 

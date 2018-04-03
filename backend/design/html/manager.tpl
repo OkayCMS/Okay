@@ -167,7 +167,7 @@
                 <div class="toggle_body_wrap on fn_card">
                     {foreach $permission as $title=>$items}
                         <div class="permission_block">
-                            <div class="heading_box">{$btr->{$title}}</div>
+                            <div class="heading_box">{$btr->get_translation({$title})}</div>
                             <div class="permission_boxes row fn_perms_wrap">
                                 {foreach $items as $key=>$item}
                                     <div class="col-xl-3 col-lg-4 col-md-6 {if $m->id==$manager->id}text-muted{/if}">

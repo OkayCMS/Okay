@@ -58,7 +58,7 @@
             </div>
 
             <div class="col-lg-7 col-xl-6">
-                <div class="product_details" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+                <div class="product_details">
                     <div class="row">
                         <div class="col-sm-6">
                             {* Wishlist *}
@@ -140,7 +140,7 @@
                             </div>
                         </div>
                         
-                        <div class="row">
+                        <div class="row" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
                             <div class="col-sm-6">
                                 {* Old price *}
                                 <div class="old_price{if !$product->variant->compare_price} hidden{/if}">
@@ -169,6 +169,19 @@
                                 
                                 {* Submit button *}
                                 <button class="fn_is_stock button product_btn{if $product->variant->stock < 1} hidden{/if}" type="submit" data-language="product_add_cart">{$lang->product_add_cart}</button>
+
+                                {* Schema.org *}
+                                <span class="hidden">
+                                    <time itemprop="priceValidUntil" datetime="{$product->created|date:'Ymd'}"></time>
+                                    {if $product->variant->stock > 0}
+                                    <link itemprop="availability" href="https://schema.org/InStock" />
+                                    {else}
+                                    <link itemprop="availability" href="http://schema.org/OutOfStock" />
+                                    {/if}
+                                    <link itemprop="itemCondition" href="https://schema.org/NewCondition" />
+                                    <span itemprop="seller" itemscope itemtype="http://schema.org/Organization">
+                                    <span itemprop="name">{$settings->company_name}</span></span>
+                                </span>
                             </div>
                         </div>
                     </form>
@@ -314,19 +327,26 @@
 
                                 <div class="row">
                                     {* User's name *}
-                                    <div class="col-lg-6 form_group">
-                                        <input class="form_input" type="text" name="name" value="{$comment_name|escape}" placeholder="{$lang->form_name}*"/>
+                                    <div class="col-lg-6">
+                                        <div class="form_group">
+                                            <input class="form_input placeholder_focus" type="text" name="name" value="{$comment_name|escape}" />
+                                            <span class="form_placeholder">{$lang->form_name}*</span>
+                                        </div>
                                     </div>
 
                                     {* User's email *}
-                                    <div class="col-lg-6 form_group">
-                                        <input class="form_input" type="text" name="email" value="{$comment_email|escape}" data-language="form_email" placeholder="{$lang->form_email}"/>
+                                    <div class="col-lg-6">
+                                        <div class="form_group">
+                                            <input class="form_input placeholder_focus" type="text" name="email" value="{$comment_email|escape}" data-language="form_email" />
+                                            <span class="form_placeholder">{$lang->form_email}</span>
+                                        </div>
                                     </div>
                                 </div>
 
                                 {* User's comment *}
                                 <div class="form_group">
-                                    <textarea class="form_textarea" rows="3" name="text" placeholder="{$lang->form_enter_comment}*">{$comment_text}</textarea>
+                                    <textarea class="form_textarea placeholder_focus" rows="3" name="text" >{$comment_text}</textarea>
+                                    <span class="form_placeholder">{$lang->form_enter_comment}*</span>
                                 </div>
 
                                 {* Captcha *}
@@ -334,7 +354,10 @@
                                     {get_captcha var="captcha_product"}
                                     <div class="captcha">
                                         <div class="secret_number">{$captcha_product[0]|escape} + ? =  {$captcha_product[1]|escape}</div>
-                                        <input class="form_input input_captcha" type="text" name="captcha_code" value="" placeholder="{$lang->form_enter_captcha}*"/>
+                                        <span class="form_captcha">
+                                            <input class="form_input input_captcha placeholder_focus" type="text" name="captcha_code" value="" />
+                                            <span class="form_placeholder">{$lang->form_enter_captcha}*</span>
+                                        </span>
                                     </div>
                                 {/if}
 
@@ -425,7 +448,7 @@
 "@type": "Product",
 "name": "{/literal}{$product->name|escape}{literal}",
 "image": "{/literal}{$product->image->filename|resize:330:300}{literal}",
-"description": "{/literal}{$product->annotation|strip_tags|escape}{literal}",
+"description": "{/literal}{str_replace(array("\r", "\n"), "", $product->annotation|strip_tags|escape)}{literal}",
 "mpn": "{/literal}{if $product->variant->sku}{$product->variant->sku|escape}{else}Не указано{/if}{literal}",
 {/literal}
 {if $brand->name}
@@ -451,8 +474,18 @@
 "priceCurrency": "{/literal}{$currency->code|escape}{literal}",
 "price": "{/literal}{$product->variant->price|convert:null:false}{literal}",
 "priceValidUntil": "{/literal}{$smarty.now|date_format:'%Y-%m-%d'}{literal}",
-"itemCondition": "http://schema.org/UsedCondition",
+"itemCondition": "http://schema.org/NewCondition",
+{/literal}
+{if $product->variant->stock > 0}
+{literal}
 "availability": "http://schema.org/InStock",
+{/literal}
+{else}
+{literal}
+"availability": "http://schema.org/OutOfStock",
+{/literal}
+{/if}
+{literal}
 "seller": {
 "@type": "Organization",
 "name": "{/literal}{$settings->company_name|escape}{literal}"

@@ -212,10 +212,9 @@
                                         <span class="switch-handle"></span>
                                     </label>
                                 </div>
-
                             </div>
+                        </div>
                     </div>
-                    <div class="col-xs-12 clearfix"></div>
                 </div>
             </div>
         </div>

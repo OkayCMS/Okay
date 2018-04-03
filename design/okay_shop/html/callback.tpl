@@ -25,17 +25,20 @@
 
         {* User's name *}
         <div class="form_group">
-            <input class="form_input" type="text" name="name" value="{if $callname}{$callname|escape}{else}{$user->name|escape}{/if}" data-language="form_name" placeholder="{$lang->form_name}*">
+            <input class="form_input placeholder_focus" type="text" name="name" value="{if $callname}{$callname|escape}{else}{$user->name|escape}{/if}" data-language="form_name">
+            <span class="form_placeholder">{$lang->form_name}*</span>
         </div>
 
         {* User's phone *}
         <div class="form_group">
-            <input class="form_input" type="text" name="phone" value="{if $callphone}{$callphone|escape}{else}{$user->phone|escape}{/if}" data-language="form_phone" placeholder="{$lang->form_phone}*">
+            <input class="form_input placeholder_focus" type="text" name="phone" value="{if $callphone}{$callphone|escape}{else}{$user->phone|escape}{/if}" data-language="form_phone">
+            <span class="form_placeholder">{$lang->form_phone}*</span>
         </div>
 
         {* User's message *}
         <div class="form_group">
-            <textarea class="form_textarea" rows="3" name="message" data-language="form_enter_message" placeholder="{$lang->form_enter_message}">{$callmessage|escape}</textarea>
+            <textarea class="form_textarea placeholder_focus" rows="3" name="message" data-language="form_enter_message">{$callmessage|escape}</textarea>
+            <span class="form_placeholder">{$lang->form_enter_message}</span>
         </div>
 
         {* Captcha *}
@@ -43,7 +46,10 @@
             {get_captcha var="captcha_callback"}
             <div class="captcha">
                 <div class="secret_number">{$captcha_callback[0]|escape} + ? =  {$captcha_callback[1]|escape}</div>
-                <input class="form_input input_captcha" type="text" name="captcha_code" value="" placeholder="{$lang->form_enter_captcha}*">
+                <span class="form_captcha">
+                <input class="form_input input_captcha placeholder_focus" type="text" name="captcha_code" value="" >
+                    <span class="form_placeholder">{$lang->form_enter_captcha}*</span>
+                </span>
             </div>
         {/if}
 

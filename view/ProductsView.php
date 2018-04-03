@@ -399,10 +399,10 @@ class ProductsView extends View {
             }
 
             // Выбираем бренды, они нужны нам в шаблоне
-            foreach ($this->brands->get_brands(array('category_id'=>$category->children, 'visible'=>1)) as $b) {
+            foreach ($this->brands->get_brands(array('category_id'=>$category->children, 'visible'=>1, 'visible_brand'=>1)) as $b) {
                 $this->category_brands[$b->id] = $b;
             }
-            $category->brands = $this->brands->get_brands(array('category_id'=>$category->children, 'visible'=>1, 'features'=>$filter['features']));
+            $category->brands = $this->brands->get_brands(array('category_id'=>$category->children, 'visible'=>1, 'features'=>$filter['features'], 'visible_brand'=>1));
             // Если в строке есть параметры которые не должны быть в фильтре, либо параметры с другой категории, бросаем 404
             if (!empty($this->meta_array['options']) && array_intersect_key($this->meta_array['options'], $features) !== $this->meta_array['options'] ||
                 !empty($this->meta_array['brand']) && array_intersect_key($this->meta_array['brand'], $this->category_brands) !== $this->meta_array['brand']) {

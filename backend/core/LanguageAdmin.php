@@ -45,9 +45,10 @@ class LanguageAdmin extends Okay {
             }
         } else {
             $language->id = $this->request->get('id', 'integer');
-            if(!empty($language->id)) {
-                $language = $this->languages->get_language($language->id);
-            }
+        }
+
+        if(!empty($language->id)) {
+            $language = $this->languages->get_language($language->id);
         }
         $this->design->assign('lang_list', $lang_list);
         

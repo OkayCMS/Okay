@@ -58,15 +58,15 @@ body {
     font-weight: normal;
     background-color: #FBFBFB;
     max-width: 100%;
-    overflow-x: hidden;
     min-width: 320px;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     max-width: 100%;
+    overflow: hidden;
 }
 .main .container-fluid {
     padding: 0 15px;
-    padding-bottom: 70px;
+    padding-bottom: 35px;
     min-height: 100%;
     position: relative;
     z-index:2;
@@ -74,10 +74,13 @@ body {
 .main {
     width: 100%;
     padding: 0;
-    padding-top: 0px;
+    padding-top: 55px;
     margin: 0;
     min-height: 100%;
+    height: calc(100% - 55px);
     position: relative;
+    width: 100%;
+    overflow: auto;
 }
 
 .border_img{
@@ -94,7 +97,7 @@ body {
     display: -ms-flexbox;
 }
 body:not(.top-nav) header.navbar {
-    z-index: inherit;
+    z-index: 200;
 }
 /********************************************************* Text  */
 .text-success,
@@ -308,7 +311,8 @@ body:not(.top-nav) header.navbar {
     width: 100%;
     height: 100%;
     padding-left: 70px;
-
+    position: fixed;
+    overflow: hidden;
 }
 .okay_list_heading .hidden_check_1{
     display: none;
@@ -2670,6 +2674,10 @@ body.mobile-open #footer,
 body.mobile-open .main {
     margin-left: 200px !important;
 }
+body .main .page_scroll{
+    height: calc(100% - 15px);
+    width: 100%;
+}
 body.sidebar-nav .sidebar {
     margin-left: 0;
 }
@@ -2748,10 +2756,9 @@ body.menu-pin .page-container {
     position: relative;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    height: calc(100% - 15px);
+    height: calc(100% - 0px);
+    padding-bottom: 25px!important;
     width: 100%;
-    padding-top: 5px;
-
 }
 #admin_catalog  .sidebar-menu .menu_items > li {
     display: block;
@@ -2899,7 +2906,7 @@ body.menu-pin #admin_catalog .scrollbar-inner > .scroll-element.scroll-y,
 
 /******************************************* Header_style  *******/
 header.navbar {
-    position: relative!important;
+    position: fixed!important;
     top: 0 !important;
     right: 0 !important;
     left: 0 !important;
@@ -2909,6 +2916,7 @@ header.navbar {
     background-color: rgb(43, 48, 59);
     border-bottom: 1px solid #cfd8dc;
     z-index: 1030;
+    padding-left: 70px;
 }
 header.navbar .container-fluid{
      height: 55px;
@@ -3239,15 +3247,16 @@ body.menu-pin .menu_switch .menu_hamburger::after {
 /************************************************************************* Footer  */
 #footer {
     padding: 0px 15px 0px;
-    line-height: 50px;
+    line-height: 35px;
     color: rgb(38, 50, 56);
-    position: relative;
+    position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: RGB(251, 251, 251);
-    height: 50px;
-    z-index: 1;
+    background-color: rgb(43, 48, 59);
+    height: 35px;
+    padding-left: 0px;
+    z-index: 100;
 }
 
 
@@ -5482,7 +5491,7 @@ base::-moz-progress-bar,
     position: fixed;
     width: 100%;
     text-align: center;
-    background-color: rgb(43, 48, 59);
+    background-color: rgba(43, 48, 59, 0.9);
     padding: 10px;
     transition: 1s;
     display: none;

@@ -207,7 +207,7 @@
                     </div>
                     <textarea id="fn_banner_code" readonly>
                     {literal}
-                        {get_banner var={/literal}banner_{$banner->group_id}{literal} group={/literal}{$banner->group_id}{literal}}
+                        {get_banner var="{/literal}banner_{$banner->group_id}{literal}" group="{/literal}{$banner->group_id}{literal}"}
                         {if {/literal}$banner_{$banner->group_id}{literal}->items}
                         <div class="container hidden-md-down">
                             <div class="fn_banner_{/literal}{$banner->group_id}{literal} slick-banner">

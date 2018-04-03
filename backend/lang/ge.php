@@ -1,4 +1,6 @@
 <?php
+$backend_translations->index_no_notification = 'ახალი შეტყობინებები არ არის';
+$backend_translations->index_name = 'სახელი';
 $backend_translations->banner_enter_id = 'მიუთითეთ ჯგუფის ID ';
 $backend_translations->banner_hide = 'არ აჩვენო';
 $backend_translations->banner_id_enter = 'ბანერების ჯგუფების ID';

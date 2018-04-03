@@ -30,13 +30,13 @@
                         {/if}
                     </div>
                 {/if}
-
                 <div class="form_group">
                     {* User's e-mail *}
-                    <label for="password_remind">
-                        <span class="label_block" data-language="password_remind_enter_your_email">{$lang->password_remind_enter_your_email}</span>
-                    </label>
-                    <input id="password_remind" class="form_input" type="text" name="email" value="{$email|escape}" data-language="form_email" placeholder="{$lang->form_email}*">
+                    <span class="label_block" data-language="password_remind_enter_your_email">{$lang->password_remind_enter_your_email}</span>
+                </div>
+                <div class="form_group">
+                    <input id="password_remind" class="form_input placeholder_focus" type="text" name="email" value="{$email|escape}" data-language="form_email" >
+                    <span class="form_placeholder">{$lang->form_email}*</span>
                 </div>
         
                 {* Submit button *}

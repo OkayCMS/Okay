@@ -42,6 +42,7 @@ class Okay {
         ,'supportinfo'=> 'SupportInfo'
         ,'support'   => 'Support'
         ,'import'    => 'Import'
+        ,'backend_translations' => 'BackendTranslations'
     );
     
     private static $objects = array();
@@ -61,7 +62,13 @@ class Okay {
     );
     
     public function __construct() {
-        //error_reporting(E_ALL & !E_STRICT);
+        $debug = $this->config->debug_mode;
+        if ($debug == true && $_SESSION['admin']) {
+            ini_set('display_errors', 'on');
+            error_reporting(E_ALL);
+        } else {
+            ini_set('display_errors', 'off');
+        }
     }
     
     public function __get($name) {

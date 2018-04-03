@@ -610,12 +610,21 @@ header {
 .products_item:nth-child(2n) {
     box-shadow: none;
 }
+.categories_nav {
+    overflow-x: auto;
+    max-height: calc(100vh - 185px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 }
 
 
 @media (max-width: 767px) {
 .mobile-hidden {
     display: none;
+}
+.categories_nav {
+    max-height: calc(100vh - 255px);
 }
 .purchase,
 .purchase tbody,

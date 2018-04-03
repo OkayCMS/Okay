@@ -4,7 +4,7 @@
 
         {* The link to the homepage *}
         <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
-            <a itemprop="url" href="{if !empty($lang_link)}{$lang_link}{else}/{/if}" data-language="breadcrumb_home">
+            <a itemprop="url" href="{if !empty($lang_link)}{$lang_link}{else}{$config->root_url}{/if}" data-language="breadcrumb_home">
                 <span itemprop="title">{$lang->breadcrumb_home}</span>
             </a>
         </li>
@@ -14,11 +14,13 @@
             {if $category && !$keyword}
                 {foreach from=$category->path item=cat}
                     {if !$cat@last}
-                        <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
-                            <a itemprop="url" href="{$lang_link}catalog/{$cat->url}">
-                                <span itemprop="title">{$cat->name|escape}</span>
-                            </a>
-                        </li>
+                        {if $cat->visible}
+                            <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                                <a itemprop="url" href="{$lang_link}catalog/{$cat->url}">
+                                    <span itemprop="title">{$cat->name|escape}</span>
+                                </a>
+                            </li>
+                        {/if}
                     {else}
                         <li>{$cat->name|escape}</li>
                     {/if}
@@ -43,11 +45,13 @@
         {* Product page *}
         {elseif $smarty.get.module == "ProductView"}
             {foreach from=$category->path item=cat}
-                <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
-                    <a itemprop="url" href="{$lang_link}catalog/{$cat->url}">
-                        <span itemprop="title">{$cat->name|escape}</span>
-                    </a>
-                </li>
+                {if $cat->visible}
+                    <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                        <a itemprop="url" href="{$lang_link}catalog/{$cat->url}">
+                            <span itemprop="title">{$cat->name|escape}</span>
+                        </a>
+                    </li>
+                {/if}
             {/foreach}
             <li>{$product->name|escape}</li>
 

@@ -285,7 +285,7 @@ class IndexAdmin extends Okay {
         require_once('backend/core/'.$module.'.php');
 
         // Перевод админки
-        $backend_translations = new stdClass();
+        $backend_translations = $this->backend_translations;
         $file = "backend/lang/".$this->manager->lang.".php";
         if (!file_exists($file)) {
             foreach (glob("backend/lang/??.php") as $f) {

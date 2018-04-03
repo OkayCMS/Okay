@@ -6,7 +6,20 @@ class Features extends Okay {
 
     /*Выборка всех свойств товаров*/
     public function get_features($filter = array()) {
+        $limit = 100;
+        $page = 1;
         $category_id_filter = '';
+
+        if(isset($filter['limit'])) {
+            $limit = max(1, intval($filter['limit']));
+        }
+
+        if(isset($filter['page'])) {
+            $page = max(1, intval($filter['page']));
+        }
+
+        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
+
         if(isset($filter['category_id'])) {
             $category_id_filter = $this->db->placehold('AND id in(SELECT feature_id FROM __categories_features AS cf WHERE cf.category_id in(?@))', (array)$filter['category_id']);
         }
@@ -39,10 +52,43 @@ class Features extends Okay {
                 $category_id_filter 
                 $in_filter_filter 
                 $id_filter 
-            ORDER BY f.position 
+            ORDER BY f.position
+            $sql_limit
         ");
         $this->db->query($query);
         return $this->db->results();
+    }
+
+    public function count_features($filter = array()) {
+        $category_id_filter = '';
+        if(isset($filter['category_id'])) {
+            $category_id_filter = $this->db->placehold('AND id in(SELECT feature_id FROM __categories_features AS cf WHERE cf.category_id in(?@))', (array)$filter['category_id']);
+        }
+
+        $in_filter_filter = '';
+        if(isset($filter['in_filter'])) {
+            $in_filter_filter = $this->db->placehold('AND f.in_filter=?', intval($filter['in_filter']));
+        }
+
+        $id_filter = '';
+        if(!empty($filter['id'])) {
+            $id_filter = $this->db->placehold('AND f.id in(?@)', (array)$filter['id']);
+        }
+
+        $lang_sql = $this->languages->get_query(array('object'=>'feature'));
+        // Выбираем свойства
+        $query = $this->db->placehold("SELECT
+               count(distinct f.id) as count
+            FROM __features AS f
+            $lang_sql->join
+            WHERE
+                1
+                $category_id_filter
+                $in_filter_filter
+                $id_filter
+        ");
+        $this->db->query($query);
+        return $this->db->result('count');
     }
 
     /*Выборка конкретного свойства товара*/

@@ -159,8 +159,8 @@
                         {*Шапка таблицы*}
                         <div class="okay_list_head">
                             <div class="okay_list_heading okay_list_check">
-                                <input class="hidden_check fn_check_all" type="checkbox" id="check_all_1" name="" value=""/>
-                                <label class="okay_ckeckbox" for="check_all_1"></label>
+                                <input class="hidden_check fn_check_all" type="checkbox" id="check_all_3" name="" value=""/>
+                                <label class="okay_ckeckbox" for="check_all_3"></label>
                             </div>
                             <div class="okay_list_heading okay_list_order_stg_lbl_name">{$btr->general_name|escape}</div>
                             <div class="okay_list_heading okay_list_order_stg_sts_label">{$btr->order_settings_colour|escape}</div>
@@ -215,8 +215,8 @@
                         <div class="okay_list_footer ">
                             <div class="okay_list_foot_left">
                                 <div class="okay_list_heading okay_list_check">
-                                    <input class="hidden_check fn_check_all" type="checkbox" id="check_all_2" name="" value=""/>
-                                    <label class="okay_ckeckbox" for="check_all_2"></label>
+                                    <input class="hidden_check fn_check_all" type="checkbox" id="check_all_4" name="" value=""/>
+                                    <label class="okay_ckeckbox" for="check_all_4"></label>
                                 </div>
                                 <div class="okay_list_option">
                                     <select name="action" class="selectpicker">

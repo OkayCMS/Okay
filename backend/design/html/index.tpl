@@ -8,14 +8,16 @@
     <title>{$meta_title|escape}</title>
     <link rel="icon" href="design/images/favicon.png" type="image/x-icon" />
     <script src="design/js/jquery/jquery.js"></script>
+    <script src="design/js/jquery.scrollbar.min.js"></script>
     <script src="design/js/jquery/jquery-ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="design/js/jquery/jquery-ui.min.css" />
     <link href="design/css/okay.css" rel="stylesheet" type="text/css" />
     <link href="design/css/media.css" rel="stylesheet" type="text/css" />
-    <script src="design/js/jquery.scrollbar.min.js"></script>
     <script src="design/js/bootstrap.min.js"></script>
     <script src="design/js/bootstrap-select.js"></script>
     <script src="design/js/jquery.dd.min.js"></script>
+
+
     {if in_array($smarty.get.module, array("OrdersAdmin", "PostAdmin", "ReportStatsAdmin", "CouponsAdmin", "CategoryStatsAdmin"))}
         <script src="design/js/jquery/datepicker/jquery.ui.datepicker-{$manager->lang}.js"></script>
     {/if}
@@ -66,7 +68,7 @@
                         {foreach $left_menu as $section=>$items}
                             <li class="{if isset($items.$menu_selected)}open active{/if} {if $items|count > 1} fn_item_sub_switch nav-dropdown{/if}">
                                 <a class="nav-link {if $items|count > 1}fn_item_switch nav-dropdown-toggle{/if}" href="{if $items|count > 1}javascript:;{else}index.php?module={$items|reset}{/if}">
-                                    <span class="{$section} title">{$btr->{$section}}</span>
+                                    <span class="{$section} title">{$btr->get_translation({$section})}</span>
                                     <span class="icon-thumbnail">
                                        {include file='svg_icon.tpl' svgId=$section}
                                     </span>
@@ -80,9 +82,9 @@
                                             <li class="{if $title == $menu_selected}active{/if}">
                                                 <a class="nav-link" href="index.php?module={$mod}">
                                                     <span class="icon-thumbnail">
-                                                        {$btr->{$title}|first_letter}
+                                                        {$btr->get_translation({$title})|first_letter}
                                                     </span>
-                                                    <span class="{$title} title">{$btr->{$title}}</span>
+                                                    <span class="{$title} title">{$btr->get_translation({$title})}</span>
                                                 </a>
                                             </li>
                                         {/foreach}
@@ -203,6 +205,11 @@
                                         <span class="notif_count">{$new_callbacks_counter}</span>
                                     </div>
                                 {/if}
+                                {if !$new_orders_counter > 0 && !$new_comments_counter > 0 && !$new_feedbacks_counter > 0 && !$new_callbacks_counter > 0}
+                                <div class="notif_item">
+                                    <span class="notif_title">{$btr->index_no_notification|escape}</span>
+                                </div>
+                                {/if}
                             </div>
                         </div>
                     </div>
@@ -223,41 +230,50 @@
         </header>
         <div class="main">
             <div class="container-fluid animated fadeIn">
-                {if $content}
-                    {$content}
-                {else}
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 mt-1">
-                            <div class="boxed boxed_warning">
-                                <div class="heading_box">
-                                    {$btr->general_no_permission}
+                <div class="">
+                    {if $content}
+                        {$content}
+                    {else}
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 mt-1">
+                                <div class="boxed boxed_warning">
+                                    <div class="heading_box">
+                                        {$btr->general_no_permission}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                {/if}
-
-            </div>
-        </div>
-        <footer id="footer" class="">
-            <div class="col-md-12 font_12 text_dark">
-                <a href="https://okay-cms.com">OkayCMS </a> &copy; {$smarty.now|date_format:"%Y"} v.{$config->version} | {$btr->index_logged|escape}  {$manager->login|escape}
-                <div class="float-md-right">
-                    {if $license->valid}
-                        <a href='index.php?module=LicenseAdmin' class="text_success">{$btr->index_valid|escape} </a>
-                    {else}
-                        <a href='index.php?module=LicenseAdmin' class="text_warning">{$btr->index_not_valid|escape}</a>
-                    {/if},
-                    {if $support_info->public_key}
-                        <a class="text_success" href="index.php?module=SupportAdmin">{$btr->index_support_active|escape} ({$support_info->new_messages})</a>
-                    {else}
-                        <a href="index.php?module=SupportAdmin">
-                            <span class="text_warning">{$btr->index_support_not_active|escape}</span>
-                        </a>
                     {/if}
                 </div>
+                <footer id="footer" class="">
+                    <div class="col-md-12 font_12 text_white">
+                        <a href="https://okay-cms.com">OkayCMS </a> &copy; {$smarty.now|date_format:"%Y"} v.{$config->version} | {$btr->index_logged|escape}  {$manager->login|escape}
+                        <div class="float-md-right">
+                            {if $license->valid}
+                            <a href='index.php?module=LicenseAdmin' class="text_success">{$btr->index_valid|escape} </a>
+                            {else}
+                            <a href='index.php?module=LicenseAdmin' class="text_warning">{$btr->index_not_valid|escape}</a>
+                            {/if},
+                            {if $support_info->public_key}
+                            <a class="text_success" href="index.php?module=SupportAdmin">{$btr->index_support_active|escape} ({$support_info->new_messages})</a>
+                            {else}
+                            <a href="index.php?module=SupportAdmin">
+                                <span class="text_warning">{$btr->index_support_not_active|escape}</span>
+                            </a>
+                            {/if}
+                        </div>
+                    </div>
+                </footer>
+             </div>
+            {*Быстрое сохранение*}
+            <div class="fn_fast_save">
+                <button type="submit" class="btn btn_small btn_blue ">
+                    {include file='svg_icon.tpl' svgId='checked'}
+                    <span>{$btr->general_apply|escape}</span>
+                </button>
             </div>
-        </footer>
+        </div>
+
         {*Форма подтверждения действий*}
         <div id="fn_action_modal" class="modal fade show" role="document">
             <div class="modal-dialog modal-md">
@@ -280,19 +296,24 @@
             </div>
         </div>
     </div>
-
-    {*Быстрое сохранение*}
-    <div class="fn_fast_save">
-        <button type="submit" class="btn btn_small btn_blue ">
-            {include file='svg_icon.tpl' svgId='checked'}
-            <span>{$btr->general_apply|escape}</span>
-        </button>
-    </div>
 </body>
 
 {*main scripts*}
 <script>
     $(function(){
+
+        /* Initializing the scrollbar */
+        if($('.scrollbar-inner').size()>0){
+            $('.scrollbar-inner').scrollbar({
+                "disableBodyScroll":true
+            });
+        }
+
+        if($(window).width() < 1199 ){
+            if($('.scrollbar-variant').size()>0){
+                $('.scrollbar-variant').scrollbar();
+            }
+        }
 
         if($('form.fn_fast_button').size()>0){
             $('input,textarea,select, .dropdown-toggle').bind('keyup change dragover click',function(){
@@ -308,13 +329,14 @@
         if($('.fn_check_all').size()>0){
             $(document).on('change','.fn_check_all',function(){
                 if($(this).is(":checked")) {
-                    $('.hidden_check').each(function () {
+                    console.log($(this).closest("form").find('.hidden_check'))
+                    $(this).closest("form").find('.hidden_check').each(function () {
                         if(!$(this).is(":checked")) {
                             $(this).trigger("click");
                         }
                     });
                 } else {
-                    $('.hidden_check').each(function () {
+                    $(this).closest("form").find('.hidden_check').each(function () {
                         if($(this).is(":checked")) {
                             $(this).trigger("click");
                         }
@@ -389,16 +411,7 @@
             });
         }
 
-        /* Initializing the scrollbar */
-        if($('.scrollbar-inner').size()>0){
-            $('.scrollbar-inner').scrollbar();
-        }
 
-        if($(window).width() < 1199 ){
-            if($('.scrollbar-variant').size()>0){
-                $('.scrollbar-variant').scrollbar();
-            }
-        }
 
         /* Initializing sorting */
         if($(".sortable").size()>0) {
@@ -492,15 +505,12 @@
         function success_action ($this){
             $(document).on('click','.fn_submit_delete',function(){
                 $('.fn_form_list input[type="checkbox"][name*="check"]').attr('checked', false);
-                $this.closest(".fn_row").find('input[type="checkbox"][name*="check"]').attr('checked', true);
-                if ( !(/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) ) {
-                    $this.closest(".fn_row").find('input[type="checkbox"][name*="check"]').trigger("click");
-                }
-                $this.closest(".fn_form_list").find('select[name="action"] option[value=delete]').attr('selected', true);
+                $this.closest(".fn_row").find('input[type="checkbox"][name*="check"]').prop('checked', true);
+                $this.closest(".fn_form_list").find('select[name="action"] option[value=delete]').prop('selected', true);
                 $this.closest(".fn_form_list").submit();
             });
             $(document).on('click','.fn_dismiss_delete',function(){
-                $('.fn_form_list input[type="checkbox"][name*="check"]').attr('checked', false);
+                $('.fn_form_list input[type="checkbox"][name*="check"]').prop('checked', false);
                 $this.closest(".fn_form_list").find('select[name="action"] option[value=delete]').removeAttr('selected');
                 return false;
             });

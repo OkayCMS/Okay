@@ -6,7 +6,7 @@
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
             <div class="box_heading heading_page">
-                {$btr->features_features|escape}
+                {$btr->features_features|escape} - {$features_count}
             </div>
             <div class="box_btn_heading">
                 <a class="btn btn_small btn-info" href="{url module=FeatureAdmin return=$smarty.server.REQUEST_URI}">
@@ -36,6 +36,15 @@
                                 {/foreach}
                             {/function}
                             {category_select categories=$categories_tree}
+                        </select>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm 12">
+                        <select onchange="location = this.value;" class="selectpicker">
+                            <option value="{url limit=5}" {if $current_limit == 5}selected{/if}>{$btr->general_show_by|escape} 5</option>
+                            <option value="{url limit=10}" {if $current_limit == 10}selected{/if}>{$btr->general_show_by|escape} 10</option>
+                            <option value="{url limit=25}" {if $current_limit == 25}selected{/if}>{$btr->general_show_by|escape} 25</option>
+                            <option value="{url limit=50}" {if $current_limit == 50}selected{/if}>{$btr->general_show_by|escape} 50</option>
+                            <option value="{url limit=100}" {if $current_limit == 100}selected=""{/if}>{$btr->general_show_by|escape} 100</option>
                         </select>
                     </div>
                 </div>
@@ -145,6 +154,11 @@
                 </div>
             </div>
         </form>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm 12 txt_center">
+                {include file='pagination.tpl'}
+            </div>
+        </div>
     {else}
         <div class="heading_box mt-1">
             <div class="text_grey">{$btr->features_no|escape}</div>

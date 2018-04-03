@@ -38,6 +38,7 @@ php_locale_monetary = ru_RU
 php_locale_numeric = ru_RU
 php_locale_time = ru_RU
 ;php_timezone = Europe/Moscow
+debug_mode = false
 
 [smarty]
 
@@ -46,7 +47,8 @@ smarty_caching = false
 smarty_cache_lifetime = 0
 smarty_debugging = false
 smarty_html_minify = false
- 
+smarty_security = true
+
 [images]
 ;Использовать imagemagick для обработки изображений (вместо gd)
 use_imagick = true

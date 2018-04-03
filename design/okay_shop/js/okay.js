@@ -294,6 +294,26 @@ $(function(){
         $("html, body").animate({scrollTop: 0}, 500);
     });
 
+    // Проверка полей на пустоту для плейсхолдера
+    $('.placeholder_focus').blur(function() {
+        if( $(this).val().trim().length > 0 ) {
+            $(this).next().addClass('active');
+        } else {
+            $(this).next().removeClass('active');
+        }
+    });
+
+    $('.form_placeholder').click(function(){
+        $(this).prev().focus();
+    });
+
+    $('.placeholder_focus').each(function() {
+        if( $(this).val().trim().length > 0 ) {
+            $(this).next().addClass('active');
+        }
+    });
+
+
     /* Инициализация баннера */
     $('.fn_banner_group1').slick({
         infinite: true,

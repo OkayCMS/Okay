@@ -1,5 +1,5 @@
 {if $language->id}
-    {$meta_title = $language->{'name_'|cat:$current_language->label}|escape scope=parent}
+    {$meta_title = $language->current_name|escape scope=parent}
 {else}
     {$meta_title = $btr->language_new scope=parent}
 {/if}
@@ -110,7 +110,7 @@
                                                 {$l->name|escape}
                                             </div>
                                             <div class="">
-                                                <input type="text" name="name_{$l->label}" value="{$language->name_{$l->label}}" class="form-control"/>
+                                                <input type="text" name="name_{$l->label}" value="{$language->names[{$l->id}]}" class="form-control"/>
                                             </div>
                                         </div>
                                     {/foreach}

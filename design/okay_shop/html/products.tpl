@@ -63,9 +63,9 @@
         </div>
     {/if}
     
-    {if $page->body}
+    {if $page->description}
         <div class="block padding">
-            {$page->body}
+            {$page->description}
         </div>
     {/if}
 

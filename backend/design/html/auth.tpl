@@ -74,8 +74,8 @@
                                 {/if}
                             </form>
                             <div class="col-xs-12 p-h fn_recovery_wrap hidden px-0">
-                                <div class="fn_success" style="display: none;">Сообщение отправлено на емейл администратору</div>
-                                <label>Введите email администратора для восстановления пароля</label>
+                                <div class="fn_success" style="display: none;margin-bottom:15px;">Сообщение отправлено на емейл администратору</div>
+                                <label class="fn_recovery_label">Введите email администратора для восстановления пароля</label>
                                 <input type="email" class="form-control mb-h fn_email" value="" name="recovery_email">
                                 <button type="button" value="recovery" class="btn btn-primary px-2 fn_ajax_recover">Напомнить</button>
                             </div>
@@ -117,7 +117,7 @@
                     success: function(data) {
                         if(data.send){
                             $(".fn_success").show();
-                            $(".fn_email").next().remove();
+                            $(".fn_recovery_label").remove();
                             $(".fn_email").remove();
                         }
                     }

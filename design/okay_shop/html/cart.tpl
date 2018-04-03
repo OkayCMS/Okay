@@ -43,31 +43,43 @@
 
             <div class="row">
                 {* User's name *}
-                <div class="form_group col-sm-6">
-                    <input class="form_input" name="name" type="text" value="{$name|escape}" data-language="form_name" placeholder="{$lang->form_name}*">
+                <div class="col-sm-6">
+                    <div class="form_group">
+                        <input class="form_input placeholder_focus" name="name" type="text" value="{$name|escape}" data-language="form_name" >
+                        <span class="form_placeholder">{$lang->form_name}*</span>
+                    </div>
                 </div>
 
                 {* User's phone *}
-                <div class="form_group col-sm-6">
-                    <input class="form_input" name="phone" type="text" value="{$phone|escape}" data-language="form_phone" placeholder="{$lang->form_phone}">
+                <div class="col-sm-6">
+                    <div class="form_group">
+                        <input class="form_input placeholder_focus" name="phone" type="text" value="{$phone|escape}" data-language="form_phone" >
+                        <span class="form_placeholder">{$lang->form_phone}</span>
+                    </div>
                 </div>
             </div>
 
             <div class="row">
                 {* User's email *}
-                <div class="form_group col-sm-6">
-                    <input class="form_input" name="email" type="text" value="{$email|escape}" data-language="form_email" placeholder="{$lang->form_email}*">
+                <div class="col-sm-6">
+                    <div class="form_group">
+                        <input class="form_input placeholder_focus" name="email" type="text" value="{$email|escape}" data-language="form_email" >
+                        <span class="form_placeholder">{$lang->form_email}*</span>
+                    </div>
                 </div>
-
                 {* User's address *}
-                <div class="form_group col-sm-6">
-                    <input class="form_input" name="address" type="text" value="{$address|escape}" data-language="form_address" placeholder="{$lang->form_address}">
+                <div class="col-sm-6">
+                    <div class="form_group">
+                        <input class="form_input placeholder_focus" name="address" type="text" value="{$address|escape}" data-language="form_address" >
+                        <span class="form_placeholder">{$lang->form_address}</span>
+                    </div>
                 </div>
             </div>
 
             {* User's message *}
             <div class="form_group">
-                <textarea class="form_textarea" rows="5" name="comment" data-language="cart_order_comment" placeholder="{$lang->cart_order_comment}">{$comment|escape}</textarea>
+                <textarea class="form_textarea placeholder_focus" rows="5" name="comment" data-language="cart_order_comment" >{$comment|escape}</textarea>
+                <span class="form_placeholder">{$lang->cart_order_comment}</span>
             </div>
 
             {* Captcha *}
@@ -75,7 +87,10 @@
                 {get_captcha var="captcha_cart"}
                 <div class="captcha">
                     <div class="secret_number">{$captcha_cart[0]|escape} + ? =  {$captcha_cart[1]|escape}</div>
-                    <input class="form_input input_captcha" type="text" name="captcha_code" value="" data-language="form_enter_captcha" placeholder="{$lang->form_enter_captcha}*">
+                    <span class="form_captcha">
+                        <input class="form_input input_captcha placeholder_focus" type="text" name="captcha_code" value="" data-language="form_enter_captcha" >
+                        <span class="form_placeholder">{$lang->form_enter_captcha}*</span>
+                     </span>
                 </div>
             {/if}
 

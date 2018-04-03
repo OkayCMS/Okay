@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="okay_list_boding okay_list_languages_name">
                                     <a href="{url module=LanguageAdmin id=$language->id return=$smarty.server.REQUEST_URI}">
-                                        {$language->{'name_'|cat:$current_language->label}|escape} [{$language->label|escape}]
+                                        {$language->current_name|escape} [{$language->label|escape}]
                                     </a>
                                 </div>
 

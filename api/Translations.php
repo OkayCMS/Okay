@@ -60,6 +60,7 @@ class Translations extends Okay {
             $result = $this->init_one($l->label);
             if (isset($result[$id])) {
                 $translation['lang_' . $l->label] = $result[$id];
+                $translation['values'][$l->id] = $result[$id];
             }
         }
         if (count($translation) > 0) {

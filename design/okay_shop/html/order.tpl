@@ -4,7 +4,21 @@
 {$meta_title = "`$lang->email_order_title` `$order->id`" scope=parent}
 
 {* The page heading *}
-<div class="h1"><span data-language="order_header">{$lang->order_header}</span> {$order->id}, {$order_status->name|escape}</div>
+<div class="order_notify">
+    <div class="order_heading">
+        <span data-language="order_greeting">{$lang->order_greeting}</span> {$order->name|escape}!
+    </div>
+    <div class="order_heading_promo">
+        <div>
+            <span data-language="order_header">{$lang->order_header}</span>
+            <span class="order_tag">{$order->id}</span>
+            <span data-language="order_success_issued">{$lang->order_success_issued}</span>
+        </div>
+        <div data-language="order_success_text">{$lang->order_success_text}</div>
+        <div class="order_thank" data-language="order_thank">{$lang->order_thank}</div>
+    </div>
+</div>
+
 
 <table class="purchase">
     <thead class="mobile-hidden">
@@ -89,7 +103,11 @@
             </td>
             <td></td>
             <td></td>
-            <td>{$order->delivery_price|convert} {$currency->sign|escape}</td>
+            {if !$order->separate_delivery}
+                <td>{$order->delivery_price|convert} {$currency->sign|escape}</td>
+            {else}
+                <td></td>
+            {/if}
         </tr>
     {/if}
 

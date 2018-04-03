@@ -68,12 +68,6 @@
                                 <td border="0" class="td" valign="top" align="left" style="border: 0">
                                     <div>
                                         <div style="text-align: left; font-family: 'Trebuchet MS'; font-size: 14px; color: rgb(51, 51, 51); line-height: 1.5">
-                                            <span style="font-size:18px;">
-                                                <span style="font-family:trebuchet ms,helvetica,sans-serif;">
-                                                    <strong>{$btr->email_hello|escape} {$order->name|escape}</strong>
-                                                </span>
-                                            </span>
-                                            <br />
                                             <span style="font-family:trebuchet ms,helvetica,sans-serif;">
                                                 <span style="font-size:14px;">{$btr->email_inform|escape} <strong>{$order->id}</strong> {$btr->email_from|escape} <strong>{$order->date|date}:{$order->date|time}</strong>.</span></span><br />
                                             <br />
@@ -218,10 +212,14 @@
                                                             <td align="right" nowrap="nowrap" valign="middle">&minus;{$order->coupon_discount}&nbsp;{$currency->sign}</td>
                                                         </tr>
                                                     {/if}
-                                                    {if $delivery && !$order->separate_delivery}
+                                                    {if $order->separate_delivery || !$order->separate_delivery && $order->delivery_price > 0}
                                                         <tr>
                                                             <td style="padding-right: 10px; white-space: nowrap; text-align: right;" valign="middle">{$delivery->name|escape}</td>
-                                                            <td align="right" nowrap="nowrap" valign="middle">{$order->delivery_price|convert:$currency->id}&nbsp;{$currency->sign}</td>
+                                                            {if !$order->separate_delivery}
+                                                                <td align="right" nowrap="nowrap" valign="middle">{$order->delivery_price|convert:$currency->id}&nbsp;{$currency->sign}</td>
+                                                            {else}
+                                                                <td></td>
+                                                            {/if}
                                                         </tr>
                                                     {/if}
                                                     <tr>

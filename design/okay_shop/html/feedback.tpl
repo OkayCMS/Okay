@@ -16,18 +16,18 @@
         </div>
     {/if}
 
-    {if $message_sent}
-        <div class="message_success">
-            <b>{$name|escape},</b> <span data-language="feedback_message_sent">{$lang->feedback_message_sent}.</span>
-        </div>
-    {else}
-        <div class="col-lg-6 no_padding">
+    <div class="col-lg-6 no_padding">
+        {* Form heading *}
+        <div class="h1" data-language="feedback_feedback">{$lang->feedback_feedback}</div>
+        {if $message_sent}
+            <div class="block padding">
+                <div class="message_success">
+                    <b>{$name|escape},</b> <span data-language="feedback_message_sent">{$lang->feedback_message_sent}.</span>
+                </div>
+            </div>
+        {else}
             {* Feedback form *}
             <form method="post" class="fn_validate_feedback">
-
-                {* Form heading *}
-                <div class="h1" data-language="feedback_feedback">{$lang->feedback_feedback}</div>
-
                 <div class="block padding">
                     {* Form error messages *}
                     {if $error}
@@ -46,17 +46,20 @@
 
                     {* User's name *}
                     <div class="form_group">
-                        <input class="form_input" value="{if $user->name}{$user->name|escape}{else}{$name|escape}{/if}" name="name" type="text" data-language="form_name" placeholder="{$lang->form_name}*"/>
+                        <input class="form_input placeholder_focus" value="{if $user->name}{$user->name|escape}{else}{$name|escape}{/if}" name="name" type="text" data-language="form_name"/>
+                        <span class="form_placeholder">{$lang->form_name}*</span>
                     </div>
 
                     {* User's email *}
                     <div class="form_group">
-                        <input class="form_input" value="{if $user->email}{$user->email|escape}{else}{$email|escape}{/if}" name="email" type="text" data-language="form_email" placeholder="{$lang->form_email}*"/>
+                        <input class="form_input placeholder_focus" value="{if $user->email}{$user->email|escape}{else}{$email|escape}{/if}" name="email" type="text" data-language="form_email"/>
+                        <span class="form_placeholder">{$lang->form_email}*</span>
                     </div>
 
                     {* User's message *}
                     <div class="form_group">
-                        <textarea class="form_textarea" rows="3" name="message" data-language="form_enter_message" placeholder="{$lang->form_enter_message}*">{$message|escape}</textarea>
+                        <textarea class="form_textarea placeholder_focus" rows="3" name="message" data-language="form_enter_message">{$message|escape}</textarea>
+                        <span class="form_placeholder">{$lang->form_enter_message}*</span>
                     </div>
 
                     {* Captcha *}
@@ -64,7 +67,10 @@
                         {get_captcha var="captcha_feedback"}
                         <div class="captcha form_group">
                             <div class="secret_number">{$captcha_feedback[0]|escape} + ? =  {$captcha_feedback[1]|escape}</div>
-                            <input class="form_input input_captcha" type="text" name="captcha_code" value="" data-language="form_enter_captcha" placeholder="{$lang->form_enter_captcha}*"/>
+                            <span class="form_captcha">
+                                <input class="form_input input_captcha placeholder_focus" type="text" name="captcha_code" value="" data-language="form_enter_captcha"/>
+                                <span class="form_placeholder">{$lang->form_enter_captcha}*</span>
+                            </span>
                         </div>
                     {/if}
 
@@ -72,11 +78,11 @@
                     <input class="button" type="submit" name="feedback" data-language="form_send" value="{$lang->form_send}"/>
                 </div>
             </form>
-        </div>
-    {/if}
+        {/if}
+    </div>
 </div>
 
-{* Yandex map *}
+{* Google map *}
 <div class="ya_map">
     <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2241.7081645541616!2d37.5206056!3d55.8156667!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x944fd88cf96de197!2sOkayCMS!5e0!3m2!1sru!2sua!4v1495180474127" width="100%" height="450" frameborder="0" style="border:0;" allowfullscreen></iframe><br>
 </div>

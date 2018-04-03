@@ -121,19 +121,25 @@
 
                     <div class="row">
                         {* User's name *}
-                        <div class="col-lg-6 form_group">
-                            <input class="form_input" type="text" name="name" value="{$comment_name|escape}" placeholder="{$lang->form_name}*">
+                        <div class="col-lg-6">
+                            <div class="form_group">
+                                <input class="form_input placeholder_focus" type="text" name="name" value="{$comment_name|escape}" >
+                                <span class="form_placeholder">{$lang->form_name}*</span>
+                            </div>
                         </div>
-
                         {* User's email *}
-                        <div class="col-lg-6 form_group">
-                            <input class="form_input" type="text" name="email" value="{$comment_email|escape}" placeholder="{$lang->form_email}"/>
+                        <div class="col-lg-6">
+                            <div class="form_group">
+                                <input class="form_input placeholder_focus" type="text" name="email" value="{$comment_email|escape}" />
+                                <span class="form_placeholder">{$lang->form_email}</span>
+                            </div>
                         </div>
                     </div>
 
                     {* User's comment *}
                     <div class="form_group">
-                        <textarea class="form_textarea" rows="3" name="text" placeholder="{$lang->form_enter_comment}*">{$comment_text}</textarea>
+                        <textarea class="form_textarea placeholder_focus" rows="3" name="text" >{$comment_text}</textarea>
+                        <span class="form_placeholder">{$lang->form_enter_comment}*</span>
                     </div>
 
                     {* Captcha *}
@@ -141,7 +147,10 @@
                         {get_captcha var="captcha_post"}
                         <div class="captcha">
                             <div class="secret_number">{$captcha_post[0]|escape} + ? =  {$captcha_post[1]|escape}</div>
-                            <input class="form_input input_captcha" type="text" name="captcha_code" value="" placeholder="{$lang->form_enter_captcha}*">
+                            <span class="form_captcha">
+                                <input class="form_input input_captcha placeholder_focus" type="text" name="captcha_code" value="" >
+                                <span class="form_placeholder">{$lang->form_enter_captcha}*</span>
+                            </span>
                         </div>
                     {/if}
 

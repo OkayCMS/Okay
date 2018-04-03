@@ -36,34 +36,42 @@
 
             {* User's  name *}
             <div class="form_group">
-                <input class="form_input" type="text" name="name" value="{$name|escape}" data-language="form_name" placeholder="{$lang->form_name}*"/>
+                <input class="form_input placeholder_focus" type="text" name="name" value="{$name|escape}" data-language="form_name" />
+                <span class="form_placeholder">{$lang->form_name}*</span>
             </div>
 
             {* User's  email *}
             <div class="form_group">
-                <input class="form_input" type="text" name="email" value="{$email|escape}" data-language="form_email" placeholder="{$lang->form_email}*"/>
+                <input class="form_input placeholder_focus" type="text" name="email" value="{$email|escape}" data-language="form_email"/>
+                <span class="form_placeholder">{$lang->form_email}*</span>
             </div>
 
             {* User's  phone *}
             <div class="form_group">
-                <input class="form_input" type="text" name="phone" value="{$phone|escape}" data-language="form_phone" placeholder="{$lang->form_phone}"/>
+                <input class="form_input placeholder_focus" type="text" name="phone" value="{$phone|escape}" data-language="form_phone" />
+                <span class="form_placeholder">{$lang->form_phone}</span>
             </div>
 
             {* User's  address *}
             <div class="form_group">
-                <input class="form_input" type="text" name="address" value="{$address|escape}" data-language="form_address" placeholder="{$lang->form_address}"/>
+                <input class="form_input placeholder_focus" type="text" name="address" value="{$address|escape}" data-language="form_address" />
+                <span class="form_placeholder">{$lang->form_address}</span>
             </div>
 
             {* User's  password *}
             <div class="form_group">
-                <input class="form_input" type="password" name="password" value="" data-language="form_enter_password" placeholder="{$lang->form_enter_password}*"/>
+                <input class="form_input placeholder_focus" type="password" name="password" value="" data-language="form_enter_password" />
+                <span class="form_placeholder">{$lang->form_enter_password}*</span>
             </div>
 
             {if $settings->captcha_register}
                 {get_captcha var="captcha_register"}
                 <div class="captcha">
                     <div class="secret_number">{$captcha_register[0]|escape} + ? =  {$captcha_register[1]|escape}</div>
-                    <input class="form_input input_captcha" type="text" name="captcha_code" value="" data-language="form_enter_captcha" placeholder="{$lang->form_enter_captcha}*">
+                    <span class="form_captcha">
+                        <input class="form_input input_captcha placeholder_focus" type="text" name="captcha_code" value="" data-language="form_enter_captcha" >
+                        <span class="form_placeholder">{$lang->form_enter_captcha}*</span>
+                      </span>
                 </div>
             {/if}
 

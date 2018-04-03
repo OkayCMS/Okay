@@ -130,12 +130,13 @@ a:active {
 }
 /* Form */
 .form_group {
+    position: relative;
     margin-bottom: 20px;
 }
 .form_input {
     line-height: 44px;
     height:44px;
-    background-color: #f5f8f9;
+    background-color: #fff;
     border: 1px solid #e8e8e1;
     border-radius: 2px;
     padding: 0 15px;
@@ -143,12 +144,36 @@ a:active {
     font-family: inherit;
     font-size: 12px;
 }
+
+.form_placeholder{
+    transition: all 0.1s linear 0s;
+    line-height: 1;
+    display: table;
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    z-index: 1;
+    cursor: text;
+    font-family: inherit;
+    color: rgb(146, 146, 146);
+    font-size: 12px;
+}
+.form_placeholder.active,
+.placeholder_focus.error + label + .form_placeholder,
+.placeholder_focus:focus + .form_placeholder {
+    font-size: 85%;
+    background: rgb(255, 255, 255);
+    padding: 0 5px;
+    top: -5px;
+    cursor: default;
+    color: rgb(146, 146, 146);
+}
 .form_textarea {
     display: block;
     width: 100%;
     border: 1px solid #e8e8e1;
     border-radius: 2px;
-    background-color: #f5f8f9;
+    background-color: #fff;
     padding: 15px;
     font-family: inherit;
     font-size: 12px;
@@ -158,12 +183,17 @@ a:active {
     vertical-align: top;
     margin: 0 17px 10px 0;
 }
+.form_captcha{
+    display: inline-block;
+    position: relative;
+    margin: 0 0 0 17px;
+    vertical-align: top;
+}
 .input_captcha {
     width: 130px;
     line-height: 38px;
     vertical-align: top;
     height:40px;
-    margin: 0 0 0 17px;
 }
 .secret_number {
     border: 1px solid #e8e8e1;
@@ -1242,6 +1272,41 @@ header a {
 .order_details td {
     padding: 0 0 15px;
 }
+.order_notify{
+    background-color: #fff;
+    border: 2px solid rgb(56, 192, 243);
+    margin-bottom: 25px;
+    padding: 18px 20px 18px;
+}
+.order_heading{
+    color: rgb(10, 10, 40);
+    font-size: 22px;
+    line-height: 1.2;
+    font-weight: bold;
+    font-family: inherit;
+    margin-bottom: 10px;
+}
+.order_thank{
+    color: rgb(10, 10, 40);
+    font-size: 18px;
+    line-height: 1.2;
+    font-family: inherit;
+    margin-top: 10px;
+}
+.order_tag{
+    color: #fff;
+    line-height: inherit;
+    padding: 0px 8px;
+    font-size: 16px;
+    border-radius: 4px;
+    display: inline-block;
+    background-color: rgb(56, 192, 243);
+}
+.order_heading_promo{
+    color: rgb(10, 10, 40);
+    font-size: 16px;
+    line-height: 1.3;
+}
 .method_name {
     font-weight: bold;
     font-size: 16px;
@@ -1901,7 +1966,7 @@ header a {
 .callback_form .captcha .secret_number{
     width: 95px;
 }
-.callback_form .captcha .input_captcha{
+.callback_form .captcha .form_captcha{
     width: calc(100% - 117px);
 }
 .callback_form .button{ 

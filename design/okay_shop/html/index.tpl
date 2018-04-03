@@ -73,13 +73,13 @@
         <meta property="og:url" content="{$config->root_url}{if $lang_link}/{str_replace('/', '', $lang_link)}{/if}{$canonical}">
         <meta property="og:type" content="article">
         <meta property="og:title" content="{$product->name|escape}">
-        <meta property="og:description" content='{$product->annotation|strip_tags}'>
+        <meta property="og:description" content='{$product->annotation|strip_tags|escape}'>
         <meta property="og:image" content="{$product->image->filename|resize:330:300}">
         <link rel="image_src" href="{$product->image->filename|resize:330:300}">
         {*twitter*}
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="{$product->name|escape}">
-        <meta name="twitter:description" content="{$product->annotation|strip_tags}">
+        <meta name="twitter:description" content="{$product->annotation|strip_tags|escape}">
         <meta name="twitter:image" content="{$product->image->filename|resize:330:300}">
     {elseif $module == 'BlogView'}
         <meta property="og:url" content="{$config->root_url}{if $lang_link}/{str_replace('/', '', $lang_link)}{/if}{$canonical}">
@@ -92,11 +92,11 @@
             <meta property="og:image" content="{$config->root_url}/design/{$settings->theme}/images/{$settings->site_logo}">
             <meta name="twitter:image" content="{$config->root_url}/design/{$settings->theme}/images/{$settings->site_logo}">
         {/if}
-        <meta property="og:description" content='{$post->annotation|strip_tags}'>
+        <meta property="og:description" content='{$post->annotation|strip_tags|escape}'>
         {*twitter*}
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="{$post->name|escape}">
-        <meta name="twitter:description" content="{$post->annotation|strip_tags}">
+        <meta name="twitter:description" content="{$post->annotation|strip_tags|escape}">
         <meta name="twitter:image" content="{$post->image|resize:400:300:false:$config->resized_blog_dir}">
     {else}
         <meta property="og:title" content="{$settings->site_name|escape}">
@@ -224,7 +224,7 @@
                         <li class="informer languages">
                             <div class="fn_switch lang_switch">
                                 <i class="angle_icon tablet-hidden"></i>
-                                <span class="informer_name tablet-hidden">{$language->{'name_'|cat:$language->label}}</span>
+                                <span class="informer_name tablet-hidden">{$language->current_name}</span>
                                 <span class="informer_name lg-hidden">{$language->label}</span>
                             </div>
                             <div class="dropdown">
@@ -232,7 +232,7 @@
                                     {if $l->enabled}
                                         <a class="dropdown_item{if $language->id == $l->id} active{/if}"
                                            href="{$l->url}">
-                                           <span class="tablet-hidden">{$l->{'name_'|cat:$language->label}}</span>
+                                           <span class="tablet-hidden">{$l->current_name}</span>
                                            <span class="lg-hidden">{$l->label}</span>
                                         </a>
                                     {/if}
@@ -269,7 +269,7 @@
     <div class="container">
 
         {* Logo *}
-        <a class="logo" href="{if $smarty.get.module=="MainView"}javascript:;{else}{$lang_link}{/if}">
+        <a class="logo" href="{if $smarty.get.module=='MainView'}javascript:;{else}{$lang_link}{/if}">
             <img src="design/{$settings->theme|escape}/images/{$settings->site_logo}" alt="{$settings->site_name|escape}"/>
         </a>
         {*Если вам нужно загружать разные логотипы на разных языках, закомментируйте код выше, и пользуйтесь кодом ниже*}

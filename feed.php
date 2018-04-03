@@ -147,7 +147,7 @@ foreach($products as $p) {
     <store>".($okay->settings->yandex_available_for_retail_store ? 'true' : 'false')."</store>
     <pickup>".($okay->settings->yandex_available_for_reservation ? 'true' : 'false')."</pickup>
     <delivery>true</delivery>
-    <vendor>$p->vendor</vendor>
+    <vendor>".htmlspecialchars($p->vendor)."</vendor>
     ".($p->sku ? '<vendorCode>'.$p->sku.'</vendorCode>' : '')."
     ";
     

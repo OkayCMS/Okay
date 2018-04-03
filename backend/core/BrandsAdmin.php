@@ -5,6 +5,21 @@ require_once('api/Okay.php');
 class BrandsAdmin extends Okay {
     
     public function fetch() {
+
+        $filter = array();
+        $filter['page'] = max(1, $this->request->get('page', 'integer'));
+
+        if ($filter['limit'] = $this->request->get('limit', 'integer')) {
+            $filter['limit'] = max(5, $filter['limit']);
+            $filter['limit'] = min(100, $filter['limit']);
+            $_SESSION['brands_num_admin'] = $filter['limit'];
+        } elseif (!empty($_SESSION['brands_num_admin'])) {
+            $filter['limit'] = $_SESSION['brands_num_admin'];
+        } else {
+            $filter['limit'] = 25;
+        }
+        $this->design->assign('current_limit', $filter['limit']);
+
         // Обработка действий
         if($this->request->method('post')) {
             // Действия с выбранными
@@ -56,8 +71,24 @@ class BrandsAdmin extends Okay {
                 $this->brands->update_brand($ids[$i], array('position'=>$position));
             }
         }
-        
-        $brands = $this->brands->get_brands();
+
+        $brands_count = $this->brands->count_brands($filter);
+        // Показать все страницы сразу
+        if($this->request->get('page') == 'all') {
+            $filter['limit'] = $brands_count;
+        }
+
+        if($filter['limit']>0) {
+            $pages_count = ceil($brands_count/$filter['limit']);
+        } else {
+            $pages_count = 0;
+        }
+        $filter['page'] = min($filter['page'], $pages_count);
+        $this->design->assign('brands_count', $brands_count);
+        $this->design->assign('pages_count', $pages_count);
+        $this->design->assign('current_page', $filter['page']);
+
+        $brands = $this->brands->get_brands($filter);
         
         $this->design->assign('brands', $brands);
         return $this->body = $this->design->fetch('brands.tpl');

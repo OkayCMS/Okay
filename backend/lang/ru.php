@@ -1,4 +1,6 @@
 <?php
+$backend_translations->index_no_notification = 'Нет новых уведомлений';
+$backend_translations->index_name = 'Имя';
 $backend_translations->banner_enter_id = 'Введите ID группы';
 $backend_translations->banner_hide = 'Не отображать';
 $backend_translations->banner_id_enter = 'ID группы баннеров';

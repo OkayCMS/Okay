@@ -93,7 +93,7 @@
                         <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mb-h">
                             <div class="heading_label">{$lang->name|escape}</div>
                             <div class="">
-                                <textarea name="lang_{$lang->label}" class="form-control okay_textarea" {if $locked_theme}readonly=""{/if}>{$translation->lang_{$lang->label}}</textarea>
+                                <textarea name="lang_{$lang->label}" class="form-control okay_textarea" {if $locked_theme}readonly=""{/if}>{$translation->values[{$lang->id}]}</textarea>
                             </div>
                         </div>
                     {/foreach}

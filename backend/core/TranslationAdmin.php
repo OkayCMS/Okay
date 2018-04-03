@@ -22,6 +22,7 @@ class TranslationAdmin extends Okay {
                 foreach($languages as $lang) {
                     $field = 'lang_'.$lang->label;
                     $translation->$field = $this->request->post($field);
+                    $translation->values[$lang->id] = $translation->$field;
                 }
             }
             $exist = $this->translations->get_translation($translation->label);

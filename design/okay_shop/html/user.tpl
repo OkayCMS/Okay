@@ -33,29 +33,33 @@
             
                 {* User's name *}
                 <div class="form_group">
-                    <input class="form_input" value="{$name|escape}" name="name" type="text" data-language="form_name" placeholder="{$lang->form_name}*"/>
+                    <input class="form_input placeholder_focus" value="{$name|escape}" name="name" type="text" data-language="form_name" />
+                    <span class="form_placeholder">{$lang->form_name}*</span>
                 </div>
 
                 {* User's email *}
                 <div class="form_group">
-                    <input class="form_input" value="{$email|escape}" name="email" type="text" data-language="form_email" placeholder="{$lang->form_email}*"/>
+                    <input class="form_input placeholder_focus" value="{$email|escape}" name="email" type="text" data-language="form_email" />
+                    <span class="form_placeholder">{$lang->form_email}*</span>
                 </div>
 
                 {* User's phone *}
                 <div class="form_group">
-                    <input class="form_input" value="{$phone|escape}" name="phone" type="text" data-language="form_phone" placeholder="{$lang->form_phone}"/>
+                    <input class="form_input placeholder_focus" value="{$phone|escape}" name="phone" type="text" data-language="form_phone" />
+                    <span class="form_placeholder">{$lang->form_phone}</span>
                 </div>
 
                 {* User's address *}
                 <div class="form_group">
-                    <input class="form_input" value="{$address|escape}" name="address" type="text" data-language="form_address" placeholder="{$lang->form_address}"/>
+                    <input class="form_input placeholder_focus" value="{$address|escape}" name="address" type="text" data-language="form_address" />
+                    <span class="form_placeholder">{$lang->form_address}</span>
                 </div>
 
                 {* User's password *}
                 <div class="form_group">
                     <p class="change_pass" onclick="$('#password').toggle();return false;"><span data-language="user_change_password">{$lang->user_change_password}</span></p>
 
-                    <input class="form_input" id="password" value="" name="password" type="password" style="display:none;" placeholder="{$lang->user_change_password}"/>
+                    <input class="form_input " id="password" value="" name="password" type="password" style="display:none;" placeholder="{$lang->user_change_password}"/>
                 </div>
 
                 <div class="form_group">

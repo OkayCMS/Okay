@@ -1,4 +1,6 @@
 <?php
+$backend_translations->index_no_notification = 'No new notifications';
+$backend_translations->index_name = 'Name';
 $backend_translations->banner_enter_id = 'Enter Group ID';
 $backend_translations->banner_hide = 'Hide';
 $backend_translations->banner_id_enter = 'ID banners group';
