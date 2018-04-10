@@ -147,6 +147,7 @@ class Languages extends Okay {
         foreach ($this->db->results() as $l) {
             $this->languages[$l->id] = $l;
         }
+        $this->first_language = reset($this->languages);
         $current_language = $this->get_language($this->lang_id());
         foreach ($this->languages as $l) {
             $l->current_name = $l->{'name_'.$current_language->label};
@@ -154,7 +155,6 @@ class Languages extends Okay {
                 $l->names[$tl->id] = $l->{'name_'.$tl->label};
             }
         }
-        $this->first_language = reset($this->languages);
     }
 
     /*Выборка первого языка сайта*/

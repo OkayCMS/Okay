@@ -46,6 +46,7 @@ class Design extends Okay {
                 'print_r',
                 'var_dump',
                 'printa',
+                'file_exists',
             );
 
             $this->smarty->security_policy->php_functions = array(
@@ -70,12 +71,13 @@ class Design extends Okay {
                 'implode',
                 'explode',
                 'print_r',
-                'var_dump'
+                'var_dump',
+                'file_exists',
             );
 
             $this->smarty->security_policy->secure_dir = array(
-                $this->config->root_dir . '/design/' . $theme . '/html',
-                $this->config->root_dir . '/backend/design/html',
+                $this->config->root_dir . '/design/' . $theme,
+                $this->config->root_dir . '/backend/design',
             );
         }
 

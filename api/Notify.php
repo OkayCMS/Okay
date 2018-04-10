@@ -12,6 +12,7 @@ class Notify extends Okay {
         $mail->Host       = $this->settings->smtp_server;
         $mail->SMTPDebug  = 0;
         $mail->SMTPAuth   = true;
+        $mail->CharSet    = 'utf-8';
         $mail->Port       = $this->settings->smtp_port;
         if ($mail->Port == 465) {
             $mail->SMTPSecure = "ssl";

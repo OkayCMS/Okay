@@ -44,7 +44,7 @@ CREATE TABLE `ok_banners_images` (
 
 INSERT INTO `ok_banners_images` (`id`, `banner_id`, `name`, `alt`, `title`, `description`, `url`, `image`, `position`, `visible`) VALUES
 (1,	1,	'Баннер 1',	'',	'Акционные планшеты',	'',	'catalog/mebel-dlya-doma',	'image2.jpg',	3,	1),
-(2,	1,	'Баннер 2',	'',	'Индивидуальные футболки',	'Смотреть все',	'catalog/gadzhety',	'Image1.jpg',	1,	1);
+(2,	1,	'Баннер 2',	'',	'Мобильные телефоны',	'Смотреть все',	'catalog/smartfony',	'Image1.jpg',	1,	1);
 
 DROP TABLE IF EXISTS `ok_blog`;
 CREATE TABLE `ok_blog` (
@@ -1051,9 +1051,9 @@ INSERT INTO `ok_lang_banners_images` (`lang_id`, `banner_image_id`, `name`, `alt
 (1,	1,	'Баннер 1',	'',	'Акционные планшеты',	'',	''),
 (2,	1,	'Баннер 1',	'',	'Акционные планшеты',	'',	''),
 (3,	1,	'Баннер 1',	'',	'Акционные планшеты',	'',	''),
-(1,	2,	'Баннер 2',	'',	'Индивидуальные футболки',	'Смотреть все',	'catalog/womens-clothing'),
-(2,	2,	'Баннер 2',	'',	'Индивидуальные футболки',	'Смотреть все',	'catalog/womens-clothing'),
-(3,	2,	'Баннер 2',	'',	'Индивидуальные футболки',	'Смотреть все',	'catalog/womens-clothing');
+(1,	2,	'Баннер 2',	'',	'Мобильные телефоны',	'Смотреть все',	'catalog/smartfony'),
+(2,	2,	'Баннер 2',	'',	'Мобильные телефоны',	'Смотреть все',	'en/catalog/smartfony'),
+(3,	2,	'Баннер 2',	'',	'Мобильные телефоны',	'Смотреть все',	'ua/catalog/smartfony');
 
 DROP TABLE IF EXISTS `ok_lang_blog`;
 CREATE TABLE `ok_lang_blog` (

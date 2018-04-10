@@ -95,7 +95,7 @@
                                                    data-column_name="{$column->name|escape}"
                                                    data-is_exist="{if $column->is_exist}1{else}0{/if}">
                                                     {if in_array($column->value, $columns_names)}
-                                                        {$btr->import_field_{$column->value}}
+                                                        {$btr->get_translation('import_field_'|cat:$column->value)}
                                                     {elseif empty($column->value)}
                                                         {$btr->import_skip}
                                                     {elseif $column->is_nf_selected}
@@ -116,8 +116,8 @@
                                         </optgroup>
                                         <optgroup label="{$btr->import_main_fields}">
                                             {foreach $columns_names as $cname}
-                                                <option value="{$cname}" data-label="{$btr->import_field_{$cname}}">
-                                                    {$btr->import_field_{$cname}}
+                                                <option value="{$cname}" data-label="{$btr->get_translation('import_field_'|cat:$cname)}">
+                                                    {$btr->get_translation('import_field_'|cat:$cname)}
                                                 </option>
                                             {/foreach}
                                         </optgroup>

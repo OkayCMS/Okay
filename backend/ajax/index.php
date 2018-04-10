@@ -11,6 +11,6 @@
         $file = $okay->request->get('file', 'string');
         $file = preg_replace("/[^A-Za-z0-9_]+/", "", $file);
         if ($file) {
-            require_once($file.'.php');
+            require_once(dirname(__FILE__).'/'.$file.'.php');
         }
     }
