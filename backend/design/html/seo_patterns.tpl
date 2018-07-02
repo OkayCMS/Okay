@@ -39,17 +39,18 @@
                         <div class="">
                             <div class="fn_preloader"></div>
                             <div>
-                                {if $categories}
-                                    <div class="seo_cateogories_wrap scrollbar-inner">
+                                <div class="seo_cateogories_wrap scrollbar-inner">
+                                    <div class="seo_item fn_get_category" data-template_type="default">{$btr->seo_patterns_all_categories|escape}</div>
+                                    {if $categories}
                                         {function name=category_seo}
                                             {foreach $cats as $cat}
-                                                <div class="seo_item fn_get_category" data-category_id="{$cat->id}" style="padding-left: {$level*10}px" >{$cat->name|escape}</div>
+                                                <div class="seo_item fn_get_category" data-template_type="category" data-category_id="{$cat->id}" style="padding-left: {$level*10}px" >{$cat->name|escape}</div>
                                                 {category_seo cats=$cat->subcategories level=$level+1}
                                             {/foreach}
                                         {/function}
                                         {category_seo cats=$categories level=1}
-                                    </div>
-                                {/if}
+                                    {/if}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -81,11 +82,12 @@
         $(document).on("click", ".fn_get_category", function () {
             $(".fn_preloader ").addClass("ajax_preloader");
             $(".fn_get_category").removeClass("active");
-            elem = $(this);
-            category_id = parseInt(elem.data("category_id"));
-            action = "get";
-            link = window.location.href;
-            session_id = '{/literal}{$smarty.session.id}{literal}';
+            var elem = $(this),
+                category_id = parseInt(elem.data("category_id")) ? parseInt(elem.data("category_id")) : null,
+                template_type = elem.data("template_type"),
+                action = "get",
+                link = window.location.href,
+                session_id = '{/literal}{$smarty.session.id}{literal}';
 
             $.ajax({
                 url: link,
@@ -94,6 +96,7 @@
                     ajax: 1,
                     session_id: session_id,
                     category_id: category_id,
+                    template_type: template_type,
                     action : action,
                 },
                 dataType: 'json',
@@ -113,10 +116,12 @@
 
         $(document).on("click", ".fn_update_category", function () {
             $(".fn_preloader ").addClass("ajax_preloader ");
-            category_id = parseInt($(this).data("category_id"));
-            action = "set";
-            link = window.location.href;
-            session_id = '{/literal}{$smarty.session.id}{literal}';
+            var elem = $(this),
+                category_id = parseInt(elem.data("category_id")) ? parseInt(elem.data("category_id")) : null,
+                template_type = elem.data("template_type"),
+                action = "set",
+                link = window.location.href,
+                session_id = '{/literal}{$smarty.session.id}{literal}';
 
             var auto_meta_title = '',
                 auto_meta_keywords = '',
@@ -135,6 +140,7 @@
                     ajax: 1,
                     session_id: session_id,
                     category_id: category_id,
+                    template_type: template_type,
                     action : action,
                     auto_meta_title: auto_meta_title,
                     auto_meta_keywords: auto_meta_keywords,

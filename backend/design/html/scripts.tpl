@@ -125,22 +125,22 @@
 
 
 {if $script_file}
-   <div class="row">
+    <div class="row">
         <div class="col-lg-12 col-md-12">
             <div class="boxed fn_toggle_wrap min_height_230px">
                 <div class="heading_box">{$btr->general_template|escape} {$template_file|escape}</div>
 
-               <form>
+                <form>
                     <textarea id="script_content" name="script_content" style="width:700px;height:500px;">{$script_content|escape}</textarea>
-                     <div class="row">
-                        <div class="col-lg-12 col-md-12">
-                            <button type="submit" name="save" class="fn_save btn btn_small btn_blue float-md-right">
-                                {include file='svg_icon.tpl' svgId='checked'}
-                                <span>{$btr->general_apply|escape}</span>
-                            </button>
-                        </div>
-                    </div>
                 </form>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                        <button type="submit" name="save" class="fn_save btn btn_small btn_blue float-md-right">
+                            {include file='svg_icon.tpl' svgId='checked'}
+                            <span>{$btr->general_apply|escape}</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

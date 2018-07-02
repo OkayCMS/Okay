@@ -6,17 +6,6 @@ require_once('api/Okay.php');
 class PagesAdmin extends Okay {
     
     public function fetch() {
-        // Меню
-        $menus = $this->pages->get_menus();
-        $this->design->assign('menus', $menus);
-        
-        // Текущее меню
-        $menu_id = $this->request->get('menu_id', 'integer');
-        if(!$menu_id || !$menu = $this->pages->get_menu($menu_id)) {
-            $menu = reset($menus);
-        }
-        $this->design->assign('menu', $menu);
-        
         // Обработка действий
         if($this->request->method('post')) {
             // Сортировка
@@ -26,10 +15,7 @@ class PagesAdmin extends Okay {
             foreach($positions as $i=>$position) {
                 $this->pages->update_page($ids[$i], array('position'=>$position));
             }
-            foreach ($this->request->post("menu_id") as $page_id=>$menu_id) {
-                $this->pages->update_page($page_id, array('menu_id'=>$menu_id));
-            }
-            
+
             // Действия с выбранными
             $ids = $this->request->post('check');
             if(is_array($ids)) {
@@ -47,7 +33,9 @@ class PagesAdmin extends Okay {
                     case 'delete': {
                         /*Удалить страницу*/
                         foreach($ids as $id) {
-                            $this->pages->delete_page($id);
+                            if (!$this->pages->delete_page($id)) {
+                                $this->design->assign('message_error', 'url_system');
+                            }
                         }
                         break;
                     }
@@ -63,5 +51,3 @@ class PagesAdmin extends Okay {
     }
     
 }
-
-?>

@@ -39,16 +39,41 @@ class CallbacksAdmin extends Okay {
         // Отображение
         $filter = array();
         $filter['page'] = max(1, $this->request->get('page', 'integer'));
-        $filter['limit'] = 40;
+
+        if ($filter['limit'] = $this->request->get('limit', 'integer')) {
+            $filter['limit'] = max(5, $filter['limit']);
+            $filter['limit'] = min(100, $filter['limit']);
+            $_SESSION['callback_num_admin'] = $filter['limit'];
+        } elseif (!empty($_SESSION['callback_num_admin'])) {
+            $filter['limit'] = $_SESSION['callback_num_admin'];
+        } else {
+            $filter['limit'] = 25;
+        }
+        $this->design->assign('current_limit', $filter['limit']);
         
+        // Сортировка по статусу
+        $status = $this->request->get('status', 'string');
+        if($status == 'processed') {
+            $filter['processed'] = 1;
+        } elseif ($status == 'unprocessed') {
+            $filter['processed'] = 0;
+        }
+        $this->design->assign('status', $status);
+
+        // Поиск
+        $keyword = $this->request->get('keyword');
+        if(!empty($keyword)) {
+            $filter['keyword'] = $keyword;
+            $this->design->assign('keyword', $keyword);
+        }
         
-        $callbacks_count = $this->callbacks->count_callbacks();
+        $callbacks_count = $this->callbacks->count_callbacks($filter);
         // Показать все страницы сразу
         if($this->request->get('page') == 'all') {
             $filter['limit'] = $callbacks_count;
         }
         /*Выборка заявок на обратный звонок*/
-        $callbacks = $this->callbacks->get_callbacks($filter, true);
+        $callbacks = $this->callbacks->get_callbacks($filter);
 
         $this->design->assign('pages_count', ceil($callbacks_count/$filter['limit']));
         $this->design->assign('current_page', $filter['page']);
@@ -60,5 +85,3 @@ class CallbacksAdmin extends Okay {
     }
     
 }
-
-?>

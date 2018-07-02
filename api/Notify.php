@@ -1,7 +1,6 @@
 <?php
 
-require_once(dirname(dirname(__FILE__)).'/lib/PHPMailer/class.phpmailer.php');
-require_once(dirname(dirname(__FILE__)).'/lib/PHPMailer/class.smtp.php');
+use PHPMailer\PHPMailer\PHPMailer;
 
 class Notify extends Okay {
 
@@ -250,6 +249,28 @@ class Notify extends Okay {
         $email_template = $this->design->fetch($this->config->root_dir.'backend/design/html/email/email_comment_admin.tpl');
         $subject = $this->design->get_var('subject');
         $this->email($this->settings->comment_email, $subject, $email_template, $this->settings->notify_from_email);
+    }
+
+    /*Отправка емейла администратору о заказе обратного звонка*/
+    public function email_callback_admin($callback_id) {
+        if(!($callback = $this->callbacks->get_callback(intval($callback_id)))) {
+            return false;
+        }
+        $this->design->assign('callback', $callback);
+        $backend_translations = new stdClass();
+        $file = "backend/lang/".$this->settings->email_lang.".php";
+        if (!file_exists($file)) {
+            foreach (glob("backend/lang/??.php") as $f) {
+                $file = "backend/lang/".pathinfo($f, PATHINFO_FILENAME).".php";
+                break;
+            }
+        }
+        require_once($file);
+        $this->design->assign('btr', $backend_translations);
+        // Отправляем письмо
+        $email_template = $this->design->fetch($this->config->root_dir.'backend/design/html/email/email_callback_admin.tpl');
+        $subject = $this->design->get_var('subject');
+        $this->notify->email($this->settings->comment_email, $subject, $email_template, "$callback->name <$callback->phone>", "$callback->name <$callback->phone>");
     }
 
     /*Отправка емейла с ответом на комментарий клиенту*/

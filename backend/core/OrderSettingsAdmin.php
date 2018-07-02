@@ -22,14 +22,17 @@ class OrderSettingsAdmin extends Okay {
             if($this->request->post('new_name')){
                 $new_status = array();
                 $new_params = array();
+                $new_colors = array();
                 $new_status = $this->request->post('new_name');
                 $new_params = $this->request->post('new_is_close');
+                $new_colors = $this->request->post('new_color');
 
                 foreach ($new_status as $id=>$value) {
                     if(!empty($value)) {
                         $new_stat = new stdClass();
                         $new_stat->name = $value;
                         $new_stat->is_close = $new_params[$id];
+                        $new_stat->color = $new_colors[$id];
                         $this->orderstatus->add_status($new_stat);
                     }
                 }
@@ -43,10 +46,12 @@ class OrderSettingsAdmin extends Okay {
                 $current_status = $this->request->post('name');
                 $is_close = $this->request->post('is_close');
                 $ids_status = $this->request->post('id');
+                $colors_status = $this->request->post('color');
                 foreach ($current_status as $id=>$value) {
                     $update_status = new stdClass();
                     $update_status->name = $value;
                     $update_status->is_close = $is_close[$id];
+                    $update_status->color = $colors_status[$id];
                     $this->orderstatus->update_status($id,$update_status);
                 }
             }
@@ -136,4 +141,4 @@ class OrderSettingsAdmin extends Okay {
     }
 
 }
-?>
+

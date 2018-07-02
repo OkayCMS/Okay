@@ -8,7 +8,19 @@ class CommentsAdmin extends Okay {
         $filter = array();
         $filter['page'] = max(1, $this->request->get('page', 'integer'));
         
-        $filter['limit'] = 40;
+        if ($filter['limit'] = $this->request->get('limit', 'integer')) {
+            $filter['limit'] = max(5, $filter['limit']);
+            $filter['limit'] = min(100, $filter['limit']);
+            $_SESSION['comments_num_admin'] = $filter['limit'];
+        } elseif (!empty($_SESSION['comments_num_admin'])) {
+            $filter['limit'] = $_SESSION['comments_num_admin'];
+        } else {
+            $filter['limit'] = 25;
+        }
+        $this->design->assign('current_limit', $filter['limit']);
+        
+        // Выбираем главные сообщения
+        $filter['has_parent'] = false;
         
         // Тип
         $type = $this->request->get('type', 'string');
@@ -16,9 +28,18 @@ class CommentsAdmin extends Okay {
             $filter['type'] = $type;
             $this->design->assign('type', $type);
         }
+
+        // Сортировка по статусу
+        $status = $this->request->get('status', 'string');
+        if ($status == 'approved') {
+            $filter['approved'] = 1;
+        } elseif ($status == 'unapproved') {
+            $filter['approved'] = 0;
+        }
+        $this->design->assign('status', $status);
         
         // Поиск
-        $keyword = $this->request->get('keyword', 'string');
+        $keyword = $this->request->get('keyword');
         if(!empty($keyword)) {
             $filter['keyword'] = $keyword;
             $this->design->assign('keyword', $keyword);
@@ -61,18 +82,6 @@ class CommentsAdmin extends Okay {
             }
         }
 
-        if (empty($keyword)) {
-            $filter2 = $filter;
-            $filter2['limit'] = 10000;
-            $filter2['has_parent'] = true;
-            $children = array();
-            foreach ($this->comments->get_comments($filter2) as $c) {
-                $children[$c->parent_id][] = $c;
-            }
-            $this->design->assign('children', $children);
-            $filter['has_parent'] = false;
-        }
-
         // Отображение
         $comments_count = $this->comments->count_comments($filter);
         // Показать все страницы сразу
@@ -80,6 +89,21 @@ class CommentsAdmin extends Okay {
             $filter['limit'] = $comments_count;
         }
         $comments = $this->comments->get_comments($filter);
+
+        // Сохраняем id комментариев для выборки ответов
+        $comments_ids = array();
+        foreach ($comments as $comment) {
+            $comments_ids[] = $comment->id;
+        }
+        
+        // Выбераем ответы на комментарии
+        if (!empty($comments_ids)) {
+            $children = array();
+            foreach ($this->comments->get_comments(array('parent_id' => $comments_ids)) as $c) {
+                $children[$c->parent_id][] = $c;
+            }
+            $this->design->assign('children', $children);
+        }
         
         // Выбирает объекты, которые прокомментированы:
         $products_ids = array();
@@ -128,5 +152,3 @@ class CommentsAdmin extends Okay {
     }
     
 }
-
-?>

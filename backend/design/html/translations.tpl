@@ -6,7 +6,7 @@
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
             <div class="box_heading heading_page">
-                {$btr->translations_translate|escape}
+                {$btr->translations_translate|escape}{if $settings->admin_theme} {$btr->theme_theme} {$settings->admin_theme|escape}{/if}
             </div>
             {if !$locked_theme}
                 <div class="box_btn_heading">

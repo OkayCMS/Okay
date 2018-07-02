@@ -65,9 +65,9 @@ class ProductView extends View {
             $this->design->assign('comment_text', $comment->text);
             $this->design->assign('comment_name', $comment->name);
             $this->design->assign('comment_email', $comment->email);
-            
+
             // Проверяем капчу и заполнение формы
-            if ($this->settings->captcha_product && ($_SESSION['captcha_product'] != $captcha_code || empty($captcha_code))) {
+            if ($this->settings->captcha_product && !$this->validate->verify_captcha('captcha_product', $captcha_code)) {
                 $this->design->assign('error', 'captcha');
             } elseif (!$this->validate->is_name($comment->name, true)) {
                 $this->design->assign('error', 'empty_name');
@@ -197,16 +197,41 @@ class ProductView extends View {
                     $parts['{$'.$feature->auto_value_id.'}'] = $feature->value;
                 }
             }
-            
-            $auto_meta_title = ($category->auto_meta_title ? $category->auto_meta_title : $product->meta_title);
-            $auto_meta_keywords = ($category->auto_meta_keywords ? $category->auto_meta_keywords : $product->meta_keywords);
-            $auto_meta_description = ($category->auto_meta_desc ? $category->auto_meta_desc : $product->meta_description);
+
+            $default_products_seo_pattern = (object)$this->settings->default_products_seo_pattern;
+
+            if ($category->auto_meta_title) {
+                $auto_meta_title = $category->auto_meta_title;
+            } elseif ($default_products_seo_pattern->auto_meta_title) {
+                $auto_meta_title = $default_products_seo_pattern->auto_meta_title;
+            } else {
+                $auto_meta_title = $product->meta_title;
+            }
+
+            if ($category->auto_meta_keywords) {
+                $auto_meta_keywords = $category->auto_meta_keywords;
+            } elseif ($default_products_seo_pattern->auto_meta_keywords) {
+                $auto_meta_keywords = $default_products_seo_pattern->auto_meta_keywords;
+            } else {
+                $auto_meta_keywords = $product->meta_keywords;
+            }
+
+            if ($category->auto_meta_desc) {
+                $auto_meta_description = $category->auto_meta_desc;
+            } elseif ($default_products_seo_pattern->auto_meta_desc) {
+                $auto_meta_description = $default_products_seo_pattern->auto_meta_desc;
+            } else {
+                $auto_meta_description = $product->meta_description;
+            }
 
             $auto_meta_title = strtr($auto_meta_title, $parts);
             $auto_meta_keywords = strtr($auto_meta_keywords, $parts);
             $auto_meta_description = strtr($auto_meta_description, $parts);
             if (!empty($category->auto_description) && empty($product->description)) {
                 $product->description = strtr($category->auto_description, $parts);
+                $product->description = preg_replace('/\{\$[^\$]*\}/', '', $product->description);
+            } elseif (!empty($default_products_seo_pattern->auto_description) && empty($product->description)) {
+                $product->description = strtr($default_products_seo_pattern->auto_description, $parts);
                 $product->description = preg_replace('/\{\$[^\$]*\}/', '', $product->description);
             }
             $auto_meta_title = preg_replace('/\{\$[^\$]*\}/', '', $auto_meta_title);

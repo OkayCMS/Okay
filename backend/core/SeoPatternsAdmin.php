@@ -12,13 +12,21 @@ class SeoPatternsAdmin extends Okay {
             /*Получение категории*/
             if($this->request->post("action") == "get") {
                 $result = new stdClass();
-                $category = $this->categories->get_category($this->request->post("category_id","integer"));
-                if (!empty($category->id)) {
-                    $this->design->assign('features', $this->features->get_features(array('category_id'=>$category->id)));
-                    $this->design->assign("category", $category);
+
+                if ($this->request->post('template_type') == 'default') {
+                    $default_products_seo_pattern = (object)$this->settings->default_products_seo_pattern;
+                    $default_products_seo_pattern->name = $this->backend_translations->seo_patterns_all_categories;
+                    $this->design->assign("category", $default_products_seo_pattern);
                     $result->success = true;
                 } else {
-                    $result->success = false;
+                    $category = $this->categories->get_category($this->request->post("category_id", "integer"));
+                    if (!empty($category->id)) {
+                        $this->design->assign('features', $this->features->get_features(array('category_id' => $category->id)));
+                        $this->design->assign("category", $category);
+                        $result->success = true;
+                    } else {
+                        $result->success = false;
+                    }
                 }
                 $result->tpl = $this->design->fetch("seo_patterns_ajax.tpl");
                 header("Content-type: application/json; charset=UTF-8");
@@ -33,19 +41,32 @@ class SeoPatternsAdmin extends Okay {
             /*Обновление шаблона данных категории*/
             if($this->request->post("action") == "set") {
                 $result = new stdClass();
-                $category = new stdClass();
-                $category = $this->categories->get_category($this->request->post("category_id","integer"));
-                $category->auto_meta_title = $this->request->post('auto_meta_title');
-                $category->auto_meta_keywords = $this->request->post('auto_meta_keywords');
-                $category->auto_meta_desc = $this->request->post('auto_meta_desc');
-                $category->auto_description = $this->request->post('auto_description');
+                if ($this->request->post('template_type') == 'default') {
+                    $default_products_seo_pattern['auto_meta_title']    = $this->request->post('auto_meta_title');
+                    $default_products_seo_pattern['auto_meta_keywords'] = $this->request->post('auto_meta_keywords');
+                    $default_products_seo_pattern['auto_meta_desc']     = $this->request->post('auto_meta_desc');
+                    $default_products_seo_pattern['auto_description']   = $this->request->post('auto_description');
 
-                if($cat_id = $this->categories->update_category($category->id, $category)) {
-                    $category = $this->categories->get_category(intval($cat_id));
-                    $this->design->assign("category", $category);
+                    $this->settings->update('default_products_seo_pattern', $default_products_seo_pattern);
+                    $default_products_seo_pattern = (object)$default_products_seo_pattern;
+                    $default_products_seo_pattern->name = $this->backend_translations->seo_patterns_all_categories;
+                    $this->design->assign("category", $default_products_seo_pattern);
                     $result->success = true;
                 } else {
-                    $result->success = false;
+                    $category = new stdClass();
+                    $category->id                   = $this->request->post("category_id", "integer");
+                    $category->auto_meta_title      = $this->request->post('auto_meta_title');
+                    $category->auto_meta_keywords   = $this->request->post('auto_meta_keywords');
+                    $category->auto_meta_desc       = $this->request->post('auto_meta_desc');
+                    $category->auto_description     = $this->request->post('auto_description');
+
+                    if ($cat_id = $this->categories->update_category($category->id, $category)) {
+                        $category = $this->categories->get_category(intval($cat_id));
+                        $this->design->assign("category", $category);
+                        $result->success = true;
+                    } else {
+                        $result->success = false;
+                    }
                 }
 
                 $result->tpl = $this->design->fetch("seo_patterns_ajax.tpl");

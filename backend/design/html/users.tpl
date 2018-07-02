@@ -16,7 +16,7 @@
             {elseif $users_count>0}
                 {$btr->users_users|escape} - {$users_count}
             {/if}
-            {if $users_count>0}
+            {if $users_count>0 && !$keyword}
                 <div class="export_block export_users hint-bottom-middle-t-info-s-small-mobile  hint-anim" data-hint="{$btr->users_export|escape}">
                     <span class="fn_start_export fa fa-file-excel-o"></span>
                 </div>
@@ -45,7 +45,14 @@
     {*Блок фильтров*}
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="boxed_sorting action_options">
+            <div class="fn_toggle_wrap">
+                <div class="heading_box visible_md">
+                    {$btr->general_filter|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
+                    </div>
+                </div>
+                <div class="boxed_sorting action_options toggle_body_wrap off fn_card">
                 <div class="row">
                     <div class="col-md-3 col-lg-3 col-sm-12">
                         <select class="selectpicker" onchange="location = this.value;">
@@ -56,6 +63,7 @@
                         </select>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
@@ -188,7 +196,6 @@
 <script src="{$config->root_url}/backend/design/js/piecon/piecon.js"></script>
 <script>
     var group_id='{$group_id|escape}';
-    var keyword='{$keyword|escape}';
     var sort='{$sort|escape}';
 </script>
 
@@ -217,7 +224,7 @@ $(function() {
         page = typeof(page) != 'undefined' ? page : 1;
         $.ajax({
             url: "ajax/export_users.php",
-            data: {page:page, group_id:group_id, keyword:keyword, sort:sort},
+            data: {page:page, group_id:group_id, sort:sort},
             dataType: 'json',
             success: function(data){
                 if(data && !data.end) {

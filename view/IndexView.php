@@ -31,12 +31,12 @@ class IndexView extends View {
                 $this->design->assign('call_error', 'empty_phone');
             } elseif(!$this->validate->is_comment($callback->message)) {
                 $this->design->assign('call_error', 'empty_comment');
-            } elseif($this->settings->captcha_callback && (($_SESSION['captcha_callback'] != $captcha_code || empty($captcha_code)) || empty($_SESSION['captcha_callback']))) {
+            } elseif($this->settings->captcha_callback && !$this->validate->verify_captcha('captcha_callback', $captcha_code)) {
                 $this->design->assign('call_error', 'captcha');
             } elseif($callback_id = $this->callbacks->add_callback($callback)) {
                 $this->design->assign('call_sent', true);
                 // Отправляем email
-                $this->callbacks->email_callback_admin($callback_id);
+                $this->notify->email_callback_admin($callback_id);
             } else {
                 $this->design->assign('call_error', 'unknown error');
             }
@@ -56,7 +56,24 @@ class IndexView extends View {
                 $this->design->assign('subscribe_success', '1');
             }
         }
-        
+
+        // Менюшки
+        $menus = $this->menu->get_menus(array('visible'=>1));
+        if (!empty($menus)) {
+            foreach ($menus as $menu) {
+                $this->design->assign("menu", $menu);
+                $this->design->assign("menu_items", $this->menu->get_menu_items_tree((int)$menu->id));
+                $this->design->assign(MENU_VAR_PREFIX.$menu->group_id, $this->design->fetch("menu.tpl"));
+            }
+        }
+
+        // Пользовательские скриты из админки
+        $counters = array();
+        foreach ($this->settings->counters as $c) {
+            $counters[$c->position][] = $c;
+        }
+        $this->design->assign('counters', $counters);
+
         // Содержимое корзины
         $this->design->assign('cart', $this->cart->get_cart());
         
@@ -83,7 +100,7 @@ class IndexView extends View {
         $is_tablet = $this->design->is_tablet();
         $this->design->assign('is_mobile',$is_mobile);
         $this->design->assign('is_tablet',$is_tablet);
-        
+
         // Текущий модуль (для отображения центрального блока)
         $module = $this->request->get('module', 'string');
         $module = preg_replace("/[^A-Za-z0-9]+/", "", $module);

@@ -16,7 +16,14 @@
 <div class="boxed fn_toggle_wrap">
     <div class="row">
         <div class="col-lg-12 col-md-12 ">
-            <div class="boxed_sorting">
+            <div class="fn_toggle_wrap">
+                <div class="heading_box visible_md">
+                    {$btr->general_filter|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
+                    </div>
+                </div>
+                <div class="boxed_sorting toggle_body_wrap off fn_card">
                 <div class="row">
                     <div class="col-xs-12 mb-1">
                         <div class="row">
@@ -26,7 +33,7 @@
                                     <form class="date_filter row" method="get">
                                         <input type="hidden" name="module" value="CategoryStatsAdmin" />
                                         <div class="col-md-5 col-lg-5 pr-0 pl-0">
-                                            <div class="input-group">
+                                            <div class="input-group mobile_input-group">
                                                 <span class=" input-group-addon-date">{$btr->general_from|escape}</span>
                                                 {if $is_mobile || $is_tablet}
                                                     <input type="date" class="fn_from_date form-control" name="date_from" value="{$date_from}" autocomplete="off">
@@ -39,7 +46,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-5 col-lg-5 pr-0 pl-0">
-                                            <div class="input-group">
+                                            <div class="input-group mobile_input-group">
                                                 <span class=" input-group-addon-date">{$btr->general_to|escape}</span>
                                                 {if $is_mobile || $is_tablet}
                                                     <input type="date" class="fn_to_date form-control" name="date_to" value="{$date_to}" autocomplete="off">
@@ -51,7 +58,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-2 pr-0">
+                                        <div class="col-md-2 pr-0 mobile_text_right">
                                             <button class="btn btn_blue" type="submit">{$btr->general_apply|escape}</button>
                                         </div>
                                     </form>
@@ -82,13 +89,14 @@
                         </select>
                     </div>
 
-                    <div class="col-md-4 col-lg-4 col-sm-12">
+                    <div class="col-md-4 col-lg-4 col-sm-12 mobile_text_right">
                         <button id="fn_start" type="submit" class="btn btn_small btn_blue float-md-right">
                             {include file='svg_icon.tpl' svgId='magic'}
                             <span>{$btr->general_export|escape}</span>
                         </button>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>

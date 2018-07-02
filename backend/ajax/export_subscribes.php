@@ -2,7 +2,7 @@
 
 class ExportAjax extends Okay {
 
-    /*Поля(столбцы) для файла экспорта*/
+    /*пїЅпїЅпїЅпїЅ(пїЅпїЅпїЅпїЅпїЅпїЅпїЅ) пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ*/
     private $columns_names = array(
         'email'=>            'Email'
     );
@@ -17,24 +17,24 @@ class ExportAjax extends Okay {
             return false;
         }
         
-        // Эксель кушает только 1251
+        // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 1251
         setlocale(LC_ALL, 'ru_RU.1251');
         $this->db->query('SET NAMES cp1251');
         
-        // Страница, которую экспортируем
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         $page = $this->request->get('page');
         if(empty($page) || $page==1) {
             $page = 1;
-            // Если начали сначала - удалим старый файл экспорта
+            // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if(is_writable($this->export_files_dir.$this->filename)) {
                 unlink($this->export_files_dir.$this->filename);
             }
         }
         
-        // Открываем файл экспорта на добавление
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         $f = fopen($this->export_files_dir.$this->filename, 'ab');
         
-        // Если начали сначала - добавим в первую строку названия колонок
+        // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         if($page == 1) {
             fputcsv($f, $this->columns_names, $this->column_delimiter);
         }
@@ -43,9 +43,8 @@ class ExportAjax extends Okay {
         $filter['page'] = $page;
         $filter['limit'] = $this->users_count;
         $filter['sort'] = $this->request->get('sort');
-        $filter['keyword'] = $this->request->get('keyword');
         
-        // Выбираем пользователей
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         $users = array();
         foreach($this->subscribes->get_subscribes($filter) as $s) {
             $str = array();

@@ -101,7 +101,6 @@
 <script src="{$config->root_url}/backend/design/js/piecon/piecon.js"></script>
 <script>
     var in_process=false;
-    var keyword='{$keyword|escape}';
     var sort='{$sort|escape}';
 
     {literal}
@@ -119,7 +118,7 @@
             page = typeof(page) != 'undefined' ? page : 1;
             $.ajax({
                 url: "ajax/export_subscribes.php",
-                data: {page:page, keyword:keyword, sort:sort},
+                data: {page:page, sort:sort},
                 dataType: 'json',
                 success: function(data){
                     if(data && !data.end)

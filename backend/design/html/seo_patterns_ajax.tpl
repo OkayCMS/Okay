@@ -75,7 +75,7 @@
 </div>
 <div class="row">
     <div class="col-lg-12 col-md-12 mt-1">
-        <button type="submit" class="btn btn_small btn_blue float-md-right fn_update_category" data-category_id="{$category->id}">
+        <button type="submit" class="btn btn_small btn_blue float-md-right fn_update_category" data-template_type="{if $category->id}category{else}default{/if}" data-category_id="{$category->id}">
             {include file='svg_icon.tpl' svgId='checked'}
             <span>{$btr->general_apply|escape}</span>
         </button>

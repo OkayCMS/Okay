@@ -23,6 +23,7 @@ class Products extends Okay {
         $in_stock_filter = '';
         $has_images_filter = '';
         $feed_filter = '';
+        $other_filter = '';
         $group_by = '';
         $order = 'p.position DESC';
         
@@ -62,6 +63,17 @@ class Products extends Okay {
         
         if(isset($filter['discounted'])) {
             $discounted_filter = $this->db->placehold('AND (SELECT 1 FROM __variants pv WHERE pv.product_id=p.id AND pv.compare_price>0 LIMIT 1) = ?', intval($filter['discounted']));
+        }
+
+        if (!empty($filter['other_filter'])) {
+            $other_filter = "AND (";
+            if (in_array("featured", $filter['other_filter'])) {
+                $other_filter .= "p.featured=1 OR ";
+            }
+            if (in_array("discounted", $filter['other_filter'])) {
+                $other_filter .= "(SELECT 1 FROM __variants pv WHERE pv.product_id=p.id AND pv.compare_price>0 LIMIT 1) = 1 OR ";
+            }
+            $other_filter = substr($other_filter, 0, -4).")";
         }
         
         if(isset($filter['in_stock'])) {
@@ -201,6 +213,7 @@ class Products extends Okay {
                 $keyword_filter
                 $is_featured_filter
                 $discounted_filter
+                $other_filter
                 $in_stock_filter
                 $has_images_filter
                 $visible_filter
@@ -243,6 +256,7 @@ class Products extends Okay {
         $feed_filter = '';
         $discounted_filter = '';
         $features_filter = '';
+        $other_filter = '';
         
         $lang_id  = $this->languages->lang_id();
         $px = ($lang_id ? 'l' : 'p');
@@ -325,6 +339,17 @@ class Products extends Okay {
         if(isset($filter['discounted'])) {
             $discounted_filter = $this->db->placehold('AND (SELECT 1 FROM __variants pv WHERE pv.product_id=p.id AND pv.compare_price>0 LIMIT 1) = ?', intval($filter['discounted']));
         }
+
+        if (!empty($filter['other_filter'])) {
+            $other_filter = "AND (";
+            if (in_array("featured", $filter['other_filter'])) {
+                $other_filter .= "p.featured=1 OR ";
+            }
+            if (in_array("discounted", $filter['other_filter'])) {
+                $other_filter .= "(SELECT 1 FROM __variants pv WHERE pv.product_id=p.id AND pv.compare_price>0 LIMIT 1) = 1 OR ";
+            }
+            $other_filter = substr($other_filter, 0, -4).")";
+        }
         
         if(isset($filter['visible'])) {
             $visible_filter = $this->db->placehold('AND p.visible=?', intval($filter['visible']));
@@ -356,6 +381,7 @@ class Products extends Okay {
                 $discounted_filter
                 $visible_filter
                 $features_filter
+                $other_filter
                 $price_filter
         ";
         $this->db->query($query);
@@ -407,8 +433,7 @@ class Products extends Okay {
     public function update_product($id, $product) {
         $product = (object)$product;
         $result = $this->languages->get_description($product, 'product');
-        
-        $product->last_modify = date("Y-m-d H:i:s");
+
         $query = $this->db->placehold("UPDATE __products SET ?% WHERE id in (?@) LIMIT ?", $product, (array)$id, count((array)$id));
         if($this->db->query($query)) {
             if(!empty($result->description)) {
@@ -439,8 +464,7 @@ class Products extends Okay {
         
         $product = (object)$product;
         $result = $this->languages->get_description($product, 'product');
-        
-        $product->last_modify = date("Y-m-d H:i:s");
+
         if($this->db->query("INSERT INTO __products SET ?%", $product)) {
             $id = $this->db->insert_id();
             $this->db->query("UPDATE __products SET position=id WHERE id=?", $id);

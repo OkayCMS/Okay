@@ -21,6 +21,13 @@ if(pathinfo($style, PATHINFO_EXTENSION) != 'css') {
 $file = $okay->config->root_dir.'design/'.$theme.'/css/'.$style;
 if(is_file($file) && is_writable($file) && !is_file($okay->config->root_dir.'design/'.$theme.'/locked')) {
     file_put_contents($file, $content);
+
+    $css_version = ltrim($okay->settings->css_version, '0');
+    if (!$css_version) {
+        $css_version = 0;
+    }
+    $okay->settings->css_version = str_pad(++$css_version, 6, 0, STR_PAD_LEFT);
+
 }
 
 $result = true;

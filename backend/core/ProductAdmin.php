@@ -150,9 +150,12 @@ class ProductAdmin extends Okay {
                     $query = $this->db->placehold('DELETE FROM __products_categories WHERE product_id=?', $product->id);
                     $this->db->query($query);
                     if(is_array($product_categories)) {
-                        foreach($product_categories as $i=>$category) {
+                        $i = 0;
+                        foreach($product_categories as $category) {
                             $this->categories->add_product_category($product->id, $category->id, $i);
+                            $i++;
                         }
+                        unset($i);
                     }
                     
                     /*Работы с вариантами товара*/
@@ -163,8 +166,8 @@ class ProductAdmin extends Okay {
                             if($variant->stock == '∞' || $variant->stock == '') {
                                 $variant->stock = null;
                             }
-                            $variant->price = str_replace(',', '.', $variant->price);
-                            $variant->compare_price = str_replace(',', '.', $variant->compare_price);
+                            $variant->price = $variant->price > 0 ? str_replace(',', '.', $variant->price) : 0;
+                            $variant->compare_price = $variant->compare_price > 0 ? str_replace(',', '.', $variant->compare_price) : 0;
                             $variant->feed = (isset($feed[$variant->id]) ? 1 : 0);
                             
                             // Удалить файл
@@ -290,7 +293,7 @@ class ProductAdmin extends Okay {
                     
                     // Свойства текущей категории
                     $category_features = array();
-                    foreach($this->features->get_features(array('category_id'=>$product_categories[0])) as $f) {
+                    foreach($this->features->get_features(array('category_id'=>reset($product_categories)->id)) as $f) {
                         $category_features[] = $f->id;
                     }
                     
@@ -370,8 +373,8 @@ class ProductAdmin extends Okay {
         
         if(empty($product_categories)) {
             if($category_id = $this->request->get('category_id')) {
-                $product_categories[0] = new stdClass();
-                $product_categories[0]->id = $category_id;
+                $product_categories[$category_id] = new stdClass();
+                $product_categories[$category_id]->id = $category_id;
             } else {
                 $product_categories = array();
             }

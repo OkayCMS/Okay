@@ -87,9 +87,10 @@
 
     <tfoot>
         <tr>
-            <td colspan="3" class="coupon text_left">
+            {if $coupon_request}
+                <td colspan="3" class="coupon text_left">
                 {* Coupon *}
-                {if $coupon_request}
+
                     {* Coupon error messages *}
                     {if $coupon_error}
                         <div class="message_error">
@@ -108,10 +109,10 @@
                     <input class="fn_coupon input_coupon" type="text" name="coupon_code" value="{$cart->coupon->code|escape}" placeholder="{$lang->cart_coupon}">
 
                     <input class="coupon_button fn_sub_coupon" type="button" value="{$lang->cart_purchases_coupon_apply}">
-                {/if}
-            </td>
+                </td>
+            {/if}
 
-            <td colspan="2" class="purchase_total">
+            <td {if $coupon_request}colspan="2"{else}colspan="5"{/if} class="purchase_total">
                 {* Total *}
                 <span data-language="cart_total_price">{$lang->cart_total_price}:</span>
                 <span class="total_sum nowrap">{$cart->total_price|convert} {$currency->sign|escape}</span>

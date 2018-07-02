@@ -5,14 +5,45 @@
     <base href="{$config->root_url}/">
 
     {* Title *}
-    <title>{$meta_title|escape}{$filter_meta->title|escape}</title>
+    <title>{strip}
+        {if $seo_filter_pattern->title}
+            {$seo_filter_pattern->title|escape}
+        {else}
+            {$meta_title|escape}{$filter_meta->title|escape}
+        {/if}
+        {if $smarty.get.page && $smarty.get.page != 'all'}
+            {$lang->meta_page} {$smarty.get.page}
+        {/if}
+    {/strip}</title>
 
     {* Meta tags *}
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    {if (!empty($meta_description) || !empty($meta_keywords) || !empty($filter_meta->description) || !empty($filter_meta->keywords)) && !$smarty.get.page}
-        <meta name="description" content="{$meta_description|escape}{$filter_meta->description|escape}">
-        <meta name="keywords" content="{$meta_keywords|escape}{$filter_meta->keywords|escape}">
+    {if (!empty($meta_description)
+            || !empty($meta_keywords)
+            || !empty($filter_meta->description)
+            || !empty($filter_meta->keywords)
+            || !empty($seo_filter_pattern->meta_description)
+            || !empty($seo_filter_pattern->keywords)
+        )
+        && !$smarty.get.page}
+
+        <meta name="description" content="{strip}
+            {if $seo_filter_pattern->meta_description}
+                {$seo_filter_pattern->meta_description|escape}
+            {else}
+                {$meta_description|escape}{$filter_meta->description|escape}
+            {/if}
+        {/strip}" />
+
+        <meta name="keywords" content="{strip}
+            {if $seo_filter_pattern->keywords}
+                {$seo_filter_pattern->keywords|escape}
+            {else}
+                {$meta_keywords|escape}{$filter_meta->keywords|escape}
+            {/if}
+        {/strip}" />
+
     {/if}
 
     {if $module == 'ProductsView'}
@@ -36,14 +67,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta name="generator" content="OkayCMS {$config->version}">
-
-    {if $settings->g_webmaster}
-        <meta name="google-site-verification" content="{$settings->g_webmaster}">
-    {/if}
-
-    {if $settings->y_webmaster}
-        <meta name='yandex-verification' content="{$settings->y_webmaster}">
-    {/if}
 
     {* rel prev next для блога *}
     {if $smarty.get.module == "BlogView" && $total_pages_num > 1}
@@ -71,16 +94,22 @@
     {* Product image/Post image for social networks *}
     {if $module == 'ProductView'}
         <meta property="og:url" content="{$config->root_url}{if $lang_link}/{str_replace('/', '', $lang_link)}{/if}{$canonical}">
-        <meta property="og:type" content="article">
+        <meta property="og:type" content="website">
         <meta property="og:title" content="{$product->name|escape}">
         <meta property="og:description" content='{$product->annotation|strip_tags|escape}'>
         <meta property="og:image" content="{$product->image->filename|resize:330:300}">
         <link rel="image_src" href="{$product->image->filename|resize:330:300}">
         {*twitter*}
-        <meta name="twitter:card" content="summary">
+        <meta name="twitter:card" content="product"/>
+        <meta name="twitter:url" content="{$config->root_url}{if $lang_link}/{str_replace('/', '', $lang_link)}{/if}{$canonical}">
+        <meta name="twitter:site" content="{$settings->site_name|escape}">
         <meta name="twitter:title" content="{$product->name|escape}">
         <meta name="twitter:description" content="{$product->annotation|strip_tags|escape}">
         <meta name="twitter:image" content="{$product->image->filename|resize:330:300}">
+        <meta name="twitter:data1" content="{$lang->cart_head_price}">
+        <meta name="twitter:label1" content="{$product->variant->price|convert:null:false} {$currency->code|escape}">
+        <meta name="twitter:data2" content="{$lang->meta_organization}">
+        <meta name="twitter:label2" content="{$settings->company_name|escape}">
     {elseif $module == 'BlogView'}
         <meta property="og:url" content="{$config->root_url}{if $lang_link}/{str_replace('/', '', $lang_link)}{/if}{$canonical}">
         <meta property="og:type" content="article">
@@ -124,7 +153,7 @@
     {if !$hide_alternate}
         {foreach $languages as $l}
             {if $l->enabled}
-                <link rel="alternate" hreflang="{$l->href_lang}" href="{$config->root_url}/{$l->url}">
+                <link rel="alternate" hreflang="{$l->href_lang}" href="{$config->root_url}/{preg_replace('/^(.+)\/$/', '$1', $l->url)}">
             {/if}
         {/foreach}
     {/if}
@@ -134,44 +163,70 @@
     <link href="design/{$settings->theme}/images/favicon.png" type="image/x-icon" rel="shortcut icon">
 
     {* JQuery *}
-    <script src="design/{$settings->theme}/js/jquery-2.1.4.min.js"></script>
+    <script src="design/{$settings->theme}/js/jquery-2.1.4.min.js{if $js_version}?v={$js_version}{/if}"></script>
 
     {* Slick slider *}
-    <script src="design/{$settings->theme}/js/slick.min.js"></script>
+    <script src="design/{$settings->theme}/js/slick.min.js{if $js_version}?v={$js_version}{/if}"></script>
 
     {* Match height *}
-    <script src="design/{$settings->theme}/js/jquery.matchHeight-min.js"></script>
+    <script src="design/{$settings->theme}/js/jquery.matchHeight-min.js{if $js_version}?v={$js_version}{/if}"></script>
 
     {* Fonts *}
     <link href="//fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i&amp;subset=cyrillic" rel="stylesheet">
 
     {* CSS *}
-    <link href="design/{$settings->theme|escape}/css/libs.css" rel="stylesheet">
-    <link href="design/{$settings->theme|escape}/css/style.css" rel="stylesheet">
-    <link href="design/{$settings->theme|escape}/css/responsive.css" rel="stylesheet">
+    <link href="design/{$settings->theme|escape}/css/font-awesome.min.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
+    <link href="design/{$settings->theme|escape}/css/libs.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
+    <link href="design/{$settings->theme|escape}/css/style.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
+    <link href="design/{$settings->theme|escape}/css/responsive.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
 
-    {* Google Analytics *}
-    {if $settings->g_analytics}
-    {literal}
-        <script>
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-            ga('create', {/literal}'{$settings->g_analytics}'{literal}, 'auto');
-            ga('send', 'pageview');
-        </script>
-    {/literal}
+    {if $counters['head']}
+        {foreach $counters['head'] as $counter}
+            {$counter->code}
+        {/foreach}
     {/if}
 
-    {if $settings->head_custom_script}
-        {$settings->head_custom_script}
+    {if $settings->captcha_type == "v2"}
+        <script type="text/javascript">
+            var onloadCallback = function() {
+                mysitekey = "{$settings->public_recaptcha}";
+                if($('#recaptcha1').size()>0){
+                    grecaptcha.render('recaptcha1', {
+                        'sitekey' : mysitekey
+                    });
+                }
+                if($('#recaptcha2').size()>0){
+                    grecaptcha.render('recaptcha2', {
+                        'sitekey' : mysitekey
+                    });
+                }
+            };
+        </script>
+        <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+    {elseif $settings->captcha_type == "invisible"}
+        <script>
+            function onSubmit(token) {
+                document.getElementById("captcha_id").submit();
+            }
+            function onSubmitCallback(token) {
+                document.getElementById("fn_callback").submit();
+            }
+            function onSubmitBlog(token) {
+                document.getElementById("fn_blog_comment").submit();
+            }
+        </script>
+        <script src='https://www.google.com/recaptcha/api.js'></script>
     {/if}
 
 </head>
 
 <body>
+{if $counters['body_top']}
+    {foreach $counters['body_top'] as $counter}
+        {$counter->code}
+    {/foreach}
+{/if}
+
 <header class="header">
     <nav class="top_nav">
         <div class="container">
@@ -179,7 +234,7 @@
             <div class="fn_menu_switch menu_switch md-hidden"></div>
 
             {* Main menu *}
-            <ul class="menu mobile-hidden">
+            {*<ul class="menu mobile-hidden">
                 {foreach $pages as $p}
                     {if $p->menu_id == 1}
                         <li class="menu_item">
@@ -187,7 +242,8 @@
                         </li>
                     {/if}
                 {/foreach}
-            </ul>
+            </ul>*}
+            {$menu_header}
 
             {* Top info block *}
             <ul class="informers">
@@ -208,7 +264,7 @@
                         <a class="account_informer" href="{$lang_link}user"></a>
                     {else}
                         {* Login *}
-                        <a class="account_informer" href="{$lang_link}user/login" title="{$lang->index_login}"></a>
+                        <a class="account_informer" href="javascript:;" onclick="document.location.href = '{$lang_link}user/login'" title="{$lang->index_login}"></a>
                     {/if}
                 </li>
 
@@ -231,9 +287,9 @@
                                 {foreach $languages as $l}
                                     {if $l->enabled}
                                         <a class="dropdown_item{if $language->id == $l->id} active{/if}"
-                                           href="{$l->url}">
-                                           <span class="tablet-hidden">{$l->current_name}</span>
-                                           <span class="lg-hidden">{$l->label}</span>
+                                           href="{preg_replace('/^(.+)\/$/', '$1', $l->url)}">
+                                            <span class="tablet-hidden">{$l->current_name}</span>
+                                            <span class="lg-hidden">{$l->label}</span>
                                         </a>
                                     {/if}
                                 {/foreach}
@@ -253,7 +309,7 @@
                         <div class="dropdown">
                             {foreach $currencies as $c}
                                 {if $c->enabled}
-                                    <a class="dropdown_item{if $currency->id== $c->id} active{/if}" href="{url currency_id=$c->id}">
+                                    <a class="dropdown_item{if $currency->id== $c->id} active{/if}" href="#" onClick="change_currency({$c->id}); return false;">
                                         <span class="tablet-hidden">{$c->name}</span>
                                         <span class="lg-hidden">{$c->sign}</span>
                                     </a>
@@ -261,7 +317,7 @@
                             {/foreach}
                         </div>
                     </li>
-                {/if}  
+                {/if}
             </ul>
         </div>
     </nav>
@@ -277,7 +333,7 @@
             <img src="design/{$settings->theme|escape}/images/logo{if $language->label}_{$language->label}{/if}.png" alt="{$settings->site_name|escape}"/>
         </a>*}
 
-       <div class="account mobile-hidden">
+        <div class="account mobile-hidden">
             {if $user}
                 {* User account *}
                 <a class="account_link" href="{$lang_link}user">
@@ -286,7 +342,7 @@
                 </a>
             {else}
                 {* Login *}
-                <a class="account_link" href="{$lang_link}user/login" title="{$lang->index_login}">
+                <a class="account_link" href="javascript:;" onclick="document.location.href = '{$lang_link}user/login'" title="{$lang->index_login}">
                     <span class="small-hidden" data-language="index_account">{$lang->index_account}</span>
                     <span class="account_name small-hidden" data-language="index_login">{$lang->index_login}</span>
                 </a>
@@ -316,7 +372,7 @@
 
     <div class="header_bottom">
         <div class="container">
-           {* Cart informer*}
+            {* Cart informer*}
             <div id="cart_informer">
                 {include file='cart_informer.tpl'}
             </div>
@@ -353,7 +409,7 @@
                         <a href="{$bi->url}" target="_blank">
                             {/if}
                             {if $bi->image}
-                                <img src="{$config->banners_images_dir}{$bi->image}" alt="{$bi->alt}" title="{$bi->title}"/>
+                                <img src="{$bi->image|resize:1170:390:false:$config->resized_banners_images_dir}" alt="{$bi->alt}" title="{$bi->title}"/>
                             {/if}
                             {if $bi->url}
                         </a>
@@ -363,7 +419,7 @@
             </div>
         {/if}
     {/if}
-    {if $module == "MainView"}
+    {if $module == "MainView" || $page->url == '404'}
         <div class="fn_ajax_content">
             {$content}
         </div>
@@ -373,7 +429,7 @@
             <div class="fn_ajax_content">
                 {$content}
             </div>
-       </div>
+        </div>
     {/if}
 </div>
 
@@ -438,9 +494,9 @@
                     <div class="foot_social">
                         <a class="fb" href="https://facebook.com/okaycms" target="_blank" title="Facebook"></a>
                         <a class="vk" href="https://vk.com/club72497645" target="_blank" title="В контакте"></a>
-                        <a class="ok" href="{$lang_link}#" target="_blank" title="Одноклассники"></a>
+                        <a class="ok" href="{preg_replace('/^(.+)\/$/', '$1', $lang_link)}#" target="_blank" title="Одноклассники"></a>
                         <a class="tw" href="https://twitter.com/okaycms" target="_blank" title="Twitter"></a>
-                        <a class="ins" href="{$lang_link}#" target="_blank"  title="Instagram"></a>
+                        <a class="ins" href="{preg_replace('/^(.+)\/$/', '$1', $lang_link)}#" target="_blank"  title="Instagram"></a>
                     </div>
 
                 </div>
@@ -452,13 +508,14 @@
                     </div>
 
                     <div class="foot_menu">
-                        {foreach $pages as $p}
+                        {*foreach $pages as $p}
                             {if $p->menu_id == 1}
                                 <div class="foot_item">
                                     <a href="{$lang_link}{$p->url}">{$p->name|escape}</a>
                                 </div>
                             {/if}
-                        {/foreach}
+                        {/foreach*}
+                        {$menu_footer}
                     </div>
                 </div>
 
@@ -515,80 +572,48 @@
 {* Форма обратного звонка *}
 {include file='callback.tpl'}
 
-{if $settings->yandex_metrika_counter_id}
-    {literal}
-    <!-- Yandex.Metrika counter -->
-    <script type="text/javascript">
-        (function (d, w, c) {
-            (w[c] = w[c] || []).push(function() {
-                try {
-                    w.yaCounter{/literal}{$settings->yandex_metrika_counter_id}{literal} = new Ya.Metrika({
-                        id:{/literal}{$settings->yandex_metrika_counter_id}{literal},
-                        clickmap:true,
-                        trackLinks:true,
-                        accurateTrackBounce:true,
-                        webvisor:true,
-                        trackHash:true,
-                        ecommerce:"dataLayer"
-                    });
-                } catch(e) { }
-            });
-
-            var n = d.getElementsByTagName("script")[0],
-                    s = d.createElement("script"),
-                    f = function () { n.parentNode.insertBefore(s, n); };
-            s.type = "text/javascript";
-            s.async = true;
-            s.src = "https://mc.yandex.ru/metrika/watch.js";
-
-            if (w.opera == "[object Opera]") {
-                d.addEventListener("DOMContentLoaded", f, false);
-            } else { f(); }
-        })(document, window, "yandex_metrika_callbacks");
-    </script>
-    <!-- /Yandex.Metrika counter -->
-{/literal}
-{/if}
-
-
-{if $settings->body_custom_script}
-    {$settings->body_custom_script}
-{/if}
 
 {*template scripts*}
 {* JQuery UI *}
 {* Библиотека с "Slider", "Transfer Effect" *}
-<script src="design/{$settings->theme}/js/jquery-ui.min.js"></script>
+<script src="design/{$settings->theme}/js/jquery-ui.min.js{if $js_version}?v={$js_version}{/if}"></script>
 
 {* Fancybox *}
-<link href="design/{$settings->theme|escape}/css/jquery.fancybox.min.css" rel="stylesheet">
-<script src="design/{$settings->theme|escape}/js/jquery.fancybox.min.js" defer></script>
+<link href="design/{$settings->theme|escape}/css/jquery.fancybox.min.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
+<script src="design/{$settings->theme|escape}/js/jquery.fancybox.min.js{if $js_version}?v={$js_version}{/if}" defer></script>
 
 {* Autocomplete *}
-<script src="design/{$settings->theme}/js/jquery.autocomplete-min.js" defer></script>
+<script src="design/{$settings->theme}/js/jquery.autocomplete-min.js{if $js_version}?v={$js_version}{/if}" defer></script>
 
 {* Admin tooltips *}
 {if $smarty.session.admin}
     <script>lang_id = {$language->id}</script>
-    <script src ="backend/design/js/admintooltip/admintooltip.js"></script>
-    <link href="backend/design/js/admintooltip/styles/admin.css" rel="stylesheet">
+    <script src ="backend/design/js/admintooltip/admintooltip.js{if $js_version}?v={$js_version}{/if}"></script>
+    <link href="backend/design/js/admintooltip/styles/admin.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
 {/if}
 
 {*JQuery Validation*}
-<script src="design/{$settings->theme}/js/jquery.validate.min.js" ></script>
-<script src="design/{$settings->theme}/js/additional-methods.min.js"></script>
+<script src="design/{$settings->theme}/js/jquery.validate.min.js{if $js_version}?v={$js_version}{/if}" ></script>
+<script src="design/{$settings->theme}/js/additional-methods.min.js{if $js_version}?v={$js_version}{/if}"></script>
 
 {* Social share buttons *}
 {if $smarty.get.module == 'ProductView' || $smarty.get.module == "BlogView"}
-    <link href="design/{$settings->theme|escape}/css/font-awesome.min.css" rel="stylesheet">
-    <link href="design/{$settings->theme|escape}/css/jssocials.css" rel="stylesheet">
-    <link href="design/{$settings->theme|escape}/css/jssocials-theme-flat.css" rel="stylesheet">
-    <script src="design/{$settings->theme|escape}/js/jssocials.min.js" ></script>
+
+    <link href="design/{$settings->theme|escape}/css/jssocials.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
+    <link href="design/{$settings->theme|escape}/css/jssocials-theme-flat.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
+    <script src="design/{$settings->theme|escape}/js/jssocials.min.js{if $js_version}?v={$js_version}{/if}" ></script>
 {/if}
 
 {* Okay *}
 {include file="scripts.tpl"}
-<script src="design/{$settings->theme}/js/okay.js"></script>
+<script src="design/{$settings->theme}/js/okay.js{if $js_version}?v={$js_version}{/if}"></script>
 {*template scripts*}
+
+{if $counters['body_bottom']}
+    {foreach $counters['body_bottom'] as $counter}
+        {$counter->code}
+    {/foreach}
+{/if}
+
 </body>
 </html>

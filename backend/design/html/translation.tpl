@@ -8,9 +8,9 @@
 <div class="row">
     <div class="col-lg-6 col-md-6">
         {if !$translation->id}
-            <div class="heading_page">{$btr->translation_add|escape}</div>
+            <div class="heading_page">{$btr->translation_add|escape}{if $settings->admin_theme} {$btr->theme_theme} {$settings->admin_theme|escape}{/if}</div>
         {else}
-            <div class="heading_page">{$translation->label|escape}</div>
+            <div class="heading_page">{$translation->label|escape}{if $settings->admin_theme} {$btr->theme_theme} {$settings->admin_theme|escape}{/if}</div>
         {/if}
     </div>
     <div class="col-lg-4 col-md-3 text-xs-right float-xs-right"></div>

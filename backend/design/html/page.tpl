@@ -63,6 +63,8 @@
                         {$btr->general_enter_title|escape}
                     {elseif $message_error == 'url_wrong'}
                         {$btr->general_not_underscore|escape}
+                    {elseif $message_error == 'url_system'}
+                        {$btr->pages_url_system|escape}
                     {else}
                         {$message_error|escape}
                     {/if}
@@ -92,7 +94,7 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-lg-6 col-md-10">
-                                <div class="mt-h mb-h">
+                                <div class="mt-h mb-h mt-2">
                                     <div class="input-group">
                                         <span class="input-group-addon">URL</span>
                                         <input name="url" class="fn_meta_field form-control fn_url {if $page->id}fn_disabled{/if}" {if $page->id}readonly=""{/if} type="text" value="{$page->url|escape}" />
@@ -108,16 +110,8 @@
                                 </div>
                             </div>
                             <div class="col-lg-6 col-sm-12">
-                                <div class="input-group mt-h mb-h">
-                                    <span class="boxes_inline heading_label">{$btr->page_menu|escape}</span>
-                                    <span class="boxes_inline pg_id_grup">
-                                        <select name="menu_id" class="selectpicker">
-                                            {foreach $menus as $m}
-                                                <option value='{$m->id}' {if $page->menu_id == $m->id}selected{/if}>{$m->name|escape}</option>
-                                            {/foreach}
-                                        </select>
-                                    </span>
-                                </div>
+                                <span class="heading_label">{$btr->page_h1|escape}</span>
+                                <input name="name_h1" class="form-control" type="text" value="{$page->name_h1|escape}" />
                             </div>
                         </div>
                     </div>
@@ -151,14 +145,14 @@
                 </div>
                 <div class="toggle_body_wrap on fn_card row">
                     <div class="col-lg-6 col-md-6">
-                        <div class="heading_label" >Meta-title</div>
+                        <div class="heading_label" >Meta-title <span id="fn_meta_title_counter"></span></div>
                         <input name="meta_title" class="form-control fn_meta_field mb-h" type="text" value="{$page->meta_title|escape}" />
                         <div class="heading_label" >Meta-keywords</div>
                         <input name="meta_keywords" class="form-control fn_meta_field mb-h" type="text" value="{$page->meta_keywords|escape}" />
                     </div>
 
                     <div class="col-lg-6 col-md-6 pl-0">
-                        <div class="heading_label" >Meta-description</div>
+                        <div class="heading_label" >Meta-description <span id="fn_meta_description_counter"></span></div>
                         <textarea name="meta_description" class="form-control okay_textarea fn_meta_field">{$page->meta_description|escape}</textarea>
                     </div>
                 </div>

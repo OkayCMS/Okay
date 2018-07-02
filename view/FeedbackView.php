@@ -24,7 +24,7 @@ class FeedbackView extends View {
                 $this->design->assign('error', 'empty_email');
             } elseif(!$this->validate->is_comment($feedback->message, true)) {
                 $this->design->assign('error', 'empty_text');
-            } elseif($this->settings->captcha_feedback && ($_SESSION['captcha_feedback'] != $captcha_code || empty($captcha_code))) {
+            } elseif($this->settings->captcha_feedback && !$this->validate->verify_captcha('captcha_feedback', $captcha_code)) {
                 $this->design->assign('error', 'captcha');
             } else {
                 $this->design->assign('message_sent', true);

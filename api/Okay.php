@@ -2,47 +2,53 @@
 
 error_reporting(E_ALL^E_NOTICE);
 
+require_once(dirname(__DIR__).'/vendor/autoload.php');
+
 class Okay {
     
     private $classes = array(
-        'config'     => 'Config',
-        'request'    => 'Request',
-        'db'         => 'Database',
-        'settings'   => 'Settings',
-        'design'     => 'Design',
-        'products'   => 'Products',
-        'variants'   => 'Variants',
-        'categories' => 'Categories',
-        'brands'     => 'Brands',
-        'features'   => 'Features',
-        'money'      => 'Money',
-        'pages'      => 'Pages',
-        'blog'       => 'Blog',
-        'cart'       => 'Cart',
-        'image'      => 'Image',
-        'delivery'   => 'Delivery',
-        'payment'    => 'Payment',
-        'orders'     => 'Orders',
-        'users'      => 'Users',
-        'coupons'    => 'Coupons',
-        'comments'   => 'Comments',
-        'feedbacks'  => 'Feedbacks',
-        'notify'     => 'Notify',
-        'managers'   => 'Managers',
-        'languages'  => 'Languages',
+        'config'        => 'Config',
+        'request'       => 'Request',
+        'db'            => 'Database',
+        'settings'      => 'Settings',
+        'design'        => 'Design',
+        'products'      => 'Products',
+        'variants'      => 'Variants',
+        'categories'    => 'Categories',
+        'brands'        => 'Brands',
+        'features'      => 'Features',
+        'money'         => 'Money',
+        'pages'         => 'Pages',
+        'blog'          => 'Blog',
+        'cart'          => 'Cart',
+        'image'         => 'Image',
+        'delivery'      => 'Delivery',
+        'payment'       => 'Payment',
+        'orders'        => 'Orders',
+        'users'         => 'Users',
+        'coupons'       => 'Coupons',
+        'comments'      => 'Comments',
+        'feedbacks'     => 'Feedbacks',
+        'notify'        => 'Notify',
+        'managers'      => 'Managers',
+        'languages'     => 'Languages',
         'translations'  => 'Translations',
-        'comparison'   => 'Comparison',
-        'subscribes' => 'Subscribes',
-        'banners'     => 'Banners',
-        'callbacks'  => 'Callbacks'
-        ,'reportstat' => 'ReportStat'
-        ,'validate'  => 'Validate'
-        ,'orderlabels'    => 'OrderLabels'
-        ,'orderstatus'    => 'OrderStatus'
-        ,'supportinfo'=> 'SupportInfo'
-        ,'support'   => 'Support'
-        ,'import'    => 'Import'
-        ,'backend_translations' => 'BackendTranslations'
+        'comparison'    => 'Comparison',
+        'subscribes'    => 'Subscribes',
+        'banners'       => 'Banners',
+        'callbacks'     => 'Callbacks',
+        'reportstat'    => 'ReportStat',
+        'validate'      => 'Validate',
+        'orderlabels'   => 'OrderLabels',
+        'orderstatus'   => 'OrderStatus',
+        'supportinfo'   => 'SupportInfo',
+        'support'       => 'Support',
+        'import'        => 'Import',
+        'menu'          => 'Menu',
+        'backend_translations' => 'BackendTranslations',
+        'seo_filter_patterns'  => 'SEOFilterPatterns',
+        'features_aliases'     => 'FeaturesAliases',
+
     );
     
     private static $objects = array();
@@ -94,7 +100,28 @@ class Okay {
         // Возвращаем созданный объект
         return self::$objects[$name];
     }
-    
+
+    public function recaptcha() {
+        $g_recaptcha_response = $this->request->post('g-recaptcha-response');
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://www.google.com/recaptcha/api/siteverify',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => http_build_query(array('secret'=>$this->settings->secret_recaptcha,
+                'response'=>$g_recaptcha_response,
+                'remoteip'=>$_SERVER['REMOTE_ADDR']))
+        ));
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        if (strpos($response, 'invalid-input-secret')){
+            return true;
+        } else {
+            return !strpos($response, 'false');
+        }
+    }
+
     public function translit($text) {
         $res = $text;
         foreach ($this->translit_pairs as $pair) {

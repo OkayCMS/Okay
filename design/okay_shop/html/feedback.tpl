@@ -8,7 +8,7 @@
     {if $page->description}
         <div class="col-lg-6 no_padding">
             {* The page heading *}
-            <h1 class="h1">{$page->name|escape}</h1>
+            <h1 class="h1">{if $page->name_h1|escape}{$page->name_h1|escape}{else}{$page->name|escape}{/if}</h1>
 
             <div class="block padding">
                 {$page->description}
@@ -27,7 +27,7 @@
             </div>
         {else}
             {* Feedback form *}
-            <form method="post" class="fn_validate_feedback">
+            <form id="captcha_id" method="post" class="fn_validate_feedback">
                 <div class="block padding">
                     {* Form error messages *}
                     {if $error}
@@ -64,26 +64,35 @@
 
                     {* Captcha *}
                     {if $settings->captcha_feedback}
-                        {get_captcha var="captcha_feedback"}
-                        <div class="captcha form_group">
-                            <div class="secret_number">{$captcha_feedback[0]|escape} + ? =  {$captcha_feedback[1]|escape}</div>
-                            <span class="form_captcha">
-                                <input class="form_input input_captcha placeholder_focus" type="text" name="captcha_code" value="" data-language="form_enter_captcha"/>
-                                <span class="form_placeholder">{$lang->form_enter_captcha}*</span>
-                            </span>
-                        </div>
+                        {if $settings->captcha_type == "v2"}
+                            <div class="captcha row" style="">
+                                <div id="recaptcha1"></div>
+                            </div>
+                        {elseif $settings->captcha_type == "default"}
+                            {get_captcha var="captcha_feedback"}
+                            <div class="captcha form_group">
+                                <div class="secret_number">{$captcha_feedback[0]|escape} + ? =  {$captcha_feedback[1]|escape}</div>
+                                <span class="form_captcha">
+                                    <input class="form_input input_captcha placeholder_focus" type="text" name="captcha_code" value="" data-language="form_enter_captcha"/>
+                                    <span class="form_placeholder">{$lang->form_enter_captcha}*</span>
+                                </span>
+                            </div>
+                        {/if}
                     {/if}
+                    <input type="hidden" name="feedback" value="1">
 
                     {* Submit button *}
-                    <input class="button" type="submit" name="feedback" data-language="form_send" value="{$lang->form_send}"/>
+                    <input class="button g-recaptcha" type="submit" name="feedback" data-language="form_send" {if $settings->captcha_type == "invisible"}data-sitekey="{$settings->public_recaptcha_invisible}" data-badge='bottomleft' data-callback="onSubmit"{/if} value="{$lang->form_send}"/>
                 </div>
             </form>
         {/if}
     </div>
 </div>
 
-{* Google map *}
+{* Map *}
+{if $settings->iframe_map_code}
 <div class="ya_map">
-    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2241.7081645541616!2d37.5206056!3d55.8156667!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x944fd88cf96de197!2sOkayCMS!5e0!3m2!1sru!2sua!4v1495180474127" width="100%" height="450" frameborder="0" style="border:0;" allowfullscreen></iframe><br>
+    {$settings->iframe_map_code}
 </div>
+{/if}
 

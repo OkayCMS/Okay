@@ -4,28 +4,6 @@ require_once('Okay.php');
 
 class Callbacks extends Okay {
 
-    /*Отправка емейла администратору о заказе обратного звонка*/
-    public function email_callback_admin($callback_id) {
-        if(!($callback = $this->callbacks->get_callback(intval($callback_id)))) {
-            return false;
-        }
-        $this->design->assign('callback', $callback);
-        $backend_translations = new stdClass();
-        $file = "backend/lang/".$this->settings->email_lang.".php";
-        if (!file_exists($file)) {
-            foreach (glob("backend/lang/??.php") as $f) {
-                $file = "backend/lang/".pathinfo($f, PATHINFO_FILENAME).".php";
-                break;
-            }
-        }
-        require_once($file);
-        $this->design->assign('btr', $backend_translations);
-        // Отправляем письмо
-        $email_template = $this->design->fetch($this->config->root_dir.'backend/design/html/email/email_callback_admin.tpl');
-        $subject = $this->design->get_var('subject');
-        $this->notify->email($this->settings->comment_email, $subject, $email_template, "$callback->name <$callback->phone>", "$callback->name <$callback->phone>");
-    }
-
     /*Выбираем конкретную заявку на обратный звонок*/
     public function get_callback($id) {
         $query = $this->db->placehold("SELECT 
@@ -55,6 +33,7 @@ class Callbacks extends Okay {
         $limit = 1000;
         $page = 1;
         $processed = '';
+        $keyword_filter = '';
         
         if(isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));
@@ -66,6 +45,17 @@ class Callbacks extends Okay {
         
         if(isset($filter['processed'])) {
             $processed = $this->db->placehold('AND c.processed=?',$filter['processed']);
+        }
+        
+        if(!empty($filter['keyword'])) {
+            $keywords = explode(' ', $filter['keyword']);
+            foreach($keywords as $keyword) {
+                $keyword_filter .= $this->db->placehold('AND (
+                    c.name LIKE "%'.$this->db->escape(trim($keyword)).'%" 
+                    OR c.message LIKE "%'.$this->db->escape(trim($keyword)).'%" 
+                    OR c.phone LIKE "%'.$this->db->escape(trim($keyword)).'%" 
+                ) ');
+            }
         }
         
         $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
@@ -83,6 +73,7 @@ class Callbacks extends Okay {
             WHERE 
                 1 
                 $processed 
+                $keyword_filter 
             ORDER BY c.date DESC 
             $sql_limit
         ");
@@ -94,14 +85,28 @@ class Callbacks extends Okay {
     /*Подсчитываем количество заявок на обратный звонок*/
     public function count_callbacks($filter = array()) {
         $processed_filter = '';
+        $keyword_filter = '';
 
         if(isset($filter['processed'])) {
             $processed_filter = $this->db->placehold('AND c.processed = ?', intval($filter['processed']));
         }
+        
+        if(!empty($filter['keyword'])) {
+            $keywords = explode(' ', $filter['keyword']);
+            foreach($keywords as $keyword) {
+                $keyword_filter .= $this->db->placehold('AND (
+                    c.name LIKE "%'.$this->db->escape(trim($keyword)).'%" 
+                    OR c.message LIKE "%'.$this->db->escape(trim($keyword)).'%" 
+                    OR c.phone LIKE "%'.$this->db->escape(trim($keyword)).'%" 
+                ) ');
+            }
+        }
+        
         $query = "SELECT COUNT(distinct c.id) as count
             FROM __callbacks c
             WHERE 1 
                 $processed_filter 
+                $keyword_filter 
               
         ";
 

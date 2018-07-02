@@ -82,7 +82,37 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="heading_label">{$btr->settings_notify_auto_approved}</div>
+                            <div class="mb-1">
+                                <select name="auto_approved" class="selectpicker">
+                                    <option value="0" {if $settings->auto_approved=='0'}selected{/if}>
+                                        {$btr->settings_notify_auto_approved_off}
+                                    </option>
+                                    <option value="1" {if $settings->auto_approved=='1'}selected{/if}>
+                                        {$btr->settings_notify_auto_approved_on}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="boxed fn_toggle_wrap">
+                <div class="heading_box">
+                    {$btr->settings_notify_smtp|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;"><i class="fa fn_icon_arrow fa-angle-down"></i></a>
+                    </div>
+                </div>
+                {*Параметры элемента*}
+                <div class="toggle_body_wrap on fn_card">
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="heading_label">{$btr->settings_notify_use_smtp}</div>
                             <div class="mb-1">

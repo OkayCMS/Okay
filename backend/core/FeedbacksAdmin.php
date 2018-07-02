@@ -44,30 +44,40 @@ class FeedbacksAdmin extends Okay {
                 }
             }
         }
+        
         // Отображение
         $filter = array();
         $filter['page'] = max(1, $this->request->get('page', 'integer'));
-        $filter['limit'] = 40;
+        
+        if ($filter['limit'] = $this->request->get('limit', 'integer')) {
+            $filter['limit'] = max(5, $filter['limit']);
+            $filter['limit'] = min(100, $filter['limit']);
+            $_SESSION['feedback_num_admin'] = $filter['limit'];
+        } elseif (!empty($_SESSION['feedback_num_admin'])) {
+            $filter['limit'] = $_SESSION['feedback_num_admin'];
+        } else {
+            $filter['limit'] = 25;
+        }
+        $this->design->assign('current_limit', $filter['limit']);
+
+        // Выбираем главные сообщения
+        $filter['has_parent'] = false;
+        
+        // Сортировка по статусу
+        $status = $this->request->get('status', 'string');
+        if($status == 'processed') {
+            $filter['processed'] = 1;
+        } elseif ($status == 'unprocessed') {
+            $filter['processed'] = 0;
+        }
+        $this->design->assign('status', $status);
         
         // Поиск
-        $keyword = $this->request->get('keyword', 'string');
+        $keyword = $this->request->get('keyword');
         if(!empty($keyword)) {
             $filter['keyword'] = $keyword;
             $this->design->assign('keyword', $keyword);
         }
-
-        if (empty($keyword)) {
-            $filter2 = $filter;
-            $filter2['limit'] = 10000;
-            $filter2['has_parent'] = true;
-            $children = array();
-            foreach ($this->feedbacks->get_feedbacks($filter2) as $feed) {
-                $admin_answer[$feed->parent_id][] = $feed;
-            }
-            $this->design->assign('admin_answer', $admin_answer);
-            $filter['has_parent'] = false;
-        }
-
         
         $feedbacks_count = $this->feedbacks->count_feedbacks($filter);
         // Показать все страницы сразу
@@ -76,6 +86,21 @@ class FeedbacksAdmin extends Okay {
         }
         
         $feedbacks = $this->feedbacks->get_feedbacks($filter, true);
+
+        // Сохраняем id сообщений для выборки ответов
+        $feedback_ids = array();
+        foreach ($feedbacks as $feedback) {
+            $feedback_ids[] = $feedback->id;
+        }
+
+        // Выбераем ответы на сообщения
+        if (!empty($feedback_ids)) {
+            $admin_answer = array();
+            foreach ($this->feedbacks->get_feedbacks(array('parent_id' => $feedback_ids)) as $f) {
+                $admin_answer[$f->parent_id][] = $f;
+            }
+            $this->design->assign('admin_answer', $admin_answer);
+        }
         
         $this->design->assign('pages_count', ceil($feedbacks_count/$filter['limit']));
         $this->design->assign('current_page', $filter['page']);
@@ -87,5 +112,3 @@ class FeedbacksAdmin extends Okay {
     }
     
 }
-
-?>

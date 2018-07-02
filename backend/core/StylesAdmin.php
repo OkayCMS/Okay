@@ -6,7 +6,12 @@ class StylesAdmin extends Okay {
 
     /*Файл стилей шаблона*/
     public function fetch() {
-        $styles_dir = 'design/'.$this->settings->theme.'/css/';
+        $current_theme = $this->settings->theme;
+        if ($this->settings->admin_theme) {
+            $current_theme = $this->settings->admin_theme;
+        }
+
+        $styles_dir = 'design/'.$current_theme.'/css/';
         $styles = array();
         // Чтаем все css-файлы
         if($handle = opendir($styles_dir)) {
@@ -54,7 +59,7 @@ class StylesAdmin extends Okay {
             $_SESSION['last_edited_style'] = $style_file;
         }
         
-        $this->design->assign('theme', $this->settings->theme);
+        $this->design->assign('theme', $current_theme);
         $this->design->assign('styles', $styles);
         return $this->design->fetch('styles.tpl');
     }

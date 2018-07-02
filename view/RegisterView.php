@@ -37,7 +37,7 @@ class RegisterView extends View {
                 $this->design->assign('error', 'empty_address');
             } elseif(empty($user->password)) {
                 $this->design->assign('error', 'empty_password');
-            } elseif($this->settings->captcha_register && (($_SESSION['captcha_register'] != $captcha_code || empty($captcha_code)) || empty($_SESSION['captcha_register']))) {
+            } elseif($this->settings->captcha_register && !$this->validate->verify_captcha('captcha_register', $captcha_code)) {
                 $this->design->assign('error', 'captcha');
             } elseif($user_id = $this->users->add_user($user)) {
                 $_SESSION['user_id'] = $user_id;

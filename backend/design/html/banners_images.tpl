@@ -31,7 +31,14 @@
 <div class="boxed fn_toggle_wrap">
     <div class="row">
         <div class="col-lg-12 col-md-12 ">
-            <div class="boxed_sorting">
+            <div class="fn_toggle_wrap">
+                <div class="heading_box visible_md">
+                    {$btr->general_filter|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
+                    </div>
+                </div>
+                <div class="boxed_sorting toggle_body_wrap off fn_card">
                 <div class="row">
                     <div class="col-md-4 col-lg-4 col-sm-12">
                         <div>
@@ -53,6 +60,7 @@
                         </div>
                     {/if}
                 </div>
+            </div>
             </div>
         </div>
     </div>
@@ -97,7 +105,7 @@
                                         <div class="okay_list_boding okay_list_brands_photo">
                                             {if $banners_image->image}
                                                 <a href="{url module=BannersImageAdmin id=$banners_image->id return=$smarty.server.REQUEST_URI}">
-                                                    <img src="../{$config->banners_images_dir}{$banners_image->image}" width="200px"/>
+                                                    <img src="{$banners_image->image|resize:200:200:false:$config->resized_banners_images_dir}" width="200px"/>
                                                 </a>
                                             {else}
                                                 <img height="100" width="100" src="design/images/no_image.png"/>

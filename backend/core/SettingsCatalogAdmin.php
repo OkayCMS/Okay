@@ -28,8 +28,16 @@ class SettingsCatalogAdmin extends Okay {
             }
             // Водяной знак
             $clear_image_cache = false;
+
+            if ($this->request->post('delete_watermark')) {
+                $clear_image_cache = true;
+                unlink($this->config->root_dir.$this->config->watermark_file);
+                $this->config->watermark_file = '';
+            }
+
             $watermark = $this->request->files('watermark_file', 'tmp_name');
             if(!empty($watermark) && in_array(pathinfo($this->request->files('watermark_file', 'name'), PATHINFO_EXTENSION), $this->allowed_image_extentions)) {
+                $this->config->watermark_file = 'backend/files/watermark/watermark.png';
                 if(@move_uploaded_file($watermark, $this->config->root_dir.$this->config->watermark_file)) {
                     $clear_image_cache = true;
                 } else {
@@ -43,14 +51,6 @@ class SettingsCatalogAdmin extends Okay {
             }
             if($this->settings->watermark_offset_y != $this->request->post('watermark_offset_y')) {
                 $this->settings->watermark_offset_y = $this->request->post('watermark_offset_y');
-                $clear_image_cache = true;
-            }
-            if($this->settings->watermark_transparency != $this->request->post('watermark_transparency')) {
-                $this->settings->watermark_transparency = $this->request->post('watermark_transparency');
-                $clear_image_cache = true;
-            }
-            if($this->settings->images_sharpen != $this->request->post('images_sharpen')) {
-                $this->settings->images_sharpen = $this->request->post('images_sharpen');
                 $clear_image_cache = true;
             }
 

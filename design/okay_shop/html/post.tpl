@@ -66,19 +66,20 @@
                                 <div class="comment_header">
                                     {* Comment name *}
                                     <span class="comment_author">{$comment->name|escape}</span>
-
-                                    {* Comment date *}
-                                    <span class="comment_date">{$comment->date|date}, {$comment->date|time}</span>
-
-                                    {* Comment status *}
-                                    {if !$comment->approved}
-                                        <span data-language="post_comment_status">({$lang->post_comment_status})</span>
-                                    {/if}
                                 </div>
                            
                                 {* Comment content *}
                                 <div class="comment_content">
                                     {$comment->text|escape|nl2br}
+                                </div>
+                                <div class="comment_footer">
+                                    {* Comment date *}
+                                    <span class="comment_date">{$comment->date|date}, {$comment->date|time}</span>
+
+                                    {* Comment status *}
+                                    {if !$comment->approved}
+                                    <span data-language="post_comment_status">({$lang->post_comment_status})</span>
+                                    {/if}
                                 </div>
 
                                  {if isset($children[$comment->id])}
@@ -144,18 +145,25 @@
 
                     {* Captcha *}
                     {if $settings->captcha_post}
-                        {get_captcha var="captcha_post"}
-                        <div class="captcha">
-                            <div class="secret_number">{$captcha_post[0]|escape} + ? =  {$captcha_post[1]|escape}</div>
-                            <span class="form_captcha">
-                                <input class="form_input input_captcha placeholder_focus" type="text" name="captcha_code" value="" >
-                                <span class="form_placeholder">{$lang->form_enter_captcha}*</span>
-                            </span>
-                        </div>
+                        {if $settings->captcha_type == "v2"}
+                             <div class="captcha row" style="">
+                                 <div id="recaptcha1"></div>
+                             </div>
+                        {elseif $settings->captcha_type == "default"}
+                            {get_captcha var="captcha_post"}
+                             <div class="captcha">
+                                  <div class="secret_number">{$captcha_post[0]|escape} + ? =  {$captcha_post[1]|escape}</div>
+                                  <span class="form_captcha">
+                                       <input class="form_input input_captcha placeholder_focus" type="text" name="captcha_code" value="" >
+                                       <span class="form_placeholder">{$lang->form_enter_captcha}*</span>
+                                  </span>
+                             </div>
+                        {/if}
                     {/if}
+                   <input type="hidden" name="comment" value="1">
 
-                    {* Submit button *}
-                    <input class="button" type="submit" name="comment" data-language="form_send" value="{$lang->form_send}">
+                   {* Submit button *}
+                    <input class="button g-recaptcha" type="submit" name="comment" data-language="form_send" {if $settings->captcha_type == "invisible"}data-sitekey="{$settings->public_recaptcha_invisible}" data-badge='bottomleft' data-callback="onSubmitBlog"{/if} value="{$lang->form_send}">
                </form>
            </div>
        </div>

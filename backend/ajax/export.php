@@ -57,9 +57,18 @@ class ExportAjax extends Okay {
         
         // Открываем файл экспорта на добавление
         $f = fopen($this->export_files_dir.$this->filename, 'ab');
+
+        $filter = array('page'=>$page, 'limit'=>$this->products_count);
+        $features_filter = array();
+        if (($cid = $this->request->get('category_id', 'integer')) && ($category = $this->categories->get_category($cid))) {
+            $filter['category_id'] = $features_filter['category_id'] = $category->children;
+        }
+        if ($brand_id = $this->request->get('brand_id', 'integer')) {
+            $filter['brand_id'] = $brand_id;
+        }
         
         // Добавим в список колонок свойства товаров
-        $features = $this->features->get_features();
+        $features = $this->features->get_features($features_filter);
         foreach($features as $feature) {
             $this->columns_names[$feature->name] = $feature->name;
         }
@@ -67,14 +76,6 @@ class ExportAjax extends Okay {
         // Если начали сначала - добавим в первую строку названия колонок
         if($page == 1) {
             fputcsv($f, $this->columns_names, $this->column_delimiter);
-        }
-
-        $filter = array('page'=>$page, 'limit'=>$this->products_count);
-        if (($cid = $this->request->get('category_id', 'integer')) && ($category = $this->categories->get_category($cid))) {
-            $filter['category_id'] = $category->children;
-        }
-        if ($brand_id = $this->request->get('brand_id', 'integer')) {
-            $filter['brand_id'] = $brand_id;
         }
 
         // Все товары

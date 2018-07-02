@@ -42,6 +42,7 @@ class Feedbacks extends Okay {
         $keyword_filter = '';
         $processed = '';
         $has_parent_filter = '';
+        $parent_id_filter =  '';
         if(isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));
         }
@@ -68,6 +69,10 @@ class Feedbacks extends Okay {
         if (isset($filter['has_parent'])) {
             $has_parent_filter = 'and f.parent_id'.($filter['has_parent'] ? '>0' : '=0');
         }
+        
+        if(!empty($filter['parent_id'])) {
+            $parent_id_filter = $this->db->placehold('AND f.parent_id IN(?@)', (array)$filter['parent_id']);
+        }
 
         if($new_on_top) {
             $sort='DESC';
@@ -91,6 +96,7 @@ class Feedbacks extends Okay {
                 $keyword_filter
                 $processed
                 $has_parent_filter
+                $parent_id_filter
             ORDER BY f.id 
             $sort $sql_limit
         ");

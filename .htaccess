@@ -47,6 +47,14 @@ ModPagespeedEnableFilters convert_png_to_jpeg,convert_jpeg_to_webp
 ModPagespeedEnableFilters collapse_whitespace,remove_comments
 </IfModule>
 
+# Редирект с page-1 на основную страницу в ЧПУ
+RewriteCond %{REQUEST_URI} ^(.*)/page-1(.*)$
+RewriteRule ^(.*)$ %1%2 [R=301,L]
+
+# Редирект с page=1 на основную страницу без ЧПУ
+RewriteCond %{QUERY_STRING} ^(.*)&?page=1(.*)$
+RewriteRule ^(.*)/?$ /$1?%1%2 [R=301,L]
+
 # Админка теперь по адресу /backend
 RewriteRule	^admin/?$  backend [L]
 
@@ -97,7 +105,7 @@ RewriteRule ^([a-z]{2}/)?user/password_remind/([0-9a-z]+)/?$	index.php?module=Lo
 RewriteRule ^([a-z]{2}/)?user/?$	index.php?module=UserView&lang_label=$1  [L,QSA]
 
 # Google sitemap
-RewriteRule ^([a-z]{2}/)?sitemap\.xml?$	sitemap.php?lang_label=$1  [L,QSA]
+RewriteRule ^([a-z]{2}/)?sitemap\.(xml|php)$	sitemap.php?lang_label=$1  [L,QSA]
 
 # XML
 RewriteCond %{REQUEST_URI} ^(.*)/yandex\.xml$ [NC]
@@ -110,23 +118,13 @@ RewriteRule ^([a-z]{2}/)?contact/?$	index.php?module=FeedbackView&lang_label=$1 
 #downloads
 RewriteRule ^([a-z]{2}/)?order/([^/]+)/([^/]+)/?$	index.php?module=OrderView&url=$2&file=$3&lang_label=$1  [L,QSA]
 
+# Ресайз картинок на лету
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^files/(.+)/(.+) resize/resize.php?object=$1&file=$2&token=%{QUERY_STRING} [L,QSA]
+
 # Статические страницы
 RewriteRule ^([a-z]{2}/?)?/?$	index.php?module=MainView&page_url=&lang_label=$1 [L,QSA]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^([a-z]{2}/)?([^/]+)/?$ index.php?lang_label=$1&module=PageView&page_url=$2 [L,QSA]
-
-# Статические страницы
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^([^/]*)/?$	index.php?module=PageView&page_url=$1 [L,QSA]
-
-#RewriteRule ^([^/]*)/?$	index.php?module=PageView&page_url=$1 [L,QSA]
-#RewriteRule ^/?$	index.php?module=MainView&page_url= [L,QSA]
-
-# Ресайз картинок на лету
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
-#resizing_image
-RewriteRule ^files/(.+)/(.+) resize/resize.php?object=$1&file=$2&token=%{QUERY_STRING}
-##resizing_image
+RewriteRule ^([a-z]{2}/)?(.+)/?$ index.php?lang_label=$1&module=PageView&page_url=$2 [L,QSA]

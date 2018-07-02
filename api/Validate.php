@@ -1,6 +1,8 @@
 <?php
 
-class Validate {
+require_once('Okay.php');
+
+class Validate extends Okay {
 
     private $denied = array(
         "<script", "</script",
@@ -98,6 +100,20 @@ class Validate {
             }
         } elseif ($is_required) {
             return false;
+        }
+        return true;
+    }
+
+    public function verify_captcha($form, $captcha_code = ''){
+        if ($this->settings->$form){
+            if ($this->settings->captcha_type == 'default'){
+                if ($_SESSION[$form] != $captcha_code || empty($captcha_code)){
+                    return false;
+                }
+                return true;
+            } elseif ($this->settings->captcha_type == 'v2' || $this->settings->captcha_type == 'invisible'){
+                return $this->recaptcha();
+            }
         }
         return true;
     }

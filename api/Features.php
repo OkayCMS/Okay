@@ -44,7 +44,8 @@ class Features extends Okay {
                 f.auto_name_id, 
                 f.auto_value_id, 
                 f.url, 
-                $lang_sql->fields 
+                f.url_in_product,
+                $lang_sql->fields
             FROM __features AS f 
             $lang_sql->join
             WHERE 
@@ -111,7 +112,8 @@ class Features extends Okay {
                 f.auto_name_id, 
                 f.auto_value_id, 
                 f.url, 
-                $lang_sql->fields 
+                f.url_in_product,
+                $lang_sql->fields
             FROM __features f 
             $lang_sql->join 
             WHERE 
@@ -207,6 +209,8 @@ class Features extends Okay {
             $query = $this->db->placehold("DELETE FROM __features WHERE id=? LIMIT 1", intval($id));
             $this->db->query($query);
             $query = $this->db->placehold("DELETE FROM __options WHERE feature_id=?", intval($id));
+            $this->db->query($query);
+            $query = $this->db->placehold("DELETE FROM __options_aliases_values WHERE feature_id=?", intval($id));
             $this->db->query($query);
             $query = $this->db->placehold("DELETE FROM __categories_features WHERE feature_id=?", intval($id));
             $this->db->query($query);
@@ -329,14 +333,10 @@ class Features extends Okay {
         $visible_filter = '';
         $brand_id_filter = '';
         $features_filter = '';
+        $other_filter = '';
         
         if(empty($filter['feature_id']) && empty($filter['product_id'])) {
             return array();
-        }
-        
-        $group_by = '';
-        if(isset($filter['feature_id'])) {
-            $group_by = 'GROUP BY feature_id, value';
         }
         
         if(isset($filter['feature_id'])) {
@@ -364,18 +364,34 @@ class Features extends Okay {
                 $features_filter .= $this->db->placehold('AND (po.feature_id=? OR po.product_id in (SELECT product_id FROM __options WHERE feature_id=? AND translit in(?@) )) ', $feature, $feature, $value);
             }
         }
+
+        if (!empty($filter['other_filter'])) {
+            $other_filter = "AND (";
+            if (in_array("featured", $filter['other_filter'])) {
+                $other_filter .= "po.product_id IN(SELECT id FROM __products WHERE featured=1) OR ";
+            }
+            if (in_array("discounted", $filter['other_filter'])) {
+                $other_filter .= "(SELECT 1 FROM __variants pv WHERE pv.product_id=po.product_id AND pv.compare_price>0 LIMIT 1) = 1 OR ";
+            }
+            $other_filter = substr($other_filter, 0, -4).")";
+        }
         
         $lang_id  = $this->languages->lang_id();
         $lang_id_filter = '';
         if($lang_id) {
             $lang_id_filter = $this->db->placehold("AND po.lang_id=?", $lang_id);
         }
+
+        // т.к. для MySQL 5.7 в ONLY_FULL_GROUP_BY режиме нужно применять ф-цию ANY_VALUE, а в MySQL 5.6 и более ранних её нет,
+        // принято решение для запросов где есть группировка отключать ONLY_FULL_GROUP_BY режим
+        $this->db->query("SET @mode := @@SESSION.sql_mode");
+        $this->db->query("SET SESSION sql_mode = ''");
         
         $query = $this->db->placehold("SELECT 
-                po.product_id, 
-                po.feature_id, 
-                po.value, 
-                po.translit, 
+                po.product_id,
+                po.feature_id,
+                po.value,
+                po.translit,
                 count(po.product_id) as count
             FROM __options po
             $visible_filter
@@ -387,12 +403,17 @@ class Features extends Okay {
                 $product_id_filter 
                 $brand_id_filter 
                 $features_filter 
-            GROUP BY po.feature_id, po.value 
+                $other_filter
+            GROUP BY po.feature_id, po.value
             ORDER BY po.value=0, -po.value DESC, po.value
         ");
         
         $this->db->query($query);
-        return $this->db->results();
+        $options = $this->db->results();
+
+        // Вернем MySQL в обычный режим
+        $this->db->query("SET SESSION sql_mode = @mode");
+        return $options;
     }
 
     /*Выборка значений свойств товара(ов)*/
@@ -418,7 +439,9 @@ class Features extends Okay {
                 f.auto_name_id, 
                 f.auto_value_id, 
                 f.url, 
-                po.value, 
+                f.in_filter, 
+                f.url_in_product,
+                po.value,
                 po.product_id, 
                 po.translit, 
                 $lang_sql->fields 

@@ -15,7 +15,13 @@ class Translations extends Okay {
         if (empty($lang_label)) {
             return;
         }
-        $dir = __DIR__.'/../design/'.$this->settings->theme.'/lang/';
+
+        $admin_theme = $this->settings->admin_theme;
+        if ($_SESSION['admin'] && $admin_theme) {
+            $dir = __DIR__ . '/../design/' . $admin_theme . '/lang/';
+        } else {
+            $dir = __DIR__ . '/../design/' . $this->settings->theme . '/lang/';
+        }
         if (file_exists($dir)) {
             $content = "<?php\n\n";
             $content .= "\$lang = array();\n";
@@ -34,7 +40,12 @@ class Translations extends Okay {
             return false;
         }
         if (!isset($this->vars[$label])) {
-            $file = __DIR__.'/../design/'.$this->settings->theme.'/lang/'.$label.'.php';
+            $admin_theme = $this->settings->admin_theme;
+            if ($_SESSION['admin'] && $admin_theme) {
+                $file = __DIR__ . '/../design/' . $admin_theme . '/lang/' . $label . '.php';
+            } else {
+                $file = __DIR__ . '/../design/' . $this->settings->theme . '/lang/' . $label . '.php';
+            }
             if (file_exists($file)) {
                 $lang = array();
                 require_once $file;

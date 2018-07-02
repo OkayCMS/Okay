@@ -1,13 +1,12 @@
 <?php
 
-require_once(dirname(__FILE__).'/'.'Okay.php');
-require_once(dirname(dirname(__FILE__)).'/Smarty/libs/Smarty.class.php');
-require_once(dirname(dirname(__FILE__)).'/lib/Mobile_Detect.php');
+require_once('Okay.php');
 
 class Design extends Okay {
     
     public $smarty;
     public $detect;
+    private $allowed_php_functions;
 
     /*Объявляем основные настройки для дизайна*/
     public function __construct() {
@@ -27,9 +26,7 @@ class Design extends Okay {
 
         $smarty_security = $this->config->smarty_security;
         if ($smarty_security == true) {
-            // Настраиваем безопасный режим
-            $this->smarty->enableSecurity();
-            $this->smarty->security_policy->php_modifiers = array(
+            $this->allowed_php_functions = array(
                 'escape',
                 'cat',
                 'count',
@@ -47,33 +44,26 @@ class Design extends Okay {
                 'var_dump',
                 'printa',
                 'file_exists',
-            );
-
-            $this->smarty->security_policy->php_functions = array(
-                'isset',
+                'stristr',
+                'strtotime',
                 'empty',
-                'count',
+                'urlencode',
+                'intval',
+                'isset',
                 'sizeof',
-                'in_array',
                 'is_array',
                 'time',
-                'nl2br',
-                'str_replace',
-                'reset',
-                'floor',
-                'round',
-                'ceil',
-                'max',
-                'min',
                 'array',
-                'number_format',
                 'base64_encode',
                 'implode',
                 'explode',
-                'print_r',
-                'var_dump',
-                'file_exists',
+                'preg_replace',
             );
+
+            // Настраиваем безопасный режим
+            $this->smarty->enableSecurity();
+            $this->smarty->security_policy->php_modifiers = $this->allowed_php_functions;
+            $this->smarty->security_policy->php_functions = $this->allowed_php_functions;
 
             $this->smarty->security_policy->secure_dir = array(
                 $this->config->root_dir . '/design/' . $theme,
@@ -143,8 +133,14 @@ class Design extends Okay {
     }
 
     /*Функция ресайза для изображений*/
-    public function resize_modifier($filename, $width=0, $height=0, $set_watermark=false, $resized_dir = null) {
-        $resized_filename = $this->image->add_resize_params($filename, $width, $height, $set_watermark);
+    public function resize_modifier($filename, $width=0, $height=0, $set_watermark=false, $resized_dir = null, $crop_position_x = null, $crop_position_y = null) {
+
+        if (!empty($crop_position_x) && !empty($crop_position_y)) {
+            $crop_params['x_pos'] = $crop_position_x;
+            $crop_params['y_pos'] = $crop_position_y;
+        }
+
+        $resized_filename = $this->image->add_resize_params($filename, $width, $height, $set_watermark, $crop_params);
         $resized_filename_encoded = $resized_filename;
         
         $size = $width.'x'.$height;

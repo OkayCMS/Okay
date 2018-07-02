@@ -1667,13 +1667,7 @@ label.switch_label {
    -webkit-overflow-scrolling: touch;
     width: 100%;
 }
-.okay_list.ok_related_list{
-    text-align: center;
-    border: none;
-}
-.okay_list.ok_related_list .okay_list_body_item:last-child{
-    border-bottom: 1px solid transparent;
-}
+
 .okay_list .dropdown-menu{
     text-align: left;
 }
@@ -2109,8 +2103,55 @@ label.switch_label {
 .okay_list .subcategories_level_2 .okay_list_subicon{
     margin-left: 60px;
 }
+.okay_list .submenu_level_1 .okay_list_body_item {
+    border-bottom: 0px solid rgb(204, 204, 204);
+}
+.okay_list .okay_list_boding .menu_icon_add{
+    color: RGB(16, 207, 189);
+    margin-top: 4px;
+}
+.okay_list .okay_list_boding .menu_icon_add:hover{
+    color: RGB(16, 207, 189);
+}
+.okay_list .okay_list_menu_name{
+    width: calc(100% - 400px);
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -10px;
+    margin-left: -10px;
+}
+.okay_list .okay_list_menu_name .okay_list_menu_item{
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 10px;
+    padding-left: 10px;
+    -webkit-flex-basis: 0;
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    -webkit-box-flex: 1;
+    -webkit-flex-grow: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    max-width: 100%;
+    text-align: left;
+}
+.okay_list .submenu_level_1 .okay_list_body_item{
+    padding-left: 30px;
+}
+.okay_list .submenu_level_2 .okay_list_body_item{
+    padding-left: 60px;
+}
+.okay_list .submenu_level_3 .okay_list_body_item{
+    padding-left: 90px;
+}
 .okay_list .okay_list_features_name{
-    width: calc(100% - 670px);
+    width: calc(100% - 560px);
     position: relative;
     text-align: left;
 }
@@ -2172,6 +2213,10 @@ label.switch_label {
     width: 110px;
 }
 .okay_list .okay_list_status{
+    width: 110px;
+    text-align: center;
+}
+.okay_list .okay_list_url_status{
     width: 110px;
     text-align: center;
 }
@@ -2264,7 +2309,7 @@ label.switch_label {
     vertical-align: middle;
 }
 .okay_list .okay_list_orders_name{
-    width: calc(100% - 700px);
+    width: calc(100% - 705px);
     position: relative;
     text-align: left;
 }
@@ -2338,6 +2383,9 @@ label.switch_label {
     text-align: center;
 }
 .okay_list .okay_list_setting{
+    width: 100px;
+}
+.okay_list .okay_list_menu_setting{
     width: 100px;
 }
 .okay_list .cur_settings{
@@ -3748,12 +3796,27 @@ body.menu-pin .menu_switch .menu_hamburger::after {
 .theme_block_image img{
     max-height: 290px;
 }
+.theme_block_image .btn{
+    position:absolute;
+    right: 0px;
+    width: 100%;
+}
+.theme_block_image .theme_btn_admin{
+    bottom:0px;
+}
+.theme_block_image .theme_btn_block{
+    bottom:45px;
+}
 .bnr_id_grup{
-    width: calc(100% - 213px);
-    margin: 0px;
+    width: 100%;
+    margin: 0px 0px 10px;
 }
 .bnr_id_grup .form-control{
    border-right: 1px solid #ccc;
+}
+.menus_id_grup{
+    width: 35%;
+    margin: 0px;
 }
 /************************************************************************* Banners_image.tpl  */
 
@@ -3939,6 +4002,7 @@ body.menu-pin .menu_switch .menu_hamburger::after {
 .toggle_body_wrap.on{
     display: block
 }
+
 .product_images_list{
     list-style: none;
     padding: 0;
@@ -5523,4 +5587,49 @@ div.mce-fullscreen {
 }
 .import_row{
     min-height: 35px
+}
+.seo_template_button{
+    color: #2b303b;
+}
+.feature_alias_variable{
+    width: 250px;
+    text-align: left;
+}
+.feature_alias_name{
+    width: 250px;
+    text-align: left;
+}
+.feature_alias_value{
+    width: calc(100% - 600px);
+    text-align: left;
+}
+.feature_option_name {
+    width: 250px;
+}
+.feature_option_aliases {
+    width: calc(100% - 250px);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding: 15px 0px!important;
+    margin-right: -10px;
+    margin-left: -10px;
+}
+.feature_opt_aliases_list{
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 10px;
+    padding-left: 10px;
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 33.333333%;
+    -ms-flex: 0 0 33.333333%;
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+    min-height: 65px;
+}
+.option_alias_name{
+    text-align: left;
 }

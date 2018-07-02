@@ -200,8 +200,27 @@ $( document ).on( 'click', '.fn_sub_coupon', function(e) {
     ajax_coupon();
 } );
 
+function change_currency(currency_id) {
+    $.ajax({
+        url: "ajax/change_currency.php",
+        data: {currency_id: currency_id},
+        dataType: 'json',
+        success: function(data) {
+            if (data == true) {
+                document.location.reload()
+            }
+        }
+    });
+    return false;
+}
+
 /* Document ready */
 $(function(){
+
+    $(document).on("click", ".fn_menu_toggle", function() {
+        $(this).next(".fn_menu_list").first().slideToggle(300);
+        return false;
+    });
 
     $(document).on("click", ".fn_filter_link", function() {
         location.href = location.protocol + "//" + location.hostname + $(this).attr("href");
@@ -233,6 +252,24 @@ $(function(){
         }
         else {
             $(this).addClass('active');
+        }
+    });
+
+    // Эмуляция наведения мыши на планшете и мобильном
+    $('ul li.category_item.has_child').on("touchstart", function (e) {
+        'use strict'; //satisfy code inspectors
+        var link = $(this);
+        if (link.hasClass('hover')) {
+            return true;
+        } else {
+            if (link.parent().is('.level_1')) {
+                $('ul li.category_item.has_child').removeClass('hover');
+            } else {
+                link.siblings('.hover').removeClass('hover');
+            }
+            link.addClass('hover');
+            e.preventDefault();
+            return false;
         }
     });
 
@@ -293,6 +330,7 @@ $(function(){
     $('.to_top').click(function(){
         $("html, body").animate({scrollTop: 0}, 500);
     });
+
 
     // Проверка полей на пустоту для плейсхолдера
     $('.placeholder_focus').blur(function() {
@@ -474,7 +512,7 @@ $(function(){
                 success: function(data) {
                     $( '#fn_products_content' ).html( data.products_content );
                     $( '.fn_pagination' ).html( data.products_pagination );
-                    $('#fn_products_sort').html(data.products_sort);
+                    $('.fn_products_sort').html(data.products_sort);
 
                     $('.fn_ajax_wait').remove();
                 }
@@ -596,9 +634,9 @@ function amount_change(input, action) {
             curr_val = okay.amount;
         }
 
-    /* Если включен предзаказ макс. кол-во товаров ставим 50 */
+    /* Если включен предзаказ макс. кол-во товаров ставим максимально количество товаров в заказе */
     if ( input.parent().hasClass('fn_is_preorder')) {
-        max_val = 50;
+        max_val = okay.max_order_amount;
     } else {
         max_val = parseFloat( input.data( 'max' ) );
     }

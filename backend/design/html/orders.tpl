@@ -5,13 +5,18 @@
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
-            {if $orders_count}
-                <div class="box_heading heading_page">
+            <div class="box_heading heading_page">
+                {if $orders_count}
                     {$btr->general_orders|escape} - {$orders_count}
-                </div>
-            {else}
-                <div class="box_heading heading_page">{$btr->orders_no|escape}</div>
-            {/if}
+                {else}
+                    {$btr->orders_no|escape}
+                {/if}
+                {if $orders_count>0 && !$keyword}
+                    <div class="export_block hint-bottom-middle-t-info-s-small-mobile hint-anim" data-hint="{$btr->orders_export|escape}">
+                        <span class="fn_start_export fa fa-file-excel-o"></span>
+                    </div>
+                {/if}
+            </div>
             <div class="box_btn_heading">
                 <a class="btn btn_small btn-info" href="{url module=OrderAdmin}">
                     {include file='svg_icon.tpl' svgId='plus'}
@@ -62,23 +67,14 @@
 <div class="boxed fn_toggle_wrap">
     <div class="row">
         <div class="col-lg-12 col-md-12 ">
-            {*Блок фильтров*}
-            <div class="hidden-md-up">
-                <div class="row mb-1">
-                    {if $all_status}
-                        <div class=" col-md-6 col-sm-12">
-                            <select name="status" class="selectpicker"  onchange="location = this.value;">
-
-                                {foreach $all_status as $order_status}
-                                    <option value="{url module=OrdersAdmin status=$order_status->id keyword=null id=null page=null label=null from_date=null to_date=null}" {if $status == $order_status->id}selected=""{/if} >{$order_status->name|escape}</option>
-                                {/foreach}
-                                <option value="{url module=OrdersAdmin status='all' keyword=null id=null page=null label=null from_date=null to_date=null}" {if $smarty.get.status && $status == "all" || !$status}selected{/if}>{$btr->general_all|escape}</option>
-                            </select>
-                        </div>
-                    {/if}
+            <div class="fn_toggle_wrap">
+                <div class="heading_box visible_md">
+                    {$btr->general_filter|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
+                    </div>
                 </div>
-            </div>
-            <div class="boxed_sorting">
+                <div class="boxed_sorting toggle_body_wrap off fn_card">
                 <div class="row">
                     <div class="col-md-11 col-lg-11 col-xl-7 col-sm-12 mb-1">
                         <div class="date">
@@ -88,7 +84,7 @@
                                 <input type="hidden" name="status" value="{$status}">
 
                                 <div class="col-md-5 col-lg-5 pr-0 pl-0">
-                                    <div class="input-group">
+                                    <div class="input-group mobile_input-group">
                                         <span class="input-group-addon-date">{$btr->general_from|escape}</span>
                                         {if $is_mobile || $is_tablet}
                                             <input type="date" class="fn_from_date form-control" name="from_date" value="{$from_date}" autocomplete="off" >
@@ -101,7 +97,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-5 col-lg-5 pr-0 pl-0">
-                                    <div class="input-group">
+                                    <div class="input-group mobile_input-group">
                                         <span class="input-group-addon-date">{$btr->general_to|escape}</span>
                                         {if $is_mobile || $is_tablet}
                                             <input type="date" class="fn_to_date form-control" name="to_date" value="{$to_date}" autocomplete="off" >
@@ -113,7 +109,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2 col-lg-2 pr-0">
+                                <div class="col-md-2 col-lg-2 pr-0 mobile_text_right">
                                     <button class="btn btn_blue" type="submit">{$btr->general_apply|escape}</button>
                                 </div>
                             </form>
@@ -144,6 +140,7 @@
                     {/if}
                 </div>
             </div>
+            </div>
         </div>
     </div>
 
@@ -172,7 +169,7 @@
                         {*Параметры элемента*}
                         <div class="okay_list_body">
                             {foreach $orders as $order}
-                            <div class="fn_row okay_list_body_item">
+                            <div class="fn_row okay_list_body_item " style="border-left: 5px solid #{$order->status_color};">
                                 <div class="okay_list_row">
                                     <div class="okay_list_boding okay_list_check">
                                         <input class="hidden_check" type="checkbox" id="id_{$order->id}" name="check[]" value="{$order->id}"/>
@@ -344,6 +341,8 @@
     {/if}
 </div>
 
+<script src="{$config->root_url}/backend/design/js/piecon/piecon.js"></script>
+
 {* On document load *}
 {literal}
 <script>
@@ -419,6 +418,56 @@ $(function() {
             }
         });
     });
+    {/literal}
+    var status = '{$status|escape}',
+        label='{$label->id|escape}',
+        from_date = '{$from_date}',
+        to_date = '{$to_date}';
+    {literal}
+    // On document load
+    $(document).on('click','.fn_start_export',function() {
+        
+        Piecon.setOptions({fallback: 'force'});
+        Piecon.setProgress(0);
+        var progress_item = $("#progressbar"); //указываем селектор элемента с анимацией
+        progress_item.show();
+        do_export('',progress_item);
+    });
+
+    function do_export(page,progress) {
+        page = typeof(page) != 'undefined' ? page : 1;
+        label = typeof(label) != 'undefined' ? label : null;
+        status = typeof(status) != 'undefined' ? status : null;
+        from_date = typeof(from_date) != 'undefined' ? from_date : null;
+        to_date = typeof(to_date) != 'undefined' ? to_date : null;
+        $.ajax({
+            url: "ajax/export_orders.php",
+            data: {
+                page:page, 
+                label:label,
+                status:status, 
+                from_date:from_date, 
+                to_date:to_date
+            },
+            dataType: 'json',
+            success: function(data){
+                if(data && !data.end) {
+                    Piecon.setProgress(Math.round(100*data.page/data.totalpages));
+                    progress.attr('value',100*data.page/data.totalpages);
+                    do_export(data.page*1+1,progress);
+                }
+                else {
+                    Piecon.setProgress(100);
+                    progress.attr('value','100');
+                    window.location.href = 'files/export/export_orders.csv';
+                    progress.fadeOut(500);
+                }
+            },
+            error:function(xhr, status, errorThrown) {
+                alert(errorThrown+'\n'+xhr.responseText);
+            }
+        });
+    }
 });
 </script>
 {/literal}

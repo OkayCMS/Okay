@@ -92,6 +92,14 @@ class OrderAdmin extends Okay {
                             $this->orders->update_order($order->id, array('status_id' => $new_status_id));
                         }
                     }
+
+                    $this->db->query("SELECT separate_payment FROM __delivery WHERE id=?", (int)$order->delivery_id);
+                    $d = $this->db->result();
+                    $this->db->query("SELECT separate_delivery FROM __orders WHERE id=?", (int)$order->id);
+                    $o = $this->db->result();
+                    if ($d && $o && $d->separate_payment != $o->separate_delivery) {
+                        $this->orders->update_order($order->id, array('separate_delivery'=>$d->separate_payment));
+                    }
                     $order = $this->orders->get_order($order->id);
 
                     // Отправляем письмо пользователю
@@ -199,7 +207,7 @@ class OrderAdmin extends Okay {
             // Способ доставки
             $delivery = $this->delivery->get_delivery($order->delivery_id);
             $this->design->assign('delivery', $delivery);
-            
+
             // Способ оплаты
             $payment_method = $this->payment->get_payment_method($order->payment_method_id);
             

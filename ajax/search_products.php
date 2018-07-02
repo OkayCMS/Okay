@@ -31,12 +31,18 @@
             }
         }
     }
+
+    // т.к. для MySQL 5.7 в ONLY_FULL_GROUP_BY режиме нужно применять ф-цию ANY_VALUE, а в MySQL 5.6 и более ранних её нет,
+    // принято решение для запросов где есть группировка отключать ONLY_FULL_GROUP_BY режим
+    $okay->db->query("SET @mode := @@SESSION.sql_mode");
+    $okay->db->query("SET SESSION sql_mode = ''");
+
     /*Делаем выборку из БД*/
 	$okay->db->query("SELECT 
             p.id,
             p.url,
-            $px.name, 
-            i.filename as image 
+            $px.name,
+            i.filename as image
         FROM __products p 
         $lang_sql->join
         LEFT JOIN __images i ON i.product_id=p.id AND i.position=(SELECT MIN(position) FROM __images WHERE product_id=p.id LIMIT 1)
@@ -45,11 +51,14 @@
             $keyword_filter
             AND visible=1
             GROUP BY p.id
-        ORDER BY p.name 
+        ORDER BY $px.name 
         LIMIT ?
     ", $limit);
     $products = $okay->db->results();
     
+    // Вернем MySQL в обычный режим
+    $okay->db->query("SET SESSION sql_mode = @mode");
+
     $suggestions = array();
     $ids = array();
     foreach($products as $p){

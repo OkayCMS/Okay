@@ -44,6 +44,16 @@ switch ($object) {
             $result = $okay->pages->update_page($id, $values);
         }
         break;
+    case 'menu':
+        if($okay->managers->access('pages')) {
+            $result = $okay->menu->update_menu($id, $values);
+        }
+        break;
+    case 'menu_item':
+        if($okay->managers->access('pages')) {
+            $result = $okay->menu->update_menu_item($id, $values);
+        }
+        break;
     case 'blog':
         if($okay->managers->access('blog')) {
             $result = $okay->blog->update_post($id, $values);
@@ -110,6 +120,8 @@ switch ($object) {
     case 'managers':
         if($okay->managers->access('managers')) {
             $result = $okay->managers->update_manager($id, $values);
+        } elseif(isset($values['menu_status'])) {
+            $result = $okay->managers->update_manager($id, array('menu_status'=>$values['menu_status']));
         }
         break;
 }

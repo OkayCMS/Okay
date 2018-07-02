@@ -22,7 +22,14 @@
 <div class="boxed fn_toggle_wrap">
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="boxed_sorting">
+            <div class="fn_toggle_wrap">
+                <div class="heading_box visible_md">
+                    {$btr->general_filter|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
+                    </div>
+                </div>
+                <div class="boxed_sorting toggle_body_wrap off fn_card">
                 <div class="row">
                     <div class="col-md-3 col-lg-3 col-sm-12">
                         <select id="id_categories" name="categories_filter" title="{$btr->general_category_filter|escape}" class="selectpicker form-control" data-live-search="true" data-size="10" onchange="location = this.value;">
@@ -49,6 +56,7 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div>
     </div>
 
@@ -67,7 +75,8 @@
                     </div>
                     <div class="okay_list_heading okay_list_features_name">{$btr->general_name|escape}</div>
                     <div class="okay_list_heading okay_list_features_tag">{$btr->general_categories|escape}</div>
-                    <div class="okay_list_heading okay_list_status">{$btr->general_enable|escape}</div>
+                    <div class="okay_list_heading okay_list_url_status">{$btr->feature_url_in_product_short|escape}</div>
+                    <div class="okay_list_heading okay_list_status">{$btr->features_in_filter|escape}</div>
                     <div class="okay_list_heading okay_list_setting okay_list_features_setting">{$btr->general_activities|escape}</div>
                     <div class="okay_list_heading okay_list_close"></div>
                 </div>
@@ -103,6 +112,14 @@
                                     {/foreach}
                                 {/if}
                                 </div>
+                            </div>
+                            <div class="okay_list_boding okay_list_url_status">
+                                {*url_in_product*}
+                                <label class="switch switch-default">
+                                    <input class="switch-input fn_ajax_action {if $feature->url_in_product}fn_active_class{/if}" data-module="feature" data-action="url_in_product" data-id="{$feature->id}" name="url_in_product" value="1" type="checkbox"  {if $feature->url_in_product}checked=""{/if}/>
+                                    <span class="switch-label"></span>
+                                    <span class="switch-handle"></span>
+                                </label>
                             </div>
                             <div class="okay_list_boding okay_list_status">
                                 {*visible*}

@@ -5,7 +5,7 @@
 
 {if $cart->purchases}
     {* Cart form *}
-    <form method="post" name="cart" class="fn_validate_cart">
+    <form id="captcha_id" method="post" name="cart" class="fn_validate_cart">
         {* The page heading *}
         <h1 class="h2"><span data-language="cart_header">{$lang->cart_header}</span></h1>
 
@@ -84,18 +84,24 @@
 
             {* Captcha *}
             {if $settings->captcha_cart}
-                {get_captcha var="captcha_cart"}
-                <div class="captcha">
-                    <div class="secret_number">{$captcha_cart[0]|escape} + ? =  {$captcha_cart[1]|escape}</div>
-                    <span class="form_captcha">
-                        <input class="form_input input_captcha placeholder_focus" type="text" name="captcha_code" value="" data-language="form_enter_captcha" >
-                        <span class="form_placeholder">{$lang->form_enter_captcha}*</span>
-                     </span>
-                </div>
+                {if $settings->captcha_type == "v2"}
+                    <div class="captcha row" style="">
+                        <div id="recaptcha1"></div>
+                    </div>
+                {elseif $settings->captcha_type == "default"}
+                    {get_captcha var="captcha_cart"}
+                    <div class="captcha">
+                        <div class="secret_number">{$captcha_cart[0]|escape} + ? =  {$captcha_cart[1]|escape}</div>
+                        <span class="form_captcha">
+                            <input class="form_input input_captcha placeholder_focus" type="text" name="captcha_code" value="" data-language="form_enter_captcha" >
+                            <span class="form_placeholder">{$lang->form_enter_captcha}*</span>
+                         </span>
+                    </div>
+                {/if}
             {/if}
-
+            <input type="hidden" name="checkout" value="1">
             {* Submit button *}
-            <input class="button" type="submit" name="checkout" data-language="cart_checkout" value="{$lang->cart_checkout}">
+            <input class="button g-recaptcha" type="submit" name="checkout" data-language="cart_checkout" {if $settings->captcha_type == "invisible"}data-sitekey="{$settings->public_recaptcha_invisible}" data-badge='bottomleft' data-callback="onSubmit"{/if} value="{$lang->cart_checkout}">
         </div>    
     </form>
 

@@ -32,7 +32,16 @@ if (isset($_GET['object']) && !empty($_GET['object'])) {
         $original_img_dir = $okay->config->original_payments_dir;
         $resized_img_dir = $okay->config->resized_payments_dir;
     }
+    if ($_GET['object'] == 'slides_resized') {
+        $original_img_dir = $okay->config->banners_images_dir;
+        $resized_img_dir = $okay->config->resized_banners_images_dir;
+    }
 
+}
+
+if (empty($original_img_dir) && empty($resized_img_dir) && $_GET['object'] != 'products') {
+    header("http/1.1 404 not found");
+    exit;
 }
 
 $resized_filename =  $okay->image->resize($filename, $original_img_dir, $resized_img_dir);

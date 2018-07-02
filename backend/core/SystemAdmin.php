@@ -22,11 +22,13 @@ class SystemAdmin extends Okay {
             $ini_params[$ini] =  ini_get($ini);
         }
         $sql_info = $this->db->get_mysql_info();
+        $server_ip = file_get_contents('http://ipinfo.io/ip');
 
         $this->design->assign('sql_info', $sql_info);
         $this->design->assign('php_version', $php_version);
         $this->design->assign('all_extensions', $all_extensions);
         $this->design->assign('ini_params',$ini_params);
+        $this->design->assign('server_ip', $server_ip);
 
         return $this->design->fetch('settings_system.tpl');
     }

@@ -124,7 +124,7 @@ class Money extends Okay {
         if(!empty($id)) {
             $query = $this->db->placehold("DELETE FROM __currencies WHERE id=? LIMIT 1", intval($id));
             $this->db->query($query);
-            $this->db->query("DELETE FROM __lang_currencies WHERE currency_id=? LIMIT 1", intval($id));
+            $this->db->query("DELETE FROM __lang_currencies WHERE currency_id=?", intval($id));
         }
         $this->init_currencies();
     }

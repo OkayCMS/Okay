@@ -155,6 +155,7 @@
                             <div class="boxed">
                                 {if $config->watermark_file}
                                     <div class="fn_parent_image">
+                                        <input class="fn_accept_delete" name="delete_watermark" value="" type="hidden" />
                                         <div class="banner_image fn_image_wrapper text-xs-center">
                                             <a href="javascript:;" class="fn_delete_item remove_image"></a>
                                             <img class="watermark_image" src="{$config->root_url}/{$config->watermark_file}" alt="" />
@@ -198,34 +199,6 @@
                                     <div class="raiting_boxed">
                                         <input class="fn_range_value" type="hidden" value="{$settings->watermark_offset_y|escape}" name="watermark_offset_y" />
                                         <input class="fn_rating range_input" type="range" min="0" max="100" step="1" value="{$settings->watermark_offset_y|escape}" />
-                                        <div class="raiting_range_number">
-                                            <span class="float-xs-left">1</span>
-                                            <span class="float-xs-right">100</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-12 fn_range_wrap">
-                                    <div class="heading_label">
-                                        {$btr->settings_catalog_watermark_transparency|escape}
-                                        <span class="font-weight-bold fn_show_range">{$settings->watermark_transparency}</span>
-                                    </div>
-                                    <div class="raiting_boxed">
-                                        <input class="fn_range_value" type="hidden" value="{$settings->watermark_transparency}" name="watermark_transparency" />
-                                        <input class="fn_rating range_input" type="range" min="0" max="100" step="1" value="{$settings->watermark_transparency|escape}" />
-                                        <div class="raiting_range_number">
-                                            <span class="float-xs-left">1</span>
-                                            <span class="float-xs-right">100</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-12 fn_range_wrap">
-                                    <div class="heading_label">
-                                        {$btr->settings_catalog_sharpless|escape}
-                                        <span class="font-weight-bold fn_show_range">{$settings->images_sharpen}</span>
-                                    </div>
-                                    <div class="raiting_boxed">
-                                        <input class="fn_range_value" type="hidden" value="{$settings->images_sharpen}" name="images_sharpen" />
-                                        <input class="fn_rating range_input" type="range" min="0" max="100" step="1" value="{$settings->images_sharpen|escape}" />
                                         <div class="raiting_range_number">
                                             <span class="float-xs-left">1</span>
                                             <span class="float-xs-right">100</span>

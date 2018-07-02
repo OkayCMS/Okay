@@ -5,9 +5,11 @@ require_once('Okay.php');
 class Image extends Okay {
     
     private $allowed_extentions = array('png', 'gif', 'jpg', 'jpeg', 'ico');
+    private $gregwar_image;
     
     public function __construct() {
         parent::__construct();
+        $this->gregwar_image = new Gregwar\Image\Image();
     }
     
     /**
@@ -18,7 +20,7 @@ class Image extends Okay {
      * @return $string имя файла превью
      */
     public function resize($filename, $original_images_dir = null, $resized_images_dir = null) {
-        list($source_file, $width , $height, $set_watermark) = $this->get_resize_params($filename);
+        list($source_file, $width , $height, $set_watermark, $crop_params) = $this->get_resize_params($filename);
 
         $size = $width.'x'.$height;
         $image_sizes = array();
@@ -40,7 +42,7 @@ class Image extends Okay {
             $original_file = $source_file;
         }
         
-        $resized_file = $this->add_resize_params($original_file, $width, $height, $set_watermark);
+        $resized_file = $this->add_resize_params($original_file, $width, $height, $set_watermark, $crop_params);
         
         // Пути к папкам с картинками
         if ($original_images_dir && !$resized_images_dir) {
@@ -55,30 +57,33 @@ class Image extends Okay {
         }
         $originals_dir = $this->config->root_dir.$original_images_dir;
         $preview_dir = $this->config->root_dir.$resized_images_dir;
-        
+
+        if (!file_exists($originals_dir.$original_file)) {
+            return false;
+        }
+
         $watermark_offet_x = $this->settings->watermark_offset_x;
         $watermark_offet_y = $this->settings->watermark_offset_y;
-        
-        $sharpen = min(100, $this->settings->images_sharpen)/100;
-        $watermark_transparency =  1-min(100, $this->settings->watermark_transparency)/100;
         
         if($set_watermark && is_file($this->config->root_dir.$this->config->watermark_file)) {
             $watermark = $this->config->root_dir.$this->config->watermark_file;
         } else {
             $watermark = null;
         }
-        
-        if(class_exists('Imagick') && $this->config->use_imagick) {
-            $this->image_constrain_imagick($originals_dir.$original_file, $preview_dir.$resized_file, $width, $height, $watermark, $watermark_offet_x, $watermark_offet_y, $watermark_transparency, $sharpen);
+
+        if ($this->config->resize_library == 'gregwar_image') {
+            $this->image_gregwar_image($originals_dir.$original_file, $preview_dir.$resized_file, $width, $height, $watermark, $watermark_offet_x, $watermark_offet_y, $crop_params);
+        } elseif ($this->config->resize_library == 'imagick' && class_exists('Imagick')) {
+            $this->image_constrain_imagick($originals_dir.$original_file, $preview_dir.$resized_file, $width, $height, $watermark, $watermark_offet_x, $watermark_offet_y);
         } else {
-            $this->image_constrain_gd($originals_dir.$original_file, $preview_dir.$resized_file, $width, $height, $watermark, $watermark_offet_x, $watermark_offet_y, $watermark_transparency);
+            $this->image_constrain_gd($originals_dir.$original_file, $preview_dir.$resized_file, $width, $height, $watermark, $watermark_offet_x, $watermark_offet_y);
         }
         
         return $preview_dir.$resized_file;
     }
 
     /*Добавление параметров ресайза для изображения*/
-    public function add_resize_params($filename, $width=0, $height=0, $set_watermark=false) {
+    public function add_resize_params($filename, $width=0, $height=0, $set_watermark=false, $crop_params = array()) {
         if('.' != ($dirname = pathinfo($filename,  PATHINFO_DIRNAME))) {
             $file = $dirname.'/'.pathinfo($filename, PATHINFO_FILENAME);
         } else {
@@ -87,28 +92,38 @@ class Image extends Okay {
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
         
         if($width>0 || $height>0) {
-            $resized_filename = $file.'.'.($width>0?$width:'').'x'.($height>0?$height:'').($set_watermark?'w':'').'.'.$ext;
+            $resized_filename = $file.'.'.($width>0?$width:'').'x'.($height>0?$height:'').($set_watermark?'w':'');
         } else {
-            $resized_filename = $file.'.'.($set_watermark?'w.':'').$ext;
+            $resized_filename = $file.($set_watermark?'.w':'').$ext;
         }
-        
-        return $resized_filename;
+
+        if ($crop_params['x_pos'] && $crop_params['y_pos']) {
+            $resized_filename .= '.'.$crop_params['x_pos'].'.'.$crop_params['y_pos'];
+        }
+
+        return $resized_filename.'.'.$ext;
     }
 
     /*Выборка параметров изображения для ресайза*/
     public function get_resize_params($filename) {
         // Определаяем параметры ресайза
-        if(!preg_match('/(.+)\.([0-9]*)x([0-9]*)(w)?\.([^\.]+)$/', $filename, $matches)) {
+        if(!preg_match('/(.+)\.([0-9]*)x([0-9]*)(w)?(\.(left|center|right)\.(top|center|bottom))?\.([^\.]+)$/', $filename, $matches)) {
             return false;
         }
-        
-        $file = $matches[1];                    // имя запрашиваемого файла
-        $width = $matches[2];                    // ширина будущего изображения
-        $height = $matches[3];                    // высота будущего изображения
-        $set_watermark = $matches[4] == 'w';    // ставить ли водяной знак
-        $ext = $matches[5];                        // расширение файла
-        
-        return array($file.'.'.$ext, $width, $height, $set_watermark);
+
+        $file = $matches[1];                 // имя запрашиваемого файла
+        $width = $matches[2];                // ширина будущего изображения
+        $height = $matches[3];               // высота будущего изображения
+        $set_watermark = $matches[4] == 'w'; // ставить ли водяной знак
+        $ext = $matches[8];                  // расширение файла
+
+        // crop params
+        if (!empty($matches[5])) {
+            $crop_params['x_pos'] = $matches[6];
+            $crop_params['y_pos'] = $matches[7];
+        }
+
+        return array($file.'.'.$ext, $width, $height, $set_watermark, $crop_params);
     }
 
     /*Загрузка изображения*/
@@ -176,7 +191,48 @@ class Image extends Okay {
         }
         return false;
     }
-    
+
+    private function image_gregwar_image($src_file, $dst_file, $max_w, $max_h, $watermark=null, $watermark_offet_x=0, $watermark_offet_y=0, $crop_params) {
+
+        $image = $this->gregwar_image->open($src_file);
+
+        // размеры исходного изображения
+        $src_w = $image->width();
+        $src_h = $image->height();
+
+        list($dst_w, $dst_h) = $this->calc_contrain_size($src_w, $src_h, $max_w, $max_h);
+        if (!empty($crop_params)) {
+            $x_pos = $crop_params['x_pos'];
+            $y_pos = $crop_params['y_pos'];
+
+            $dst_w = min($src_w, $max_w);
+            $dst_h = min($src_h, $max_h);
+
+            $image->zoomCrop($dst_w, $dst_h, 'transparent', $x_pos, $y_pos);
+        } else {
+            $image->cropResize($dst_w, $dst_h);
+        }
+
+        if ($watermark && is_readable($watermark)) {
+            $watermark_image = $this->gregwar_image->open($watermark);
+
+            // размеры водяного знака
+            $watermark_width  = $watermark_image->width();
+            $watermark_height = $watermark_image->height();
+
+            $watermark_x = min(($dst_w-$watermark_width)*$watermark_offet_x/100, $dst_w);
+            $watermark_y = min(($dst_h-$watermark_height)*$watermark_offet_y/100, $dst_h);
+
+            $image->merge($watermark_image, $watermark_x, $watermark_y, $watermark_width, $watermark_height);
+        }
+
+        $src_ext = $image->guessType();
+        if ($src_ext == 'gif') {
+            $src_ext = 'png';
+        }
+        $image->save($dst_file, $src_ext, $this->settings->image_quality ? $this->settings->image_quality : 80);
+    }
+
     /**
      * Создание превью средствами gd
      * @param $src_file исходный файл
@@ -185,7 +241,7 @@ class Image extends Okay {
      * @param max_h максимальная высота
      * @return bool
      */
-    private function image_constrain_gd($src_file, $dst_file, $max_w, $max_h, $watermark=null, $watermark_offet_x=0, $watermark_offet_y=0, $watermark_opacity=1) {
+    private function image_constrain_gd($src_file, $dst_file, $max_w, $max_h, $watermark=null, $watermark_offet_x=0, $watermark_offet_y=0) {
         $quality = 100;
         
         // Параметры исходного изображения
@@ -322,8 +378,10 @@ class Image extends Okay {
      * @param max_h максимальная высота
      * @return bool
      */
-    private function image_constrain_imagick($src_file, $dst_file, $max_w, $max_h, $watermark=null, $watermark_offet_x=0, $watermark_offet_y=0, $watermark_opacity=1, $sharpen=0.2) {
+    private function image_constrain_imagick($src_file, $dst_file, $max_w, $max_h, $watermark=null, $watermark_offet_x=0, $watermark_offet_y=0) {
         $thumb = new Imagick();
+
+        $sharpen = 0.2;
         
         // Читаем изображение
         if(!$thumb->readImage($src_file)) {
@@ -352,7 +410,6 @@ class Image extends Okay {
         // Устанавливаем водяной знак
         if($watermark && is_readable($watermark)) {
             $overlay = new Imagick($watermark);
-            $overlay->evaluateImage(Imagick::EVALUATE_MULTIPLY, $watermark_opacity, Imagick::CHANNEL_ALPHA);
             
             // Get the size of overlay
             $owidth = $overlay->getImageWidth();
@@ -371,9 +428,7 @@ class Image extends Okay {
             $frame->setImagePage($dst_w, $dst_h, 0, 0);
             
             // Наводим резкость
-            if($sharpen > 0) {
-                $thumb->adaptiveSharpenImage($sharpen, $sharpen);
-            }
+            $thumb->adaptiveSharpenImage($sharpen, $sharpen);
             
             if(isset($overlay) && is_object($overlay)) {
                 $frame->compositeImage($overlay, imagick::COMPOSITE_OVER, $watermark_x, $watermark_y, imagick::COLOR_ALPHA);

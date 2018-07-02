@@ -3,22 +3,32 @@
 require_once('api/Okay.php');
 
 class ThemeAdmin extends Okay {
-    
+
     private $themes_dir = 'design/';
     private $compiled_dir = 'compiled/';
 
     /*Работа с шаблонами сайта*/
     public function fetch() {
         if($this->request->method('post')) {
+
+            if (isset($_POST['admin_theme'])) {
+                $this->settings->admin_theme = $this->request->post('admin_theme');
+            }
+            $admin_theme_managers = $this->request->post('admin_theme_managers');
+            $this->settings->admin_theme_managers = $admin_theme_managers == 'all' ? '' : $admin_theme_managers;
+
             $this->dir_delete($this->compiled_dir, false);
             $old_names = $this->request->post('old_name');
             $new_names = $this->request->post('new_name');
             if(is_array($old_names)) {
                 foreach($old_names as $i=>$old_name) {
                     $new_name = preg_replace("/[^a-zA-Z0-9\-\_]/", "", $new_names[$i]);
-                    
+
                     if(is_writable($this->themes_dir) && is_dir($this->themes_dir.$old_name) && !is_file($this->themes_dir.$new_name)&& !is_dir($this->themes_dir.$new_name)) {
                         rename($this->themes_dir.$old_name, $this->themes_dir.$new_name);
+                        if($this->settings->admin_theme == $old_name) {
+                            $this->settings->admin_theme = $new_name;
+                        }
                         if($this->settings->theme == $old_name) {
                             $this->settings->theme = $new_name;
                         }
@@ -27,10 +37,10 @@ class ThemeAdmin extends Okay {
                     }
                 }
             }
-            
+
             $action = $this->request->post('action');
             $action_theme  = $this->request->post('theme');
-            
+
             switch($this->request->post('action')) {
                 case 'set_main_theme': {
                     /*Установить тему*/
@@ -55,6 +65,9 @@ class ThemeAdmin extends Okay {
                 case 'delete_theme': {
                     /*Удалить тему*/
                     $this->dir_delete($this->themes_dir.$action_theme);
+                    if($action_theme == $this->settings->admin_theme) {
+                        $this->settings->admin_theme = '';
+                    }
                     if($action_theme == $this->settings->theme) {
                         $t = current($this->get_themes());
                         $this->settings->theme = $t->name;
@@ -63,23 +76,44 @@ class ThemeAdmin extends Okay {
                 }
             }
         }
-        
+
+        /*Обновляем версию JS и CSS*/
+        if ($this->request->get('reset_cache')) {
+            $css_version = ltrim($this->settings->css_version, '0');
+            if (!$css_version) {
+                $css_version = 0;
+            }
+            $this->settings->css_version = str_pad(++$css_version, 6, 0, STR_PAD_LEFT);
+
+            $js_version = ltrim($this->settings->js_version, '0');
+            if (!$js_version) {
+                $js_version = 0;
+            }
+            $this->settings->js_version = str_pad(++$js_version, 6, 0, STR_PAD_LEFT);
+            header("Location: ".$this->request->url(array('reset_cache'=>null)));
+            exit;
+        }
+
         $themes = $this->get_themes();
-        
+
         // Если нет прав на запись - передаем в дизайн предупреждение
         if(!is_writable($this->themes_dir)) {
             $this->design->assign('message_error', 'permissions');
         }
-        
+
         $current_theme = new stdClass;
         $current_theme->name = $this->settings->theme;
         $current_theme->locked = is_file($this->themes_dir.$current_theme->name.'/locked');
+        $managers = $this->managers->get_managers();
+        $this->design->assign('managers', $managers);
+        $admin_theme_managers = $this->settings->admin_theme_managers;
+        $this->design->assign('admin_theme_managers', $admin_theme_managers);
         $this->design->assign('theme', $current_theme);
         $this->design->assign('themes', $themes);
         $this->design->assign('themes_dir', $this->themes_dir);
         return $this->design->fetch('theme.tpl');
     }
-    
+
     private function dir_copy($src, $dst) {
         if(is_dir($src)) {
             mkdir($dst, 0755);
@@ -95,7 +129,7 @@ class ThemeAdmin extends Okay {
             @chmod($dst, 0664);
         }
     }
-    
+
     private function dir_delete($path, $delete_self = true) {
         if(!$dh = @opendir($path)) {
             return;
@@ -104,7 +138,7 @@ class ThemeAdmin extends Okay {
             if($obj == '.' || $obj == '..') {
                 continue;
             }
-            
+
             if (!@unlink($path . '/' . $obj)) {
                 $this->dir_delete($path.'/'.$obj, true);
             }
@@ -115,7 +149,7 @@ class ThemeAdmin extends Okay {
         }
         return;
     }
-    
+
     private function get_themes() {
         if($handle = opendir($this->themes_dir)) {
             while(false !== ($file = readdir($handle))) {
@@ -131,5 +165,5 @@ class ThemeAdmin extends Okay {
         }
         return $themes;
     }
-    
+
 }

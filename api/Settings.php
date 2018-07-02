@@ -33,6 +33,12 @@ class Settings extends Okay {
 
     /*Запись данных в общие настройки*/
     public function __set($name, $value) {
+
+        if (!empty($this->vars['admin_theme']) && $name == 'theme' && $value == $this->vars['admin_theme']) {
+            $this->vars[$name] = $value;
+            return;
+        }
+
         if (isset($this->vars_lang[$name])) {
             return;
         }

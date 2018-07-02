@@ -21,6 +21,13 @@ if(pathinfo($script, PATHINFO_EXTENSION) != 'js') {
 $file = $okay->config->root_dir.'design/'.$theme.'/js/'.$script;
 if(is_file($file) && is_writable($file) && !is_file($okay->config->root_dir.'design/'.$theme.'/locked')) {
     file_put_contents($file, $content);
+
+    $js_version = ltrim($okay->settings->js_version, '0');
+    if (!$js_version) {
+        $js_version = 0;
+    }
+    $okay->settings->js_version = str_pad(++$js_version, 6, 0, STR_PAD_LEFT);
+
 }
 
 $result = true;

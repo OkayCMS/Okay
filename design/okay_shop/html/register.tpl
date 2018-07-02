@@ -32,7 +32,7 @@
             </div>
         {/if}
 
-        <form method="post" class="fn_validate_register">
+        <form id="captcha_id" method="post" class="fn_validate_register">
 
             {* User's  name *}
             <div class="form_group">
@@ -65,18 +65,24 @@
             </div>
 
             {if $settings->captcha_register}
-                {get_captcha var="captcha_register"}
-                <div class="captcha">
-                    <div class="secret_number">{$captcha_register[0]|escape} + ? =  {$captcha_register[1]|escape}</div>
-                    <span class="form_captcha">
-                        <input class="form_input input_captcha placeholder_focus" type="text" name="captcha_code" value="" data-language="form_enter_captcha" >
-                        <span class="form_placeholder">{$lang->form_enter_captcha}*</span>
-                      </span>
-                </div>
+                {if $settings->captcha_type == "v2"}
+                    <div class="captcha">
+                        <div id="recaptcha1"></div>
+                    </div>
+                {elseif $settings->captcha_type == "default"}
+                    {get_captcha var="captcha_register"}
+                    <div class="captcha">
+                        <div class="secret_number">{$captcha_register[0]|escape} + ? =  {$captcha_register[1]|escape}</div>
+                        <span class="form_captcha">
+                            <input class="form_input input_captcha placeholder_focus" type="text" name="captcha_code" value="" data-language="form_enter_captcha" >
+                            <span class="form_placeholder">{$lang->form_enter_captcha}*</span>
+                          </span>
+                    </div>
+                {/if}
             {/if}
-
+            <input name="register" type="hidden" value="1">
             {* Submit button *}
-            <input type="submit" class="button md-right" name="register" data-language="register_create_account" value="{$lang->register_create_account}">
+            <input type="submit" class="button md-right g-recaptcha" name="register" data-language="register_create_account" {if $settings->captcha_type == "invisible"}data-sitekey="{$settings->public_recaptcha_invisible}" data-badge='bottomleft' data-callback="onSubmit"{/if} value="{$lang->register_create_account}">
         </form>
     </div>
 </div>

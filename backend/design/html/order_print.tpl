@@ -219,7 +219,7 @@
         {if $order->delivery_price>0}
         <tr>
             <td colspan=3>{$delivery->name|escape}{if $order->separate_delivery} ({$btr->general_paid_separately|escape}){/if}</td>
-            <td class="align_right">{$order->delivery_price|convert}&nbsp;{$currency->sign|escape}</td>
+            <td class="align_right">{$order->delivery_price|convert:$currency->id}&nbsp;{$currency->sign|escape}</td>
         </tr>
         {/if}
         
@@ -240,10 +240,10 @@
             <th>{$btr->general_coupon|escape} {if $order->coupon_code} ({$order->coupon_code}){/if}</th>
             <td>{$order->coupon_discount}&nbsp;{$currency->sign|escape}</td>
         </tr>
-        {/if}        
+        {/if}
         <tr>
             <th>{$btr->general_total|escape}</th>
-            <td class="total">{$order->total_price}&nbsp;{$currency->sign|escape}</td>
+            <td class="total">{$order->total_price|convert:$currency->id}&nbsp;{$currency->sign|escape}</td>
         </tr>
         {if $payment_method}
         <tr>

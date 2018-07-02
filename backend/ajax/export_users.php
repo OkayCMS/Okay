@@ -55,7 +55,6 @@ class ExportAjax extends Okay {
             $filter['group_id'] = intval($this->request->get('group_id'));
         }
         $filter['sort'] = $this->request->get('sort');
-        $filter['keyword'] = $this->request->get('keyword');
         
         // Выбираем пользователей
         $users = array();

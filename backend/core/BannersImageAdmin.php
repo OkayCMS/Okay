@@ -30,12 +30,12 @@ class BannersImageAdmin extends Okay {
             }
             // Удаление изображения
             if($this->request->post('delete_image')) {
-                $this->image->delete_image($banners_image->id, 'image', 'banners_images', $this->config->banners_images_dir);
+                $this->image->delete_image($banners_image->id, 'image', 'banners_images', $this->config->banners_images_dir, $this->config->resized_banners_images_dir);
             }
             // Загрузка изображения
             $image = $this->request->files('image');
             if (!empty($image['name']) && ($filename = $this->image->upload_image($image['tmp_name'], $image['name'], $this->config->banners_images_dir))) {
-                $this->image->delete_image($banners_image->id, 'image', 'banners_images', $this->config->banners_images_dir);
+                $this->image->delete_image($banners_image->id, 'image', 'banners_images', $this->config->banners_images_dir, $this->config->resized_banners_images_dir);
                 $this->banners->update_banners_image($banners_image->id, array('image'=>$filename));
             }
             $banners_image = $this->banners->get_banners_image(intval($banners_image->id));

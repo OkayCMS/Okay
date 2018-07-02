@@ -99,7 +99,6 @@ class ManagerAdmin extends Okay {
             ),
             'left_seo'      => array(
                 'robots'        => $btr->left_robots_title,
-                'yametrika'     => $btr->left_metrika_title,
                 'seo_patterns'  => $btr->left_seo_patterns_title,
             ),
             'left_support'  => array(

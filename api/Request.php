@@ -34,7 +34,7 @@ class Request extends Okay {
     * Если $type не задан, возвращает переменную в чистом виде
     */
     /*Прием параметров с массива $_GET*/
-    public function get($name, $type = null) {
+    public function get($name, $type = null, $default = '') {
         $val = null;
         if(isset($_GET[$name])) {
             $val = $_GET[$name];
@@ -43,7 +43,11 @@ class Request extends Okay {
         if(!empty($type) && is_array($val)) {
             $val = reset($val);
         }
-        
+
+        if (empty($val) && (!empty($default) || $default === null)) {
+            $val = $default;
+        }
+
         if($type == 'string') {
             return strval(preg_replace('/[^\p{L}\p{Nd}\d\s_\-\.\%\s]/ui', '', $val));
         }
@@ -69,14 +73,18 @@ class Request extends Okay {
     * Если $type не задан, возвращает переменную в чистом виде
     */
     /*Прием параметров с массива $_POST*/
-    public function post($name = null, $type = null) {
+    public function post($name = null, $type = null, $default = '') {
         $val = null;
         if(!empty($name) && isset($_POST[$name])) {
             $val = $_POST[$name];
         } elseif(empty($name)) {
             $val = file_get_contents('php://input');
         }
-        
+
+        if (empty($val) && (!empty($default) || $default === null)) {
+            $val = $default;
+        }
+
         if($type == 'string') {
             return strval(preg_replace('/[^\p{L}\p{Nd}\d\s_\-\.\%\s]/ui', '', $val));
         }

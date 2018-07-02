@@ -165,6 +165,7 @@
             <input type="hidden" value="{$mrh_login|escape}" name="MrchLogin">
             <input type="hidden" value="{$price|escape}"     name="OutSum">
             <input type="hidden" value="{$inv_id|escape}"    name="InvId">
+            <input type="hidden" value="{$receipt|escape}"   name="Receipt">
             <input type="hidden" value="{$inv_desc|escape}"  name="Desc">
             <input type="hidden" value="{$crc|escape}"       name="SignatureValue">
             <input type="hidden" value="{$in_curr|escape}"   name="IncCurrLabel">

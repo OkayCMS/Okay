@@ -101,7 +101,7 @@
                     <a class="all_brands_link" href="{$lang_link}brands/{$b->url}" data-brand="{$b->id}">
                         {if $b->image}
                             <div class="brand_image">
-                                <img class="brand_img" src="{$b->image|resize:250:250:false:$config->resized_brands_dir}" alt="{$b->name|escape}" title="{$b->name|escape}">
+                                <img class="brand_img" src="{$b->image|resize:250:100:false:$config->resized_brands_dir}" alt="{$b->name|escape}" title="{$b->name|escape}">
                             </div>
                             <span>{$b->name|escape}</span>
                         {else}

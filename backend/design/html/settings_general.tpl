@@ -135,6 +135,8 @@
         </div>
     </div>
 
+
+
     {*Параметры элемента*}
     <div class="row">
         <div class="col-lg-12 col-md-12">
@@ -146,6 +148,18 @@
                     </div>
                 </div>
                 <div class="toggle_body_wrap on fn_card">
+                    <div class="row">
+                        <div class="col-xl-3 col-lg-4 col-md-6">
+                            <div class="heading_label">{$btr->settings_type_capcha|escape}</div>
+                            <div class="mb-1">
+                                <select name="captcha_type" class="selectpicker">
+                                    <option value="default" {if $settings->captcha_type == "default"}selected{/if}>{$btr->captcha_default}</option>
+                                    <option value="v2" {if $settings->captcha_type == "v2"}selected{/if}>reCAPTCHA V2</option>
+                                    <option value="invisible" {if $settings->captcha_type == "invisible"}selected{/if}>reCAPTCHA Invisible</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <div class="permission_block">
                         <div class="permission_boxes row">
                             <div class="col-xl-3 col-lg-4 col-md-6">
@@ -215,11 +229,84 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-12">
+                            <div class="boxed">
+                                <div class="heading_box">
+                                    reCAPTCHA V2
+                                 </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="heading_label">{$btr->recaptcha_key|escape}</div>
+                                            <div class="mb-1">
+                                                <input name="public_recaptcha" class="form-control" type="text" value="{$settings->public_recaptcha|escape}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="heading_label">{$btr->recaptcha_secret_key|escape}</div>
+                                            <div class="mb-1">
+                                                <input name="secret_recaptcha" class="form-control" type="text" value="{$settings->secret_recaptcha|escape}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12">
+                            <div class="boxed">
+                                <div class="heading_box">
+                                    reCAPTCHA invisible
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="heading_label">{$btr->recaptcha_key|escape}</div>
+                                            <div class="mb-1">
+                                                <input name="public_recaptcha_invisible" class="form-control" type="text" value="{$settings->public_recaptcha_invisible|escape}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="heading_label">{$btr->recaptcha_secret_key|escape}</div>
+                                            <div class="mb-1">
+                                                <input name="secret_recaptcha_invisible" class="form-control" type="text" value="{$settings->secret_recaptcha_invisible|escape}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    {* Карта в контактах*}
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="boxed fn_toggle_wrap">
+                <div class="heading_box">
+                    {$btr->settings_general_iframe_map|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
+                    </div>
+                </div>
+                {*Параметры элемента*}
+                <div class="toggle_body_wrap on fn_card">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="heading_label">{$btr->settings_general_iframe_message|escape}</div>
+                            <div class="">
+                                <textarea name="iframe_map_code" class="form-control okay_textarea">{$settings->iframe_map_code}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div class="row">
         <div class="col-lg-12 col-md-12">
             <div class="boxed fn_toggle_wrap min_height_210px">

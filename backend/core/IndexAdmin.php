@@ -24,6 +24,7 @@ class IndexAdmin extends Okay {
         ),
         'left_pages' => array(
             'left_pages_title'          => array('PagesAdmin', 'PageAdmin'),
+            'left_menus_title'          => array('MenusAdmin', 'MenuAdmin'),
         ),
         'left_blog' => array(
             'left_blog_title'           => array('BlogAdmin', 'PostAdmin'),
@@ -36,8 +37,6 @@ class IndexAdmin extends Okay {
         'left_auto' => array(
             'left_import_title'         => array('ImportAdmin'),
             'left_export_title'         => array('ExportAdmin'),
-            'left_multiimport_title'    => array('MultiImportAdmin'),
-            'left_multiexport_title'    => array('MultiExportAdmin'),
             'left_log_title'            => array('ImportLogAdmin'),
         ),
         'left_stats' => array(
@@ -48,8 +47,8 @@ class IndexAdmin extends Okay {
         'left_seo' => array(
             'left_robots_title'         => array('RobotsAdmin'),
             'left_setting_counter_title'=> array('SettingsCounterAdmin'),
-            'left_metrika_title'        => array('YametrikaAdmin'),
             'left_seo_patterns_title'   => array('SeoPatternsAdmin'),
+            'left_seo_filter_patterns_title'   => array('SeoFilterPatternsAdmin'),
         ),
         'left_design' => array(
             'left_theme_title'          => array('ThemeAdmin'),
@@ -92,19 +91,19 @@ class IndexAdmin extends Okay {
         'UsersAdmin'          => 'users',
         'UserAdmin'           => 'users',
         'ExportUsersAdmin'    => 'users',
-        'UserGroupsAdmin'         => 'groups',
-        'UserGroupAdmin'          => 'groups',
+        'UserGroupsAdmin'     => 'groups',
+        'UserGroupAdmin'      => 'groups',
         'CouponsAdmin'        => 'coupons',
         'PagesAdmin'          => 'pages',
         'PageAdmin'           => 'pages',
+        'MenusAdmin'          => 'pages',
+        'MenuAdmin'           => 'pages',
         'BlogAdmin'           => 'blog',
         'PostAdmin'           => 'blog',
         'CommentsAdmin'       => 'comments',
         'FeedbacksAdmin'      => 'feedbacks',
         'ImportAdmin'         => 'import',
         'ExportAdmin'         => 'export',
-        'MultiImportAdmin'    => 'import',
-        'MultiExportAdmin'    => 'export',
         'ImportLogAdmin'      => 'import',
         'StatsAdmin'          => 'stats',
         'ThemeAdmin'          => 'design',
@@ -112,45 +111,43 @@ class IndexAdmin extends Okay {
         'TemplatesAdmin'      => 'design',
         'ImagesAdmin'         => 'design',
         'ScriptsAdmin'        => 'design',
-        'SettingsGeneralAdmin'       => 'settings',
-        'SettingsNotifyAdmin'       => 'settings',
-        'SettingsCatalogAdmin'       => 'settings',
-        'SettingsCounterAdmin'       => 'settings',
-        'SettingsFeedAdmin'       => 'settings',
-        'SystemAdmin'       => 'settings',
-        'CurrencyAdmin'       => 'currency',
-        'DeliveriesAdmin'     => 'delivery',
-        'DeliveryAdmin'       => 'delivery',
-        'PaymentMethodAdmin'  => 'payment',
-        'PaymentMethodsAdmin' => 'payment',
-        'ManagersAdmin'       => 'managers',
-        'ManagerAdmin'        => 'managers',
-        'LicenseAdmin'        => 'license',
-        'SubscribeMailingAdmin'=> 'users',
+        'SettingsGeneralAdmin'  => 'settings',
+        'SettingsNotifyAdmin'   => 'settings',
+        'SettingsCatalogAdmin'  => 'settings',
+        'SettingsCounterAdmin'  => 'settings',
+        'SettingsFeedAdmin'     => 'settings',
+        'SystemAdmin'           => 'settings',
+        'CurrencyAdmin'         => 'currency',
+        'DeliveriesAdmin'       => 'delivery',
+        'DeliveryAdmin'         => 'delivery',
+        'PaymentMethodAdmin'    => 'payment',
+        'PaymentMethodsAdmin'   => 'payment',
+        'ManagersAdmin'         => 'managers',
+        'ManagerAdmin'          => 'managers',
+        'LicenseAdmin'          => 'license',
+        'SubscribeMailingAdmin' => 'users',
         'BannersAdmin'          => 'banners',
-        'BannerAdmin'          => 'banners',
-        'BannersImagesAdmin'  => 'banners',
-        'BannersImageAdmin'   => 'banners',
-        'CallbacksAdmin'      => 'callbacks',
+        'BannerAdmin'           => 'banners',
+        'BannersImagesAdmin'    => 'banners',
+        'BannersImageAdmin'     => 'banners',
+        'CallbacksAdmin'        => 'callbacks',
         
         /* Мультиязычность start */
-        'LanguageAdmin'       => 'languages',
-        'LanguagesAdmin'      => 'languages',
-        'TranslationAdmin'    => 'languages',
-        'TranslationsAdmin'   => 'languages',
+        'LanguageAdmin'         => 'languages',
+        'LanguagesAdmin'        => 'languages',
+        'TranslationAdmin'      => 'languages',
+        'TranslationsAdmin'     => 'languages',
         /* Мультиязычность end */
         /*statistic*/
-        'ReportStatsAdmin'    => 'stats',
-        'CategoryStatsAdmin'  => 'stats',
+        'ReportStatsAdmin'      => 'stats',
+        'CategoryStatsAdmin'    => 'stats',
         /*statistic*/
-        /*YaMetrika*/
-        'YametrikaAdmin'      => 'yametrika',
-        /*YaMetrika*/
-        'RobotsAdmin'         => 'robots',
-        'OrderSettingsAdmin'    => 'order_settings',
-        'SeoPatternsAdmin'  => 'seo_patterns',
-        'SupportAdmin'        => 'support',
-        'TopicAdmin'          => 'support'
+        'RobotsAdmin'               => 'robots',
+        'OrderSettingsAdmin'        => 'order_settings',
+        'SeoPatternsAdmin'          => 'seo_patterns',
+        'SeoFilterPatternsAdmin'    => 'seo_patterns',
+        'SupportAdmin'              => 'support',
+        'TopicAdmin'                => 'support'
     );
     
     // Конструктор
@@ -304,7 +301,7 @@ class IndexAdmin extends Okay {
         }
     }
 
-    /*Отображение запрашуемого модуля*/
+    /*Отображение запрашиваемого модуля*/
     public function fetch() {
         $currency = $this->money->get_currency();
         $this->design->assign("currency", $currency);

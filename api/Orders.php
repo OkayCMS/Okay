@@ -46,7 +46,7 @@ class Orders extends Okay {
                 $where 
             LIMIT 1
         ");
-        
+
         if($this->db->query($query)) {
             return $this->db->result();
         } else {
@@ -149,9 +149,11 @@ class Orders extends Okay {
                 o.url, 
                 o.total_price, 
                 o.note, 
-                o.lang_id
+                o.lang_id,
+                os.color as status_color
             FROM __orders AS o
             LEFT JOIN __orders_labels AS ol ON o.id=ol.order_id
+            LEFT JOIN __orders_status AS os ON o.status_id=os.id
             WHERE 
                 1
                 $id_filter 
@@ -207,18 +209,18 @@ class Orders extends Okay {
             }
         }
 
-        if(!empty($filter['from_date']) || !empty($filter['to_date'])){
-            if(!empty($filter['from_date'])){
-                $from = $filter['from_date'];
-            }else{
+        if (!empty($filter['from_date']) || !empty($filter['to_date'])) {
+            if (!empty($filter['from_date'])) {
+                $from = date('Y-m-d', strtotime($filter['from_date']));
+            } else {
                 $from = '1970-01-01'; /*если стартовой даты нет, берем время с эпохи UNIX*/
             }
-            if(!empty($filter['to_date'])){
-                $to = $filter['to_date'];
-            }else{
+            if (!empty($filter['to_date'])) {
+                $to = date('Y-m-d', strtotime($filter['to_date']));
+            } else {
                 $to = date('Y-m-d'); /*если конечной даты нет, берем за дату "сегодня"*/
             }
-            $date_filter = $this->db->placehold("AND (o.date BETWEEN ? AND ?)",$from,$to);
+            $date_filter = $this->db->placehold("AND (o.date BETWEEN ? AND ?)", $from, $to);
         }
         
         // Выбираем заказы
@@ -241,7 +243,7 @@ class Orders extends Okay {
     public function update_order($id, $order) {
         $order = (object)$order;
 
-        $query = $this->db->placehold("UPDATE __orders SET ?%, modified=now() WHERE id=? LIMIT 1", $order, intval($id));
+        $query = $this->db->placehold("UPDATE __orders SET ?% WHERE id=? LIMIT 1", $order, intval($id));
         $this->db->query($query);
         $this->update_total_price(intval($id));
         return $id;
@@ -467,7 +469,7 @@ class Orders extends Okay {
                     $this->variants->update_variant($variant->id, array('stock'=>$new_stock));
                 }
             }
-            $query = $this->db->placehold("UPDATE __orders SET closed=1, modified=NOW() WHERE id=? LIMIT 1", $order->id);
+            $query = $this->db->placehold("UPDATE __orders SET closed=1 WHERE id=? LIMIT 1", $order->id);
             $this->db->query($query);
         }
         return $order->id;
@@ -489,7 +491,7 @@ class Orders extends Okay {
                     $this->variants->update_variant($variant->id, array('stock'=>$new_stock));
                 }
             }
-            $query = $this->db->placehold("UPDATE __orders SET closed=0, modified=NOW() WHERE id=? LIMIT 1", $order->id);
+            $query = $this->db->placehold("UPDATE __orders SET closed=0 WHERE id=? LIMIT 1", $order->id);
             $this->db->query($query);
         }
         return $order->id;
@@ -501,8 +503,8 @@ class Orders extends Okay {
         if(empty($order)) {
             return false;
         }
-        
-        $query = $this->db->placehold("UPDATE __orders o SET o.total_price=IFNULL((SELECT SUM(p.price*p.amount)*(100-o.discount)/100 FROM __purchases p WHERE p.order_id=o.id), 0)+o.delivery_price*(1-o.separate_delivery)-o.coupon_discount, modified=NOW() WHERE o.id=? LIMIT 1", $order->id);
+
+        $query = $this->db->placehold("UPDATE __orders o SET o.total_price=IFNULL((SELECT SUM(p.price*p.amount)*(100-o.discount)/100 FROM __purchases p WHERE p.order_id=o.id), 0)+o.delivery_price*(1-IFNULL(o.separate_delivery, 0))-o.coupon_discount WHERE o.id=? LIMIT 1", $order->id);
         $this->db->query($query);
         return $order->id;
     }

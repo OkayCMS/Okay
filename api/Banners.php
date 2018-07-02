@@ -167,7 +167,7 @@ class Banners extends Okay {
     /*Удаление слайда*/
     public function delete_banners_image($id) {
         if(!empty($id)) {
-            $this->image->delete_image((int)$id, 'image', 'banners_images', $this->config->banners_images_dir);
+            $this->image->delete_image((int)$id, 'image', 'banners_images', $this->config->banners_images_dir, $this->config->resized_banners_images_dir);
             $query = $this->db->placehold("DELETE FROM __banners_images WHERE id=? LIMIT 1", intval($id));
             if($this->db->query($query)) {
                 $this->db->query("DELETE FROM __lang_banners_images where banner_image_id=?", intval($id));

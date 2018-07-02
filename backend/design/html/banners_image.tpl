@@ -94,7 +94,7 @@
                         <div class="banner_image text-xs-center">
                             {if $banners_image->image}
                                 <a href="javascript:;" class="fn_delete_banner remove_image"></a>
-                                <img class="admin_banner_images" src="../{$config->banners_images_dir}{$banners_image->image}" alt="" />
+                                <img class="admin_banner_images" src="{$banners_image->image|resize:465:265:false:$config->resized_banners_images_dir}" alt="" />
                             {/if}
                         </div>
                         <div class="fn_upload_image dropzone_block_image text-xs-center {if $banners_image->image} hidden{/if}">
@@ -169,6 +169,7 @@
        $(this).closest(".banner_image").find("img").remove();
        $(this).remove();
        $(".fn_upload_image ").removeClass("hidden");
+        $(".fn_accept_delete").val(1);
     });
 
     if(window.File && window.FileReader && window.FileList) {

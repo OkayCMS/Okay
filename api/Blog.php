@@ -154,14 +154,11 @@ class Blog extends Okay {
 
     /*Добавляем запись*/
     public function add_post($post) {
-        $date_query = (!isset($post->date) ? ', date=NOW()' : '');
-        
         $post = (object)$post;
         // Проверяем есть ли мультиязычность и забираем описания для перевода
         $result = $this->languages->get_description($post, 'blog');
-        
-        $post->last_modify = date("Y-m-d H:i:s");
-        $query = $this->db->placehold("INSERT INTO __blog SET ?% $date_query", $post);
+
+        $query = $this->db->placehold("INSERT INTO __blog SET ?%", $post);
         if(!$this->db->query($query)) {
             return false;
         }
@@ -181,8 +178,7 @@ class Blog extends Okay {
         $post = (object)$post;
         // Проверяем есть ли мультиязычность и забираем описания для перевода
         $result = $this->languages->get_description($post, 'blog');
-        
-        $post->last_modify = date("Y-m-d H:i:s");
+
         $query = $this->db->placehold("UPDATE __blog SET ?% WHERE id in(?@) LIMIT ?", $post, (array)$id, count((array)$id));
         $this->db->query($query);
         

@@ -6,11 +6,13 @@ class Database extends Okay {
     
     private $mysqli;
     private $res;
-    
+    private $log_dir;
+
     /**
      * В конструкторе подключаем базу
      */
     public function __construct() {
+        $this->log_dir = dirname(__DIR__) . '/log/';
         parent::__construct();
         $this->connect();
     }
@@ -72,7 +74,21 @@ class Database extends Okay {
     
         $args = func_get_args();
         $q = call_user_func_array(array($this, 'placehold'), $args);
-        return $this->res = $this->mysqli->query($q);
+        $this->res = $this->mysqli->query($q);
+
+        if ($this->config->sql_debug && $this->res == false) {
+            if (!is_dir($this->log_dir)) {
+                mkdir($this->log_dir);
+                file_put_contents($this->log_dir.'.htaccess', 'order deny,allow'.PHP_EOL.'deny from all');
+            }
+            $log_string = date('d.m.Y H:i:s').PHP_EOL;
+            $log_string .= 'Error ('.$this->mysqli->errno.') '.$this->mysqli->error.PHP_EOL;
+            $log_string .= $q.PHP_EOL;
+            $log_string .= '----------------------'.PHP_EOL.PHP_EOL;
+            file_put_contents($this->log_dir.'sql.log', $log_string, FILE_APPEND);
+        }
+
+        return $this->res;
     }
     
     /**

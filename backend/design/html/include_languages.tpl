@@ -31,6 +31,8 @@
     {$id = $language->id}
 {elseif $translation->id}
     {$id = $translation->id}
+{elseif $menu->id}
+    {$id = $menu->id}
 {/if}
 
 {*Список языков*}

@@ -6,16 +6,21 @@ class TemplatesAdmin extends Okay {
 
     /*Чтение файлов шаблона*/
     public function fetch() {
+        $current_theme = $this->settings->theme;
+        if ($this->settings->admin_theme) {
+            $current_theme = $this->settings->admin_theme;
+        }
+
         if($this->request->get("email")){
-            $templates_dir = 'design/'.$this->settings->theme.'/html/email/';
+            $templates_dir = 'design/'.$current_theme.'/html/email/';
             $this->design->assign('current_dir', 'email');
         } else {
-            $templates_dir = 'design/'.$this->settings->theme.'/html/';
+            $templates_dir = 'design/'.$current_theme.'/html/';
             $this->design->assign('current_dir', 'html');
         }
 
         $templates = array();
-        // Чтаем все tpl-файлы
+        // Читаем все tpl-файлы
         if($handle = opendir($templates_dir)) {
             while(false !== ($file = readdir($handle))) {
                 if(is_file($templates_dir.$file) && $file[0] != '.'  && pathinfo($file, PATHINFO_EXTENSION) == 'tpl') {
@@ -54,8 +59,8 @@ class TemplatesAdmin extends Okay {
             // Запоминаем в сессии имя редактируемого шаблона
             $_SESSION['last_edited_template'] = $template_file;
         }
-        
-        $this->design->assign('theme', $this->settings->theme);
+
+        $this->design->assign('theme', $current_theme);
         $this->design->assign('templates', $templates);
         return $this->design->fetch('templates.tpl');
     }

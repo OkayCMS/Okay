@@ -1,5 +1,5 @@
 {* Title *}
-{$meta_title = {$menu->name} scope=parent}
+{$meta_title = $btr->pages_site scope=parent}
 
 {*Название страницы*}
 <div class="row">
@@ -18,6 +18,23 @@
     </div>
 </div>
 
+{*Вывод ошибок*}
+{if $message_error}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="boxed boxed_warning">
+                <div class="heading_box">
+                    {if $message_error == 'url_system'}
+                        {$btr->pages_delete_error_url|escape}
+                    {else}
+                        {$message_error|escape}
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
+
 {*Главная форма страницы*}
 <div class="boxed fn_toggle_wrap">
     {if $pages}
@@ -35,7 +52,7 @@
                                 <label class="okay_ckeckbox" for="check_all_1"></label>
                             </div>
                             <div class="okay_list_heading okay_list_page_name">{$btr->pages_name|escape}</div>
-                            <div class="okay_list_heading okay_list_pages_group">{$btr->general_group|escape}</div>
+                            <div class="okay_list_heading okay_list_pages_group"></div>
                             <div class="okay_list_heading okay_list_status">{$btr->general_enable|escape}</div>
                             <div class="okay_list_heading okay_list_setting okay_list_pages_setting">{$btr->general_activities|escape}</div>
                             <div class="okay_list_heading okay_list_close"></div>
@@ -64,10 +81,6 @@
                                         </div>
 
                                         <div class="okay_list_boding okay_list_pages_group">
-                                            <select name="menu_id[{$page->id}]" class="selectpicker" data-page_id="{$page->id}">
-                                                <option value="1" {if $page->menu_id == 1}selected{/if}>{$btr->pages_main_menu|escape}</option>
-                                                <option value="2" {if $page->menu_id == 2}selected{/if}>{$btr->pages_other|escape}</option>
-                                            </select>
                                         </div>
 
                                         <div class="okay_list_boding okay_list_status">

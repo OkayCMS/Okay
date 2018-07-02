@@ -6,16 +6,20 @@
 <div class="row">
     <div class="col-lg-10 col-md-10">
         <div class="wrap_heading">
-            <div class="box_heading heading_page">
+            <div class="box_heading heading_page ">
                 {$btr->theme_current|escape} {$theme->name}
             </div>
-            <div class="box_btn_heading">
+            <div class="box_btn_heading theme_btn_heading">
                 <a class="fn_clone_theme btn btn_small btn-info" href="/">
                     {include file='svg_icon.tpl' svgId='plus'}
                     <span>{$btr->theme_copy|escape} {$settings->theme}</span>
                 </a>
+                <a class="btn btn_small btn-info" href="{url reset_cache=1}">
+                    {include file='svg_icon.tpl' svgId='refresh_icon'}
+                    <span>{$btr->theme_reset_cache|escape}</span>
+                </a>
             </div>
-         </div>
+        </div>
     </div>
     <div class="col-md-2 col-lg-2 col-sm-12 float-xs-right"></div>
 </div>
@@ -25,7 +29,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="boxed boxed_warning">
                 <div class="">
-                   {$btr->theme_close|escape}
+                    {$btr->theme_close|escape}
                 </div>
             </div>
         </div>
@@ -93,10 +97,21 @@
                                                 <div class="theme_block_image" style="position:relative;">
                                                     <img class="{if $theme->name != $t->name}gray_filter{/if}" width="" src='{$root_dir}../design/{$t->name}/preview.png'>
                                                     {if $theme->name != $t->name}
-                                                        <div style="position:absolute; bottom:0px; right:0px;" class="fn_set_theme btn btn_small btn_blue" data-set_name="{$t->name|escape}">
+                                                        <div class="fn_set_theme btn btn_small btn_blue theme_btn_admin" data-set_name="{$t->name|escape}">
                                                             {include file='svg_icon.tpl' svgId='checked'}
                                                             <span>{$btr->general_select|escape}</span>
                                                         </div>
+                                                    {/if}
+                                                    {if $t->name == $settings->admin_theme}
+                                                        <button type="button" value="" class="btn btn_small btn-danger fn_set_admin theme_btn_block" data-set_name="{$t->name|escape}">
+                                                            {include file='svg_icon.tpl' svgId='delete'}
+                                                            <span>{$btr->theme_unset_to_admin}</span>
+                                                        </button>
+                                                    {else}
+                                                        <button type="button" value="{$t->name|escape}" class="btn btn_small btn_blue fn_set_admin theme_btn_block" data-set_name="{$t->name|escape}">
+                                                            {include file='svg_icon.tpl' svgId='checked'}
+                                                            <span>{$btr->theme_set_to_admin}</span>
+                                                        </button>
                                                     {/if}
                                                 </div>
                                             </div>
@@ -106,6 +121,43 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="boxed fn_toggle_wrap">
+                            <div class="heading_box">
+                                {$btr->restrict_to_admins}
+                            </div>
+                            <div class="toggle_body_wrap on fn_card">
+                                <div class="permission_block">
+                                    <div class="permission_boxes row fn_perms_wrap">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
+                                            <div class="permission_box">
+                                                <span>{$btr->theme_all_admins}</span>
+                                                <label class="switch switch-default">
+                                                    <input class="switch-input fn_all_managers" name="admin_theme_managers" value="all" type="checkbox" {if !$admin_theme_managers}checked{/if} />
+                                                    <span class="switch-label"></span>
+                                                    <span class="switch-handle"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        {foreach $managers as $m}
+                                            <div class="col-xl-3 col-lg-4 col-md-6">
+                                                <div class="permission_box">
+                                                    <span>{$m->login}</span>
+                                                    <label class="switch switch-default">
+                                                        <input class="switch-input fn_manager" name="admin_theme_managers[]" value="{$m->login}" type="checkbox" {if $admin_theme_managers && in_array($m->login, $admin_theme_managers)}checked{/if} />
+                                                        <span class="switch-label"></span>
+                                                        <span class="switch-handle"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        {/foreach}
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="admin_theme" disabled value="" />
                     <div class="col-lg-12">
                         <button type="submit" name="save" class="btn btn_small btn_blue fn_chek_all float-md-right ">
                             {include file='svg_icon.tpl' svgId='checked'}
@@ -137,6 +189,18 @@
     {literal}
 
     $(function() {
+
+        $('.fn_all_managers').on('change', function(){
+            $('.fn_manager').attr('checked', false);
+        });
+        $('.fn_manager').on('change', function(){
+            $('.fn_all_managers').attr('checked', false);
+        });
+        $('.fn_set_admin').on('click', function (e) {
+            e.preventDefault();
+            $("input[name=admin_theme]").val($(this).val()).attr('disabled', false);
+            $("form").submit();
+        });
 
         $('.fn_rename_theme').on('click',function(){
             $(this).parent().find('.fn_rename_value').toggleClass('hidden');

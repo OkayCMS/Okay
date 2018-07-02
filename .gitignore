@@ -1,4 +1,5 @@
 compiled/*/*.php
+vendor/
 backend/design/compiled/*.php
 files/products/*.jpg
 files/products/*.jpeg
@@ -19,3 +20,4 @@ files/*_resized/*.ico
 .idea/
 tmp/
 nbproject/
+log/

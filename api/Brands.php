@@ -15,6 +15,7 @@ class Brands extends Okay {
         $product_join = '';
         $visible_brand_filter = '';
         $features_filter = '';
+        $other_filter = '';
 
         if(isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));
@@ -54,6 +55,21 @@ class Brands extends Okay {
             }
         }
 
+        if (!empty($filter['other_filter'])) {
+            $other_filter = "AND (";
+            if (in_array("featured", $filter['other_filter'])) {
+                $other_filter .= "p.featured=1 OR ";
+            }
+            if (in_array("discounted", $filter['other_filter'])) {
+                $other_filter .= "(SELECT 1 FROM __variants pv WHERE pv.product_id=p.id AND pv.compare_price>0 LIMIT 1) = 1 OR ";
+            }
+            $other_filter = substr($other_filter, 0, -4).")";
+            if (empty($category_join)) {
+                $other_filter .= $visible_filter;
+                $category_join = $this->db->placehold("LEFT JOIN __products p ON (p.brand_id=b.id)");
+            }
+        }
+
         $lang_sql = $this->languages->get_query(array('object'=>'brand'));
         // Выбираем все бренды
         $query = $this->db->placehold("SELECT 
@@ -74,6 +90,7 @@ class Brands extends Okay {
                 $features_filter
                 $visible_brand_filter
                 $product_id_filter
+                $other_filter
             ORDER BY b.position
             $sql_limit
         ");
@@ -89,6 +106,7 @@ class Brands extends Okay {
         $product_join = '';
         $visible_brand_filter = '';
         $features_filter = '';
+        $other_filter = '';
 
         if(isset($filter['visible'])) {
             $visible_filter = $this->db->placehold('AND p.visible=?', intval($filter['visible']));
@@ -118,6 +136,21 @@ class Brands extends Okay {
             }
         }
 
+        if (!empty($filter['other_filter'])) {
+            $other_filter = "AND (";
+            if (in_array("featured", $filter['other_filter'])) {
+                $other_filter .= "p.featured=1 OR ";
+            }
+            if (in_array("discounted", $filter['other_filter'])) {
+                $other_filter .= "(SELECT 1 FROM __variants pv WHERE pv.product_id=p.id AND pv.compare_price>0 LIMIT 1) = 1 OR ";
+            }
+            $other_filter = substr($other_filter, 0, -4).")";
+            if (empty($category_join)) {
+                $other_filter .= $visible_filter;
+                $category_join = $this->db->placehold("LEFT JOIN __products p ON (p.brand_id=b.id)");
+            }
+        }
+
         $lang_sql = $this->languages->get_query(array('object'=>'brand'));
         // Выбираем все бренды
         $query = $this->db->placehold("SELECT
@@ -132,6 +165,7 @@ class Brands extends Okay {
                 $features_filter
                 $visible_brand_filter
                 $product_id_filter
+                $other_filter
         ");
         $this->db->query($query);
         return $this->db->result('count');
@@ -187,8 +221,7 @@ class Brands extends Okay {
         
         // Проверяем есть ли мультиязычность и забираем описания для перевода
         $result = $this->languages->get_description($brand, 'brand');
-        
-        $brand->last_modify = date("Y-m-d H:i:s");
+
         $this->db->query("INSERT INTO __brands SET ?%", $brand);
         $id = $this->db->insert_id();
         $this->db->query("UPDATE __brands SET position=id WHERE id=? LIMIT 1", $id);
@@ -205,8 +238,7 @@ class Brands extends Okay {
         $brand = (object)$brand;
         // Проверяем есть ли мультиязычность и забираем описания для перевода
         $result = $this->languages->get_description($brand, 'brand');
-        
-        $brand->last_modify = date("Y-m-d H:i:s");
+
         $query = $this->db->placehold("UPDATE __brands SET ?% WHERE id=? LIMIT 1", $brand, intval($id));
         $this->db->query($query);
         

@@ -223,6 +223,12 @@ class Categories extends Okay {
                     $query = $this->db->placehold("DELETE FROM __products_categories WHERE category_id in(?@)", $category->children);
                     $this->db->query($query);
                     $this->db->query("DELETE FROM __lang_categories WHERE category_id in(?@)", $category->children);
+
+                    if ($patterns = $this->seo_filter_patterns->get_patterns(array('category_id'=>$category->children))) {
+                        foreach ($patterns as $p) {
+                            $this->seo_filter_patterns->delete_pattern($p->id);
+                        }
+                    }
                 }
             }
         }

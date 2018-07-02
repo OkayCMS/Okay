@@ -153,7 +153,7 @@
                                 <div class="okay_list_heading okay_list_user_number">№ </div>
                                 <div class="okay_list_heading okay_list_user_name">{$btr->general_full_name|escape}</div>
                                 <div class="okay_list_heading okay_list_user_date">{$btr->general_date|escape}</div>
-                                <div class="okay_list_heading okay_list_user_price">{$btr->general_amount|escape}</div>
+                                <div class="okay_list_heading okay_list_user_price">{$btr->coupons_order_price|escape}</div>
                             </div>
                             <div class="okay_list_body">
                                 {foreach $orders as $order}

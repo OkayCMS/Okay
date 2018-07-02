@@ -1,3 +1,31 @@
+<div class="catalog_nav filters tablet-hidden">
+    <div class="h2 filter_name">
+        <span data-language="features_catalog">{$lang->features_catalog}</span>
+    </div>
+    <div class="filters">
+        {function name=categories_tree_sidebar}
+        {if $categories}
+            <div class="level_{$level} {if $level == 1}catalog_menu {else}subcatalog {/if}">
+                {foreach $categories as $c}
+                {if $c->visible}
+                    <div class="catalog_item has_child">
+                        <{if $c->id == $category->id}b{else}a{/if} class="catalog_link{if $category->id == $c->id} selected{/if}" href="{$lang_link}catalog/{$c->url}" data-category="{$c->id}">
+                            <span>{$c->name|escape}</span>
+                        </{if $c->id == $category->id}b{else}a{/if}>
+                    </div>
+                {/if}
+                {/foreach}
+            </div>
+        {/if}
+        {/function}
+        {if $category->subcategories}
+            {categories_tree_sidebar categories=$category->subcategories level=1}
+        {elseif $category->path[$category->level_depth-2]->subcategories}
+            {categories_tree_sidebar categories=$category->path[$category->level_depth-2]->subcategories level=1}
+        {/if}
+    </div>
+</div>
+
 {* Filters *}
 {if ($category->brands || $prices || $features)  && $products|count > 0}
     <div class="filters_heading fn_switch lg-hidden">
@@ -26,6 +54,34 @@
                         <input class="max_input" id="fn_slider_max" name="p[max]" value="{($prices->current->max|default:$prices->range->max)|escape}" data-price="{$prices->range->max}" type="text">
                     </div>
                 </div>
+            </div>
+        {/if}
+
+        {* Other filters *}
+        {if $other_filters}
+            {* Brand name *}
+            <div class="h2 filter_name">
+                <span data-language="features_manufacturer">{$lang->features_other_filter}</span>
+            </div>
+            <div class="filter_group">
+                {* Display all brands *}
+                <div class="filter_item">
+                    {$furl = {furl params=[filter=>null, page=>null]}}
+                    <{$link_tag} class="filter_link{if $link_tag=='span'} fn_filter_link{/if}{if !$smarty.get.filter} checked{/if}" href="{$furl}">
+                        <i class="filter_indicator"></i>
+                        <span data-language="features_all">{$lang->features_all}</span>
+                    </{$link_tag}>
+                </div>
+                {* Other filter list *}
+                {foreach $other_filters as $f}
+                    <div class="filter_item">
+                        {$furl = {furl params=[filter=>$f->url, page=>null]}}
+                        <{$link_tag} class="filter_link{if $link_tag=='span'} fn_filter_link{/if}{if $smarty.get.filter && in_array($f->url, $smarty.get.filter)} checked{/if}" href="{$furl}">
+                            <i class="filter_indicator"></i>
+                            <span data-language="{$f->translation}">{$f->name}</span>
+                        </{$link_tag}>
+                    </div>
+                {/foreach}
             </div>
         {/if}
 

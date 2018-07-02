@@ -76,6 +76,7 @@
                                             {if $c@first}
                                                 <span data-hint="{$btr->currency_base|escape}" class="currency_name_active hint-bottom-middle-t-info-s-small-mobile  hint-anim">{include file='svg_icon.tpl' svgId='checked'}</span>
                                             {/if}
+                                            {if $is_mobile == true}
                                             <div class="hidden-md-up mt-q">
                                                 <div class="okay_list_currency_exchange_item">
                                                     {if !$c@first}
@@ -102,6 +103,7 @@
                                                     {/if}
                                                 </div>
                                             </div>
+                                            {/if}
                                         </div>
                                         <div class="okay_list_boding okay_list_currency_iso">
                                             <input class="form-control" name="currency[sign][{$c->id}]" type="text" value="{$c->sign|escape}"/>
@@ -109,6 +111,7 @@
                                         <div class="okay_list_boding okay_list_currency_sign">
                                             <input class="form-control" name="currency[code][{$c->id}]" type="text" value="{$c->code|escape}"/>
                                         </div>
+                                        {if $is_mobile == false}
                                         <div class="okay_list_boding okay_list_currency_exchange">
                                             <div class="okay_list_currency_exchange_item">
                                                 {if !$c@first}
@@ -135,6 +138,7 @@
                                                 {/if}
                                             </div>
                                         </div>
+                                        {/if}
                                         <div class="okay_list_boding okay_list_status hidden-md-down">
                                             <label class="switch switch-default ">
                                                 <input class="switch-input fn_ajax_action {if $c->enabled}fn_active_class{/if}" data-module="currency" data-action="enabled" data-id="{$c->id}" name="enabled" value="1" type="checkbox"  {if $c->enabled}checked=""{/if}/>

@@ -5,7 +5,12 @@ require_once('api/Okay.php');
 class ScriptsAdmin extends Okay {
 
     public function fetch() {
-        $scripts_dir = 'design/'.$this->settings->theme.'/js/';
+        $current_theme = $this->settings->theme;
+        if ($this->settings->admin_theme) {
+            $current_theme = $this->settings->admin_theme;
+        }
+
+        $scripts_dir = 'design/'.$current_theme.'/js/';
         $scripts = array();
         // Чтаем все js-файлы
         if($handle = opendir($scripts_dir)) {
@@ -54,7 +59,7 @@ class ScriptsAdmin extends Okay {
             $_SESSION['last_edited_script'] = $script_file;
         }
 
-        $this->design->assign('theme', $this->settings->theme);
+        $this->design->assign('theme', $current_theme);
         $this->design->assign('scripts', $scripts);
         return $this->design->fetch('scripts.tpl');
     }

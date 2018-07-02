@@ -46,6 +46,8 @@ class Comments extends Okay {
         $keyword_filter = '';
         $approved_filter = '';
         $has_parent_filter = '';
+        $ip_filter = '';
+        $parent_id_filter =  '';
         
         if(isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));
@@ -56,10 +58,11 @@ class Comments extends Okay {
         }
         
         if(isset($filter['ip'])) {
-            $ip = $this->db->placehold("OR c.ip=?", $filter['ip']);
+            $ip_filter = $this->db->placehold("OR c.ip=?", $filter['ip']);
         }
+        
         if(isset($filter['approved'])) {
-            $approved_filter = $this->db->placehold("AND (c.approved=? $ip)", intval($filter['approved']));
+            $approved_filter = $this->db->placehold("AND (c.approved=? $ip_filter)", intval($filter['approved']));
         }
         
         $sql_limit = ($limit ? $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit) : '');
@@ -74,6 +77,10 @@ class Comments extends Okay {
 
         if (isset($filter['has_parent'])) {
             $has_parent_filter = 'and c.parent_id'.($filter['has_parent'] ? '>0' : '=0');
+        }
+
+        if(!empty($filter['parent_id'])) {
+            $parent_id_filter = $this->db->placehold('AND c.parent_id IN(?@)', (array)$filter['parent_id']);
         }
         
         if(!empty($filter['keyword'])) {
@@ -109,6 +116,7 @@ class Comments extends Okay {
                 $has_parent_filter
                 $keyword_filter 
                 $approved_filter 
+                $parent_id_filter 
             ORDER BY id $sort 
             $sql_limit
         ");
@@ -168,6 +176,11 @@ class Comments extends Okay {
 
     /*Добавление комментария*/
     public function add_comment($comment) {
+        
+        // Автоматическое одобрение комментария
+        if ($this->settings->auto_approved) {
+            $comment->approved = 1;
+        }
         $query = $this->db->placehold('INSERT INTO __comments SET ?%, date = NOW()', $comment);
         if(!$this->db->query($query)) {
             return false;

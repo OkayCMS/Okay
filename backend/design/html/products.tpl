@@ -48,7 +48,14 @@
 <div class="boxed fn_toggle_wrap">
     <div class="row">
         <div class="col-lg-12 col-md-12 ">
-            <div class="boxed_sorting">
+            <div class="fn_toggle_wrap">
+                <div class="heading_box visible_md">
+                    {$btr->general_filter|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
+                    </div>
+                </div>
+                <div class="boxed_sorting toggle_body_wrap off fn_card">
                 <div class="row">
                     <div class="col-md-3 col-lg-3 col-sm-12">
                         <div>
@@ -101,6 +108,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>

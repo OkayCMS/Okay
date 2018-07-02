@@ -88,6 +88,8 @@ class Support extends Okay {
             return false;
         }
         $params['domain'] = $_SERVER['HTTP_HOST'];
+        $params['version'] = $this->config->version;
+        $params['version_type'] = $this->config->version_type;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'http://okay-cms.support/support/1.0/');
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=UTF-8'));

@@ -5,7 +5,12 @@ require_once('api/Okay.php');
 class ImagesAdmin extends Okay {
     
     public function fetch() {
-        $images_dir = 'design/'.$this->settings->theme.'/images/';
+        $current_theme = $this->settings->theme;
+        if ($this->settings->admin_theme) {
+            $current_theme = $this->settings->admin_theme;
+        }
+
+        $images_dir = 'design/'.$current_theme.'/images/';
         $allowed_extentions = array('png', 'gif', 'jpg', 'jpeg', 'ico');
         $images = array();
         
@@ -72,7 +77,7 @@ class ImagesAdmin extends Okay {
             $this->design->assign('message_error', 'theme_locked');
         }
         
-        $this->design->assign('theme', $this->settings->theme);
+        $this->design->assign('theme', $current_theme);
         $this->design->assign('images', $images);
         $this->design->assign('images_dir', $images_dir);
         return $this->design->fetch('images.tpl');

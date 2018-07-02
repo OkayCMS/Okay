@@ -43,19 +43,25 @@
 
         {* Captcha *}
         {if $settings->captcha_callback}
-            {get_captcha var="captcha_callback"}
-            <div class="captcha">
-                <div class="secret_number">{$captcha_callback[0]|escape} + ? =  {$captcha_callback[1]|escape}</div>
-                <span class="form_captcha">
-                <input class="form_input input_captcha placeholder_focus" type="text" name="captcha_code" value="" >
-                    <span class="form_placeholder">{$lang->form_enter_captcha}*</span>
-                </span>
-            </div>
+            {if $settings->captcha_type == "v2"}
+                <div class="captcha row">
+                    <div id="recaptcha2"></div>
+                </div>
+            {elseif $settings->captcha_type == "default"}
+                {get_captcha var="captcha_callback"}
+                <div class="captcha">
+                    <div class="secret_number">{$captcha_callback[0]|escape} + ? =  {$captcha_callback[1]|escape}</div>
+                    <span class="form_captcha">
+                    <input class="form_input input_captcha placeholder_focus" type="text" name="captcha_code" value="" >
+                        <span class="form_placeholder">{$lang->form_enter_captcha}*</span>
+                    </span>
+                </div>
+            {/if}
         {/if}
-
+        <input name="callback" type="hidden" value="1">
         {* Submit button *}
         <div class="center">
-            <input class="button" type="submit" name="callback" data-language="callback_order" value="{$lang->callback_order}">
+            <input class="button g-recaptcha" type="submit" name="callback" data-language="callback_order" {if $settings->captcha_type == "invisible"}data-sitekey="{$settings->public_recaptcha_invisible}" data-badge='bottomleft' data-callback="onSubmitCallback"{/if} value="{$lang->callback_order}">
         </div>
 
     </form>

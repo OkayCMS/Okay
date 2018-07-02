@@ -17,7 +17,11 @@ class Languages extends Okay {
         'payment'  => 'payment_methods',
         'banner_image' => 'banners_images',
         'order_labels' => 'orders_labels',
-        'order_status' => 'orders_status'
+        'order_status' => 'orders_status',
+        'menu_item'    => 'menu_items',
+        'seo_filter_pattern'    => 'seo_filter_patterns',
+        'feature_alias'         => 'features_aliases',
+        'feature_alias_value'   => 'features_aliases_values',
     );
     
     private $languages = array();
@@ -43,15 +47,19 @@ class Languages extends Okay {
         $fields['products']        = array('name', 'meta_title', 'meta_keywords', 'meta_description', 'annotation', 'description', 'special');
         $fields['variants']        = array('name', 'units');
         $fields['blog']            = array('name', 'meta_title', 'meta_keywords', 'meta_description', 'annotation', 'description');
-        $fields['pages']           = array('name', 'meta_title', 'meta_keywords', 'meta_description', 'description');
+        $fields['pages']           = array('name', 'name_h1', 'meta_title', 'meta_keywords', 'meta_description', 'description');
         $fields['features']        = array('name');
         $fields['delivery']        = array('name', 'description');
         $fields['payment_methods'] = array('name', 'description');
         $fields['currencies']      = array('name', 'sign');
         $fields['banners_images']  = array('name', 'alt', 'title', 'description', 'url');
-        $fields['orders_labels']      = array('name');
-        $fields['orders_status']      = array('name');
-        
+        $fields['orders_labels']   = array('name');
+        $fields['orders_status']   = array('name');
+        $fields['menu_items']      = array('name');
+        $fields['seo_filter_patterns'] = array('h1', 'title', 'keywords', 'meta_description', 'description');
+        $fields['features_aliases']    = array('name');
+        $fields['features_aliases_values'] = array('value');
+
         if($object && !empty($fields[$object])) {
             return $fields[$object];
         } else {

@@ -28,13 +28,15 @@
         <h1 class="h1"><span data-language="products_search">{$lang->products_search}</span> {$keyword|escape}</h1>
     {elseif $page}
         <h1 class="h1">
-            <span data-page="{$page->id}">{$page->name|escape}</span>
+            <span data-page="{$page->id}">{if $page->name_h1|escape}{$page->name_h1|escape}{else}{$page->name|escape}{/if}</span>
         </h1>
+    {elseif $seo_filter_pattern->h1}
+        <h1 class="h1">{$seo_filter_pattern->h1|escape}</h1>
     {else}
         <h1 class="h1"><span data-category="{$category->id}">{if $category->name_h1|escape}{$category->name_h1|escape}{else}{$category->name|escape}{/if}</span> {$brand->name|escape} {$filter_meta->h1|escape}</h1>
     {/if}
 
-    {if $current_page_num == 1 && ($category->annotation || $brand->annotation)}
+    {if $current_page_num == 1 && ($category->annotation || $brand->annotation) && !$is_filter}
         <div class="block padding">
             {* Краткое описание категории *}
             {$category->annotation}
@@ -63,22 +65,29 @@
         </div>
     {/if}
     
-    {if $page->description}
+    {if $current_page_num == 1 && $page->description}
         <div class="block padding">
             {$page->description}
         </div>
     {/if}
 
-    {if $current_page_num == 1 && (!$category || !$brand) && ($category->description || $brand->description)}
-        <div class="block padding">
-            {* Описание категории *}
-            {$category->description}
+    {if $current_page_num == 1}
+        {*SEO шаблон описания страницы фильтра*}
+        {if $seo_filter_pattern->description}
+            <div class="block padding">
+                {$seo_filter_pattern->description}
+            </div>
+        {elseif (!$category || !$brand) && ($category->description || $brand->description) && !$is_filter}
+            <div class="block padding">
+                {* Описание категории *}
+                {$category->description}
 
-            {* Описание бренда *}
-            {$brand->description}
-        </div>
+                {* Описание бренда *}
+                {$brand->description}
+            </div>
+        {/if}
     {/if}
-    
+
 </div>
 
 {* Sidebar with browsed products *}

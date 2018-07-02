@@ -252,7 +252,13 @@
                             {foreach $product->features as $f}
                                 <li>
                                     <span class="features_name"><span>{$f->name|escape}</span></span>
-                                    <span class="features_value">{$f->value|escape}</span>
+                                    <span class="features_value">
+                                        {if $category && $f->url_in_product && $f->in_filter}
+                                            <a href="{$lang_link}catalog/{$category->url}/{$f->url}-{$f->translit}">{$f->value|escape}</a>
+                                        {else}
+                                            {$f->value|escape}
+                                        {/if}
+                                    </span>
                                 </li>
                             {/foreach}
                         </ul>
@@ -276,17 +282,19 @@
                                             <div class="comment_header">
                                                 {* Comment name *}
                                                 <span class="comment_author">{$comment->name|escape}</span>
-                                                {* Comment date *}
-                                                <span class="comment_date">{$comment->date|date}, {$comment->date|time}</span>
-                                                {* Comment status *}
-                                                {if !$comment->approved}
-                                                    <span data-language="post_comment_status">({$lang->post_comment_status})</span>
-                                                {/if}
                                             </div>
 
                                             {* Comment content *}
                                             <div class="comment_content">
                                                 {$comment->text|escape|nl2br}
+                                            </div>
+                                            <div class="comment_footer">
+                                                {* Comment date *}
+                                                <span class="comment_date">{$comment->date|date}, {$comment->date|time}</span>
+                                                {* Comment status *}
+                                                {if !$comment->approved}
+                                                <span data-language="post_comment_status">({$lang->post_comment_status})</span>
+                                                {/if}
                                             </div>
                                             {if isset($children[$comment->id])}
                                                 {comments_tree comments=$children[$comment->id] level=$level+1}
@@ -304,7 +312,7 @@
 
                         <div class="col-lg-5">
                             {* Comment form *}
-                            <form class="comment_form fn_validate_product" method="post">
+                            <form id="captcha_id" class="comment_form fn_validate_product" method="post">
 
                                 <div class="h3">
                                     <span data-language="product_write_comment">{$lang->product_write_comment}</span>
@@ -351,18 +359,24 @@
 
                                 {* Captcha *}
                                 {if $settings->captcha_product}
-                                    {get_captcha var="captcha_product"}
-                                    <div class="captcha">
-                                        <div class="secret_number">{$captcha_product[0]|escape} + ? =  {$captcha_product[1]|escape}</div>
-                                        <span class="form_captcha">
-                                            <input class="form_input input_captcha placeholder_focus" type="text" name="captcha_code" value="" />
-                                            <span class="form_placeholder">{$lang->form_enter_captcha}*</span>
-                                        </span>
-                                    </div>
+                                    {if $settings->captcha_type == "v2"}
+                                        <div class="captcha">
+                                             <div id="recaptcha1"></div>
+                                        </div>
+                                    {elseif $settings->captcha_type == "default"}
+                                        {get_captcha var="captcha_product"}
+                                        <div class="captcha">
+                                            <div class="secret_number">{$captcha_product[0]|escape} + ? =  {$captcha_product[1]|escape}</div>
+                                            <span class="form_captcha">
+                                                <input class="form_input input_captcha placeholder_focus" type="text" name="captcha_code" value="" />
+                                                <span class="form_placeholder">{$lang->form_enter_captcha}*</span>
+                                            </span>
+                                        </div>
+                                    {/if}
                                 {/if}
-
+                                <input type="hidden" name="comment" value="1">
                                 {* Submit button *}
-                                <input class="button" type="submit" name="comment" data-language="form_send" value="{$lang->form_send}"/>
+                                <input class="button g-recaptcha" type="submit" name="comment" data-language="form_send" {if $settings->captcha_type == "invisible"}data-sitekey="{$settings->public_recaptcha_invisible}" data-badge='bottomleft' data-callback="onSubmit"{/if} value="{$lang->form_send}"/>
                             </form>
                         </div>
                     </div>
@@ -441,6 +455,12 @@
 {/if}
 
 {*микроразметка по схеме JSON-LD*}
+{*
+Микроразметка Json-LD отключена в связи с тем, что Яндекс не воспринимает Json-LD,
+а Google расценивает двойную разметку (Microdata и Json-LD) как спам.
+Если нужно разметить для Яндекс, то включаем Json-LD, а Microdata отключаем.
+*}
+{*
 {literal}
 <script type="application/ld+json">
 {
@@ -494,3 +514,4 @@
 }
 </script>
 {/literal}
+*}

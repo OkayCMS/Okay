@@ -18,23 +18,58 @@
             </div>
         </div>
     </div>
+
+    <div class="col-md-12 col-lg-5 col-xs-12 float-xs-right">
+        <div class="boxed_search">
+            <form class="search" method="get">
+                <input type="hidden" name="module" value="CommentsAdmin">
+                <div class="input-group">
+                    <input name="keyword" class="form-control" placeholder="{$btr->comments_search|escape}" type="text" value="{$keyword|escape}" >
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn_blue"><i class="fa fa-search"></i> <span class="hidden-md-down"></span></button>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 {*Блок фильтров*}
 <div class="boxed fn_toggle_wrap">
     <div class="row">
         <div class="col-lg-12 col-md-12">
-            <div class="boxed_sorting">
+            <div class="fn_toggle_wrap">
+                <div class="heading_box visible_md">
+                    {$btr->general_filter|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
+                    </div>
+                </div>
+                <div class="boxed_sorting toggle_body_wrap off fn_card">
                 <div class="row">
                     <div class="col-lg-3 col-md-3 col-sm-12">
                         <select class="selectpicker form-control" onchange="location = this.value;">
-                            <option value="{url type=null}" {if !$type}selected{/if}>{$btr->comments_all|escape}</option>
-                            <option value="{url keyword=null type=product}" {if $type == 'product'}selected{/if}>{$btr->comments_to_products|escape}</option>
-                            <option value="{url keyword=null type=blog}" {if $type == 'blog'}selected{/if}>{$btr->comments_to_articles|escape}</option>
-                            <option value="{url keyword=null type=news}" {if $type == 'news'}selected{/if}>{$btr->comments_to_news|escape}</option>
+                            <option value="{url keyword=null page=null type=null status=null}" {if !$type}selected{/if}>{$btr->comments_all|escape}</option>
+                            <option value="{url keyword=null page=null type=product status=null}" {if $type == 'product'}selected{/if}>{$btr->comments_to_products|escape}</option>
+                            <option value="{url keyword=null page=null type=blog status=null}" {if $type == 'blog'}selected{/if}>{$btr->comments_to_articles|escape}</option>
+                            <option value="{url keyword=null page=null type=news status=null}" {if $type == 'news'}selected{/if}>{$btr->comments_to_news|escape}</option>
+                            <option value="{url keyword=null page=null type=null status='approved'}" {if $status == 'approved'}selected{/if}>{$btr->comments_filter_approved|escape}</option>
+                            <option value="{url keyword=null page=null type=null status='unapproved'}" {if $status == 'unapproved'}selected{/if}>{$btr->comments_filter_unapproved|escape}</option>
                         </select>
                     </div>
+                    <div class="col-lg-3 col-md-3 col-sm-12 pull-right">
+                        <div class="pull-right">
+                            <select onchange="location = this.value;" class="selectpicker">
+                                <option value="{url limit=5}" {if $current_limit == 5}selected{/if}>{$btr->general_show_by|escape} 5</option>
+                                <option value="{url limit=10}" {if $current_limit == 10}selected{/if}>{$btr->general_show_by|escape} 10</option>
+                                <option value="{url limit=25}" {if $current_limit == 25}selected{/if}>{$btr->general_show_by|escape} 25</option>
+                                <option value="{url limit=50}" {if $current_limit == 50}selected{/if}>{$btr->general_show_by|escape} 50</option>
+                                <option value="{url limit=100}" {if $current_limit == 100}selected=""{/if}>{$btr->general_show_by|escape} 100</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
@@ -82,12 +117,15 @@
                                             </div>
                                             <div class="">
                                                 {$btr->comments_left|escape} <span class="tag tag-default">{$comment->date|date} | {$comment->date|time}</span>
-                                                {$btr->comments_to_the|escape} {if $comment->type == "product"}
-                                                    {$btr->comments_product|escape}  <a href="../products/{$comment->product->url|escape}" target="_blank">{$comment->product->name|escape}</a>
-                                                {elseif $comment->type == "blog"}
-                                                    {$btr->comments_article|escape} <a href="../blog/{$comment->post->url|escape}" target="_blank">{$comment->post->name|escape}</a>
-                                                {elseif $comment->type == "news"}
-                                                    {$btr->comments_news|escape} <a href="../news/{$comment->post->url|escape}" target="_blank">{$comment->post->name|escape}</a>
+                                                {if $level == 0}
+                                                    {$btr->comments_to_the|escape}
+                                                    {if $comment->type == "product"}
+                                                        {$btr->comments_product|escape}  <a href="../products/{$comment->product->url|escape}" target="_blank">{$comment->product->name|escape}</a>
+                                                    {elseif $comment->type == "blog"}
+                                                        {$btr->comments_article|escape} <a href="../blog/{$comment->post->url|escape}" target="_blank">{$comment->post->name|escape}</a>
+                                                    {elseif $comment->type == "news"}
+                                                        {$btr->comments_news|escape} <a href="../news/{$comment->post->url|escape}" target="_blank">{$comment->post->name|escape}</a>
+                                                    {/if}
                                                 {/if}
                                             </div>
                                             <div class="hidden-md-up mt-q">

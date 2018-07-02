@@ -12,11 +12,26 @@ class View extends Okay {
     public $page;
     public $language;
     public $lang_link;
-    
+    public $js_version;
+    public $css_version;
+
     /* Класс View похож на синглтон, храним статически его инстанс */
     private static $view_instance;
     
     public function __construct() {
+        // После переключения на язык по умолчанию, если не вызвать set_lang_id() до создания экземпляра класса settings,
+        // то мультиязычные настройки первый раз приходят на предыдущем языке.
+        if (empty($_GET['lang_label']) && empty($_GET['lang_id'])) {
+            $first_language = $this->languages->get_first_language();
+            $this->languages->set_lang_id($first_language->id);
+        }
+        $admin_theme = $this->settings->admin_theme;
+        $admin_theme_managers = $this->settings->admin_theme_managers;
+        if (!empty($_SESSION['admin']) && !empty($admin_theme) && $this->settings->theme != $this->settings->admin_theme) {
+            if (empty($admin_theme_managers) || in_array($_SESSION['admin'], $this->settings->admin_theme_managers)) {
+                $this->settings->theme = $this->settings->admin_theme;
+            }
+        }
         parent::__construct();
         if (!defined('IS_CLIENT')) {
             define('IS_CLIENT', true);
@@ -31,11 +46,27 @@ class View extends Okay {
             $this->page         = &self::$view_instance->page;
             $this->language     = &self::$view_instance->language;
             $this->lang_link    = &self::$view_instance->lang_link;
+            $this->js_version   = &self::$view_instance->js_version;
+            $this->css_version  = &self::$view_instance->css_version;
         } else {
             // Сохраняем свой инстанс в статической переменной,
             // чтобы в следующий раз использовать его
             self::$view_instance = $this;
-            
+
+            /*Устанавливаем версию js и css*/
+            if ($this->settings->theme == $this->settings->admin_theme) {
+                $this->js_version  = time();
+                $this->css_version = time();
+            }
+            if (empty($this->js_version)) {
+                $this->js_version  = $this->settings->js_version;
+            }
+            if (empty($this->css_version)) {
+                $this->css_version = $this->settings->css_version;
+            }
+            $this->design->assign('js_version', $this->js_version);
+            $this->design->assign('css_version',$this->css_version);
+
             // Язык
             $languages = $this->languages->get_languages();
             $lang_link = '';
@@ -94,7 +125,7 @@ class View extends Okay {
             }
             $this->design->assign('lang_link', $lang_link);
             $this->lang_link = $lang_link;
-            
+
             // Все валюты
             $this->currencies = $this->money->get_currencies(array('enabled'=>1));
             
@@ -194,7 +225,7 @@ class View extends Okay {
             return false;
         }
     }
-    
+
     public function get_categories_plugin($params, &$smarty) {
         if(!empty($params['var'])) {
             $smarty->assign($params['var'], $this->categories->get_categories($params));
