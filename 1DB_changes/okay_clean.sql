@@ -4439,7 +4439,8 @@ INSERT INTO `ok_settings` (`setting_id`, `name`, `value`) VALUES
 (154,	'site_logo',	'logo.png'),
 (155,	'gather_enabled',	'1'),
 (156,	'captcha_callback',	'1'),
-(157,	'iframe_map_code',	'<iframe src=\"https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2241.7081645541616!2d37.5206056!3d55.8156667!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x944fd88cf96de197!2sOkayCMS!5e0!3m2!1sru!2sua!4v1495180474127\" width=\"100%\" height=\"450\" frameborder=\"0\" style=\"border:0;\" allowfullscreen></iframe><br>');
+(157,	'iframe_map_code',	'<iframe src=\"https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2241.7081645541616!2d37.5206056!3d55.8156667!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x944fd88cf96de197!2sOkayCMS!5e0!3m2!1sru!2sua!4v1495180474127\" width=\"100%\" height=\"450\" frameborder=\"0\" style=\"border:0;\" allowfullscreen></iframe><br>'),
+(158,	'captcha_type',	'default');
 
 DROP TABLE IF EXISTS `ok_settings_lang`;
 CREATE TABLE `ok_settings_lang` (

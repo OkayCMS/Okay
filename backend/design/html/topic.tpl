@@ -7,24 +7,33 @@
 
 {*Название страницы*}
 <div class="row">
-    <div class="col-lg-7 col-md-7">
+    <div class="col-lg-10 col-md-9 col-sm-12 col-xs-12">
         <div class="wrap_heading">
             <div class="box_heading heading_page">
                 {if $topic->id}
-                    {$btr->topic_number} {$topic->id|escape} ({$topic->spent_time|balance}) - {$comments_count}
+                {$btr->topic_number} {$topic->id|escape} ({$topic->spent_time|balance}) - {$comments_count}
                 {else}
-                    {$btr->topic_new|escape}
+                {$btr->topic_new|escape}
                 {/if}
             </div>
             <div class="box_btn_heading">
-                <a class="btn btn_small btn-info" href="{url module=SupportAdmin}">
+                <a class="btn btn_small btn-info" href="{url module=SupportAdmin id=null}">
                     {include file='svg_icon.tpl' svgId='return'}
                     <span>{$btr->general_back|escape}</span>
                 </a>
             </div>
         </div>
     </div>
+    <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+        <div class="wrap_heading wrap_head_mob float-sm-right">
+            <a class="btn btn_blue btn_small" target="_blank" href="https://okay-cms.com/support">
+                {include file='svg_icon.tpl' svgId='sertificat'}
+                <span class="ml-q">{$btr->support_condition|escape}</span>
+            </a>
+        </div>
+    </div>
 </div>
+
 
 {*Вывод ошибок*}
 {if $message_error}
@@ -65,91 +74,71 @@
     <div class="row">
         <div class="col-lg-12 col-md-12">
             <div class="boxed fn_toggle_wrap ">
-                <div class="row">
-                    {if $topic->id}
-                        {$topic->header|escape}{if $topic->status=='closed'} (Closed){/if}
-                        <div class="col-md-6">
-                            <span class="text_500">
-                                ({$topic->created|date} {$topic->created|time})
-                            </span>
-                        </div>
-                    {else}
-                        <div class="col-md-6">
-                            <div class="heading_label">{$btr->topic_new_theme|escape}</div>
-                            <div class="mb-1">
-                                <input name="header" class="name form-control" value="{$topic_header|escape}" type="text">
-                            </div>
-                        </div>
-                    {/if}
-                    <input name="id" type="hidden" value="{$topic->id|escape}"/>
+                <div class="heading_box">
+                    {$btr->support_heading_accesses|escape}
                 </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="heading_label">
+                        {$btr->support_attention_accesses|escape}
+                        </div>
+                        <div class="mb-1">
+                            <textarea class="form-control okay_textarea" name="accesses">{$accesses}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="boxed">
                 <div class="toggle_body_wrap on fn_card">
                     <div class="row">
-                         <div class="col-lg-12 col-md-12 col-sm 12">
+                        <div class="col-lg-12 col-md-12 col-sm 12">
                             {include file='pagination.tpl'}
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             {if $comments}
-                                <div class="okay_list">
-                                    {*Шапка таблицы*}
-                                    <div class="okay_list_head">
-                                        <div class="okay_list_heading okay_list_topic_name">{$btr->general_name|escape}</div>
-                                        <div class="okay_list_heading okay_list_topic_message">{$btr->topic_message|escape}</div>
-                                        <div class="okay_list_heading okay_list_topic_time">{$btr->topic_spent_time|escape}</div>
-                                    </div>
-                                    {*Параметры элемента*}
-                                    <div class="okay_list_body">
-                                        {foreach $comments as $comment}
-                                            <div class="fn_row okay_list_body_item">
-                                                <div class="okay_list_row">
-                                                    <div class="okay_list_boding okay_list_topic_name">
-                                                        <div class="text_dark text_600 mb-q mr-1 {if $comment->is_support}text-primary{/if}">
-                                                            {if $comment->is_support}Support: {/if}
-                                                            {$comment->manager|escape}
-                                                        </div>
-                                                        {$btr->support_last_answer|escape}
-                                                        {if $topic->last_comment}
-                                                            <span class="tag tag-default">{$comment->created|date} {$comment->created|time}</span>
-                                                        {/if}
-                                                    </div>
-
-                                                    <div class="okay_list_boding okay_list_topic_message">
-                                                        {$comment->text}
-                                                    </div>
-
-                                                    <div class="okay_list_boding okay_list_topic_time {if $comment->spent_time < 0}text-success{/if}">
-                                                        {$comment->spent_time|balance}
-                                                    </div>
+                            <div class="okay_list">
+                                {*Шапка таблицы*}
+                                <div class="okay_list_head">
+                                    <div class="okay_list_heading okay_list_topic_name">{$btr->general_name|escape}</div>
+                                    <div class="okay_list_heading okay_list_topic_message">{$btr->topic_message|escape}</div>
+                                    <div class="okay_list_heading okay_list_topic_time">{$btr->topic_spent_time|escape}</div>
+                                </div>
+                                {*Параметры элемента*}
+                                <div class="okay_list_body">
+                                    {foreach $comments as $comment}
+                                    <div class="fn_row okay_list_body_item">
+                                        <div class="okay_list_row">
+                                            <div class="okay_list_boding okay_list_topic_name">
+                                                <div class="text_dark text_600 mb-q mr-1 {if $comment->is_support}text-primary{/if}">
+                                                    {if $comment->is_support}Support: {/if}
+                                                    {$comment->manager|escape}
                                                 </div>
+                                                {$btr->support_last_answer|escape}
+                                                {if $topic->last_comment}
+                                                <span class="tag tag-default">{$comment->created|date} {$comment->created|time}</span>
+                                                {/if}
                                             </div>
-                                        {/foreach}
-                                    </div>
-                                </div>
-                            {else}
-                                <div class="heading_box mt-1">
-                                    <div class="text_grey">Нет сообщений</div>
-                                </div>
-                            {/if}
 
-                            {if $topic->status!='closed'}
-                                <div class="heading_label mt-2">
-                                    {$btr->topic_message|escape}
-                                </div>
-                                <div class="mb-1">
-                                    <textarea class="form-control okay_textarea editor_small" name="comment_text">{$topic_message|nl2br}</textarea>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-12 col-md-12 fn_action_block">
-                                        {if $topic->id}
-                                            <button type="submit" class="btn btn_small btn-danger" name="close_topic" value="1">
-                                                <span>{$btr->topic_close|escape}</span>
-                                            </button>
-                                        {/if}
-                                        <button type="submit" class="btn btn_small btn_blue float-md-right" name="new_message" value="1">
-                                            <span>{$btr->topic_send|escape}</span>
-                                        </button>
+                                            <div class="okay_list_boding okay_list_topic_message">
+                                                {$comment->text}
+                                            </div>
+
+                                            <div class="okay_list_boding okay_list_topic_time {if $comment->spent_time < 0}text-success{/if}">
+                                                {$comment->spent_time|balance}
+                                            </div>
+                                        </div>
                                     </div>
+                                    {/foreach}
                                 </div>
+                            </div>
+                            {else}
+                            <div class="heading_box mt-1">
+                                <div class="text_grey">Нет сообщений</div>
+                            </div>
                             {/if}
                         </div>
                     </div>
@@ -157,6 +146,60 @@
             </div>
         </div>
     </div>
+
+    {if $topic->status!='closed'}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="boxed match fn_toggle_wrap tabs">
+                <div class="heading_box">
+                    Написать сообщение
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="icon-arrow-down"></i></a>
+                    </div>
+                </div>
+                <div class="toggle_body_wrap on fn_card row">
+                    <div class="col-md-12">
+                        {if $topic->id}
+                            <div class="my-q mb-1">
+                                <span class="text_700 text_primary font_16">
+                                    {$topic->header|escape}{if $topic->status=='closed'} (Closed){/if}
+                                </span>
+                                <span class="text_400 text_grey font_14">
+                                    ({$topic->created|date} {$topic->created|time})
+                                </span>
+                            </div>
+                        {else}
+                            <div class="">
+                                <div class="heading_label">{$btr->topic_new_theme|escape}</div>
+                                <div class="mb-1">
+                                    <input name="header" class="name form-control" value="{$topic_header|escape}" type="text">
+                                </div>
+                            </div>
+                        {/if}
+                        <input name="id" type="hidden" value="{$topic->id|escape}"/>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="heading_label">{$btr->topic_message|escape}</div>
+                        <textarea name="description" id="fn_editor" class="form-control okay_textarea editor_small">{$topic_message|nl2br}</textarea>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 fn_action_block mt-1">
+                        {if $topic->id}
+                        <button type="submit" class="btn btn_small btn-danger" name="close_topic" value="1">
+                            <span>{$btr->topic_close|escape}</span>
+                        </button>
+                        {/if}
+                        <button type="submit" class="btn btn_small btn_blue float-md-right" name="new_message" value="1">
+                            <span>{$btr->topic_send|escape}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {/if}
 </form>
 {if $config->subfolder !='/'}
     <script type="text/javascript" src="/{$config->subfolder}backend/design/js/tinymce_jq/tinymce.min.js"></script>

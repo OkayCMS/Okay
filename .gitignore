@@ -21,3 +21,4 @@ files/*_resized/*.ico
 tmp/
 nbproject/
 log/
+config/config.local.php

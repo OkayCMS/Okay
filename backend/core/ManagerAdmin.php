@@ -78,9 +78,11 @@ class ManagerAdmin extends Okay {
                 'users'         => $btr->left_users,
                 'groups'        => $btr->left_groups_title,
                 'coupons'       => $btr->left_coupons_title,
+                'subscribes'    => $btr->left_subscribe_title,
             ),
             'left_pages'    => array(
                 'pages'         => $btr->left_pages,
+                'menu'          => $btr->left_menus_title,
             ),
             'left_blog'     => array(
                 'blog'          => $btr->left_blog,
@@ -98,8 +100,10 @@ class ManagerAdmin extends Okay {
                 'stats'         => $btr->left_stats,
             ),
             'left_seo'      => array(
-                'robots'        => $btr->left_robots_title,
-                'seo_patterns'  => $btr->left_seo_patterns_title,
+                'robots'              => $btr->left_robots_title,
+                'settings_counter'    => $btr->left_setting_counter_title,
+                'seo_patterns'        => $btr->left_seo_patterns_title,
+                'seo_filter_patterns' => $btr->left_seo_filter_patterns_title,
             ),
             'left_support'  => array(
                 'support'       => $btr->left_support,

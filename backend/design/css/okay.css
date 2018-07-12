@@ -110,8 +110,8 @@ body:not(.top-nav) header.navbar {
 .text-info,
 .text_primary{color: #48b0f7;}
 .text_dark{color: #2b303b;}
-.text-white,
-.text_white{color: #fff;}
+.text-wht_whiite,
+.texte{color: #fff;}
 .text-muted,
 .text_grey{color: #b4b4b4!important;}
 
@@ -122,6 +122,7 @@ body:not(.top-nav) header.navbar {
 
 .font_12{font-size: 12px;}
 .font_14{font-size: 14px;}
+.font_16{font-size: 16px;}
 .font_20{font-size: 20px;line-height: 24px;}
 
 .text_700{font-weight: 700!important;}

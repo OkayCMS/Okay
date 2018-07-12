@@ -48,12 +48,12 @@ ModPagespeedEnableFilters collapse_whitespace,remove_comments
 </IfModule>
 
 # Редирект с page-1 на основную страницу в ЧПУ
-RewriteCond %{REQUEST_URI} ^(.*)/page-1(.*)$
-RewriteRule ^(.*)$ %1%2 [R=301,L]
+RewriteCond %{REQUEST_URI} ^(.*)/page-1(?![0-9])(.*)$
+RewriteRule ^(.*)$ %1%3 [R=301,L]
 
 # Редирект с page=1 на основную страницу без ЧПУ
-RewriteCond %{QUERY_STRING} ^(.*)&?page=1(.*)$
-RewriteRule ^(.*)/?$ /$1?%1%2 [R=301,L]
+RewriteCond %{QUERY_STRING} ^(.*)&?page=1(?![0-9])(.*)$
+RewriteRule ^(.*)/?$ /$1?%1%3 [R=301,L]
 
 # Админка теперь по адресу /backend
 RewriteRule	^admin/?$  backend [L]

@@ -3,6 +3,7 @@
 chdir(__DIR__);
 require_once('api/Okay.php');
 $okay = new Okay();
+define("MAX_URLS", 50000);
 
 /*
  * параметры с крона в виде key=val
@@ -190,10 +191,11 @@ function write ($str, $count_url = false) {
     if ($params['output'] == 'file') {
         $file = 'sitemap'.$params['l'].'_'.$sitemap_index.'.xml';
         file_put_contents($file, $str, FILE_APPEND);
-        if ($count_url && ++$url_index == 50000) {
+        if ($count_url && ++$url_index == MAX_URLS) {
             file_put_contents($file, '</urlset>'."\n", FILE_APPEND);
             $url_index=0;
             $sitemap_index++;
+            $file = 'sitemap'.$params['l'].'_'.$sitemap_index.'.xml';
             file_put_contents($file, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
             file_put_contents($file, "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n", FILE_APPEND);
         }

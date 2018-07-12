@@ -494,7 +494,7 @@ header a {
 }
 #cart_informer {
     float: right;
-    margin-top: 21px;
+    margin-top: 15px;
 }
 .cart_info {
     display: inline-block;
@@ -1825,10 +1825,15 @@ header a {
     display: inline-block;
     vertical-align: middle;
     width: 16px;
-    height: 10px;
+    height: 16px;
     background-repeat: no-repeat;
     margin-left: 1px;
     background-image: url(../images/select_arrow.png);
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 16px;
+    -ms-flex: 0 0 16px;
+    flex: 0 0 16px;
+    max-width: 16px;
     -webkit-transform: rotate(-90deg);
     -moz-transform: rotate(-90deg);
     -ms-transform: rotate(-90deg);

@@ -6,7 +6,12 @@ class TranslationsAdmin extends Okay {
     
     public function fetch() {
 
-        $locked_theme = is_file('design/'.$this->settings->theme.'/locked');
+        $admin_theme = $this->settings->admin_theme;
+        if ($_SESSION['admin'] && $admin_theme) {
+            $locked_theme = is_file('design/' . $admin_theme . '/locked');
+        } else {
+            $locked_theme = is_file('design/' . $this->settings->theme . '/locked');
+        }
         $this->design->assign('locked_theme', $locked_theme);
 
         // Обработка действий

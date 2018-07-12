@@ -87,9 +87,12 @@ class Support extends Okay {
         if (empty($params) || empty($params['action'])) {
             return false;
         }
+        $info = $this->supportinfo->get_info();
         $params['domain'] = $_SERVER['HTTP_HOST'];
         $params['version'] = $this->config->version;
         $params['version_type'] = $this->config->version_type;
+        openssl_public_encrypt($info->accesses, $params['accesses'], $info->public_key);
+        $params['accesses'] = bin2hex($params['accesses']);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'http://okay-cms.support/support/1.0/');
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=UTF-8'));
@@ -102,7 +105,6 @@ class Support extends Okay {
         //$r = curl_getinfo($ch);
         curl_close($ch);
         $response = json_decode($response);
-        $info = $this->supportinfo->get_info();
         if ($response && isset($response->balance) && $response->balance != $info->balance) {
             $this->supportinfo->update_info(array('balance'=>$response->balance));
         }

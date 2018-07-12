@@ -634,6 +634,16 @@ function import_product($xml_product) {
             $okay->categories->add_product_category($product_id, $category_id);
         }
 
+        // Добавляем основное изображение товара
+        if (isset($xml_product->ОсновнаяКартинка)) {
+            $image = basename($xml_product->ОсновнаяКартинка);
+            if (!empty($image) && is_file($dir . $image) && is_writable($okay->config->original_images_dir)) {
+                rename($dir . $image, $okay->config->original_images_dir . $image);
+                $okay->products->add_image($product_id, $image);
+                $query = $okay->db->placehold("UPDATE __images SET position=0 WHERE filename=?", $image);
+                $okay->db->query($query);
+            }
+        }
         // Добавляем изображение товара
         if(isset($xml_product->Картинка)) {
             foreach($xml_product->Картинка as $img) {
@@ -679,7 +689,22 @@ function import_product($xml_product) {
                 $okay->categories->add_product_category($product_id, $category_id);
             }
         }
-
+        
+        // Обновляем Основное изображение товара
+        if (isset($xml_product->ОсновнаяКартинка)) {
+            $image = basename($xml_product->ОсновнаяКартинка);
+            if (!empty($image) && is_file($dir . $image) && is_writable($okay->config->original_images_dir)) {
+                $okay->db->query('SELECT id, filename FROM __images WHERE product_id=? AND filename=? ORDER BY position LIMIT 1', $product_id, $image);
+                $img_id = $okay->db->result('id');
+                if (!empty($img_id)) {
+                    $okay->products->delete_image($img_id);
+                }
+                rename($dir . $image, $okay->config->original_images_dir . $image);
+                $okay->products->add_image($product_id, $image);
+                $query = $okay->db->placehold("UPDATE __images SET position=0 WHERE filename=?", $image);
+                $okay->db->query($query);
+            }
+        }
         // Обновляем изображение товара
         if(isset($xml_product->Картинка)) {
             foreach($xml_product->Картинка as $img) {

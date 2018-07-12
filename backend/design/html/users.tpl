@@ -11,11 +11,7 @@
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="heading_page">
-            {if $keyword && $users_count>0}
-               {$btr->users_users|escape} - {$users_count}
-            {elseif $users_count>0}
-                {$btr->users_users|escape} - {$users_count}
-            {/if}
+            {$btr->users_users|escape} ({$users_count})
             {if $users_count>0 && !$keyword}
                 <div class="export_block export_users hint-bottom-middle-t-info-s-small-mobile  hint-anim" data-hint="{$btr->users_export|escape}">
                     <span class="fn_start_export fa fa-file-excel-o"></span>

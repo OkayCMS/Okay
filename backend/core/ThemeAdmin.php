@@ -11,7 +11,7 @@ class ThemeAdmin extends Okay {
     public function fetch() {
         if($this->request->method('post')) {
 
-            if (isset($_POST['admin_theme'])) {
+            if (isset($_POST['admin_theme']) && $_POST['admin_theme'] != $this->settings->theme) {
                 $this->settings->admin_theme = $this->request->post('admin_theme');
             }
             $admin_theme_managers = $this->request->post('admin_theme_managers');
@@ -44,6 +44,9 @@ class ThemeAdmin extends Okay {
             switch($this->request->post('action')) {
                 case 'set_main_theme': {
                     /*Установить тему*/
+                    if($action_theme == $this->settings->admin_theme) {
+                        $this->settings->admin_theme = '';
+                    }
                     $this->settings->theme = $action_theme;
                     break;
                 }

@@ -8,7 +8,8 @@ class Managers extends Okay {
     public $permissions_list = array('products', 'categories', 'brands', 'features', 'orders', 'order_settings',
         'users', 'groups', 'coupons', 'pages', 'blog', 'comments', 'feedbacks', 'import', 'export',
         'stats', 'design', 'settings', 'currency', 'delivery', 'payment', 'managers', 'license', 'languages',
-        'banners', 'callbacks','robots', 'seo_patterns', 'support'
+        'banners', 'callbacks','robots', 'seo_patterns', 'support', 'subscribes', 'menu', 'seo_filter_patterns', 
+        'settings_counter'
         
     );
 

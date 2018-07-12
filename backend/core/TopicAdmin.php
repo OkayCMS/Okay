@@ -12,8 +12,12 @@ class TopicAdmin extends Okay {
             header('Location: '.$this->config->root_url.'/backend/index.php?module=SupportAdmin');
             exit();
         } else {
+            $this->design->assign("accesses", $support_info->accesses);
             $topic = new stdClass();
             if ($this->request->method('post')) {
+                $accesses = $this->request->post('accesses');
+                $this->supportinfo->update_info(array('accesses'=>$accesses));
+                $this->design->assign('accesses', $accesses);
                 $topic->id = $this->request->post('id', 'integer');
                 if ($this->request->post('new_message')) {
                     $topic = new stdClass();

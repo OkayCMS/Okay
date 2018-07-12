@@ -294,3 +294,4 @@ CREATE TABLE `ok_options_aliases_values` (
   KEY `lang_id` (`lang_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+INSERT INTO `ok_settings`(`setting_id`, `name`, `value`) VALUES ('','captcha_type','default');

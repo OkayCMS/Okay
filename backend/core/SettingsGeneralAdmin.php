@@ -21,6 +21,8 @@ class SettingsGeneralAdmin extends Okay {
             $this->settings->captcha_callback = $this->request->post('captcha_callback', 'boolean');
             $this->settings->public_recaptcha = $this->request->post('public_recaptcha');
             $this->settings->secret_recaptcha = $this->request->post('secret_recaptcha');
+            $this->settings->public_recaptcha_invisible = $this->request->post('public_recaptcha_invisible');
+            $this->settings->secret_recaptcha_invisible = $this->request->post('secret_recaptcha_invisible');
             $this->settings->captcha_type = $this->request->post('captcha_type');
             $this->settings->iframe_map_code = $this->request->post('iframe_map_code');
             $this->settings->gather_enabled = $this->request->post('gather_enabled', 'boolean');

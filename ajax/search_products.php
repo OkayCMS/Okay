@@ -32,32 +32,21 @@
         }
     }
 
-    // т.к. для MySQL 5.7 в ONLY_FULL_GROUP_BY режиме нужно применять ф-цию ANY_VALUE, а в MySQL 5.6 и более ранних её нет,
-    // принято решение для запросов где есть группировка отключать ONLY_FULL_GROUP_BY режим
-    $okay->db->query("SET @mode := @@SESSION.sql_mode");
-    $okay->db->query("SET SESSION sql_mode = ''");
-
     /*Делаем выборку из БД*/
 	$okay->db->query("SELECT 
             p.id,
             p.url,
-            $px.name,
-            i.filename as image
+            $px.name
         FROM __products p 
         $lang_sql->join
-        LEFT JOIN __images i ON i.product_id=p.id AND i.position=(SELECT MIN(position) FROM __images WHERE product_id=p.id LIMIT 1)
         WHERE 
             1
             $keyword_filter
             AND visible=1
-            GROUP BY p.id
         ORDER BY $px.name 
         LIMIT ?
     ", $limit);
     $products = $okay->db->results();
-    
-    // Вернем MySQL в обычный режим
-    $okay->db->query("SET SESSION sql_mode = @mode");
 
     $suggestions = array();
     $ids = array();
@@ -68,6 +57,16 @@
     $variants = array();
     foreach ($okay->variants->get_variants(array('product_id'=>$ids)) as $v) {
         $variants[$v->product_id][] = $v;
+    }
+
+    /*Картинки товаров*/
+    $images = array();
+    if (!empty($ids)) {
+        foreach ($okay->products->get_images(array('product_id'=>$ids)) as $i) {
+            if (!isset($images[$i->product_id])) {
+                $images[$i->product_id] = $i->filename;
+            }
+        }
     }
 
     /*Определяем валюту*/
@@ -81,8 +80,8 @@
     /*Подготавливаем данные для отображения в автокомплите*/
     foreach($products as $product) {
         $suggestion = new stdClass();
-        if(!empty($product->image)) {
-            $product->image = $okay->design->resize_modifier($product->image, 35, 35);
+        if(isset($images[$product->id])) {
+            $product->image = $okay->design->resize_modifier($images[$product->id], 35, 35);
         }
         $suggestion->price = $okay->money->convert($variants[$product->id][0]->price, $currency->id);
         $suggestion->currency = $currency->sign;

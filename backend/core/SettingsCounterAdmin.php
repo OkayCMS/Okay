@@ -22,6 +22,7 @@ class SettingsCounterAdmin extends Okay {
             $this->design->assign('message_success', 'saved');
         }
         $this->design->assign('counters', $this->settings->counters);
+        header('X-XSS-Protection:0');
         return $this->design->fetch('settings_counter.tpl');
     }
 }
