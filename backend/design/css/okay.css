@@ -110,8 +110,8 @@ body:not(.top-nav) header.navbar {
 .text-info,
 .text_primary{color: #48b0f7;}
 .text_dark{color: #2b303b;}
-.text-wht_whiite,
-.texte{color: #fff;}
+.text-white,
+.text_white{color: #fff;}
 .text-muted,
 .text_grey{color: #b4b4b4!important;}
 

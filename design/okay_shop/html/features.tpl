@@ -1,3 +1,5 @@
+{if ($category->subcategories && $category->has_children_visible) ||
+    ($category->path[$category->level_depth-2]->subcategories && $category->path[$category->level_depth-2]->has_children_visible)}
 <div class="catalog_nav filters tablet-hidden">
     <div class="h2 filter_name">
         <span data-language="features_catalog">{$lang->features_catalog}</span>
@@ -9,7 +11,7 @@
                 {foreach $categories as $c}
                 {if $c->visible}
                     <div class="catalog_item has_child">
-                        <{if $c->id == $category->id}b{else}a{/if} class="catalog_link{if $category->id == $c->id} selected{/if}" href="{$lang_link}catalog/{$c->url}" data-category="{$c->id}">
+                        <{if $c->id == $category->id}b{else}a{/if} class="catalog_link{if $c->subcategories} sub_cat{/if}{if $category->id == $c->id} selected{/if}" href="{$lang_link}catalog/{$c->url}" data-category="{$c->id}">
                             <span>{$c->name|escape}</span>
                         </{if $c->id == $category->id}b{else}a{/if}>
                     </div>
@@ -18,13 +20,14 @@
             </div>
         {/if}
         {/function}
-        {if $category->subcategories}
+        {if $category->subcategories && $category->has_children_visible}
             {categories_tree_sidebar categories=$category->subcategories level=1}
-        {elseif $category->path[$category->level_depth-2]->subcategories}
+        {elseif $category->path[$category->level_depth-2]->subcategories && $category->path[$category->level_depth-2]->has_children_visible}
             {categories_tree_sidebar categories=$category->path[$category->level_depth-2]->subcategories level=1}
         {/if}
     </div>
 </div>
+{/if}
 
 {* Filters *}
 {if ($category->brands || $prices || $features)  && $products|count > 0}

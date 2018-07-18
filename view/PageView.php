@@ -10,7 +10,7 @@ class PageView extends View {
         $page = $this->pages->get_page($url);
         
         // Отображать скрытые страницы только админу
-        if(empty($page) || (!$page->visible && empty($_SESSION['admin']))) {
+        if((empty($page) || (!$page->visible && empty($_SESSION['admin']))) && $url != '404') {
             return false;
         }
         

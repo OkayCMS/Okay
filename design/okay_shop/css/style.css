@@ -1820,7 +1820,7 @@ header a {
     padding: 7px 0px;
 
 }
-.catalog_link::after {
+.catalog_link.sub_cat::after {
     content: "";
     display: inline-block;
     vertical-align: middle;

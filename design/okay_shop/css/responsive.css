@@ -317,7 +317,7 @@
 .menu_group_header .menu_item {
     float: left;
 }
-.menu_group_header .menu_item_1:first-child .menu_link {
+.menu_group_header .menu_item_1:first-child>.menu_link {
     padding-left: 0;
 }
 
