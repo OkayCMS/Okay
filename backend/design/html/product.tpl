@@ -863,9 +863,10 @@
                         value.data('id', feature.id);
                         value.attr('name', "options["+feature.id+"][value]");
                         value.val(feature.value);
-                        value.autocomplete({
+                        value.devbridgeAutocomplete({
                             serviceUrl:'ajax/options_autocomplete.php',
                             minChars:0,
+                            orientation:'auto',
                             params: {feature_id:feature.id},
                             noCache: false,
                             onSelect:function(suggestion){
@@ -882,7 +883,7 @@
         // Автодополнение свойств
         $(".fn_auto_option").each(function() {
             feature_id = $(this).data("id");
-            $(this).autocomplete({
+            $(this).devbridgeAutocomplete({
                 serviceUrl:'ajax/options_autocomplete.php',
                 minChars:0,
                 params: {feature_id:feature_id},
@@ -910,9 +911,10 @@
         var new_related_product = $('#new_related_product').clone(true);
         $('#new_related_product').remove();
         new_related_product.removeAttr('id');
-        $("input#related_products").autocomplete({
+        $("input#related_products").devbridgeAutocomplete({
             serviceUrl:'ajax/search_products.php',
             minChars:0,
+            orientation:'auto',
             noCache: false,
             onSelect:
                 function(suggestion){

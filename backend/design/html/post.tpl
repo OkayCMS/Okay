@@ -222,8 +222,8 @@
                                         <div class="okay_list_boding okay_list_related_photo">
                                             <input type="hidden" name=related_products[] value='{$related_product->id}'>
                                             <a href="{url module=ProductAdmin id=$related_product->id}">
-                                                {if $related_product->images[0]}
-                                                    <img class="product_icon" src='{$related_product->images[0]->filename|resize:40:40}'>
+                                                {if $related_product->image}
+                                                    <img class="product_icon" src='{$related_product->image->filename|resize:40:40}'>
                                                 {else}
                                                     <img class="product_icon" src="design/images/no_image.png" width="40">
                                                 {/if}
@@ -351,9 +351,10 @@
         var new_related_product = $('#new_related_product').clone(true);
         $('#new_related_product').remove().removeAttr('id');
 
-        $("input#related_products").autocomplete({
+        $("input#related_products").devbridgeAutocomplete({
             serviceUrl:'ajax/search_products.php',
             minChars:0,
+            orientation:'auto',
             noCache: false,
             onSelect:
                     function(suggestion){

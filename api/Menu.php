@@ -1,7 +1,6 @@
 <?php
 
 require_once('Okay.php');
-define("MENU_VAR_PREFIX", "menu_");
 
 class Menu extends Okay {
 
@@ -9,6 +8,7 @@ class Menu extends Okay {
     private $all_menu_items;
     // Дерево элементов меню
     private $menu_items_tree;
+    const MENU_VAR_PREFIX = "menu_";
 
     private function init_menu_items() {
         $menu_items = $this->menu_items_tree = $this->all_menu_items = array();
@@ -87,7 +87,7 @@ class Menu extends Okay {
             unset($pointers[0]);
             unset($ids);
             $this->menu_items_tree[$menu_id] = $tree->submenus;
-            $this->all_menu_items = array_merge($this->all_menu_items, $pointers);
+            $this->all_menu_items = $this->all_menu_items+$pointers;
         }
     }
 
@@ -170,7 +170,7 @@ class Menu extends Okay {
         $menus = $this->db->results();
         if (!empty($menus)) {
             foreach ($menus as $menu) {
-                $menu->var = '{$'.MENU_VAR_PREFIX.$menu->group_id."}";
+                $menu->var = '{$'.Menu::MENU_VAR_PREFIX.$menu->group_id."}";
             }
         }
         return $menus;
@@ -197,7 +197,7 @@ class Menu extends Okay {
         $this->db->query($query);
         $menu = $this->db->result();
         if (!empty($menu)) {
-            $menu->var = '{$'.MENU_VAR_PREFIX.$menu->group_id."}";
+            $menu->var = '{$'.Menu::MENU_VAR_PREFIX.$menu->group_id."}";
         }
         return $menu;
     }

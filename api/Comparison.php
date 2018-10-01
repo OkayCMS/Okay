@@ -14,15 +14,16 @@ class Comparison extends Okay {
         $items = !empty($_COOKIE['comparison']) ? unserialize($_COOKIE['comparison']) : array();
         if(!empty($items) && is_array($items)) {
             $products = array();
+            $images_ids = array();
             foreach ($this->products->get_products(array('id'=>$items, 'visible'=>1)) as $p) {
                 $products[$p->id] = $p;
+                $images_ids[] = $p->main_image_id;
             }
             if(!empty($products)) {
                 $products_ids = array_keys($products);
                 $comparison->ids = $products_ids;
                 foreach($products as $product) {
                     $product->variants = array();
-                    $product->images = array();
                     $product->features = array();
                 }
                 
@@ -31,10 +32,14 @@ class Comparison extends Okay {
                 foreach($variants as $variant) {
                     $products[$variant->product_id]->variants[] = $variant;
                 }
-                
-                $images = $this->products->get_images(array('product_id'=>$products_ids));
-                foreach($images as $image) {
-                    $products[$image->product_id]->images[] = $image;
+
+                if (!empty($images_ids)) {
+                    $images = $this->products->get_images(array('id'=>$images_ids));
+                    foreach ($images as $image) {
+                        if (isset($products[$image->product_id])) {
+                            $products[$image->product_id]->image = $image;
+                        }
+                    }
                 }
                 
                 $options = array();
@@ -65,9 +70,6 @@ class Comparison extends Okay {
                 foreach($products as $product) {
                     if(isset($product->variants[0])) {
                         $product->variant = $product->variants[0];
-                    }
-                    if(isset($product->images[0])) {
-                        $product->image = $product->images[0];
                     }
                     foreach($features as $id=>$f) {
                         if(isset($options[$id][$product->id])){

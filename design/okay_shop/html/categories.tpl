@@ -4,7 +4,7 @@
             <ul class="level_{$level} {if $level == 1}categories_menu {else}subcategory {/if}">
                 {foreach $categories as $c}
                     {if $c->visible}
-                        {if $c->subcategories && $c->has_children_visible}
+                        {if $c->subcategories && $c->count_children_visible}
                             <li class="category_item has_child">
                                 <a class="category_link{if $category->id == $c->id} selected{/if}" href="{$lang_link}catalog/{$c->url}" data-category="{$c->id}">
                                     <span>{$c->name|escape}</span>

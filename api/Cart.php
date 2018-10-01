@@ -28,13 +28,17 @@ class Cart extends Okay {
                 }
                 
                 $products = array();
-                foreach($this->products->get_products(array('id'=>$products_ids, 'limit' => count($products_ids))) as $p) {
+                $images_ids = array();
+                foreach($this->products->get_products(array('id'=>$products_ids, 'limit'=>count($products_ids))) as $p) {
                     $products[$p->id]=$p;
+                    $images_ids[] = $p->main_image_id;
                 }
                 
-                $images = $this->products->get_images(array('product_id'=>$products_ids));
-                foreach($images as $image) {
-                    $products[$image->product_id]->images[$image->id] = $image;
+                if (!empty($images_ids)) {
+                    $images = $this->products->get_images(array('id'=>$images_ids));
+                    foreach ($images as $image) {
+                        $products[$image->product_id]->image = $image;
+                    }
                 }
                 
                 foreach($items as $variant_id=>$item) {

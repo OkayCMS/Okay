@@ -258,8 +258,10 @@ class ProductsAdmin extends Okay {
         $this->design->assign('current_page', $filter['page']);
         
         $products = array();
+        $images_ids = array();
         foreach($this->products->get_products($filter) as $p) {
             $products[$p->id] = $p;
+            $images_ids[] = $p->main_image_id;
         }
         
         
@@ -268,7 +270,6 @@ class ProductsAdmin extends Okay {
             $products_ids = array_keys($products);
             foreach($products as $product) {
                 $product->variants = array();
-                $product->images = array();
                 $product->properties = array();
             }
             
@@ -277,10 +278,14 @@ class ProductsAdmin extends Okay {
             foreach($variants as $variant) {
                 $products[$variant->product_id]->variants[] = $variant;
             }
-            
-            $images = $this->products->get_images(array('product_id'=>$products_ids));
-            foreach($images as $image) {
-                $products[$image->product_id]->images[$image->id] = $image;
+
+            if (!empty($images_ids)) {
+                $images = $this->products->get_images(array('id'=>$images_ids));
+                foreach ($images as $image) {
+                    if (isset($products[$image->product_id])) {
+                        $products[$image->product_id]->image = $image;
+                    }
+                }
             }
 
             $brands = $this->brands->get_brands(array('product_id'=>$products_ids));

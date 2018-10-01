@@ -89,17 +89,23 @@ class PostAdmin extends Okay {
 
         /*Связанные товары записи*/
         if(!empty($related_products)) {
+            $images_ids = array();
             foreach($related_products as &$r_p) {
                 $r_products[$r_p->related_id] = &$r_p;
             }
             $temp_products = $this->products->get_products(array('id'=>array_keys($r_products)));
             foreach($temp_products as $temp_product) {
                 $r_products[$temp_product->id] = $temp_product;
+                $images_ids[] = $temp_product->main_image_id;
             }
 
-            $related_products_images = $this->products->get_images(array('product_id'=>array_keys($r_products)));
-            foreach($related_products_images as $image) {
-                $r_products[$image->product_id]->images[] = $image;
+            if (!empty($images_ids)) {
+                $images = $this->products->get_images(array('id'=>$images_ids));
+                foreach ($images as $image) {
+                    if (isset($r_products[$image->product_id])) {
+                        $r_products[$image->product_id]->image = $image;
+                    }
+                }
             }
         }
 

@@ -58,6 +58,7 @@ class Design extends Okay {
                 'implode',
                 'explode',
                 'preg_replace',
+                'preg_match',
             );
 
             // Настраиваем безопасный режим

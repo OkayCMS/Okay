@@ -217,7 +217,7 @@
                                         <a href="{$bi->url}" target="_blank">
                                     {/if}
                                     {if $bi->image}
-                                        <img src="{$config->banners_images_dir}{$bi->image}" alt="{$bi->alt}" title="{$bi->title}"/>
+                                        <img src="{$bi->image|resize:1170:390:false:$config->resized_banners_images_dir}" alt="{$bi->alt}" title="{$bi->title}"/>
                                     {/if}
                                     <span class="slick-name">
                                         {$bi->title}

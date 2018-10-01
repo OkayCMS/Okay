@@ -69,7 +69,7 @@ write($s, true);
 
 // Страницы
 foreach($okay->pages->get_pages() as $p) {
-    if($p->visible && $p->menu_id == 1 && $p->url) {
+    if($p->visible && $p->url && $p->url != '404') {
         $url = $main_url.esc($p->url);
         $last_modify = array();
         if ($p->url == 'blog') {

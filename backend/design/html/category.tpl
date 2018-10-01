@@ -291,9 +291,10 @@
 {literal}
 <script>
 $(function() {
-    $('.input_autocomplete').autocomplete({
+    $('.input_autocomplete').devbridgeAutocomplete({
         serviceUrl:'ajax/market.php?module=search_market&session_id={/literal}{$smarty.session.id}{literal}',
         minChars:1,
+        orientation:'auto',
         noCache: false,
         onSelect:
             function(suggestions) {

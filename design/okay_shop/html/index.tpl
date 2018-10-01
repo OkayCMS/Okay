@@ -12,7 +12,7 @@
     <link href="design/{$settings->theme}/images/favicon.png" type="image/x-icon" rel="shortcut icon">
 
     {* JQuery *}
-    <script src="design/{$settings->theme}/js/jquery-2.1.4.min.js{if $js_version}?v={$js_version}{/if}"></script>
+    <script src="design/{$settings->theme}/js/jquery-3.3.1.min.js{if $js_version}?v={$js_version}{/if}"></script>
 
     {* Slick slider *}
     <script src="design/{$settings->theme}/js/slick.min.js{if $js_version}?v={$js_version}{/if}"></script>
@@ -434,12 +434,7 @@
 {* Autocomplete *}
 <script src="design/{$settings->theme}/js/jquery.autocomplete-min.js{if $js_version}?v={$js_version}{/if}" defer></script>
 
-{* Admin tooltips *}
-{if $smarty.session.admin}
-    <script>lang_id = {$language->id}</script>
-    <script src ="backend/design/js/admintooltip/admintooltip.js{if $js_version}?v={$js_version}{/if}"></script>
-    <link href="backend/design/js/admintooltip/styles/admin.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
-{/if}
+{$admintooltip}
 
 {*JQuery Validation*}
 <script src="design/{$settings->theme}/js/jquery.validate.min.js{if $js_version}?v={$js_version}{/if}" ></script>

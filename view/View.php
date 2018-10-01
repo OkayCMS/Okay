@@ -259,8 +259,10 @@ class View extends Okay {
             }
             
             $products = array();
+            $images_ids = array();
             foreach($this->products->get_products(array('id'=>$browsed_products_ids, 'visible'=>1)) as $p) {
                 $products[$p->id] = $p;
+                $images_ids[] = $p->main_image_id;
             }
 
             if (!empty($products)) {
@@ -273,18 +275,17 @@ class View extends Okay {
                     }
                 }
 
-                $images = $this->products->get_images(array('product_id' => $browsed_products_ids));
-                foreach ($images as $image) {
-                    if (isset($products[$image->product_id])) {
-                        $products[$image->product_id]->images[] = $image;
+                if (!empty($images_ids)) {
+                    $images = $this->products->get_images(array('id'=>$images_ids));
+                    foreach ($images as $image) {
+                        if (isset($products[$image->product_id])) {
+                            $products[$image->product_id]->image = $image;
+                        }
                     }
                 }
 
                 foreach ($browsed_products_ids as $id) {
                     if (isset($products[$id])) {
-                        if (isset($products[$id]->images[0])) {
-                            $products[$id]->image = $products[$id]->images[0];
-                        }
                         if (isset($products[$id]->variants[0])) {
                             $products[$id]->variant = $products[$id]->variants[0];
                         }
@@ -303,8 +304,10 @@ class View extends Okay {
         $params['in_stock'] = 1;
         $params['featured'] = 1;
         if(!empty($params['var'])) {
+            $images_ids = array();
             foreach($this->products->get_products($params) as $p) {
                 $products[$p->id] = $p;
+                $images_ids[] = $p->main_image_id;
             }
 
             if(!empty($products)) {
@@ -321,17 +324,18 @@ class View extends Okay {
                 }
 
                 // Выбираем изображения товаров
-                $images = $this->products->get_images(array('product_id'=>$products_ids));
-                foreach($images as $image) {
-                    $products[$image->product_id]->images[] = $image;
+                if (!empty($images_ids)) {
+                    $images = $this->products->get_images(array('id'=>$images_ids));
+                    foreach ($images as $image) {
+                        if (isset($products[$image->product_id])) {
+                            $products[$image->product_id]->image = $image;
+                        }
+                    }
                 }
 
                 foreach($products as $product) {
                     if(isset($product->variants[0])) {
                         $product->variant = $product->variants[0];
-                    }
-                    if(isset($product->images[0])) {
-                        $product->image = $product->images[0];
                     }
                 }
             }
@@ -348,8 +352,10 @@ class View extends Okay {
         }
         $params['in_stock'] = 1;
         if(!empty($params['var'])) {
+            $images_ids = array();
             foreach($this->products->get_products($params) as $p) {
                 $products[$p->id] = $p;
+                $images_ids[] = $p->main_image_id;
             }
             
             if(!empty($products)) {
@@ -366,17 +372,18 @@ class View extends Okay {
                 }
                 
                 // Выбираем изображения товаров
-                $images = $this->products->get_images(array('product_id'=>$products_ids));
-                foreach($images as $image) {
-                    $products[$image->product_id]->images[] = $image;
+                if (!empty($images_ids)) {
+                    $images = $this->products->get_images(array('id'=>$images_ids));
+                    foreach ($images as $image) {
+                        if (isset($products[$image->product_id])) {
+                            $products[$image->product_id]->image = $image;
+                        }
+                    }
                 }
                 
                 foreach($products as $product) {
                     if(isset($product->variants[0])) {
                         $product->variant = $product->variants[0];
-                    }
-                    if(isset($product->images[0])) {
-                        $product->image = $product->images[0];
                     }
                 }
             }
@@ -391,8 +398,10 @@ class View extends Okay {
         $params['in_stock'] = 1;
         $params['discounted'] = 1;
         if(!empty($params['var'])) {
+            $images_ids = array();
             foreach($this->products->get_products($params) as $p) {
                 $products[$p->id] = $p;
+                $images_ids[] = $p->main_image_id;
             }
             
             if(!empty($products)) {
@@ -409,17 +418,18 @@ class View extends Okay {
                 }
                 
                 // Выбираем изображения товаров
-                $images = $this->products->get_images(array('product_id'=>$products_ids));
-                foreach($images as $image) {
-                    $products[$image->product_id]->images[] = $image;
+                if (!empty($images_ids)) {
+                    $images = $this->products->get_images(array('id'=>$images_ids));
+                    foreach ($images as $image) {
+                        if (isset($products[$image->product_id])) {
+                            $products[$image->product_id]->image = $image;
+                        }
+                    }
                 }
                 
                 foreach($products as $product) {
                     if(isset($product->variants[0])) {
                         $product->variant = $product->variants[0];
-                    }
-                    if(isset($product->images[0])) {
-                        $product->image = $product->images[0];
                     }
                 }
             }

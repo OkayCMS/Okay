@@ -41,15 +41,20 @@ class WishlistView extends View {
         }
         
         $products = array();
+        $images_ids = array();
         
         if (count($products_ids)) {
             foreach ($this->products->get_products(array('id'=>$products_ids, 'visible'=>1)) as $p) {
                 $products[$p->id] = $p;
+                $images_ids[] = $p->main_image_id;
             }
             if (!empty($products)) {
-                foreach ($this->products->get_images(array('product_id' => $products_ids)) as $image) {
-                    if (isset($products[$image->product_id])) {
-                        $products[$image->product_id]->images[] = $image;
+                if (!empty($images_ids)) {
+                    $images = $this->products->get_images(array('id'=>$images_ids));
+                    foreach ($images as $image) {
+                        if (isset($products[$image->product_id])) {
+                            $products[$image->product_id]->image = $image;
+                        }
                     }
                 }
 
@@ -61,9 +66,6 @@ class WishlistView extends View {
 
                 foreach ($products_ids as $id) {
                     if (isset($products[$id])) {
-                        if (isset($products[$id]->images[0])) {
-                            $products[$id]->image = $products[$id]->images[0];
-                        }
                         if (isset($products[$id]->variants[0])) {
                             $products[$id]->variant = $products[$id]->variants[0];
                         }

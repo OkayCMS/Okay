@@ -242,6 +242,11 @@ class ProductAdmin extends Okay {
                     }
                     $images = $this->products->get_images(array('product_id'=>$product->id));
 
+                    $main_category = reset($product_categories);
+                    $main_image = reset($images);
+                    $main_image_id = $main_image ? $main_image->id : null;
+                    $this->products->update_product($product->id, array('main_category_id'=>$main_category->id, 'main_image_id'=>$main_image_id));
+                    
                     //Загрузка и удаление промо-изображений
                     // Удаление изображений
                     $spec_images = (array)$this->request->post('spec_images');
@@ -416,7 +421,8 @@ class ProductAdmin extends Okay {
         $this->design->assign('related_products', $related_products);
         
         // Все бренды
-        $brands = $this->brands->get_brands();
+        $brands_count = $this->brands->count_brands();
+        $brands = $this->brands->get_brands(array('limit'=>$brands_count));
         $this->design->assign('brands', $brands);
         
         // Все категории

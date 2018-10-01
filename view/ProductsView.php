@@ -64,7 +64,7 @@ class ProductsView extends View {
                         foreach(explode('_',$param_values) as $bv) {
                             if(($brand = $this->brands->get_brand((string)$bv)) && !in_array($brand->id, $_GET['b'])) {
                                 $_GET['b'][] = $brand->id;
-                                $this->meta_array['brand'][$brand->id] = $translations->products_brand.' '. $brand->name;
+                                $this->meta_array['brand'][$brand->id] = $brand->name;
                             } else {
                                 $this->is_wrong_params = 1;
                             }
@@ -105,12 +105,12 @@ class ProductsView extends View {
                                 $option_translits = array();
                                 foreach ($this->features->get_options(array('feature_id' => $feature->id)) as $fo) {
                                     $option_translits[] = $fo->translit;
-                                    if (in_array($fo->translit, $_GET[$feature->id])) {
+                                    if (in_array($fo->translit, $_GET[$feature->id], true)) {
                                         $this->meta_array['options'][$feature->id][] = $fo->value;
                                     }
                                 }
                                 foreach ($_GET[$feature->id] as $param_value) {
-                                    if (!in_array($param_value, $option_translits)) {
+                                    if (!in_array($param_value, $option_translits, true)) {
                                         $this->is_wrong_params = 1;
                                         break;
                                     }
@@ -175,16 +175,16 @@ class ProductsView extends View {
         }
 
         if(!empty($this->meta['h1'])) {
-            $this->meta['h1']           = !empty($translations->ceo_filter_s_harakteristikami) ? ' ' : ''.$translations->ceo_filter_s_harakteristikami.' '.$this->meta['h1'];
+            $this->meta['h1']           = ' '.$this->meta['h1'];
         }
         if(!empty($this->meta['title'])) {
-            $this->meta['title']        = !empty($translations->ceo_filter_s_harakteristikami) ? ' ' : ''.$translations->ceo_filter_s_harakteristikami.' '.$this->meta['title'];
+            $this->meta['title']        = ' '.$this->meta['title'];
         }
         if(!empty($this->meta['keywords'])) {
-            $this->meta['keywords']     = !empty($translations->ceo_filter_s_harakteristikami) ? ' ' : ''.$translations->ceo_filter_s_harakteristikami.' '.$this->meta['keywords'];
+            $this->meta['keywords']     = ' '.$this->meta['keywords'];
         }
         if(!empty($this->meta['description'])) {
-            $this->meta['description']  = !empty($translations->ceo_filter_s_harakteristikami) ? ' ' : ''.$translations->ceo_filter_s_harakteristikami.' '.$this->meta['description'];
+            $this->meta['description']  = $this->meta['description'];
         }
 
         if($this->set_canonical) {
@@ -267,7 +267,7 @@ class ProductsView extends View {
                 default:
                     if(is_null($v)) {
                         unset($result_array['features'][$k]);
-                    } elseif(!empty($result_array['features']) && in_array($k,array_keys($result_array['features'])) && in_array($v,$result_array['features'][$k])) {
+                    } elseif(!empty($result_array['features']) && in_array($k,array_keys($result_array['features']), true) && in_array($v,$result_array['features'][$k], true)) {
                         unset($result_array['features'][$k][array_search($v,$result_array['features'][$k])]);
                     } else {
                         $result_array['features'][$k][] = $v;
@@ -359,7 +359,7 @@ class ProductsView extends View {
         }
         $result_string = '';
         foreach ($this->features_urls as $furl) {
-            if (in_array($furl, array_keys($features))) {
+            if (in_array($furl, array_keys($features), true)) {
                 $result_string .= '/'.$furl.'-'.implode('_', $features[$furl]);
             }
         }
@@ -405,9 +405,10 @@ class ProductsView extends View {
             $filter['brand_id'] = $val;
         } elseif (!empty($brand_url)) {
             $brand = $this->brands->get_brand((string)$brand_url);
-            if (empty($brand)) {
+            if (empty($brand) || (!$brand->visible && empty($_SESSION['admin']))) {
                 return false;
             }
+            $brand->categories = $this->categories->get_categories(array('brand_id'=>$brand->id, 'category_visible'=>1));
             $this->design->assign('brand', $brand);
             $filter['brand_id'] = $brand->id;
         }
@@ -598,10 +599,11 @@ class ProductsView extends View {
         
         if(!empty($products)) {
             $products_ids = array_keys($products);
+            $images_ids = array();
             foreach($products as $product) {
                 $product->variants = array();
-                $product->images = array();
                 $product->properties = array();
+                $images_ids[] = $product->main_image_id;
             }
 
             $variants = $this->variants->get_variants(array('product_id'=>$products_ids));
@@ -610,17 +612,16 @@ class ProductsView extends View {
                 $products[$variant->product_id]->variants[] = $variant;
             }
 
-            $images = $this->products->get_images(array('product_id'=>$products_ids));
-            foreach($images as $image) {
-                $products[$image->product_id]->images[] = $image;
+            if (!empty($images_ids)) {
+                $images = $this->products->get_images(array('id'=>$images_ids));
+                foreach ($images as $image) {
+                    $products[$image->product_id]->image = $image;
+                }
             }
 
             foreach($products as $product) {
                 if(isset($product->variants[0])) {
                     $product->variant = $product->variants[0];
-                }
-                if(isset($product->images[0])) {
-                    $product->image = $product->images[0];
                 }
             }
             $this->design->assign('products', $products);

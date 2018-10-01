@@ -166,9 +166,12 @@
                                                     {foreach $purchases as $purchase}
                                                         <tr>
                                                             <td valign="middle">
-                                                                {$image = $purchase->product->images[0]}
                                                                 <a href="{$config->root_url}/{$lang_link}products/{$purchase->product->url}">
-                                                                    <img align="middle" src="{$image->filename|resize:70:70}" />
+                                                                    {if $purchase->product->image}
+                                                                        <img align="middle" src="{$purchase->product->image->filename|resize:70:70}" />
+                                                                    {else}
+                                                                        <img width="70" height="70" src="{$config->root_url}/design/{$settings->theme}/images/no_image.png" alt="{$purchase->product->name|escape}" title="{$purchase->product->name|escape}">
+                                                                    {/if}
                                                                 </a>
                                                             </td>
 

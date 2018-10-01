@@ -62,11 +62,28 @@ class IndexView extends View {
         if (!empty($menus)) {
             foreach ($menus as $menu) {
                 $this->design->assign("menu", $menu);
+                $all_menu_items = $this->menu->get_menu_items();
+                $this->count_visible($this->menu->get_menu_items_tree((int)$menu->id), $all_menu_items, 'submenus');
                 $this->design->assign("menu_items", $this->menu->get_menu_items_tree((int)$menu->id));
-                $this->design->assign(MENU_VAR_PREFIX.$menu->group_id, $this->design->fetch("menu.tpl"));
+                $this->design->assign(Menu::MENU_VAR_PREFIX.$menu->group_id, $this->design->fetch("menu.tpl"));
             }
         }
-
+        
+        if ($_SESSION['admin'] && ($manager = $this->managers->get_manager())) {
+            // Перевод админки
+            $backend_translations = $this->backend_translations;
+            $file = "backend/lang/".$manager->lang.".php";
+            if (!file_exists($file)) {
+                foreach (glob("backend/lang/??.php") as $f) {
+                    $file = "backend/lang/".pathinfo($f, PATHINFO_FILENAME).".php";
+                    break;
+                }
+            }
+            require_once($file);
+            $this->design->assign('btr', $backend_translations);
+            $this->design->assign('admintooltip', $this->design->fetch($this->config->root_dir.'backend/design/html/admintooltip.tpl'));
+        }
+        
         // Пользовательские скриты из админки
         $counters = array();
         foreach ($this->settings->counters as $c) {
@@ -89,7 +106,8 @@ class IndexView extends View {
         $this->design->assign('comparison', $this->comparison->get_comparison());
         
         // Категории товаров
-        $this->count_visible($this->categories->get_categories_tree());
+        $all_categories = $this->categories->get_categories();
+        $this->count_visible($this->categories->get_categories_tree(), $all_categories);
         $this->design->assign('categories', $this->categories->get_categories_tree());
         
         // Страницы
@@ -155,16 +173,17 @@ class IndexView extends View {
         }
     }
 
-    /*Подсчет количества видимых дочерних категорий*/
-    private function count_visible($categories = array()) {
-        $all_categories = $this->categories->get_categories();
-        foreach ($categories as $category) {
-            $category->has_children_visible = 0;
-            if ($category->parent_id && $category->visible) {
-                $all_categories[$category->parent_id]->has_children_visible = 1;
+    /*Подсчет количества видимых дочерних элементов*/
+    private function count_visible($items = array(), $all_items, $subitems_name = 'subcategories') {
+        foreach ($items as $item) {
+            if (!isset($all_items[$item->parent_id]->count_children_visible)) {
+                $all_items[$item->parent_id]->count_children_visible = 0;
             }
-            if ($category->subcategories) {
-                $this->count_visible($category->subcategories);
+            if ($item->parent_id && $item->visible) {
+                $all_items[$item->parent_id]->count_children_visible++;
+            }
+            if ($item->{$subitems_name}) {
+                $this->count_visible($item->{$subitems_name}, $all_items, $subitems_name);
             }
         }
     }

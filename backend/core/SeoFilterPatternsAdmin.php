@@ -57,6 +57,7 @@ class SeoFilterPatternsAdmin extends Okay {
                 $category->id = $this->request->post("category_id", "integer");
                 if ($category = $this->categories->get_category($category->id)) {
                     $seo_filter_patterns = $this->request->post('seo_filter_patterns');
+                    $patterns = array();
                     if(is_array($seo_filter_patterns)) {
 
                         foreach($this->request->post('seo_filter_patterns') as $n=>$pa) {
@@ -71,17 +72,16 @@ class SeoFilterPatternsAdmin extends Okay {
                             }
                         }
                     }
-                    if ($patterns) {
-                        // Удалим паттерны которые не запостили
-                        if ($patterns_ids) {
-                            $current_patterns = $this->seo_filter_patterns->get_patterns(array('category_id' => $category->id));
-                            foreach ($current_patterns as $current_pattern) {
-                                if (!in_array($current_pattern->id, $patterns_ids)) {
-                                    $this->seo_filter_patterns->delete_pattern($current_pattern->id);
-                                }
-                            }
+                    
+                    // Удалим паттерны которые не запостили
+                    $current_patterns = $this->seo_filter_patterns->get_patterns(array('category_id' => $category->id));
+                    foreach ($current_patterns as $current_pattern) {
+                        if (!in_array($current_pattern->id, $patterns_ids)) {
+                            $this->seo_filter_patterns->delete_pattern($current_pattern->id);
                         }
+                    }
 
+                    if ($patterns) {
                         foreach ($patterns as $pattern) {
                             if (!$pattern->feature_id) {
                                 $pattern->feature_id = null;

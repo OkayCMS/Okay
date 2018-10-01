@@ -42,6 +42,30 @@ class Categories extends Okay {
             }
             return $result;
         }
+
+        if(!empty($filter['brand_id'])) {
+            $category_visible_filter = '';
+            
+            if (isset($filter['category_visible'])) {
+                $category_visible_filter = $this->db->placehold(" AND c.visible=?", (int)$filter['category_visible']);
+            }
+            
+            $query = $this->db->placehold("SELECT pc.category_id FROM __products_categories pc 
+                      INNER JOIN __products p ON p.id=pc.product_id AND p.brand_id in (?@) AND p.visible=1
+                      LEFT JOIN __categories c ON c.id=pc.category_id
+                      WHERE 1
+                      $category_visible_filter
+                      GROUP BY pc.category_id ORDER BY c.parent_id, c.position", (array)$filter['brand_id']);
+            $this->db->query($query);
+            $categories_ids = $this->db->results('category_id');
+            $result = array();
+            foreach($categories_ids as $id) {
+                if(isset($this->all_categories[$id])) {
+                    $result[$id] = $this->all_categories[$id];
+                }
+            }
+            return $result;
+        }
         
         $parent = null;
         if (!empty($filter['parent_id']) && isset($this->all_categories[intval($filter['parent_id'])])) {
@@ -220,8 +244,13 @@ class Categories extends Okay {
                     }
                     $query = $this->db->placehold("DELETE FROM __categories WHERE id in(?@)", $category->children);
                     $this->db->query($query);
+                    $this->db->query("SELECT product_id FROM __products_categories WHERE category_id in(?@)", $category->children);
+                    //Получим товары для которых нужно будет обновить информацию о главных категориях
+                    $product_ids = $this->db->results('product_id');
                     $query = $this->db->placehold("DELETE FROM __products_categories WHERE category_id in(?@)", $category->children);
                     $this->db->query($query);
+                    //Обновим информацию о главной категории
+                    $this->update_main_product_category($product_ids);
                     $this->db->query("DELETE FROM __lang_categories WHERE category_id in(?@)", $category->children);
 
                     if ($patterns = $this->seo_filter_patterns->get_patterns(array('category_id'=>$category->children))) {
@@ -242,6 +271,16 @@ class Categories extends Okay {
         $this->db->query("update __categories set last_modify=now() where id=?", intval($category_id));
         $query = $this->db->placehold("INSERT IGNORE INTO __products_categories SET product_id=?, category_id=?, position=?", $product_id, $category_id, $position);
         $this->db->query($query);
+    }
+
+    //Обновление информацию о главной категории товара
+    public function update_main_product_category($product_ids) {
+        if (!empty($product_ids)) {
+            $this->db->query("UPDATE __products p
+                              LEFT JOIN __products_categories pc ON p.id = pc.product_id AND pc.position=(SELECT MIN(position) FROM __products_categories WHERE product_id=p.id LIMIT 1)
+                              SET p.main_category_id = pc.category_id
+                              WHERE p.id in (?@)", (array)$product_ids);
+        }
     }
 
     /*Удаление категории из товара*/

@@ -699,11 +699,6 @@ header a {
     padding: 6px 30px 6px 20px;
     border-bottom: 1px solid #23aee2;
 }
-.category_link:hover,
-.category_link:hover .arrow_right,
-.category_item.hover > .category_link{
-    color: #1480a8;
-}
 .category_item .arrow_right {
     position: absolute;
     width: 16px;

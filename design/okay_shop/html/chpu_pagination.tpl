@@ -1,6 +1,6 @@
 {* Pagination *}
 {if $total_pages_num > 1}
-    <ul class="pagination{if $ajax} fn_is_ajax{/if}">
+    <ul class="fn_ajax_buttons pagination{if $ajax} fn_is_ajax{/if}">
         {* Number of visible pagination links *}
         {$visible_pages = 5}
 
@@ -17,7 +17,7 @@
         {* Link to the previous page *}
         {if $current_page_num > 1}
             <li class="page_item">
-                <a class="page_link" href="{if $current_page_num == 2}{furl page=null}{else}{furl page=$current_page_num - 1}{/if}">
+                <a class="fn_sort_pagination_link page_link" href="{if $current_page_num == 2}{furl page=null}{else}{furl page=$current_page_num - 1}{/if}">
                     <span>&laquo; {$lang->pagination_prev}</span>
                 </a>
             </li>
@@ -30,7 +30,7 @@
             </li>
         {else}
             <li class="page_item">
-                <a class="page_link" href="{furl page=null}">1</a>
+                <a class="fn_sort_pagination_link page_link" href="{furl page=null}">1</a>
             </li>
         {/if}
 
@@ -39,15 +39,15 @@
             {$p = $smarty.section.pages.index+1}
             {if ($p == $page_from+1 && $p!=2) || ($p == $page_to && $p != $total_pages_num-1)}
                 <li class="page_item">
-                    <a class="page_link" href="{furl page=$p}">...</a>
+                    <a class="fn_sort_pagination_link page_link" href="{furl page=$p}">...</a>
                 </li>
             {elseif $p == $current_page_num}
                 <li class="page_item{if $p==$current_page_num} active{/if}">
-                    <span class="page_link">{$p}</span>
+                    <span class=fn_sort_pagination_link "page_link">{$p}</span>
                 </li>
             {else}
                 <li class="page_item">
-                    <a class="page_link" href="{furl page=$p}">{$p}</a>
+                    <a class="fn_sort_pagination_link page_link" href="{furl page=$p}">{$p}</a>
                 </li>
             {/if}
         {/section}
@@ -59,19 +59,19 @@
             </li>
         {else}
             <li class="page_item">
-                <a class="page_link" href="{furl page=$total_pages_num}">{$total_pages_num}</a>
+                <a class="fn_sort_pagination_link page_link" href="{furl page=$total_pages_num}">{$total_pages_num}</a>
             </li>
         {/if}
 
         {* Display all pages *}
         <li class="page_item">
-            <a class="page_link" href="{furl page=all}" data-language="pagination_all">{$lang->pagination_all}</a>
+            <a class="fn_sort_pagination_link page_link" href="{furl page=all}" data-language="pagination_all">{$lang->pagination_all}</a>
         </li>
 
         {* Link to the next page *}
         {if $current_page_num < $total_pages_num}
             <li class="page_item">
-                <a class="page_link" href="{furl page=$current_page_num+1}">
+                <a class="fn_sort_pagination_link page_link" href="{furl page=$current_page_num+1}">
                     <span>{$lang->pagination_next} &raquo;</span>
                 </a>
             </li>

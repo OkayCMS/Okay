@@ -9,12 +9,12 @@
     <link rel="icon" href="design/images/favicon.png" type="image/x-icon" />
     <script src="design/js/jquery/jquery.js"></script>
     <script src="design/js/jquery.scrollbar.min.js"></script>
+    <script src="design/js/bootstrap.min.js"></script>
+    <script src="design/js/bootstrap-select.js"></script>
     <script src="design/js/jquery/jquery-ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="design/js/jquery/jquery-ui.min.css" />
     <link href="design/css/okay.css" rel="stylesheet" type="text/css" />
     <link href="design/css/media.css" rel="stylesheet" type="text/css" />
-    <script src="design/js/bootstrap.min.js"></script>
-    <script src="design/js/bootstrap-select.js"></script>
     <script src="design/js/jquery.dd.min.js"></script>
 
 

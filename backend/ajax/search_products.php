@@ -33,7 +33,7 @@
             i.filename as image 
         FROM __products p
         $lang_sql->join
-        LEFT JOIN __images i ON i.product_id=p.id AND i.position=(SELECT MIN(position) FROM __images WHERE product_id=p.id LIMIT 1)
+        LEFT JOIN __images i ON i.id=p.main_image_id
         WHERE 
             1 
             $keyword_sql 

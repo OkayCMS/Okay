@@ -197,6 +197,8 @@ class Products extends Okay {
                 p.rating,
                 p.votes,
                 p.last_modify,
+                p.main_category_id,
+                p.main_image_id,
                 $lang_sql->fields
             FROM __products p
             $lang_sql->join
@@ -415,6 +417,8 @@ class Products extends Okay {
                 p.rating,
                 p.votes,
                 p.last_modify,
+                p.main_category_id,
+                p.main_image_id,
                 $lang_sql->fields
             FROM __products AS p
             $lang_sql->join
@@ -640,9 +644,15 @@ class Products extends Okay {
 
     /*Выборка изображений товаров*/
     public function get_images($filter = array()) {
+        $id_filter = '';
         $product_id_filter = '';
+        
         if(!empty($filter['product_id'])) {
             $product_id_filter = $this->db->placehold('AND i.product_id in(?@)', (array)$filter['product_id']);
+        }
+        
+        if(!empty($filter['id'])) {
+            $id_filter = $this->db->placehold('AND i.id in(?@)', (array)$filter['id']);
         }
         
         // images
@@ -655,6 +665,7 @@ class Products extends Okay {
             FROM __images AS i 
             WHERE 
                 1 
+                $id_filter
                 $product_id_filter 
             ORDER BY i.product_id, i.position
         ");

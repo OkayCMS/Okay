@@ -90,10 +90,9 @@
                                     <div class="okay_list_row">
                                         <div class="okay_list_boding okay_list_check">{$log@iteration}</div>
                                         <div class="okay_list_boding okay_list_photo">
-                                           {$image = $log->product->images|@first}
-                                            {if $image}
+                                            {if $log->product->image}
                                                 <a href="{url module=ProductAdmin id=$log->product_id return=$smarty.server.REQUEST_URI}" target="_blank">
-                                                    <img src="{$image->filename|escape|resize:55:55}"/>
+                                                    <img src="{$log->product->image->filename|escape|resize:55:55}"/>
                                                 </a>
                                             {else}
                                                 <img height="55" width="55" src="design/images/no_image.png"/>

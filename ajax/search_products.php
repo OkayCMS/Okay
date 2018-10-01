@@ -36,6 +36,7 @@
 	$okay->db->query("SELECT 
             p.id,
             p.url,
+            p.main_image_id,
             $px.name
         FROM __products p 
         $lang_sql->join
@@ -50,8 +51,10 @@
 
     $suggestions = array();
     $ids = array();
+    $images_ids = array();
     foreach($products as $p){
         $ids[] = $p->id;
+        $images_ids[] = $p->main_image_id;
     }
     /*Подставляем к найденым товарам их варианты*/
     $variants = array();
@@ -61,11 +64,9 @@
 
     /*Картинки товаров*/
     $images = array();
-    if (!empty($ids)) {
-        foreach ($okay->products->get_images(array('product_id'=>$ids)) as $i) {
-            if (!isset($images[$i->product_id])) {
-                $images[$i->product_id] = $i->filename;
-            }
+    if (!empty($images_ids)) {
+        foreach ($okay->products->get_images(array('id'=>$images_ids)) as $i) {
+            $images[$i->product_id] = $i->filename;
         }
     }
 

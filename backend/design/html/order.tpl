@@ -157,9 +157,8 @@
                                             <input type=hidden name=purchases[id][{$purchase->id}] value='{$purchase->id}'>
 
                                             <div class="okay_list_boding okay_list_photo">
-                                                {$image = $purchase->product->images|first}
-                                                {if $image}
-                                                    <img class=product_icon src="{$image->filename|resize:50:50}">
+                                                {if $purchase->product->image}
+                                                    <img class=product_icon src="{$purchase->product->image->filename|resize:50:50}">
                                                 {else}
                                                     <img width="50" src="design/images/no_image.png"/>
                                                 {/if}
@@ -599,9 +598,10 @@ $(function() {
     var new_purchase = $('#fn_purchase .fn_new_purchase').clone(true);
     $('#fn_purchase .fn_new_purchase').remove().removeAttr('class');
 
-    $("#fn_add_purchase").autocomplete({
+    $("#fn_add_purchase").devbridgeAutocomplete({
     serviceUrl:'ajax/add_order_product.php',
     minChars:0,
+    orientation:'auto',
     noCache: false,
     onSelect:
         function(suggestion){
@@ -661,9 +661,10 @@ $(function() {
         return false;
   }
 
-    $(".fn_user_complite").autocomplete({
+    $(".fn_user_complite").devbridgeAutocomplete({
         serviceUrl:'ajax/search_users.php',
         minChars:0,
+        orientation:'auto',
         noCache: false,
         onSelect:
             function(suggestion){

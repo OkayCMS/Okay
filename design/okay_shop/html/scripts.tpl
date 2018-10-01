@@ -9,7 +9,7 @@
     {* Ошибка при отправке комментария в посте *}
     {if $smarty.get.module == 'BlogView' && $error}
         {* Переход по якорю к форме *}
-        $( window ).load( function() {
+        $( window ).on( 'load', function() {
             location.href = location.href + '#fn_blog_comment';
             $( '#fn_blog_comment' ).trigger( 'submit' );
         } );
@@ -34,7 +34,7 @@
 
     {* Карточка товара, ошибка в форме *}
     {if $smarty.get.module == 'ProductView' && $error}
-        $( window ).load( function() {
+        $( window ).on( 'load', function() {
             $( '.tab_navigation a' ).removeClass( 'selected' );
             $( '.tab' ).hide();
             $( 'a[href="#comments"]' ).addClass( 'selected' );
@@ -42,7 +42,7 @@
         } );
     {* Карточка товара, отправка комментария *}
     {elseif $smarty.get.module == 'ProductView'}
-        $( window ).load( function() {
+        $( window ).on( 'load', function() {
             if( location.hash.search('comment') !=-1 ) {
                 $( '.tab_navigation a' ).removeClass( 'selected' );
                 $( '.tab' ).hide();
@@ -60,7 +60,7 @@
             } );
         } );
     {elseif $subscribe_error}
-        $( window ).load( function() {
+        $( window ).on( 'load', function() {
             location.href = location.href + '#subscribe_error';
             $.fancybox.open( {
                 src: '#subscribe_error',
@@ -86,7 +86,7 @@
     var form_enter_password = '{$lang->form_enter_password}';
     var form_enter_message = '{$lang->form_enter_message}';
 
-    if($(".fn_validate_product").size()>0) {
+    if($(".fn_validate_product").length>0) {
         $(".fn_validate_product").validate({
             rules: {
                 name: "required",
@@ -100,7 +100,7 @@
             }
         });
     }
-    if($(".fn_validate_callback").size()>0) {
+    if($(".fn_validate_callback").length>0) {
         $(".fn_validate_callback").validate({
             rules: {
                 name: "required",
@@ -113,7 +113,7 @@
 
         });
     }
-    if($(".fn_validate_subscribe").size()>0) {
+    if($(".fn_validate_subscribe").length>0) {
         $(".fn_validate_subscribe").validate({
             rules: {
                 subscribe_email: "required",
@@ -123,7 +123,7 @@
             }
         });
     }
-    if($(".fn_validate_post").size()>0) {
+    if($(".fn_validate_post").length>0) {
         $(".fn_validate_post").validate({
             rules: {
                 name: "required",
@@ -138,7 +138,7 @@
         });
     }
 
-    if($(".fn_validate_feedback").size()>0) {
+    if($(".fn_validate_feedback").length>0) {
         $(".fn_validate_feedback").validate({
             rules: {
                 name: "required",
@@ -158,7 +158,7 @@
         });
     }
 
-    if($(".fn_validate_cart").size()>0) {
+    if($(".fn_validate_cart").length>0) {
         $(".fn_validate_cart").validate({
             rules: {
                 name: "required",
@@ -176,7 +176,7 @@
         });
     }
 
-    if($(".fn_validate_login").size()>0) {
+    if($(".fn_validate_login").length>0) {
         $(".fn_validate_login").validate({
             rules: {
                 email: "required",
@@ -189,7 +189,7 @@
         });
     }
 
-    if($(".fn_validate_register").size()>0) {
+    if($(".fn_validate_register").length>0) {
         $(".fn_validate_register").validate({
             rules: {
                 name: "required",
@@ -209,7 +209,7 @@
         });
     }
 
-    if($(".fn_share").size()>0) {
+    if($(".fn_share").length>0) {
         $(".fn_share").jsSocials({
             showLabel: false,
             showCount: false,

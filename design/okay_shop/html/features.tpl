@@ -1,32 +1,51 @@
-{if ($category->subcategories && $category->has_children_visible) ||
-    ($category->path[$category->level_depth-2]->subcategories && $category->path[$category->level_depth-2]->has_children_visible)}
-<div class="catalog_nav filters tablet-hidden">
-    <div class="h2 filter_name">
-        <span data-language="features_catalog">{$lang->features_catalog}</span>
-    </div>
-    <div class="filters">
-        {function name=categories_tree_sidebar}
-        {if $categories}
-            <div class="level_{$level} {if $level == 1}catalog_menu {else}subcatalog {/if}">
-                {foreach $categories as $c}
-                {if $c->visible}
-                    <div class="catalog_item has_child">
-                        <{if $c->id == $category->id}b{else}a{/if} class="catalog_link{if $c->subcategories} sub_cat{/if}{if $category->id == $c->id} selected{/if}" href="{$lang_link}catalog/{$c->url}" data-category="{$c->id}">
-                            <span>{$c->name|escape}</span>
-                        </{if $c->id == $category->id}b{else}a{/if}>
+{if ($category->subcategories && $category->count_children_visible) ||
+($category->path[$category->level_depth-2]->subcategories && $category->path[$category->level_depth-2]->count_children_visible)}
+    <div class="catalog_nav filters tablet-hidden">
+        <div class="h2 filter_name">
+            <span data-language="features_catalog">{$lang->features_catalog}</span>
+        </div>
+        <div class="filters">
+            {function name=categories_tree_sidebar}
+                {if $categories}
+                    <div class="level_{$level} {if $level == 1}catalog_menu {else}subcatalog {/if}">
+                        {foreach $categories as $c}
+                            {if $c->visible}
+                                <div class="catalog_item has_child">
+                                    <{if $c->id == $category->id}b{else}a{/if} class="catalog_link{if $c->subcategories} sub_cat{/if}{if $category->id == $c->id} selected{/if}" href="{$lang_link}catalog/{$c->url}" data-category="{$c->id}">
+                                        <span>{$c->name|escape}</span>
+                                    </{if $c->id == $category->id}b{else}a{/if}>
+                                </div>
+                            {/if}
+                        {/foreach}
                     </div>
                 {/if}
+            {/function}
+            {if $category->subcategories && $category->count_children_visible}
+                {categories_tree_sidebar categories=$category->subcategories level=1}
+            {elseif $category->path[$category->level_depth-2]->subcategories && $category->path[$category->level_depth-2]->count_children_visible}
+                {categories_tree_sidebar categories=$category->path[$category->level_depth-2]->subcategories level=1}
+            {/if}
+        </div>
+    </div>
+{/if}
+
+{if $brand->categories}
+    <div class="catalog_nav filters tablet-hidden">
+        <div class="h2 filter_name">
+            <span data-language="features_catalog">{$lang->features_catalog}</span>
+        </div>
+        <div class="filters">
+            <div class="level_1 catalog_menu">
+                {foreach $brand->categories as $c}
+                    <div class="catalog_item has_child">
+                        <a class="catalog_link" href="{$lang_link}catalog/{$c->url}/brand-{$brand->url}" data-category="{$c->id}">
+                            <span>{$c->name|escape}</span>
+                        </a>
+                    </div>
                 {/foreach}
             </div>
-        {/if}
-        {/function}
-        {if $category->subcategories && $category->has_children_visible}
-            {categories_tree_sidebar categories=$category->subcategories level=1}
-        {elseif $category->path[$category->level_depth-2]->subcategories && $category->path[$category->level_depth-2]->has_children_visible}
-            {categories_tree_sidebar categories=$category->path[$category->level_depth-2]->subcategories level=1}
-        {/if}
+        </div>
     </div>
-</div>
 {/if}
 
 {* Filters *}
@@ -135,7 +154,7 @@
                     {foreach $f->options as $o}
                         <div class="filter_item">
                             {$furl = {furl params=[$f->url=>$o->translit, page=>null]}}
-                            <{$link_tag} class="filter_link{if $link_tag=='span'} fn_filter_link{/if}{if $smarty.get.{$f@key} && in_array($o->translit,$smarty.get.{$f@key})} checked{/if}" href="{$furl}">
+                            <{$link_tag} class="filter_link{if $link_tag=='span'} fn_filter_link{/if}{if $smarty.get.{$f@key} && in_array($o->translit,$smarty.get.{$f@key},true)} checked{/if}" href="{$furl}">
                                 <i class="filter_indicator"></i>
                                 <span>{$o->value|escape}</span>
                             </{$link_tag}>

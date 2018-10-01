@@ -297,6 +297,7 @@ class ImportAjax extends Import {
             }
             
             // Изображения товаров
+            $images_ids = array();
             if(isset($item['images'])) {
                 // Изображений может быть несколько, через запятую
                 $images = explode(',', $item['images']);
@@ -307,13 +308,21 @@ class ImportAjax extends Import {
                         $image_filename = pathinfo($image, PATHINFO_BASENAME);
                         
                         // Добавляем изображение только если такого еще нет в этом товаре
-                        $this->db->query('SELECT filename FROM __images WHERE product_id=? AND (filename=? OR filename=?) LIMIT 1', $product_id, $image_filename, $image);
-                        if(!$this->db->result('filename')) {
-                            $this->products->add_image($product_id, $image);
+                        $this->db->query('SELECT id, filename FROM __images WHERE product_id=? AND (filename=? OR filename=?) LIMIT 1', $product_id, $image_filename, $image);
+                        $result = $this->db->result();
+                        if(!$result->filename) {
+                            $images_ids[] = $this->products->add_image($product_id, $image);
+                        } else {
+                            $images_ids[] = $result->id;
                         }
                     }
                 }
             }
+            
+            $main_image = reset($images_ids);
+            $main_image_id = $main_image ? $main_image : null;
+            $this->products->update_product($product_id, array('main_category_id'=>$category_id, 'main_image_id'=>$main_image_id));
+            
             // Характеристики товаров
             foreach($item as $feature_name=>$feature_value) {
                 // Если нет такого названия колонки, значит это название свойства

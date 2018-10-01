@@ -95,6 +95,7 @@ class ProductView extends View {
         // Связанные товары
         $related_ids = array();
         $related_products = array();
+        $images_ids = array();
         foreach($this->products->get_related_products($product->id) as $p) {
             $related_ids[] = $p->related_id;
             $related_products[$p->related_id] = null;
@@ -102,12 +103,15 @@ class ProductView extends View {
         if(!empty($related_ids)) {
             foreach($this->products->get_products(array('id'=>$related_ids,'limit' => count($related_ids),'visible'=>1, 'in_stock'=>1)) as $p) {
                 $related_products[$p->id] = $p;
+                $images_ids[] = $p->main_image_id;
             }
-            
-            $related_products_images = $this->products->get_images(array('product_id'=>array_keys($related_products)));
-            foreach($related_products_images as $related_product_image) {
-                if(isset($related_products[$related_product_image->product_id])) {
-                    $related_products[$related_product_image->product_id]->images[] = $related_product_image;
+
+            if (!empty($images_ids)) {
+                $images = $this->products->get_images(array('id'=>$images_ids));
+                foreach ($images as $image) {
+                    if (isset($related_products[$image->product_id])) {
+                        $related_products[$image->product_id]->image = $image;
+                    }
                 }
             }
             $related_products_variants = $this->variants->get_variants(array('product_id'=>array_keys($related_products)));
@@ -118,7 +122,6 @@ class ProductView extends View {
             }
             foreach($related_products as $id=>$r) {
                 if(is_object($r)) {
-                    $r->image = $r->images[0];
                     $r->variant = $r->variants[0];
                 } else {
                     unset($related_products[$id]);
@@ -152,9 +155,8 @@ class ProductView extends View {
         $this->design->assign('children', $children);
         
         // Категория и бренд товара
-        $product->categories = $this->categories->get_categories(array('product_id'=>$product->id));
         $this->design->assign('brand', $this->brands->get_brand(intval($product->brand_id)));
-        $category = reset($product->categories);
+        $category = $this->categories->get_category((int)$product->main_category_id);
         $this->design->assign('category', $category);
 
         // Соседние товары

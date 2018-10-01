@@ -537,6 +537,11 @@
 .brand_item:nth-child(4n) {
     border-right: none;
 }
+.category_link:hover,
+.category_link:hover .arrow_right,
+.category_item.hover > .category_link{
+    color: #1480a8;
+}
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {

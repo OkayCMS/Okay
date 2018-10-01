@@ -65,14 +65,13 @@ $okay->db->query("SELECT
         p.id as product_id, 
         p.url, 
         p.annotation, 
-        pc.category_id, 
+        p.main_category_id as category_id, 
         c.rate_from, 
         c.rate_to, 
         v.currency_id 
     FROM __variants v 
     LEFT JOIN __products p ON v.product_id=p.id
     left join __currencies as c on(c.id=v.currency_id)
-    LEFT JOIN __products_categories pc ON p.id = pc.product_id AND pc.position=(SELECT MIN(position) FROM __products_categories WHERE product_id=p.id LIMIT 1)
     LEFT JOIN __brands b on (b.id = p.brand_id)
     WHERE 
         1 

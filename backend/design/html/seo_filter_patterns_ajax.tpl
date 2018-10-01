@@ -96,13 +96,13 @@
                             <div class="col-md-12">
                                 <div class="heading_label">H1</div>
                                 <div class="mb-1">
-                                    <input name="seo_filter_patterns[h1][]" class="form-control mb-h fn_ajax_area" value="{$p->h1}" />
+                                    <input name="seo_filter_patterns[h1][]" class="form-control mb-h fn_ajax_area" value="{$p->h1|escape}" />
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="heading_label">Auto Meta-description</div>
                                 <div class="mb-1">
-                                    <input name="seo_filter_patterns[meta_description][]" class="form-control fn_ajax_area" value="{$p->meta_description}" />
+                                    <input name="seo_filter_patterns[meta_description][]" class="form-control fn_ajax_area" value="{$p->meta_description|escape}" />
                                 </div>
                             </div>
                         </div>
@@ -112,13 +112,13 @@
                             <div class="col-md-12">
                                 <div class="heading_label">Auto Meta-title</div>
                                 <div class="mb-1">
-                                    <input name="seo_filter_patterns[title][]" class="form-control mb-h fn_ajax_area" value="{$p->title}" />
+                                    <input name="seo_filter_patterns[title][]" class="form-control mb-h fn_ajax_area" value="{$p->title|escape}" />
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="heading_label">Auto Meta-keywords</div>
                                 <div class="mb-1">
-                                    <input name="seo_filter_patterns[keywords][]" class="form-control fn_ajax_area" value="{$p->keywords}" />
+                                    <input name="seo_filter_patterns[keywords][]" class="form-control fn_ajax_area" value="{$p->keywords|escape}" />
                                 </div>
                             </div>
                         </div>
@@ -128,7 +128,7 @@
                     <div class="col-lg-12 col-md-12">
                         <div class="heading_label">{$btr->seo_filter_patterns_ajax_description|escape}</div>
                         <div class="mb-1">
-                            <textarea name="seo_filter_patterns[description][]" class="okay_textarea fn_ajax_area">{$p->description}</textarea>
+                            <textarea name="seo_filter_patterns[description][]" class="okay_textarea fn_ajax_area">{$p->description|escape}</textarea>
                         </div>
                     </div>
                 </div>

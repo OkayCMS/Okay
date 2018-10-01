@@ -7,15 +7,15 @@ $(document).on('submit', '.fn_variants', function(e) {
     var variant,
         amount;
     /* Вариант */
-    if($(this).find('input[name=variant]:checked').size() > 0 ) {
+    if($(this).find('input[name=variant]:checked').length > 0 ) {
         variant = $(this).find('input[name=variant]:checked').val();
-    } else if($(this ).find('input[name=variant]').size() > 0 ) {
+    } else if($(this ).find('input[name=variant]').length > 0 ) {
         variant = $(this).find('input[name=variant]').val();
-    } else if($(this).find('select[name=variant]').size() > 0 ) {
+    } else if($(this).find('select[name=variant]').length > 0 ) {
         variant = $(this).find('select[name=variant]').val();
     }
     /* Кол-во */
-    if($(this).find('input[name=amount]').size()>0) {
+    if($(this).find('input[name=amount]').length>0) {
         amount = $(this).find('input[name=amount]').val();
     } else {
         amount = 1;
@@ -139,7 +139,7 @@ $(document).on('click', '.fn_comparison', function(e){
                 button.attr( 'title', text );
             }
             /* Если находимся на странице сравнения - перезагрузить */
-            if( $( '.fn_comparison_products' ).size() ) {
+            if( $( '.fn_comparison_products' ).length ) {
                 window.location = window.location;
             }
         }
@@ -176,7 +176,7 @@ $(document).on('click', '.fn_wishlist', function(e){
                 button.attr( 'title', text );
             }
             /* Если находимся на странице сравнения - перезагрузить */
-            if( $( '.fn_wishlist_page' ).size() ) {
+            if( $( '.fn_wishlist_page' ).length ) {
                 window.location = window.location;
             }
         }
@@ -255,25 +255,7 @@ $(function(){
         }
     });
 
-    // Эмуляция наведения мыши на планшете и мобильном
-    $('ul li.category_item.has_child').on("touchstart", function (e) {
-        'use strict'; //satisfy code inspectors
-        var link = $(this);
-        if (link.hasClass('hover')) {
-            return true;
-        } else {
-            if (link.parent().is('.level_1')) {
-                $('ul li.category_item.has_child').removeClass('hover');
-            } else {
-                link.siblings('.hover').removeClass('hover');
-            }
-            link.addClass('hover');
-            e.preventDefault();
-            return false;
-        }
-    });
-
-     /* Главное меню для мобильных */
+    /* Главное меню для мобильных */
     $('.fn_menu_switch').on("click", function(){
         $('.menu').toggle("normal");
         $('body').toggleClass('openmenu');
@@ -298,7 +280,7 @@ $(function(){
     var nav = $('.tabs').find('.tab_navigation');
     var tabs = $('.tabs').find('.tab_container');
 
-    if(nav.children('.selected').size() > 0) {
+    if(nav.children('.selected').length > 0) {
         $(nav.children('.selected').attr("href")).show();
     } else {
         nav.children().first().addClass('selected');
@@ -318,9 +300,9 @@ $(function(){
 
     //Кнопка вверх
     $(window).scroll(function () {
-    var scroll_height = $(window).height();
+        var scroll_height = $(window).height();
 
-     if ($(this).scrollTop() >= scroll_height) {
+        if ($(this).scrollTop() >= scroll_height) {
             $('.to_top').fadeIn();
         } else {
             $('.to_top').fadeOut();
@@ -434,7 +416,7 @@ $(function(){
     $('.products_item').matchHeight();
     $('.fn_col').matchHeight();
 
-    
+
 
 
     /* Зум картинок в карточке */
@@ -443,11 +425,11 @@ $(function(){
             protect: true
         }
     });
-    
+
     $.fancybox.defaults.hash = false;
 
     /* Аяксовый фильтр по цене */
-    if( $( '#fn_slider_price' ).size() ) {
+    if( $( '#fn_slider_price' ).length ) {
         var slider_all = $( '#fn_slider_min, #fn_slider_max' ),
             slider_min = $( '#fn_slider_min' ),
             slider_max = $( '#fn_slider_max' ),
@@ -499,24 +481,31 @@ $(function(){
         } );
 
         // Если после фильтрации у нас осталось товаров на несколько страниц, то постраничную навигацию мы тоже проведем с помощью ajax чтоб не сбить фильтр по цене
-        $( document ).on( 'click', '.fn_is_ajax a', function(e) {
+        $( document ).on( 'click', 'a.fn_sort_pagination_link', function(e) {
             e.preventDefault();
-            $('.fn_categories').append('<div class="fn_ajax_wait"></div>');
-            var link = $(this).attr( 'href' ),
-                send_min = $("#fn_slider_min").val();
-                send_max = $("#fn_slider_max").val();
-            $.ajax( {
-                url: link,
-                data: { ajax: 1, 'p[min]': send_min, 'p[max]': send_max },
-                dataType: 'json',
-                success: function(data) {
-                    $( '#fn_products_content' ).html( data.products_content );
-                    $( '.fn_pagination' ).html( data.products_pagination );
-                    $('.fn_products_sort').html(data.products_sort);
+            var link = $(this).data('href') ? $(this).data('href') : $(this).attr('href');
+            
+            if ($(this).closest('.fn_ajax_buttons').hasClass('fn_is_ajax')) {
 
-                    $('.fn_ajax_wait').remove();
-                }
-            } );
+                $('.fn_categories').append('<div class="fn_ajax_wait"></div>');
+                var send_min = $("#fn_slider_min").val();
+                send_max = $("#fn_slider_max").val();
+                $.ajax({
+                    url: link,
+                    data: {ajax: 1, 'p[min]': send_min, 'p[max]': send_max},
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#fn_products_content').html(data.products_content);
+                        $('.fn_pagination').html(data.products_pagination);
+                        $('.fn_products_sort').html(data.products_sort);
+                        $('.products_item').matchHeight();
+
+                        $('.fn_ajax_wait').remove();
+                    }
+                });
+            } else {
+                document.location.href = link;
+            }
         } );
     }
 
@@ -541,27 +530,27 @@ $(function(){
     } );
 
     /* Слайдер в сравнении */
-    if( $( '.fn_comparison_products' ).size() ) {
-            $( '.fn_comparison_products' ).slick( {
-                infinite: true,
-                slidesToShow: 3,
-                slidesToScroll: 1,
-                arrows: true,
-                responsive: [
-                    {
-                      breakpoint: 1200,
-                      settings: {
+    if( $( '.fn_comparison_products' ).length ) {
+        $( '.fn_comparison_products' ).slick( {
+            infinite: true,
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            arrows: true,
+            responsive: [
+                {
+                    breakpoint: 1200,
+                    settings: {
                         slidesToShow: 2,
-                      }
-                    },
-                    {
-                      breakpoint: 992,
-                      settings: {
-                        slidesToShow: 1
-                      }
                     }
-                ]
-            } );
+                },
+                {
+                    breakpoint: 992,
+                    settings: {
+                        slidesToShow: 1
+                    }
+                }
+            ]
+        } );
 
         resize_comparison();
 
@@ -630,9 +619,9 @@ function amount_change(input, action) {
         curr_val = parseFloat( input.val() ),
         step = 1,
         id = input.data('id');
-        if(isNaN(curr_val)){
-            curr_val = okay.amount;
-        }
+    if(isNaN(curr_val)){
+        curr_val = okay.amount;
+    }
 
     /* Если включен предзаказ макс. кол-во товаров ставим максимально количество товаров в заказе */
     if ( input.parent().hasClass('fn_is_preorder')) {
@@ -753,11 +742,11 @@ function resize_comparison() {
         }
     });
     $('.fn_resize' ).height(minHeightHead);
-    if ($('[data-use]').size()) {
+    if ($('[data-use]').length) {
         $('[data-use]').each(function () {
             var use = '.' + $(this).data('use');
             var minHeight = $(this).height();
-            if ($(use).size()) {
+            if ($(use).length) {
                 $(use).each(function () {
                     if ($(this).height() >= minHeight) {
                         minHeight = $(this).height();
@@ -770,7 +759,9 @@ function resize_comparison() {
 }
 
 /* В сравнении выравниваем строки */
-$( window ).load( resize_comparison );
+if( $( '.fn_comparison_products' ).length ) {
+    $(window).on('load', resize_comparison);
+}
 
 /* Звёздный рейтинг товаров */
 $.fn.rater = function (options) {
