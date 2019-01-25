@@ -69,7 +69,7 @@
             <div class="boxed fn_toggle_wrap min_height_230px">
                 <div class="heading_box">{$btr->general_template|escape} {$template_file}</div>
 
-                <form>
+                <form class="fn_fast_button">
                     <textarea id="template_content" name="template_content" style="width:700px;height:500px;">{$template_content|escape}</textarea>
                 </form>
                 <div class="row">
@@ -149,6 +149,7 @@
         // Нажали кнопку Сохранить
         $('.fn_save').on('click',function(){
             save();
+            return false;
         });
     });
 </script>

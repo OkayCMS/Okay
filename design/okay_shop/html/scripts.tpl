@@ -4,6 +4,14 @@
     var okay = {literal}{}{/literal};
     okay.max_order_amount = {$settings->max_order_amount};
 
+    {*Сброс фильтра*}
+    {if $smarty.get.module == 'ProductsView'}
+        $(document).on('click', '.fn_filter_reset', function () {
+            var date = new Date(0);
+            document.cookie = "price_filter=; path=/; expires=" + date.toUTCString();
+        });
+    {/if}
+    
     {* Предзаказ *}
     okay.is_preorder = {$settings->is_preorder};
     {* Ошибка при отправке комментария в посте *}
@@ -68,23 +76,13 @@
             } );
         } );
     {/if}
-    
-    {if $smarty.get.module == "MainView" || $smarty.get.module == "ProductsView" || $smarty.get.module == "ProductView" || $smarty.get.module == "ComparisonView" || $smarty.get.module == "WishlistView" || $smarty.get.module == "BlogView"}
-        $(document).ready(function(){
-            $('select[name=variant]').each(function(){
-                var first_in_stock = $(this).find('option[data-stock!="0"]').first();
-                first_in_stock.prop('selected',true);
-                first_in_stock.trigger('change');
-            });
-        });
-    {/if}
 
-    var form_enter_name = '{$lang->form_enter_name}';
-    var form_enter_phone = '{$lang->form_enter_phone}';
-    var form_error_captcha = '{$lang->form_error_captcha}';
-    var form_enter_email = '{$lang->form_enter_email}';
-    var form_enter_password = '{$lang->form_enter_password}';
-    var form_enter_message = '{$lang->form_enter_message}';
+    var form_enter_name = "{$lang->form_enter_name|escape}";
+    var form_enter_phone = "{$lang->form_enter_phone|escape}";
+    var form_error_captcha = "{$lang->form_error_captcha|escape}";
+    var form_enter_email = "{$lang->form_enter_email|escape}";
+    var form_enter_password = "{$lang->form_enter_password|escape}";
+    var form_enter_message = "{$lang->form_enter_message|escape}";
 
     if($(".fn_validate_product").length>0) {
         $(".fn_validate_product").validate({

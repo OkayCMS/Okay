@@ -18,8 +18,14 @@
 {/if}
 
 {* Sidebar with filters *}
-<div class="sidebar sidebar_top">
+<div class="sidebar">
+    <div class="fn_selected_features">
+        {include 'selected_features.tpl'}
+    </div>
+
+    <div class="sidebar_top fn_features">
     {include file='features.tpl'}
+    </div>
 </div>
 
 <div class="products_container">
@@ -36,7 +42,7 @@
         <h1 class="h1"><span data-category="{$category->id}">{if $category->name_h1|escape}{$category->name_h1|escape}{else}{$category->name|escape}{/if}</span> {$brand->name|escape} {$filter_meta->h1|escape}</h1>
     {/if}
 
-    {if $current_page_num == 1 && ($category->annotation || $brand->annotation) && !$is_filter}
+    {if $current_page_num == 1 && ($category->annotation || $brand->annotation) && !$is_filter_page && !$smarty.get.page && !$smarty.get.sort}
         <div class="block padding">
             {* Краткое описание категории *}
             {$category->annotation}
@@ -46,6 +52,8 @@
         </div>
     {/if}
 
+
+    
     {if $products}
         {* Product Sorting *}
         <div class="fn_products_sort">
@@ -77,7 +85,7 @@
             <div class="block padding">
                 {$seo_filter_pattern->description}
             </div>
-        {elseif (!$category || !$brand) && ($category->description || $brand->description) && !$is_filter}
+        {elseif (!$category || !$brand) && ($category->description || $brand->description) && !$is_filter_page && !$smarty.get.page && !$smarty.get.sort}
             <div class="block padding">
                 {* Описание категории *}
                 {$category->description}

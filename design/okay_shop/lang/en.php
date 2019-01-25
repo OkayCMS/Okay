@@ -255,3 +255,5 @@ $lang['meta_page'] = ", page";
 $lang['page404_text'] = "The page you are requesting does not exist, or it has been deleted. Perhaps you typed the wrong address. Try entering again.";
 $lang['meta_organization'] = "Organization";
 $lang['features_catalog'] = "Categories";
+$lang['selected_features_heading'] = "You choosed:";
+$lang['selected_features_reset'] = "Clear all";

@@ -53,6 +53,15 @@ class SeoFilterPatternsAdmin extends Okay {
 
             /*Обновление шаблона данных категории*/
             if($this->request->post("action") == "set") {
+
+                $this->settings->max_filter_brands          = $this->request->post('max_filter_brands', 'integer', 1);
+                $this->settings->max_filter_filter          = $this->request->post('max_filter_filter', 'integer', 1);
+                $this->settings->max_filter_features_values = $this->request->post('max_filter_features_values', 'integer', 1);
+                $this->settings->max_filter_features        = $this->request->post('max_filter_features', 'integer', 1);
+                $this->settings->max_filter_depth           = $this->request->post('max_filter_depth', 'integer', 1);
+
+                $result->success = true;
+                
                 $category = new stdClass();
                 $category->id = $this->request->post("category_id", "integer");
                 if ($category = $this->categories->get_category($category->id)) {
@@ -118,9 +127,8 @@ class SeoFilterPatternsAdmin extends Okay {
                     $this->design->assign("category", $category);
                     $features_aliases = $this->features_aliases->get_features_aliases();
                     $this->design->assign("features_aliases", $features_aliases);
-                    $result->success = true;
+                    $result->tpl = $this->design->fetch("seo_filter_patterns_ajax.tpl");
                 }
-                $result->tpl = $this->design->fetch("seo_filter_patterns_ajax.tpl");
             }
 
             if ($result) {

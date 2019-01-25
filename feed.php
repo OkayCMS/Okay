@@ -12,7 +12,7 @@ print
 <yml_catalog date='".date('Y-m-d H:i')."'>
 <shop>
 <name>".$okay->settings->site_name."</name>
-<company>".$okay->settings->company_name."</company>
+<company>".$okay->settings->site_name."</company>
 <url>".$okay->config->root_url."</url>
 <platform>OkayCMS</platform>
 <version>".$okay->config->version."</version>
@@ -47,6 +47,7 @@ print "</categories>
 ";
 
 $stock_filter = $okay->settings->yandex_export_not_in_stock ? '' : ' AND (v.stock >0 OR v.stock is NULL) ';
+$price_filter = $okay->settings->yandex_no_export_without_price ? ' AND v.price >0 ' : '';
 
 // Товары
 $okay->db->query("SET SQL_BIG_SELECTS=1");
@@ -77,7 +78,8 @@ $okay->db->query("SELECT
         1 
         AND p.visible 
         AND v.feed = 1 
-        $stock_filter 
+        $stock_filter
+        $price_filter 
     GROUP BY v.id 
     ORDER BY p.id, v.position ");
 print "<offers>
@@ -99,9 +101,16 @@ foreach($okay->products->get_images(array('product_id' => $p_ids)) as $image) {
     $p_images[$image->product_id][] = $image->filename;
 }
 
-$features = array();
-foreach ($okay->features->get_product_options(array('product_id'=>$p_ids, 'yandex'=>1)) as $option) {
-    $features[$option->product_id][] = $option;
+// Получаем список свойств для фида
+$features_values = array();
+foreach ($okay->features_values->get_features_values(array('product_id'=>$p_ids, 'yandex'=>1)) as $fv) {
+    $features_values[$fv->id] = $fv;
+}
+
+// Получаем связь товара и значения свойства
+$products_values = array();
+foreach ($okay->features_values->get_product_value_id($p_ids) as $pv) {
+    $products_values[$pv->product_id][] = $pv->value_id;
 }
 
 foreach($products as $p) {
@@ -160,11 +169,14 @@ foreach($products as $p) {
     <seller_warranty>".($okay->settings->yandex_has_seller_warranty ? 'true' : 'false')."</seller_warranty>
     ";
     
-    if (!empty($features[$p->product_id])) {
-        foreach($features[$p->product_id] as $feature) {
-            print "
-            <param name='".htmlspecialchars($feature->name)."'>".htmlspecialchars($feature->value)."</param>
-            ";
+    if (!empty($products_values[$p->product_id])) {
+        foreach($products_values[$p->product_id] as $value_id) {
+            if (isset($features_values[$value_id])) {
+                $feature = $features_values[$value_id];
+                print "
+                <param name='".htmlspecialchars($feature->name)."'>".htmlspecialchars($feature->value)."</param>
+                ";
+            }
         }
     }
     print "</offer>";

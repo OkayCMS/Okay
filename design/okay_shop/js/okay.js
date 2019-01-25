@@ -214,16 +214,82 @@ function change_currency(currency_id) {
     return false;
 }
 
+function price_slider_init() {
+
+    var slider_all = $( '#fn_slider_min, #fn_slider_max' ),
+        slider_min = $( '#fn_slider_min' ),
+        slider_max = $( '#fn_slider_max' ),
+        current_min = slider_min.val(),
+        current_max = slider_max.val(),
+        range_min = slider_min.data( 'price' ),
+        range_max = slider_max.data( 'price' ),
+        link = window.location.href.replace( /\/page-(\d{1,5})/, '' ),
+        ajax_slider = function() {
+            $.ajax( {
+                url: link,
+                data: {
+                    ajax: 1,
+                    'p[min]': slider_min.val(),
+                    'p[max]': slider_max.val()
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#fn_products_content').html( data.products_content );
+                    $('.fn_pagination').html( data.products_pagination );
+                    $('.fn_products_sort').html(data.products_sort);
+                    $('.fn_features').html(data.features);
+                    $('.fn_selected_features').html(data.selected_features);
+                    $('.products_item').matchHeight();
+                    // Выпадающие блоки
+                    $('.fn_switch').click(function(e){
+                        e.preventDefault();
+
+                        $(this).next().slideToggle(300);
+
+                        if ($(this).hasClass('active')) {
+                            $(this).removeClass('active');
+                        }
+                        else {
+                            $(this).addClass('active');
+                        }
+                    });
+
+                    price_slider_init();
+
+                    $('.fn_ajax_wait').remove();
+                }
+            } );
+        };
+    link = link.replace(/\/sort-([a-zA-Z_]+)/, '');
+
+    $( '#fn_slider_price' ).slider( {
+        range: true,
+        min: range_min,
+        max: range_max,
+        values: [current_min, current_max],
+        slide: function(event, ui) {
+            slider_min.val( ui.values[0] );
+            slider_max.val( ui.values[1] );
+        },
+        stop: function(event, ui) {
+            slider_min.val( ui.values[0] );
+            slider_max.val( ui.values[1] );
+            $('.fn_categories').append('<div class="fn_ajax_wait"></div>');
+            ajax_slider();
+        }
+    } );
+
+    slider_all.on( 'change', function() {
+        $( "#fn_slider_price" ).slider( 'option', 'values', [slider_min.val(), slider_max.val()] );
+        ajax_slider();
+    } );
+}
+
 /* Document ready */
 $(function(){
 
     $(document).on("click", ".fn_menu_toggle", function() {
         $(this).next(".fn_menu_list").first().slideToggle(300);
-        return false;
-    });
-
-    $(document).on("click", ".fn_filter_link", function() {
-        location.href = location.protocol + "//" + location.hostname + $(this).attr("href");
         return false;
     });
 
@@ -315,24 +381,19 @@ $(function(){
 
 
     // Проверка полей на пустоту для плейсхолдера
-    $('.placeholder_focus').blur(function() {
+    $('.placeholder_focus').on('blur', function() {
         if( $(this).val().trim().length > 0 ) {
-            $(this).next().addClass('active');
+            $(this).parent().addClass('filled');
         } else {
-            $(this).next().removeClass('active');
+            $(this).parent().removeClass('filled');
         }
-    });
-
-    $('.form_placeholder').click(function(){
-        $(this).prev().focus();
     });
 
     $('.placeholder_focus').each(function() {
         if( $(this).val().trim().length > 0 ) {
-            $(this).next().addClass('active');
+            $(this).parent().addClass('filled');
         }
     });
-
 
     /* Инициализация баннера */
     $('.fn_banner_group1').slick({
@@ -430,56 +491,9 @@ $(function(){
 
     /* Аяксовый фильтр по цене */
     if( $( '#fn_slider_price' ).length ) {
-        var slider_all = $( '#fn_slider_min, #fn_slider_max' ),
-            slider_min = $( '#fn_slider_min' ),
-            slider_max = $( '#fn_slider_max' ),
-            current_min = slider_min.val(),
-            current_max = slider_max.val(),
-            range_min = slider_min.data( 'price' ),
-            range_max = slider_max.data( 'price' ),
-            link = window.location.href.replace( /\/page-(\d{1,5})/, '' ),
-            ajax_slider = function() {
-                $.ajax( {
-                    url: link,
-                    data: {
-                        ajax: 1,
-                        'p[min]': slider_min.val(),
-                        'p[max]': slider_max.val()
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        $( '#fn_products_content' ).html( data.products_content );
-                        $( '.fn_pagination' ).html( data.products_pagination );
-                        $('.fn_products_sort').html(data.products_sort);
 
-                        $('.fn_ajax_wait').remove();
-                    }
-                } );
-            };
-        link = link.replace(/\/sort-([a-zA-Z_]+)/, '');
-
-        $( '#fn_slider_price' ).slider( {
-            range: true,
-            min: range_min,
-            max: range_max,
-            values: [current_min, current_max],
-            slide: function(event, ui) {
-                slider_min.val( ui.values[0] );
-                slider_max.val( ui.values[1] );
-            },
-            stop: function(event, ui) {
-                slider_min.val( ui.values[0] );
-                slider_max.val( ui.values[1] );
-                $('.fn_categories').append('<div class="fn_ajax_wait"></div>');
-                ajax_slider();
-            }
-        } );
-
-        slider_all.on( 'change', function() {
-            $( "#fn_slider_price" ).slider( 'option', 'values', [slider_min.val(), slider_max.val()] );
-            ajax_slider();
-        } );
-
+        price_slider_init();
+        
         // Если после фильтрации у нас осталось товаров на несколько страниц, то постраничную навигацию мы тоже проведем с помощью ajax чтоб не сбить фильтр по цене
         $( document ).on( 'click', 'a.fn_sort_pagination_link', function(e) {
             e.preventDefault();
@@ -498,7 +512,10 @@ $(function(){
                         $('#fn_products_content').html(data.products_content);
                         $('.fn_pagination').html(data.products_pagination);
                         $('.fn_products_sort').html(data.products_sort);
+                        $('.fn_features').html(data.features);
+                        $('.fn_selected_features').html(data.selected_features);
                         $('.products_item').matchHeight();
+                        price_slider_init();
 
                         $('.fn_ajax_wait').remove();
                     }

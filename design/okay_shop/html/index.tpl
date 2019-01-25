@@ -14,6 +14,10 @@
     {* JQuery *}
     <script src="design/{$settings->theme}/js/jquery-3.3.1.min.js{if $js_version}?v={$js_version}{/if}"></script>
 
+    {* JQuery migrate*}
+    {if $module == "ProductsView"}
+    <script src="design/{$settings->theme}/js/jquery-migrate-3.0.1.min.js{if $js_version}?v={$js_version}{/if}"></script>
+    {/if}
     {* Slick slider *}
     <script src="design/{$settings->theme}/js/slick.min.js{if $js_version}?v={$js_version}{/if}"></script>
 
@@ -24,7 +28,6 @@
     <link href="//fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i&amp;subset=cyrillic" rel="stylesheet">
 
     {* CSS *}
-    <link href="design/{$settings->theme|escape}/css/font-awesome.min.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
     <link href="design/{$settings->theme|escape}/css/libs.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
     <link href="design/{$settings->theme|escape}/css/style.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
     <link href="design/{$settings->theme|escape}/css/responsive.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
@@ -39,12 +42,12 @@
         <script type="text/javascript">
             var onloadCallback = function() {
                 mysitekey = "{$settings->public_recaptcha}";
-                if($('#recaptcha1').size()>0){
+                if($('#recaptcha1').length>0){
                     grecaptcha.render('recaptcha1', {
                         'sitekey' : mysitekey
                     });
                 }
-                if($('#recaptcha2').size()>0){
+                if($('#recaptcha2').length>0){
                     grecaptcha.render('recaptcha2', {
                         'sitekey' : mysitekey
                     });
@@ -427,6 +430,9 @@
 {* Библиотека с "Slider", "Transfer Effect" *}
 <script src="design/{$settings->theme}/js/jquery-ui.min.js{if $js_version}?v={$js_version}{/if}"></script>
 
+{* Библиотека touch-punch *}
+<script src="design/{$settings->theme}/js/ui.touch-punch.min.js{if $js_version}?v={$js_version}{/if}"></script>
+
 {* Fancybox *}
 <link href="design/{$settings->theme|escape}/css/jquery.fancybox.min.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
 <script src="design/{$settings->theme|escape}/js/jquery.fancybox.min.js{if $js_version}?v={$js_version}{/if}" defer></script>
@@ -442,7 +448,7 @@
 
 {* Social share buttons *}
 {if $smarty.get.module == 'ProductView' || $smarty.get.module == "BlogView"}
-
+    <link href="design/{$settings->theme|escape}/css/font-awesome.min.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
     <link href="design/{$settings->theme|escape}/css/jssocials.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
     <link href="design/{$settings->theme|escape}/css/jssocials-theme-flat.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
     <script src="design/{$settings->theme|escape}/js/jssocials.min.js{if $js_version}?v={$js_version}{/if}" ></script>

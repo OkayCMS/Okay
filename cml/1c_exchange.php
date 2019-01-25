@@ -878,12 +878,13 @@ function flush_database() {
 
     // Очищаем свойства и свойства товара
     $okay->db->query('TRUNCATE TABLE __features');
-    $okay->db->query('TRUNCATE TABLE __options');
+    $this->db->query("TRUNCATE TABLE __features_values");
 
     // Очищаем переводы
     $okay->db->query('TRUNCATE TABLE __lang_brands');
     $okay->db->query('TRUNCATE TABLE __lang_categories');
     $okay->db->query('TRUNCATE TABLE __lang_features');
+    $this->db->query("TRUNCATE TABLE __lang_features_values");
     $okay->db->query('TRUNCATE TABLE __lang_products');
     $okay->db->query('TRUNCATE TABLE __lang_variants');
 

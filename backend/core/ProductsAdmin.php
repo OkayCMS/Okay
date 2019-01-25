@@ -33,11 +33,16 @@ class ProductsAdmin extends Okay {
         $this->design->assign('category_id', $category_id);
         
         // Бренды категории
-        $brands = $this->brands->get_brands(array('category_id'=>$filter['category_id']));
+        $brands_count = $this->brands->count_brands(array('category_id'=>$filter['category_id']));
+        $brands = $this->brands->get_brands(array('category_id'=>$filter['category_id'], 'limit'=>$brands_count));
         $this->design->assign('brands', $brands);
         
         // Все бренды
-        $all_brands = $this->brands->get_brands();
+        $brands_count = $this->brands->count_brands();
+        $all_brands = array();
+        foreach ($this->brands->get_brands(array('limit'=>$brands_count)) as $b) {
+            $all_brands[$b->id] = $b;
+        }
         $this->design->assign('all_brands', $all_brands);
         
         // Текущий бренд
@@ -48,6 +53,8 @@ class ProductsAdmin extends Okay {
             $filter['brand_id'] = array(0);
         }
         $this->design->assign('brand_id', $brand_id);
+
+        $filter['features'] = $this->request->get('features');
         
         /*Фильтр по товарам*/
         if($f = $this->request->get('filter', 'string')) {
@@ -224,7 +231,8 @@ class ProductsAdmin extends Okay {
                         $this->db->query($query);
                         
                         // Заново выберем бренды категории
-                        $brands = $this->brands->get_brands(array('category_id'=>$category_id));
+                        $brands_count = $this->brands->count_brands(array('category_id'=>$category_id));
+                        $brands = $this->brands->get_brands(array('category_id'=>$category_id, 'limit'=>$brands_count));
                         $this->design->assign('brands', $brands);
                         
                         break;
@@ -286,15 +294,6 @@ class ProductsAdmin extends Okay {
                         $products[$image->product_id]->image = $image;
                     }
                 }
-            }
-
-            $brands = $this->brands->get_brands(array('product_id'=>$products_ids));
-            $brands_array = array();
-            if(!empty($brands)) {
-                foreach ($brands as $brand) {
-                    $brands_array[$brand->id] = $brand;
-                }
-                $this->design->assign('brands_name',$brands_array);
             }
         }
         

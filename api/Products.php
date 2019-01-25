@@ -178,10 +178,37 @@ class Products extends Okay {
                 }
             }
         }
-        
+
         if(!empty($filter['features'])) {
-            foreach($filter['features'] as $feature=>$value) {
-                $features_filter .= $this->db->placehold('AND p.id in (SELECT product_id FROM __options WHERE feature_id=? AND translit in(?@) AND lang_id=? ) ', $feature, (array)$value, (int)$lang_id);
+
+            $lang_id_options_filter = '';
+            $lang_options_join      = '';
+            // Алиас для таблицы без языков
+            $options_px = 'fv';
+            if (!empty($lang_id)) {
+                $lang_id_options_filter = $this->db->placehold("AND `lfv`.`lang_id`=?", $lang_id);
+                $lang_options_join = $this->db->placehold("LEFT JOIN `__lang_features_values` AS `lfv` ON `pf`.`value_id`=`lfv`.`feature_value_id`");
+                // Алиас для таблицы с языками
+                $options_px = 'lfv';
+            }
+
+            foreach($filter['features'] as $feature_id=>$value) {
+                $features_values[] = $this->db->placehold("(
+                            `{$options_px}`.`translit` in(?@)
+                            AND `{$options_px}`.`feature_id`=?)", (array)$value, $feature_id);
+            }
+
+            if (!empty($features_values)) {
+                $features_values = implode(' OR ', $features_values);
+                
+                $features_filter = $this->db->placehold("AND `p`.`id` in (SELECT 
+                        `pf`.`product_id`
+                    FROM `__products_features_values` AS `pf`
+                    $lang_options_join
+                    LEFT JOIN `__features_values` AS `fv` ON `fv`.`id`=`pf`.`value_id`
+                    WHERE ($features_values) 
+                    $lang_id_options_filter
+                    GROUP BY `pf`.`product_id` HAVING COUNT(*) >= ?)", count($filter['features']));
             }
         }
         
@@ -224,6 +251,7 @@ class Products extends Okay {
             ORDER BY $order
             $sql_limit
         ";
+        
         $this->db->query($query);
         $products = $this->db->results();
         
@@ -356,10 +384,37 @@ class Products extends Okay {
         if(isset($filter['visible'])) {
             $visible_filter = $this->db->placehold('AND p.visible=?', intval($filter['visible']));
         }
-        
+
         if(!empty($filter['features'])) {
-            foreach($filter['features'] as $feature=>$value) {
-                $features_filter .= $this->db->placehold('AND p.id in (SELECT product_id FROM __options WHERE feature_id=? AND translit in(?@) AND lang_id=? ) ', $feature, (array)$value, (int)$lang_id);
+
+            $lang_id_options_filter = '';
+            $lang_options_join      = '';
+            // Алиас для таблицы без языков
+            $options_px = 'fv';
+            if (!empty($lang_id)) {
+                $lang_id_options_filter = $this->db->placehold("AND `lfv`.`lang_id`=?", $lang_id);
+                $lang_options_join = $this->db->placehold("LEFT JOIN `__lang_features_values` AS `lfv` ON `pf`.`value_id`=`lfv`.`feature_value_id`");
+                // Алиас для таблицы с языками
+                $options_px = 'lfv';
+            }
+            
+            foreach($filter['features'] as $feature_id=>$value) {
+                $features_values[] = $this->db->placehold("(
+                            `{$options_px}`.`translit` in(?@)
+                            AND `{$options_px}`.`feature_id`=?)", (array)$value, $feature_id);
+            }
+
+            if (!empty($features_values)) {
+                $features_values = implode(' OR ', $features_values);
+
+                $features_filter = $this->db->placehold("AND `p`.`id` in (SELECT 
+                        `pf`.`product_id`
+                    FROM `__products_features_values` AS `pf`
+                    $lang_options_join
+                    LEFT JOIN `__features_values` AS `fv` ON `fv`.`id`=`pf`.`value_id`
+                    WHERE ($features_values) 
+                    $lang_id_options_filter
+                    GROUP BY `pf`.`product_id` HAVING COUNT(*) >= ?)", count($filter['features']));
             }
         }
         
@@ -438,7 +493,7 @@ class Products extends Okay {
         $product = (object)$product;
         $result = $this->languages->get_description($product, 'product');
 
-        $query = $this->db->placehold("UPDATE __products SET ?% WHERE id in (?@) LIMIT ?", $product, (array)$id, count((array)$id));
+        $query = $this->db->placehold("UPDATE __products SET ?%, last_modify=NOW() WHERE id in (?@) LIMIT ?", $product, (array)$id, count((array)$id));
         if($this->db->query($query)) {
             if(!empty($result->description)) {
                 $this->languages->action_description($id, $result->description, 'product', $this->languages->lang_id());
@@ -451,6 +506,7 @@ class Products extends Okay {
 
     /*Добавление товара*/
     public function add_product($product) {
+        $created = '';
         $product = (array) $product;
         if(empty($product['url'])) {
             $product['url'] = preg_replace("/[\s]+/ui", '-', $product['name']);
@@ -467,9 +523,12 @@ class Products extends Okay {
         }
         
         $product = (object)$product;
+        if (empty($product->created)) {
+            $created = $this->db->placehold(", created=NOW()");
+        }        
         $result = $this->languages->get_description($product, 'product');
 
-        if($this->db->query("INSERT INTO __products SET ?%", $product)) {
+        if($this->db->query("INSERT INTO __products SET ?% $created", $product)) {
             $id = $this->db->insert_id();
             $this->db->query("UPDATE __products SET position=id WHERE id=?", $id);
             
@@ -504,7 +563,7 @@ class Products extends Okay {
             }
             
             // Удаляем свойства
-            $this->db->query("DELETE FROM __options WHERE product_id=?", intval($id));
+            $this->features_values->delete_product_value($id);
             
             // Удаляем связанные товары
             $related = $this->get_related_products($id);
@@ -591,10 +650,10 @@ class Products extends Okay {
             $this->variants->add_variant($variant);
         }
         
-        // Дублируем свойства
-        $options = $this->features->get_options(array('product_id'=>$id));
-        foreach($options as $o) {
-            $this->features->update_option($new_id, $o->feature_id, $o->value, $o->translit);
+        // Дублируем значения свойств
+        $values = $this->features_values->get_product_value_id($id);
+        foreach($values as $value) {
+            $this->features_values->add_product_value($new_id, $value->value_id);
         }
         
         // Дублируем связанные товары
@@ -795,12 +854,6 @@ class Products extends Okay {
                             }
                             $this->variants->update_variant($variants[$i]->id, $upd_variant);
                         }
-                    }
-                    
-                    // Дублируем свойства
-                    $options = $this->features->get_options(array('product_id'=>$id));
-                    foreach($options as $o) {
-                        $this->features->update_option($new_id, $o->feature_id, $o->value, $o->translit);
                     }
                     
                     $this->languages->set_lang_id($lang_id);

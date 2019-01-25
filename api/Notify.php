@@ -15,6 +15,8 @@ class Notify extends Okay {
         $mail->Port       = $this->settings->smtp_port;
         if ($mail->Port == 465) {
             $mail->SMTPSecure = "ssl";
+            // Добавляем протокол, если не указали
+            $mail->Host = (strpos($mail->Host, "ssl://") === false) ? "ssl://".$mail->Host : $mail->Host;
         }
         $mail->Username   = $this->settings->smtp_user;
         $mail->Password   = $this->settings->smtp_pass;
@@ -73,6 +75,7 @@ class Notify extends Okay {
             $this->design->assign("currency", $this->money->get_currency());
             $this->settings->init_settings();
             $this->design->assign('settings', $this->settings);
+            $this->translations->debug = (bool)$this->config->debug_translation;
             $this->design->assign('lang', $this->translations->get_translations(array('lang'=>$entity_language->label)));
         }
         /*/lang_modify...*/
@@ -212,7 +215,7 @@ class Notify extends Okay {
         $this->design->assign('main_currency', $this->money->get_currency());
 
         // Перевод админки
-        $backend_translations = new stdClass();
+        $backend_translations = $this->backend_translations;
         $file = "backend/lang/".$this->settings->email_lang.".php";
         if (!file_exists($file)) {
             foreach (glob("backend/lang/??.php") as $f) {
@@ -247,7 +250,7 @@ class Notify extends Okay {
         
         $this->design->assign('comment', $comment);
         // Перевод админки
-        $backend_translations = new stdClass();
+        $backend_translations = $this->backend_translations;
         $file = "backend/lang/".$this->settings->email_lang.".php";
         if (!file_exists($file)) {
             foreach (glob("backend/lang/??.php") as $f) {
@@ -269,7 +272,7 @@ class Notify extends Okay {
             return false;
         }
         $this->design->assign('callback', $callback);
-        $backend_translations = new stdClass();
+        $backend_translations = $this->backend_translations;
         $file = "backend/lang/".$this->settings->email_lang.".php";
         if (!file_exists($file)) {
             foreach (glob("backend/lang/??.php") as $f) {
@@ -301,6 +304,7 @@ class Notify extends Okay {
             $this->design->assign('lang_link', $this->languages->get_lang_link());
             $this->settings->init_settings();
             $this->design->assign('settings', $this->settings);
+            $this->translations->debug = (bool)$this->config->debug_translation;
             $this->design->assign('lang', $this->translations->get_translations(array('lang'=>$entity_language->label)));
         }
         /*/lang_modify...*/
@@ -361,7 +365,7 @@ class Notify extends Okay {
         
         $this->design->assign('feedback', $feedback);
         // Перевод админки
-        $backend_translations = new stdClass();
+        $backend_translations = $this->backend_translations;
         $file = "backend/lang/".$this->settings->email_lang.".php";
         if (!file_exists($file)) {
             foreach (glob("backend/lang/??.php") as $f) {
@@ -389,6 +393,7 @@ class Notify extends Okay {
             $cur_lang_id = $this->languages->lang_id();
             $this->languages->set_lang_id($entity_language->id);
             $this->design->assign('lang_link', $this->languages->get_lang_link());
+            $this->translations->debug = (bool)$this->config->debug_translation;
             $this->design->assign('lang', $this->translations->get_translations(array('lang'=>$entity_language->label)));
         }
         /*/lang_modify...*/
@@ -417,7 +422,7 @@ class Notify extends Okay {
         }
 
         // Перевод админки
-        $backend_translations = new stdClass();
+        $backend_translations = $this->backend_translations;
         $file = "backend/lang/".$this->settings->email_lang.".php";
         if (!file_exists($file)) {
             foreach (glob("backend/lang/??.php") as $f) {

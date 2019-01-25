@@ -13,12 +13,13 @@ $content = $okay->request->post('content');
 $style = $okay->request->post('style');
 $theme = $okay->request->post('theme', 'string');
 
-if(pathinfo($style, PATHINFO_EXTENSION) != 'css') {
+/*Сохранение стилей из админки*/
+$file = $okay->config->root_dir.'design/'.$theme.'/css/'.$style;
+
+if(pathinfo($style, PATHINFO_EXTENSION) != 'css' || $file != realpath($file)) {
     exit();
 }
 
-/*Сохранение стилей из админки*/
-$file = $okay->config->root_dir.'design/'.$theme.'/css/'.$style;
 if(is_file($file) && is_writable($file) && !is_file($okay->config->root_dir.'design/'.$theme.'/locked')) {
     file_put_contents($file, $content);
 

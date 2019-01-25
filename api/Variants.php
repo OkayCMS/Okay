@@ -8,7 +8,12 @@ class Variants extends Okay {
     public function get_variants($filter = array()) {
         $product_id_filter = '';
         $variant_id_filter = '';
+        $variant_sort = 'v.position, v.id';
         $instock_filter = '';
+
+        if (defined('IS_CLIENT')) {
+            $variant_sort = 'IF(stock=0, 0, 1) DESC, v.position, v.id';
+        }
         
         if(!empty($filter['product_id'])) {
             $product_id_filter = $this->db->placehold('AND v.product_id in(?@)', (array)$filter['product_id']);
@@ -51,7 +56,7 @@ class Variants extends Okay {
                 $variant_id_filter
                 $instock_filter
             GROUP BY v.id
-            ORDER BY v.position, v.id
+            ORDER BY $variant_sort
         ", $this->settings->max_order_amount);
         
         $this->db->query($query);

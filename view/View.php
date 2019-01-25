@@ -19,6 +19,9 @@ class View extends Okay {
     private static $view_instance;
     
     public function __construct() {
+
+
+
         // После переключения на язык по умолчанию, если не вызвать set_lang_id() до создания экземпляра класса settings,
         // то мультиязычные настройки первый раз приходят на предыдущем языке.
         if (empty($_GET['lang_label']) && empty($_GET['lang_id'])) {
@@ -33,6 +36,12 @@ class View extends Okay {
             }
         }
         parent::__construct();
+
+        if ($prg_seo_hide = $this->request->post("prg_seo_hide")) {
+            header("Location: ".$prg_seo_hide);
+            exit;
+        }
+
         if (!defined('IS_CLIENT')) {
             define('IS_CLIENT', true);
         }
@@ -115,6 +124,8 @@ class View extends Okay {
                     } else {
                         $l->url = ($ruri ? implode('/',array_slice($ruri, $as)) : '');
                     }
+
+                    $l->url = $this->config->root_url.'/'.$l->url;
                 }
 
                 if(!$this->language->enabled && $this->language->id != $first_lang->id) {
@@ -169,19 +180,20 @@ class View extends Okay {
             }
             $this->design->assign('language', $this->language);
             $this->design->assign('languages', $languages);
+            $this->translations->debug = (bool)$this->config->debug_translation;
             $this->design->assign('lang', $this->translations->get_translations(array('lang'=>$this->language->label)));
 
             $this->page = $this->pages->get_page((string)$page_url);
             $this->design->assign('page', $this->page);
             
             // Передаем в дизайн то, что может понадобиться в нем
-            $this->design->assign('currencies',    $this->currencies);
-            $this->design->assign('currency',    $this->currency);
+            $this->design->assign('currencies', $this->currencies);
+            $this->design->assign('currency',   $this->currency);
             $this->design->assign('user',       $this->user);
             $this->design->assign('group',      $this->group);
             
-            $this->design->assign('config',        $this->config);
-            $this->design->assign('settings',    $this->settings);
+            $this->design->assign('config',     $this->config);
+            $this->design->assign('settings',   $this->settings);
             
             // Настраиваем плагины для смарти
             /*Распаковка переменной под админом*/

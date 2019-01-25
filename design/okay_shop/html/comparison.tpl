@@ -35,7 +35,7 @@
             {if $comparison->features}
                 {foreach $comparison->features as $id=>$cf}
                     <div class="cprs_feature_{$id} cell{if $cf->not_unique} not_unique{/if}" data-use="cprs_feature_{$id}">
-                        <span data-feature="{$cf->id}">{$cf->name}</span>
+                        <span data-feature="{$cf->feature_id}">{$cf->name}</span>
                     </div>
                 {/foreach}
             {/if}

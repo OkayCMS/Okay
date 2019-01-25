@@ -12,7 +12,9 @@ class ExportAdmin extends Okay {
         if(!is_writable($this->export_files_dir)) {
             $this->design->assign('message_error', 'no_permission');
         }
-        $this->design->assign('brands', $this->brands->get_brands());
+        
+        $brands_count = $this->brands->count_brands();
+        $this->design->assign('brands', $this->brands->get_brands(array('limit'=>$brands_count)));
         $this->design->assign('categories', $this->categories->get_categories_tree());
         return $this->design->fetch('export.tpl');
     }

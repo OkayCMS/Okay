@@ -95,8 +95,6 @@ class OrdersAdmin extends Okay {
         if(empty($keyword)) {
             if($this->request->get('status')) {
                 $status = $this->request->get('status', 'integer');
-            } elseif($this->request->get('status') == 'all') {
-                $status = 0;
             } else {
                 $status = 0;
             }

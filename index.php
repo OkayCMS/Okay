@@ -9,6 +9,8 @@ require_once('view/IndexView.php');
 
 $view = new IndexView();
 
+header("X-Powered-CMS: OkayCMS ".$view->config->version." ".$view->config->version_type);
+
 if(isset($_GET['logout'])) {
     unset($_SESSION['admin']);
     header('location: '.$view->config->root_url);

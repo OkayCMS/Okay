@@ -59,6 +59,7 @@ class Design extends Okay {
                 'explode',
                 'preg_replace',
                 'preg_match',
+                'key',
             );
 
             // Настраиваем безопасный режим
@@ -69,6 +70,7 @@ class Design extends Okay {
             $this->smarty->security_policy->secure_dir = array(
                 $this->config->root_dir . '/design/' . $theme,
                 $this->config->root_dir . '/backend/design',
+                $this->config->root_dir . '/payment',
             );
         }
 

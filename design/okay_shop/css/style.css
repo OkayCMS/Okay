@@ -145,6 +145,23 @@ a:active {
     font-size: 12px;
 }
 
+.form_select {
+    width: 100%;
+    height: 39px;
+    line-height: 35px;
+    padding: 0 35px 0 15px;
+    border: 2px solid #e1e8ed;
+    border-radius: 2px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url(../images/select_arrow.png);
+    background-position: right 12px center;
+    background-repeat: no-repeaxnj t;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
 .form_placeholder{
     transition: all 0.1s linear 0s;
     line-height: 1;
@@ -159,14 +176,39 @@ a:active {
     font-size: 12px;
 }
 .form_placeholder.active,
-.placeholder_focus.error + label + .form_placeholder,
-.placeholder_focus:focus + .form_placeholder {
+.filled .form_placeholder,
+.placeholder_focus.error ~ label ~ .form_placeholder,
+.placeholder_focus:focus ~ .form_placeholder {
     font-size: 85%;
     background: rgb(255, 255, 255);
     padding: 0 5px;
     top: -5px;
     cursor: default;
     color: rgb(146, 146, 146);
+}
+.placeholder_focus:-webkit-autofill,
+.placeholder_focus:-webkit-autofill:hover,
+.placeholder_focus:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 30px #fff inset;
+    box-shadow: 0 0 0 30px #fff inset;
+    -webkit-text-fill-color: inherit !important;
+}
+.form_placeholder.active,
+.filled .form_placeholder,
+.placeholder_focus.error ~ label ~ .form_placeholder,
+.placeholder_focus:focus ~ .form_placeholder,
+.placeholder_focus:-webkit-autofill ~ .form_placeholder,
+.placeholder_focus:-webkit-autofill:focus ~ .form_placeholder,
+.placeholder_focus:focus ~ .form_placeholder{
+    font-size: 85%;
+    background: rgb(255, 255, 255);
+    padding: 0 5px;
+    top: -5px;
+    cursor: default;
+    color: rgb(146, 146, 146);
+}
+.form_placeholder{
+    pointer-events:none;
 }
 .form_textarea {
     display: block;
@@ -253,6 +295,8 @@ a:active {
 }
 .error{
     color: #f00;
+    display: block;
+    font-size: 13px;
 }
 .header_bottom.fixed {
     position: fixed;
@@ -1079,6 +1123,9 @@ header a {
     padding: 14px 5px 14px 10px;
     text-decoration: none;
     font-size: 13px;
+    border: none;
+    background: none;
+    cursor: pointer;
 }
 .sort_link.active_up,
 .sort_link.active_down {
@@ -1374,15 +1421,30 @@ header a {
 }
 .product_image {
     position: relative;
-    border: 1px solid #e8e8e1;
     text-align: center;
     height: 340px;
     margin-bottom: 23px;
 }
+.product_image a{
+    overflow: hidden;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    height: 340px;
+    border: 1px solid #e8e8e1;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
 .product_img {
     position: relative;
-    top: 50%;
-    transform: translateY(-50%);
+    max-height: 100%;
 }
 .images {
     margin-left: -6px;
@@ -1752,7 +1814,11 @@ header a {
 
 .sidebar_top {
     background-color: #fff;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
+}
+.sidebar_center {
+    background-color: #fff;
+    margin-bottom: 20px;
 }
 .sidebar .h2 {
     padding-bottom: 10px;
@@ -1764,7 +1830,97 @@ header a {
 .catalog_menu{
     padding: 20px 23px 0;
 }
-
+.selected_filter_boxes{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -10px;
+    margin-left: -10px;
+}
+.selected_filter_box {
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    /*padding-right: 10px;*/
+    padding-left: 10px;
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 auto;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 100%;
+}
+.selected_filter_item{
+    border: 1px solid #38c0f3;
+    border-radius: 3px;
+    margin: 0 0px 10px 0;
+    max-width: 100%;
+}
+.filter_reset{
+    font-size: 13px;
+    color: #00aeef;
+    font-weight: 500;
+    overflow: hidden;
+    display: inline-block;
+    border: none;
+    background: no-repeat;
+    padding: 0;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.selected_filter_box .s_filter_link{
+    border: none;
+    background: transparent;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify !important;
+    -webkit-justify-content: space-between !important;
+    -ms-flex-pack: justify !important;
+    justify-content: space-between !important;
+    -webkit-box-align: center !important;
+    -webkit-align-items: center !important;
+    -ms-flex-align: center !important;
+    align-items: center !important;
+    font-size: 12px;
+    padding: 2px 8px 1px;
+    cursor: pointer;
+    color: #575757;
+}
+.selected_filter_box .s_filter_link span{
+    margin-right: 5px;
+    cursor: pointer;
+    text-align: left;
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 calc(100% - 20px);
+    -ms-flex: 0 0 calc(100% - 20px);
+    flex: 0 0 calc(100% - 20px);
+    max-width: calc(100% - 20px);
+}
+.selected_filter_box .s_filter_link svg{
+    width: 16px;
+    height: 16px;
+    color: #999;
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 16px;
+    -ms-flex: 0 0 16px;
+    flex: 0 0 16px;
+    max-width: 16px;
+}
+.selected_filter_box .selected_filter_item:hover .s_filter_link svg{
+    color: #f25050;
+}
+.selected_filter_box .selected_filter_item:hover{
+    background: #38c0f3;
+}
+.selected_filter_box .selected_filter_item:hover .s_filter_link{
+    color: #fff;
+}
 .filters_heading {
     position: relative;
     font-weight: bold;
@@ -1790,9 +1946,12 @@ header a {
     padding-left: 36px;
     font-size: 14px;
     min-height: 24px;
-    line-height: 16px;
+    line-height: 24px;
     text-decoration: none;
     cursor: pointer;
+    background: no-repeat;
+    border: none;
+    text-align: left;
 }
 .catalog_link {
     display: -webkit-box !important;
@@ -1838,7 +1997,7 @@ header a {
     position: absolute;
     width: 24px;
     height: 24px;
-    top: -4px;
+    top: 0;
     left: 0;
     border: 1px solid #e8e8e1;
     border-radius: 1px;

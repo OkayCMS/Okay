@@ -150,6 +150,7 @@ class Categories extends Okay {
 
     /*Добавление категории*/
     public function add_category($category) {
+        $created = '';
         $category = (array)$category;
         if(empty($category['url'])) {
             $category['url'] = preg_replace("/[\s]+/ui", '_', $category['name']);
@@ -175,13 +176,12 @@ class Categories extends Okay {
         }
 
         if (empty($category->created)) {
-            $category->created = date("Y-m-d H:i:s");
+            $created = $this->db->placehold(", created=NOW()");
         }
 
         $result = $this->languages->get_description($category, 'category');
         
-        $category->last_modify = date("Y-m-d H:i:s");
-        $this->db->query("INSERT INTO __categories SET ?%", $category);
+        $this->db->query("INSERT INTO __categories SET ?% $created", $category);
         $id = $this->db->insert_id();
         $this->db->query("UPDATE __categories SET position=id WHERE id=?", $id);
         
@@ -220,8 +220,7 @@ class Categories extends Okay {
         $category = (object)$category;
         $result = $this->languages->get_description($category, 'category');
         
-        $category->last_modify = date("Y-m-d H:i:s");
-        $query = $this->db->placehold("UPDATE __categories SET ?% WHERE id=? LIMIT 1", $category, intval($id));
+        $query = $this->db->placehold("UPDATE __categories SET ?%, last_modify=NOW() WHERE id=? LIMIT 1", $category, intval($id));
         $this->db->query($query);
         
         if(!empty($result->description)) {

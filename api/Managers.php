@@ -9,7 +9,7 @@ class Managers extends Okay {
         'users', 'groups', 'coupons', 'pages', 'blog', 'comments', 'feedbacks', 'import', 'export',
         'stats', 'design', 'settings', 'currency', 'delivery', 'payment', 'managers', 'license', 'languages',
         'banners', 'callbacks','robots', 'seo_patterns', 'support', 'subscribes', 'menu', 'seo_filter_patterns', 
-        'settings_counter'
+        'settings_counter', 'features_aliases'
         
     );
 
@@ -22,6 +22,11 @@ class Managers extends Okay {
         $this->all_managers = array();
         $this->db->query("SELECT * FROM __managers ORDER BY id");
         foreach ($this->db->results() as $m) {
+            if (!empty($m->menu)) {
+                $m->menu = unserialize($m->menu);
+            } else {
+                $m->menu = array();
+            }
             $this->all_managers[$m->id] = $m;
             if (!is_null($m->permissions)) {
                 $m->permissions = explode(',', $m->permissions);
@@ -77,6 +82,11 @@ class Managers extends Okay {
             // захешировать пароль
             $manager->password = $this->crypt_apr1_md5($manager->password);
         }
+
+        if (!empty($manager->menu) && is_array($manager->menu)) {
+            $manager->menu = serialize($manager->menu);
+        }
+        
         if(is_array($manager->permissions)) {
             if(count(array_diff($this->permissions_list, $manager->permissions))>0) {
                 $manager->permissions = implode(",", $manager->permissions);
@@ -99,6 +109,9 @@ class Managers extends Okay {
             $manager->password = $this->crypt_apr1_md5($manager->password);
         }
 
+        if (!empty($manager->menu) && is_array($manager->menu)) {
+            $manager->menu = serialize($manager->menu);
+        }
         if(isset($manager->permissions) && is_array($manager->permissions)) {
             if(count(array_diff($this->permissions_list, $manager->permissions))>0) {
                 $manager->permissions = implode(",", array_intersect($this->permissions_list, $manager->permissions));

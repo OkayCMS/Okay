@@ -8,10 +8,17 @@ class ManagerAdmin extends Okay {
         $manager = new stdClass();
         /*Прием информации о менеджере*/
         if($this->request->method('post')) {
+            if ($this->request->post('reset_menu')) {
+                $id = $this->request->post('id', 'integer');
+                $this->managers->update_manager($id, array('menu'=>''));
+                header('location: '.$this->config->root_url.'/backend/index.php?module=ManagerAdmin&id='.$id);
+                exit();
+            }
             $manager->id = $this->request->post('id', 'integer');
             $manager->lang = $this->request->post('manager_lang');
             $manager->comment = $this->request->post('comment');
             $manager->menu_status = $this->request->post('menu_status','integer');
+            
             if ($this->request->post('unlock_manager')) {
                 $this->managers->update_manager($manager->id, array('cnt_try'=>0));
                 $id = $this->request->get('id', 'integer');
@@ -104,6 +111,7 @@ class ManagerAdmin extends Okay {
                 'settings_counter'    => $btr->left_setting_counter_title,
                 'seo_patterns'        => $btr->left_seo_patterns_title,
                 'seo_filter_patterns' => $btr->left_seo_filter_patterns_title,
+                'features_aliases'    => $btr->left_feature_aliases_title,
             ),
             'left_support'  => array(
                 'support'       => $btr->left_support,

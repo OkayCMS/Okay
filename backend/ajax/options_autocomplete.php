@@ -9,23 +9,22 @@
     $keyword = $okay->request->get('query', 'string');
     $feature_id = $okay->request->get('feature_id', 'string');
 
-    /*Выбираем значение свойства*/
-    $query = $okay->db->placehold('SELECT DISTINCT po.value 
-        FROM __options po
-        WHERE 
-            value LIKE "'.$okay->db->escape($keyword).'%" 
-            AND feature_id=? 
-        ORDER BY po.value 
-        LIMIT ?
-    ', $feature_id, $limit);
-    
-    $okay->db->query($query);
-    
-    $options = $okay->db->results('value');
-    
+    $features_values = $okay->features_values->get_features_values(array(
+        'feature_id' => $feature_id,
+        'keyword'    => $keyword
+    ));
+
+    $suggestions = array();
+    foreach ($features_values as $fv) {
+        $suggestion = new stdClass();
+        $suggestion->value = $fv->value;
+        $suggestion->data = $fv;
+        $suggestions[] = $suggestion;
+    }
+
     $res = new stdClass;
     $res->query = $keyword;
-    $res->suggestions = $options;
+    $res->suggestions = $suggestions;
     header("Content-type: application/json; charset=UTF-8");
     header("Cache-Control: must-revalidate");
     header("Pragma: no-cache");

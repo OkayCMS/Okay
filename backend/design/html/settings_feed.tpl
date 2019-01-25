@@ -104,6 +104,16 @@
                                     </label>
                                 </div>
                             </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12">
+                                <div class="permission_box">
+                                    <span>{$btr->settings_feed_no_export_without_price|escape}</span>
+                                    <label class="switch switch-default">
+                                        <input class="switch-input" name="yandex_no_export_without_price" value='1' type="checkbox" {if $settings->yandex_no_export_without_price}checked=""{/if}/>
+                                        <span class="switch-label"></span>
+                                        <span class="switch-handle"></span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

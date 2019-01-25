@@ -50,6 +50,7 @@ smarty_cache_lifetime = 0
 smarty_debugging = false
 smarty_html_minify = false
 smarty_security = true
+debug_translation = false
 
 [images]
 ;Указываем какую библиотеку использовать для нарезки изображений. Варианты: gregwar_image, imagick или gd

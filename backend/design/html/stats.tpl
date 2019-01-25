@@ -22,9 +22,9 @@
     var stats_orders_amount =  '{$btr->stats_orders_amount|escape}';
 </script>
 {literal}
-    <script src="design/js/highcharts/js/highcharts.js" type="text/javascript"></script>
-    <script src="design/js/highcharts/js/themes/grid.js" type="text/javascript"></script>
-    <script src="design/js/highcharts/js/modules/exporting.js" type="text/javascript"></script>
+    <script src="design/js/highcharts/highcharts.js" type="text/javascript"></script>
+    <script src="design/js/highcharts/themes/grid.js" type="text/javascript"></script>
+    <script src="design/js/highcharts/modules/exporting.js" type="text/javascript"></script>
 
 <script>
     var chart;

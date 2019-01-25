@@ -46,8 +46,10 @@ class Okay {
         'import'        => 'Import',
         'menu'          => 'Menu',
         'backend_translations' => 'BackendTranslations',
+        'front_translations'   => 'FrontTranslations',
         'seo_filter_patterns'  => 'SEOFilterPatterns',
         'features_aliases'     => 'FeaturesAliases',
+        'features_values'      => 'FeaturesValues',
 
     );
     
@@ -66,10 +68,55 @@ class Okay {
         ),
 
     );
+
+    public $spec_pairs = array(
+        '+'  => 'p',
+        '-'  => 'm',
+        '—'  => 'ha',
+        '–'  => 'hb',
+        '−'  => 'hc',
+        '‐'  => 'hd',
+        '/'  => 'f',
+        '°'  => 'deg',
+        '±'  => 'pm',
+        '_'  => 'u',
+        '.'  => 'd',
+        ','  => 'c',
+        '@'  => 'at',
+        '('  => 'lb',
+        ')'  => 'rb',
+        '{'  => 'lf',
+        '}'  => 'rf',
+        '['  => 'ls',
+        ']'  => 'rs',
+        ';'  => 'sem',
+        ':'  => 'col',
+        '%'  => 'pe',
+        '$'  => 'do',
+        ' '  => 'sp',
+        '?'  => 'w',
+        '&'  => 'a',
+        '*'  => 's',
+        '®'  => 'r',
+        '©'  => 'co',
+        '\'' => 'ap',
+        '"'  => 'qu',
+        '`'  => 'bt',
+        '<'  => 'le',
+        '>'  => 'mo',
+        '#'  => 'sh',
+        '№'  => 'n',
+        '!'  => 'em',
+        '~'  => 't',
+        '^'  => 'h',
+        '='  => 'eq',
+        '|'  => 'vs',
+        
+    );
     
     public function __construct() {
         $debug = $this->config->debug_mode;
-        if ($debug == true && $_SESSION['admin']) {
+        if ($debug == true) {
             ini_set('display_errors', 'on');
             error_reporting(E_ALL);
         } else {
@@ -139,15 +186,28 @@ class Okay {
     public function translit_alpha($text) {
         $res = $text;
         foreach ($this->translit_pairs as $pair) {
-            $from = explode('-', $pair['from']);
-            $to = explode('-', $pair['to']);
-            $res = str_replace($from, $to, $res);
+            $pair['from'] = explode('-', $pair['from']);
+            $pair['to'] = explode('-', $pair['to']);
+
+            $pair = $this->spec_pairs($pair);
+
+            $res = str_replace($pair['from'], $pair['to'], $res);
         }
 
         $res = preg_replace("/[\s]+/ui", '', $res);
         $res = preg_replace("/[^a-zA-Z0-9]+/ui", '', $res);
         $res = strtolower($res);
         return $res;
+    }
+
+    //Добавляет к массиву пар для транслита, пары для замены спецсимволов на буквенные обозначения
+    private function spec_pairs($pair) {
+        foreach ($this->spec_pairs as $symbol => $alias) {
+            $pair['from'][] = $symbol;
+            $pair['to'][]   = $alias;
+        }
+
+        return $pair;
     }
     
 }

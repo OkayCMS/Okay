@@ -27,6 +27,7 @@ class CurrencyAdmin extends Okay {
                 if ($currency->id) {
                     $this->money->update_currency($currency->id, $currency);
                 } else {
+                    unset($currency->id);
                     $currency->id = $this->money->add_currency($currency);
                 }
                 $currencies_ids[] = $currency->id;

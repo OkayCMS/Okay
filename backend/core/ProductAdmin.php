@@ -5,12 +5,9 @@ require_once('api/Okay.php');
 class ProductAdmin extends Okay {
     
     public function fetch() {
-        $options = array();
         $product_categories = array();
         $variants = array();
         $images = array();
-        $spec_images = array();
-        $product_features = array();
         $related_products = array();
 
         /*Прием данных о товаре*/
@@ -18,7 +15,7 @@ class ProductAdmin extends Okay {
             $product = new stdClass;
             $product->id = $this->request->post('id', 'integer');
             $product->name = $this->request->post('name');
-            $product->visible = $this->request->post('visible', 'boolean');
+            $product->visible = $this->request->post('visible', 'integer');
             $product->featured = $this->request->post('featured');
             $product->brand_id = $this->request->post('brand_id', 'integer');
             
@@ -54,17 +51,6 @@ class ProductAdmin extends Okay {
                     $pc[$x->id] = $x;
                 }
                 $product_categories = $pc;
-            }
-            
-            // Свойства товара
-            $options = $this->request->post('options');
-            if(is_array($options)) {
-                foreach($options as $f_id=>$val) {
-                    $po[$f_id] = new stdClass;
-                    $po[$f_id]->feature_id = $f_id;
-                    $po[$f_id]->value = $val['value'];
-                }
-                $options = $po;
             }
             
             // Связанные товары
@@ -111,12 +97,6 @@ class ProductAdmin extends Okay {
                     $images = $this->products->get_images(array('product_id' => $product->id));
                 }
             } else {
-                /*Добавление/Обновление товара*/
-                /* Какую ф-ию обновления значений св-тв вызывать:
-                 * если это новый товар то нужно значения добавить во все языки
-                 * иначе - только для текущего - вызываем старую добрую update_option()
-                */
-                $update_option_function = "update_option";
                 if(empty($product->id)) {
                     //lastModify
                     if ($product->brand_id > 0) {
@@ -126,7 +106,6 @@ class ProductAdmin extends Okay {
                     $product->id = $this->products->add_product($product);
                     $product = $this->products->get_product($product->id);
                     $this->design->assign('message_success', 'added');
-                    $update_option_function = "update_option_all_languages";
                 } else {
                     //lastModify                    
                     $this->db->query('select brand_id from __products where id=?', $product->id);
@@ -290,22 +269,45 @@ class ProductAdmin extends Okay {
                     }
                     
                     // Характеристики товара
-                    
-                    // Удалим все из товара
-                    foreach($this->features->get_product_options(array('product_id'=>$product->id)) as $po) {
-                        $this->features->delete_option($product->id, $po->feature_id);
-                    }
-                    
                     // Свойства текущей категории
                     $category_features = array();
                     foreach($this->features->get_features(array('category_id'=>reset($product_categories)->id)) as $f) {
                         $category_features[] = $f->id;
                     }
-                    
-                    if(is_array($options)) {
-                        foreach($options as $option) {
-                            if(in_array($option->feature_id, $category_features)) {
-                                $this->features->{$update_option_function}($product->id, $option->feature_id, $option->value);
+
+                    // Удалим все значения свойств товара
+                    $this->features_values->delete_product_value($product->id);
+                    if ($features_values = $this->request->post('features_values')) {
+                        $features_values_text = $this->request->post('features_values_text');
+
+                        foreach ($features_values as $feature_id=>$feature_values) {
+                            foreach ($feature_values as $k=>$value_id) {
+
+                                if (empty($value_id) && !empty($features_values_text[$feature_id][$k])) {
+
+                                    /**
+                                     * Проверим может есть занчение с таким транслитом,
+                                     * дабы исключить дублирование значений "ТВ приставка" и "TV приставка" и подобных
+                                     */
+                                    $value = trim($features_values_text[$feature_id][$k]);
+                                    $translit = $this->translit_alpha($value);
+                                    if ($fv = $this->features_values->get_features_values(array('feature_id'=>$feature_id, 'translit'=>$translit))) {
+                                        $fv = reset($fv);
+                                        $value_id = $fv->id;
+                                    }
+
+                                    // Если такого значения еще нет, но его запостили тогда добавим
+                                    if (!$value_id) {
+                                        $feature_value = new stdClass();
+                                        $feature_value->value = $value;
+                                        $feature_value->feature_id = $feature_id;
+                                        $value_id = $this->features_values->add_feature_value($feature_value);
+                                    }
+                                }
+
+                                if ($value_id) {
+                                    $this->features_values->add_product_value($product->id, $value_id);
+                                }
                             }
                         }
                     }
@@ -317,6 +319,7 @@ class ProductAdmin extends Okay {
                         foreach($new_features_names as $i=>$name) {
                             $value = trim($new_features_values[$i]);
                             if(!empty($name) && !empty($value)) {
+                                // TODO Переместить логику в Features с учётом мультиязычности
                                 $query = $this->db->placehold("SELECT * FROM __features WHERE name=? LIMIT 1", trim($name));
                                 $this->db->query($query);
                                 $feature_id = $this->db->result('id');
@@ -324,11 +327,17 @@ class ProductAdmin extends Okay {
                                     $feature_id = $this->features->add_feature(array('name'=>trim($name)));
                                 }
                                 $this->features->add_feature_category($feature_id, reset($product_categories)->id);
-                                $this->features->{$update_option_function}($product->id, $feature_id, $value);
+
+                                // Добавляем вариант значения свойства
+                                $feature_value = new stdClass();
+                                $feature_value->feature_id = $feature_id;
+                                $feature_value->value = $value;
+                                $value_id = $this->features_values->add_feature_value($feature_value);
+
+                                // Добавляем значения к товару
+                                $this->features_values->add_product_value($product->id, $value_id);
                             }
                         }
-                        // Свойства товара
-                        $options = $this->features->get_product_options(array('product_id'=>$product->id));
                     }
                     
                     // Связанные товары
@@ -352,9 +361,6 @@ class ProductAdmin extends Okay {
                 
                 // Изображения товара
                 $images = $this->products->get_images(array('product_id'=>$product->id));
-                
-                // Свойства товара
-                $options = $this->features->get_options(array('product_id'=>$product->id));
                 
                 // Связанные товары
                 $related_products = $this->products->get_related_products(array('product_id'=>$product->id));
@@ -402,14 +408,15 @@ class ProductAdmin extends Okay {
                 $r_products[$image->product_id]->images[] = $image;
             }
         }
-        
-        if(is_array($options)) {
-            $temp_options = array();
-            foreach($options as $option) {
-                $temp_options[$option->feature_id] = $option;
+
+        // Свойства товара
+        $features_values = array();
+        if ($product->id) {
+            foreach ($this->features_values->get_features_values(array('product_id' => $product->id)) as $fv) {
+                $features_values[$fv->feature_id][] = $fv;
             }
-            $options = $temp_options;
         }
+
         $special_images = $this->products->get_spec_images();
         $this->design->assign('special_images', $special_images);
         $this->design->assign('product', $product);
@@ -417,7 +424,7 @@ class ProductAdmin extends Okay {
         $this->design->assign('product_categories', $product_categories);
         $this->design->assign('product_variants', $variants);
         $this->design->assign('product_images', $images);
-        $this->design->assign('options', $options);
+        $this->design->assign('features_values', $features_values);
         $this->design->assign('related_products', $related_products);
         
         // Все бренды

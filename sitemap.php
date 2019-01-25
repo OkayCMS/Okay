@@ -91,7 +91,8 @@ foreach($okay->pages->get_pages() as $p) {
 }
 
 // Блог
-foreach($okay->blog->get_posts(array('visible'=>1)) as $p) {
+$posts_count = $okay->blog->count_posts(array('visible'=>1));
+foreach($okay->blog->get_posts(array('visible'=>1, 'limit'=>$posts_count)) as $p) {
     $url = $main_url.$p->type_post.'/'.esc($p->url);
     $last_modify = substr($p->last_modify, 0, 10);
     $s = "\t<url>\n";
@@ -130,7 +131,8 @@ foreach($okay->categories->get_categories() as $c) {
 }
 
 // Бренды
-foreach($okay->brands->get_brands() as $b) {
+$brands_count = $okay->brands->count_brands(array('visible_brand'=>1));
+foreach($okay->brands->get_brands(array('visible_brand'=>1, 'limit'=>$brands_count)) as $b) {
     $url = $main_url.'brands/'.esc($b->url);
     $last_modify = array();
     $okay->db->query("SELECT p.last_modify

@@ -148,6 +148,11 @@
                     </div>
                 </div>
                 <div class="toggle_body_wrap on fn_card">
+                    <div class="boxed boxed_attention">
+                        <div class="">
+                            {$btr->settings_capcha_help1|escape} <a class="link_white" rel="nofollow" href="https://www.google.com/recaptcha/admin#list">{$btr->settings_capcha_help2|escape}</a>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-xl-3 col-lg-4 col-md-6">
                             <div class="heading_label">{$btr->settings_type_capcha|escape}</div>

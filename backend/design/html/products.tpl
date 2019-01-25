@@ -173,8 +173,8 @@
                                                       {/if}</span>
                                                 <span class="text_500">{if $product->variants[0]->infinity}∞{else}{$product->variants[0]->stock}{/if} {if $product->variants[0]->units}{$product->variants[0]->units|escape}{else}{$settings->units|escape}{/if}</span>
                                             </div>
-                                            {if $brands_name[$product->brand_id]->name}
-                                                <div class="okay_list_name_brand">{$btr->general_brand|escape} {$brands_name[$product->brand_id]->name|escape}</div>
+                                            {if $all_brands[$product->brand_id]->name}
+                                                <div class="okay_list_name_brand">{$btr->general_brand|escape} {$all_brands[$product->brand_id]->name|escape}</div>
                                             {/if}
                                             {if $product->variants|count > 1}
                                                 <div class="fn_variants_toggle variants_toggle">
@@ -318,15 +318,15 @@
                                     </select>
                                 </div>
 
-                                <div class="col-lg-8 col-md-6 col-sm-12">
-                                    <div id="move_to_page" class="col-lg-12 col-md-12 col-sm-12 hidden fn_hide_block">
+                                <div class="col-lg-8 col-md-6 col-sm-12 fn_additional_params">
+                                    <div class="fn_move_to_page col-lg-12 col-md-12 col-sm-12 hidden fn_hide_block">
                                         <select name="target_page" class="selectpicker">
                                             {section target_page $pages_count}
                                                 <option value="{$smarty.section.target_page.index+1}">{$smarty.section.target_page.index+1}</option>
                                             {/section}
                                         </select>
                                     </div>
-                                    <div id="move_to_category" class="col-lg-12 col-md-12 col-sm-12 hidden fn_hide_block">
+                                    <div class="fn_move_to_category col-lg-12 col-md-12 col-sm-12 hidden fn_hide_block">
                                         <select name="target_category" class="selectpicker" data-live-search="true" data-size="10">
                                             {function name=category_select_btn level=0}
                                                 {foreach $categories as $category}
@@ -337,8 +337,8 @@
                                             {category_select_btn categories=$categories}
                                         </select>
                                     </div>
-                                    <div id="move_to_brand" class="col-lg-12 col-md-12 col-sm-12 hidden fn_hide_block">
-                                        <select name="target_brand" class="selectpicker" data-live-search="true" data-size="10">
+                                    <div class="fn_move_to_brand col-lg-12 col-md-12 col-sm-12 hidden fn_hide_block">
+                                        <select name="target_brand" class="selectpicker" data-live-search="true" data-size="{if $brands|count<10}{$brands|count}{else}10{/if}">
                                             <option value="0">{$btr->general_not_set|escape}</option>
                                             {foreach $all_brands as $b}
                                                 <option value="{$b->id}">{$b->name|escape}</option>
@@ -383,8 +383,8 @@ $(function() {
     $(document).on('change','.fn_action_block select.products_action',function(){
         var elem = $(this).find('option:selected').val();
         $('.fn_hide_block').addClass('hidden');
-        if($('#'+elem).size()>0){
-            $('#'+elem).removeClass('hidden');
+        if($('.fn_'+elem).size()>0){
+            $('.fn_'+elem).removeClass('hidden');
         }
     });
 

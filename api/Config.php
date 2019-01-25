@@ -10,7 +10,7 @@ require_once('Okay.php');
 class Config {
 
     /*Версия системы*/
-    public $version = '2.2.3';
+    public $version = '2.3.0';
     /*Тип системы*/
     public $version_type = 'pro';
     

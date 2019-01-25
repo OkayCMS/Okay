@@ -63,6 +63,59 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="boxed fn_toggle_wrap ">
+                <div class="heading_box">
+                    {$btr->settings_chpu_filter|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
+                    </div>
+                </div>
+                <div class="toggle_body_wrap on fn_card">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <div class="heading_label">{$btr->max_filter_brands|escape}</div>
+                            <div class="mb-1">
+                                <input name="max_filter_brands" class="form-control" type="text" value="{$settings->max_filter_brands|escape}" />
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <div class="heading_label">{$btr->max_filter_filter|escape}</div>
+                            <div class="mb-1">
+                                <input name="max_filter_filter" class="form-control" type="text" value="{$settings->max_filter_filter|escape}" />
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <div class="heading_label">{$btr->max_filter_features_values|escape}</div>
+                            <div class="mb-1">
+                                <input name="max_filter_features_values" class="form-control" type="text" value="{$settings->max_filter_features_values|escape}" />
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <div class="heading_label">{$btr->max_filter_features|escape}</div>
+                            <div class="mb-1">
+                                <input name="max_filter_features" class="form-control" type="text" value="{$settings->max_filter_features|escape}" />
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <div class="heading_label">{$btr->max_filter_depth|escape}</div>
+                            <div class="mb-1">
+                                <input name="max_filter_depth" class="form-control" type="text" value="{$settings->max_filter_depth|escape}" />
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 ">
+                            <div class="heading_label">&nbsp;</div>
+                            <button type="submit" class="btn btn_small btn_blue float-md-right fn_update_category" data-category_id="{$category->id}">
+                                {include file='svg_icon.tpl' svgId='checked'}
+                                <span>{$btr->general_apply|escape}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
 
 <div class="fn_new_template hidden fn_template_block">

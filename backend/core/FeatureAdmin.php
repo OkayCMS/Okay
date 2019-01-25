@@ -17,6 +17,7 @@ class FeatureAdmin extends Okay {
             $feature->auto_value_id = $this->request->post('auto_value_id');
             $feature->url = $this->request->post('url', 'string');
             $feature->url_in_product = $this->request->post('url_in_product');
+            $feature->to_index_new_value = $this->request->post('to_index_new_value');
 
             $feature->url = preg_replace("/[\s]+/ui", '', $feature->url);
             $feature->url = strtolower(preg_replace("/[^0-9a-z]+/ui", '', $feature->url));
@@ -51,128 +52,125 @@ class FeatureAdmin extends Okay {
                 $this->features->update_feature_categories($feature->id, $feature_categories);
             }
 
-            $features_aliases = array();
-            $features_aliases_values = array();
-            if($this->request->post('features_aliases')) {
-                foreach($this->request->post('features_aliases') as $n=>$fa) {
-                    foreach($fa as $i=>$a) {
-                        if(empty($features_aliases[$i])) {
-                            $features_aliases[$i] = new stdClass;
+            // Если отметили "Индексировать все значения"
+            if (isset($_POST['to_index_all_values']) && $feature->id) {
+                $this->db->query("UPDATE `__features_values` SET `to_index`=? WHERE `feature_id`=?", $this->request->post('to_index_all_values', 'integer'), $feature->id);
+            }
+
+            $features_values = array();
+            if($this->request->post('feature_values')) {
+                foreach($this->request->post('feature_values') as $n=>$fv) {
+                    foreach($fv as $i=>$v) {
+                        if(empty($features_values[$i])) {
+                            $features_values[$i] = new stdClass;
                         }
-                        $features_aliases[$i]->$n = $a;
+                        $features_values[$i]->$n = $v;
                     }
                 }
             }
 
-            if($this->request->post('feature_aliases_value')) {
-                foreach($this->request->post('feature_aliases_value') as $n=>$fav) {
-                    foreach($fav as $i=>$av) {
-                        if(empty($features_aliases_values[$i])) {
-                            $features_aliases_values[$i] = new stdClass;
-                        }
-                        $features_aliases_values[$i]->$n = $av;
+            if ($values_to_delete = $this->request->post('values_to_delete')) {
+                foreach ($features_values  as $k=>$fv) {
+                    if (in_array($fv->id, $values_to_delete)) {
+                        unset($features_values[$k]);
+                        $this->features_values->delete_feature_value($fv->id);
                     }
                 }
             }
 
-            foreach($features_aliases as $k=>$features_alias) {
-                if ($features_alias->name) {
-                    if (!empty($features_alias->id)) {
-                        $this->features_aliases->update_feature_alias($features_alias->id, $features_alias);
+            $feature_values_ids = array();
+            foreach($features_values as $fv) {
+                if (!$fv->to_index) {
+                    $fv->to_index = 0;
+                }
+                // TODO Обработка ошибок не уникального тринслита или генерить уникальный
+                if ($fv->value) {
+                    $fv->feature_id = $feature->id;
+                    if (!empty($fv->id)) {
+                        $this->features_values->update_feature_value($fv->id, $fv);
                     } else {
-                        unset($features_alias->id);
-                        $features_alias->id = $this->features_aliases->add_feature_alias($features_alias);
+                        unset($fv->id);
+                        $fv->id = $this->features_values->add_feature_value($fv);
                     }
-                }
-
-                // Добавим все значения для алиасов которые нам запостили
-                if (isset($features_aliases_values[$k]) && $features_alias->id) {
-                    $alias_value = $features_aliases_values[$k];
-                    $alias_value->feature_id = $feature->id;
-                    $alias_value->feature_alias_id = $features_alias->id;
-
-                    if (!empty($alias_value->id)) {
-                        $this->features_aliases->update_feature_alias_value($alias_value->id, $alias_value);
-                    } else {
-                        unset($alias_value->id);
-                        $this->features_aliases->add_feature_alias_value($alias_value);
-                    }
-                }
-
-                $features_alias = $this->features_aliases->get_features_alias((int)$features_alias->id);
-                if(!empty($features_alias->id)) {
-                    $features_aliases_ids[] = $features_alias->id;
+                    $feature_values_ids[] = $fv->id;
                 }
             }
 
-            $current_features_aliases = $this->features_aliases->get_features_aliases();
-            foreach($current_features_aliases as $current_features_alias) {
-                if(!in_array($current_features_alias->id, $features_aliases_ids)) {
-                    $current_feature_alias_values = $this->features_aliases->get_feature_aliases_values(array('feature_alias_id'=>$current_features_alias->id));
-                    foreach ($current_feature_alias_values as $cv) {
-                        $this->features_aliases->delete_feature_alias_value($cv->id);
-                    }
-                    $this->features_aliases->delete_feature_alias($current_features_alias->id);
-                }
-            }
-
-            asort($features_aliases_ids);
+            asort($feature_values_ids);
             $i = 0;
-            foreach($features_aliases_ids as $features_alias_id) {
-                $this->features_aliases->update_feature_alias($features_aliases_ids[$i], array('position'=>$features_alias_id));
+            foreach($feature_values_ids as $features_value_id) {
+                $this->features_values->update_feature_value($feature_values_ids[$i], array('position'=>$features_value_id));
                 $i++;
             }
 
-            $features_aliases = array();
-            foreach ($this->features_aliases->get_features_aliases() as $f) {
-                $features_aliases[$f->id] = $f;
-            }
+            // Если прислали значения для объединения
+            if (($union_main_value_id = $this->request->post('union_main_value_id', 'integer'))
+                && ($union_second_value_id = $this->request->post('union_second_value_id', 'integer'))) {
 
-            // Удалим все алиасы значений свойств для текущего языка
-            if(!empty($feature->id)) {
-                $this->db->query("DELETE FROM __options_aliases_values WHERE feature_id=? AND lang_id=?", $feature->id, $this->languages->lang_id());
-            }
+                $union_main_value   = $this->features_values->get_feature_value($union_main_value_id);
+                $union_second_value = $this->features_values->get_feature_value($union_second_value_id);
 
-            foreach ($this->features->get_options(array('feature_id'=>$feature->id)) as $o) {
-                $options[$o->translit] = $o;
-            }
-            $this->design->assign('options', $options);
+                if ($union_main_value && $union_second_value && $union_main_value->id != $union_second_value->id) {
 
-            if ($feature->id && $this->request->post('options_aliases')) {
-                foreach($this->request->post('options_aliases') as $o_translit=>$values) {
-                    foreach($values as $feature_alias_id=>$value) {
-                        if (!empty($value) && isset($features_aliases[$feature_alias_id]) && isset($options[$o_translit])) {
-                            $option_alias = new stdClass;
-                            $option_alias->translit = $o_translit;
-                            $option_alias->value    = $value;
-                            $option_alias->lang_id  = $this->languages->lang_id();
-                            $option_alias->feature_id       = $feature->id;
-                            $option_alias->feature_alias_id = $feature_alias_id;
-                            $this->features_aliases->add_option_alias_value($option_alias);
-                            $options[$o_translit]->aliases[$feature_alias_id] = $option_alias;
-                        }
+                    // Получим id товаров для которых уже есть занчение которое мы объединяем
+                    $this->db->query("SELECT `product_id` FROM `__products_features_values` WHERE `value_id`=?", $union_main_value->id);
+                    $products_ids = $this->db->results('product_id');
+
+                    // Добавляем значение с которым объединяли всем товарам у которых было старое значение
+                    foreach ($products_ids as $product_id) {
+                        $this->db->query("REPLACE INTO `__products_features_values` SET `product_id`=?, `value_id`=?", $product_id, $union_second_value->id);
                     }
+
+                    // Удаляем занчение которое мы объединяли
+                    $this->features_values->delete_feature_value($union_main_value->id);
                 }
             }
 
         } else {
             $feature->id = $this->request->get('id', 'integer');
             $feature = $this->features->get_feature($feature->id);
-            if ($feature->id) {
-                foreach ($this->features->get_options(array('feature_id'=>$feature->id)) as $o) {
-                    $options[$o->translit] = $o;
-                }
+        }
 
-                foreach ($this->features_aliases->get_options_aliases_values(array('feature_id'=>$feature->id)) as $oa) {
-                    $options[$oa->translit]->aliases[$oa->feature_alias_id] = $oa;
-                }
-                $this->design->assign('options', $options);
+        if ($feature->id) {
+
+            $features_values = array();
+            $features_values_filter = array('feature_id'=>$feature->id);
+
+            if ($features_values_filter['limit'] = $this->request->get('limit', 'integer')) {
+                $features_values_filter['limit'] = max(5, $features_values_filter['limit']);
+                $features_values_filter['limit'] = min(100, $features_values_filter['limit']);
+                $_SESSION['features_values_num_admin'] = $features_values_filter['limit'];
+            } elseif (!empty($_SESSION['features_values_num_admin'])) {
+                $features_values_filter['limit'] = $_SESSION['features_values_num_admin'];
+            } else {
+                $features_values_filter['limit'] = 25;
+            }
+            $this->design->assign('current_limit', $features_values_filter['limit']);
+
+            $features_values_filter['page'] = max(1, $this->request->get('page', 'integer'));
+
+            $feature_values_count = $this->features_values->get_features_values($features_values_filter, true);
+
+            // Показать все страницы сразу
+            if($this->request->get('page') == 'all') {
+                $features_values_filter['limit'] = $feature_values_count;
             }
 
-            $features_aliases = array();
-            foreach ($this->features_aliases->get_features_aliases() as $f) {
-                $features_aliases[$f->id] = $f;
+            if($features_values_filter['limit'] > 0) {
+                $pages_count = ceil($feature_values_count/$features_values_filter['limit']);
+            } else {
+                $pages_count = 0;
             }
+            $features_values_filter['page'] = min($features_values_filter['page'], $pages_count);
+            $this->design->assign('feature_values_count', $feature_values_count);
+            $this->design->assign('pages_count', $pages_count);
+            $this->design->assign('current_page', $features_values_filter['page']);
+
+            foreach ($this->features_values->get_features_values($features_values_filter) as $fv) {
+                $features_values[$fv->translit] = $fv;
+            }
+
+            $this->design->assign('features_values', $features_values);
         }
 
         $feature_categories = array();
@@ -182,13 +180,6 @@ class FeatureAdmin extends Okay {
             $feature_categories[] = $category_id;
         }
 
-        if ($feature->id) {
-            foreach ($this->features_aliases->get_feature_aliases_values(array('feature_id'=>$feature->id)) as $fv) {
-                $features_aliases[$fv->feature_alias_id]->value = $fv;
-            }
-        }
-
-        $this->design->assign('features_aliases', $features_aliases);
         $categories = $this->categories->get_categories_tree();
         $this->design->assign('categories', $categories);
         $this->design->assign('feature', $feature);

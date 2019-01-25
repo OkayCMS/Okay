@@ -13,12 +13,13 @@ $content = $okay->request->post('content');
 $template = $okay->request->post('template');
 $theme = $okay->request->post('theme', 'string');
 
-if(pathinfo($template, PATHINFO_EXTENSION) != 'tpl') {
+/*Сохранение файлов шаблона из админки*/
+$file = $okay->config->root_dir.'design/'.$theme.'/html/'.$template;
+
+if(pathinfo($template, PATHINFO_EXTENSION) != 'tpl' || $file != realpath($file)) {
     exit();
 }
 
-/*Сохранение файлов шаблона из админки*/
-$file = $okay->config->root_dir.'design/'.$theme.'/html/'.$template;
 if(is_file($file) && is_writable($file) && !is_file($okay->config->root_dir.'design/'.$theme.'/locked')) {
     file_put_contents($file, $content);
 }

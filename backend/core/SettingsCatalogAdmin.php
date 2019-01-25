@@ -21,6 +21,14 @@ class SettingsCatalogAdmin extends Okay {
             $this->settings->comparison_count = $this->request->post('comparison_count');
             $this->settings->update('units', $this->request->post('units'));
             $this->settings->posts_num = $this->request->post('posts_num');
+            
+            if ($this->request->post('truncate_table_confirm') && ($pass = $this->request->post('truncate_table_password'))) {
+                $manager = $this->managers->get_manager();
+                if ($this->managers->check_password($pass, $manager->password)) {
+                    $this->truncate_tables();
+                }
+            }
+            
             if($this->request->post('is_preorder', 'integer')){
                 $this->settings->is_preorder = $this->request->post('is_preorder', 'integer');
             } else {
@@ -62,11 +70,11 @@ class SettingsCatalogAdmin extends Okay {
 
             // Удаление заресайзеных изображений
             if($clear_image_cache) {
-                $this->clear_resized_dirs($this->config->resized_images_dir);
+                $this->clear_files_dirs($this->config->resized_images_dir);
 
-                $this->clear_resized_dirs($this->config->resized_blog_dir);
-                $this->clear_resized_dirs($this->config->resized_brands_dir);
-                $this->clear_resized_dirs($this->config->resized_categories_dir);
+                $this->clear_files_dirs($this->config->resized_blog_dir);
+                $this->clear_files_dirs($this->config->resized_brands_dir);
+                $this->clear_files_dirs($this->config->resized_categories_dir);
             }
             $this->design->assign('message_success', 'saved');
 
@@ -82,13 +90,50 @@ class SettingsCatalogAdmin extends Okay {
         return $this->design->fetch('settings_catalog.tpl');
     }
 
-    private function clear_resized_dirs($dir = '') {
+    private function truncate_tables() {
+        $this->db->query("DELETE FROM `__comments` WHERE `type`='product'");
+        $this->db->query("UPDATE `__purchases` SET `product_id`=0, `variant_id`=0");
+        $this->db->query("TRUNCATE TABLE `__brands`");
+        $this->db->query("TRUNCATE TABLE `__categories`");
+        $this->db->query("TRUNCATE TABLE `__categories_features`");
+        $this->db->query("TRUNCATE TABLE `__features`");
+        $this->db->query("TRUNCATE TABLE `__features_aliases_values`");
+        $this->db->query("TRUNCATE TABLE `__features_values`");
+        $this->db->query("TRUNCATE TABLE `__images`");
+        $this->db->query("TRUNCATE TABLE `__import_log`");
+        $this->db->query("TRUNCATE TABLE `__lang_brands`");
+        $this->db->query("TRUNCATE TABLE `__lang_categories`");
+        $this->db->query("TRUNCATE TABLE `__lang_features`");
+        $this->db->query("TRUNCATE TABLE `__lang_features_aliases_values`");
+        $this->db->query("TRUNCATE TABLE `__lang_features_values`");
+        $this->db->query("TRUNCATE TABLE `__lang_products`");
+        $this->db->query("TRUNCATE TABLE `__lang_variants`");
+        $this->db->query("TRUNCATE TABLE `__options_aliases_values`");
+        $this->db->query("TRUNCATE TABLE `__products`");
+        $this->db->query("TRUNCATE TABLE `__products_categories`");
+        $this->db->query("TRUNCATE TABLE `__products_features_values`");
+        $this->db->query("TRUNCATE TABLE `__related_blogs`");
+        $this->db->query("TRUNCATE TABLE `__related_products`");
+        $this->db->query("TRUNCATE TABLE `__variants`");
+
+        $this->clear_files_dirs($this->config->original_images_dir);
+        $this->clear_files_dirs($this->config->resized_images_dir);
+        
+        $this->clear_files_dirs($this->config->original_brands_dir);
+        $this->clear_files_dirs($this->config->resized_brands_dir);
+        
+        $this->clear_files_dirs($this->config->original_categories_dir);
+        $this->clear_files_dirs($this->config->resized_categories_dir);
+        
+    }
+
+    private function clear_files_dirs($dir = '') {
         if (empty($dir)) {
             return false;
         }
         if($handle = opendir($dir)) {
             while(false !== ($file = readdir($handle))) {
-                if($file != "." && $file != ".." && $file != '.keep_folder') {
+                if($file != "." && $file != ".." && $file != '.keep_folder' && $file != '.htaccess') {
                     @unlink($dir."/".$file);
                 }
             }

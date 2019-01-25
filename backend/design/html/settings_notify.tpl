@@ -154,6 +154,23 @@
                                 <input name="smtp_pass" class="form-control" type="password" value="{$settings->smtp_pass|escape}" />
                             </div>
                         </div>
+
+                        <div class="col-md-6">
+                            <div class="heading_label">{$btr->settings_notify_test_smtp}</div>
+                            <div class="mb-1">
+                                <button type="button" class="fn_test_smtp btn btn_small btn_blue float-xs-left">
+                                    {include file='svg_icon.tpl' svgId='refresh_icon'}
+                                    <span>{$btr->settings_notify_do_test_smtp|escape}</span>
+                                </button>
+                                <div class="fn_test_smtp_status float-xs-left form-control"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row fn_row hidden">
+                        <div class="col-md-12">
+                            <div class="heading_label">{$btr->settings_notify_test_smtp_trace}</div>
+                            <div class="fn_test_smtp_trace"></div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 ">
@@ -168,3 +185,34 @@
         </div>
     </div>
 </form>
+
+<script>
+    $(document).on('click', '.fn_test_smtp', function() {
+        $('.fn_test_smtp_status').fadeOut(100);
+        var server = $('input[name="smtp_server"]').val(),
+            port   = $('input[name="smtp_port"]').val(),
+            user   = $('input[name="smtp_user"]').val(),
+            pass   = $('input[name="smtp_pass"]').val();
+        $.ajax({
+            url: 'ajax/test_smtp.php',
+            type: 'POST',
+            data: {
+                server: server,
+                port: port,
+                user: user,
+                pass: pass
+            },
+            success: function (data) {
+                $('.fn_test_smtp_status').text(data.message);
+                if (data.status == true) {
+                    $('.fn_test_smtp_trace').text('').closest('.fn_row').addClass('hidden');
+                    $('.fn_test_smtp_status').removeClass('text-danger').addClass('text-success');
+                } else {
+                    $('.fn_test_smtp_trace').html(data.trace).closest('.fn_row').removeClass('hidden');
+                    $('.fn_test_smtp_status').removeClass('text-success').addClass('text-danger');
+                }
+                $('.fn_test_smtp_status').fadeIn(500);
+            }
+        });
+    });
+</script>

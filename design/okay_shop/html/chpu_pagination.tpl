@@ -43,7 +43,7 @@
                 </li>
             {elseif $p == $current_page_num}
                 <li class="page_item{if $p==$current_page_num} active{/if}">
-                    <span class=fn_sort_pagination_link "page_link">{$p}</span>
+                    <span class="page_link">{$p}</span>
                 </li>
             {else}
                 <li class="page_item">

@@ -118,7 +118,9 @@ switch ($object) {
         }
         break;
     case 'managers':
-        if($okay->managers->access('managers')) {
+        if($manager_menu = $okay->request->post('manager_menu')) {
+            $result = $okay->managers->update_manager($id, array('menu'=>$manager_menu));
+        } elseif($okay->managers->access('managers')) {
             $result = $okay->managers->update_manager($id, $values);
         } elseif(isset($values['menu_status'])) {
             $result = $okay->managers->update_manager($id, array('menu_status'=>$values['menu_status']));

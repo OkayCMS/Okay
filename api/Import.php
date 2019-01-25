@@ -36,10 +36,12 @@ class Import extends Okay {
     protected $import_file           = 'import.csv';            // Временный файл
     protected $category_delimiter    = ',,';                    // Разделитель каегорий в файле
     protected $subcategory_delimiter = '/';                     // Разделитель подкаегорий в файле
+    protected $values_delimiter      = ',,';                    // Разделитель значений свойства в товаре
     protected $column_delimiter      = ';';
     protected $products_count        = 100;
     protected $columns               = array();
     protected $locale                = 'ru_RU.UTF-8';
+    protected $values_ids            = array();
 
     // Фозвращает внутреннее название колонки по названию колонки в файле
     private function internal_column_name($name) {

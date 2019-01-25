@@ -9,9 +9,9 @@ class StatAjax extends Okay {
         }
         $query = $this->db->placehold('SELECT 
                 SUM( o.total_price ) AS total_price, 
-                DAY(date) AS day, 
-                MONTH(date) as month, 
-                YEAR(date) as year 
+                MAX(DAY(date)) AS day, 
+                MAX(MONTH(date)) as month, 
+                MAX(YEAR(date)) as year 
             FROM __orders o 
             WHERE 
                 o.closed 

@@ -16,19 +16,16 @@
     /*Выборка значений свойств*/
     $options = array();
     if(!empty($product_id)) {
-        $opts = $okay->features->get_product_options(array('product_id'=>$product_id));
-        foreach($opts as $opt) {
-            $options[$opt->feature_id] = $opt;
+        foreach($okay->features_values->get_features_values(array('product_id'=>$product_id)) as $fv) {
+            $features_values[$fv->feature_id][] = $fv;
         }
     }
     
     foreach($features as $f) {
-        if(isset($options[$f->id])) {
-            $f->value = $options[$f->id]->value;
-            $f->translit = $options[$f->id]->translit;
+        if(isset($features_values[$f->id])) {
+            $f->values = $features_values[$f->id];
         } else {
-            $f->value = '';
-            $f->translit = '';
+            $f->values = array(array('value'=>'', 'id'=>''));
         }
     }
     

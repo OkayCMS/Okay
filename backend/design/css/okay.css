@@ -347,6 +347,14 @@ a.link:focus,
 a.link:hover{
     text-decoration: none;
 }
+a.link_white{
+    color: #fff;
+    text-decoration: underline;
+}
+a.link_white:focus,
+a.link_white:hover{
+    text-decoration: none;
+}
 
 /************************************************************************* Buttons  */
 
@@ -376,7 +384,7 @@ a.link:hover{
     cursor: pointer;
     user-select: none;
     border: 1px solid #6d5cae;
-    padding: 6px 16px;
+    padding: 6px 10px;
     transition: all 0.2s ease-in-out;
     color: #fff;
     background-color: #6d5cae;
@@ -387,6 +395,20 @@ a.link:hover{
     background-color: #8a7dbe;
     border-color: #8a7dbe;
 }
+.btn_vid_help{
+    border: 1px solid #d55959;
+    color: #fff;
+    background-color: #d55959;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+.btn_vid_help:focus,
+.btn_vid_help:hover{
+    color: #fff;
+    background-color: #de3838;
+    border-color: #de3838;
+}
+
 
 .btn.btn_big svg{
     width: 20px;
@@ -3013,14 +3035,14 @@ header.navbar .container-fluid{
 .admin_exit a{
     display: block;
     height: 40px;
-    padding: 10px 20px;
+    padding: 10px 15px;
     font-size: 14px;
     font-weight: 500;
     position: relative;
 }
 .admin_languages .languages_inner{
     display: block;
-    padding-right: 20px;
+    padding-right: 5px;
     font-size: 14px;
     font-weight: 500;
     position: relative;
@@ -3112,6 +3134,9 @@ header.navbar .container-fluid{
     margin-right: 5px;
     width: 20px;
     height: 20px;
+}
+.admin_switches a.btn_vid_help svg{
+    margin-right:0px;
 }
 .menu_switch{
     position: relative;
@@ -4304,6 +4329,12 @@ input[type=range]:focus::-ms-fill-upper {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.feature_name a{
+    color: #ffffff;
+}
+.additional_values.feature_name {
+    background: transparent;
+}
 .new_feature_row .new_feature_name{
     float: left;
     width: 35%;
@@ -4333,9 +4364,20 @@ input[type=range]:focus::-ms-fill-upper {
     float: left;
     width: 65%;
 }
+.feature_multi_values {
+    width: 35px;
+    padding: 5px;
+    float: left;
+    height: 34px;
+    text-align: center;
+    border-radius: 0px;
+}
+.feature_multi_values.btn.btn_mini svg{
+    margin: 0;
+}
 .feature_input {
     display: block;
-    width: 100%;
+    width: calc(100% - 35px);
     padding: 5px 10px;
     font-size: 14px;
     color: #607d8b;
@@ -4346,6 +4388,7 @@ input[type=range]:focus::-ms-fill-upper {
     height: 34px;
     font-weight: 400;
     border: 1px solid transparent;
+    float: left;
 }
 .feature_input:focus {
     border-color: rgba(118, 118, 118, 0.7);
@@ -5553,6 +5596,7 @@ base::-moz-progress-bar,
 
 .fn_fast_save {
     bottom: 0;
+    left: 0;
     position: fixed;
     width: 100%;
     text-align: center;
@@ -5565,6 +5609,19 @@ base::-moz-progress-bar,
 .fn_fast_save button {
     display: inline-block;
     float: none;
+}
+.fn_fast_action_block {
+    display: inline-block;
+}
+.fn_fast_save .additional_params,
+.fn_fast_save .action {
+    max-width: 300px;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: left;
+}
+.fn_fast_save .additional_params>div {
+    width: 100% !important;
 }
 .fn_disable_url{cursor:pointer;}
 div.mce-fullscreen {
@@ -5593,15 +5650,15 @@ div.mce-fullscreen {
     color: #2b303b;
 }
 .feature_alias_variable{
-    width: 250px;
+    width: 30%;
     text-align: left;
 }
 .feature_alias_name{
-    width: 250px;
+    width: 30%;
     text-align: left;
 }
 .feature_alias_value{
-    width: calc(100% - 600px);
+    width: calc(40% - 90px);
     text-align: left;
 }
 .feature_option_name {
@@ -5633,4 +5690,30 @@ div.mce-fullscreen {
 }
 .option_alias_name{
     text-align: left;
+}
+.feature_value_name{
+    width: calc(100% - 500px);
+    text-align: left;
+}
+.feature_value_translit{
+    width: 200px;
+    text-align: left;
+}
+.feature_value_products_num{
+    width: 90px;
+    text-align: left;
+}
+.feature_value_products_num .form-control {
+    text-align: center;
+    background-color: #cfd8dc;
+}
+.feature_value_index{
+    width: 120px;
+    text-align: center;
+}
+.fn_test_smtp_status {
+    width: auto;
+    border: none;
+    margin-left: 15px;
+    display: none;
 }

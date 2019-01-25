@@ -143,6 +143,15 @@
                             </select>
                         </div>
                     </div>
+                    
+                    <div class="mb-1">
+                        <div class="">
+                            <button type="submit" class="btn btn_small btn_blue" name="reset_menu" value="1">
+                                {include file='svg_icon.tpl' svgId='refresh_icon'}
+                                <span>{$btr->manager_reset_menu|escape}</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

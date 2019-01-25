@@ -45,6 +45,7 @@ class Features extends Okay {
                 f.auto_value_id, 
                 f.url, 
                 f.url_in_product,
+                f.to_index_new_value,
                 $lang_sql->fields
             FROM __features AS f 
             $lang_sql->join
@@ -113,6 +114,7 @@ class Features extends Okay {
                 f.auto_value_id, 
                 f.url, 
                 f.url_in_product,
+                f.to_index_new_value,
                 $lang_sql->fields
             FROM __features f 
             $lang_sql->join 
@@ -174,7 +176,9 @@ class Features extends Okay {
         if (isset($feature['name']) && !empty($feature['name']) && !is_array($id)) {
             $old_feature = $this->get_feature($id);
             if ($old_feature->name != $feature['name']) {
-                $this->db->query('select product_id from __options where feature_id=?', intval($id));
+                $this->db->query('SELECT `pv`.`product_id` 
+                                  FROM `__products_features_values` AS `pv`
+                                  INNER JOIN `__features_values` AS `fv` ON `pv`.`value_id`=`fv`.`id` AND `fv`.`feature_id`=?', intval($id));
                 $p_ids = $this->db->results('product_id');
                 if (!empty($p_ids)) {
                     $this->db->query('update __products set last_modify=now() where id in(?@)', $p_ids);
@@ -200,15 +204,19 @@ class Features extends Okay {
     public function delete_feature($id = array()) {
         if(!empty($id)) {
             //lastModify
-            $this->db->query('select product_id from __options where feature_id=?', intval($id));
+            $this->db->query("SELECT `pv`.`product_id`
+                              FROM `__products_features_values` AS `pf`
+                              INNER JOIN `__features_values` AS `fv` ON `pf`.`value_id`=`fv`.`id` AND `fv`.`feature_id` = ?", intval($id));
             $p_ids = $this->db->results('product_id');
             if (!empty($p_ids)) {
                 $this->db->query('update __products set last_modify=now() where id in(?@)', $p_ids);
             }
-            
+
+            /*Удаляем значения свойств*/
+            $this->features_values->delete_product_value(null, null, $id);
+            $this->features_values->delete_feature_value(null, $id);
+
             $query = $this->db->placehold("DELETE FROM __features WHERE id=? LIMIT 1", intval($id));
-            $this->db->query($query);
-            $query = $this->db->placehold("DELETE FROM __options WHERE feature_id=?", intval($id));
             $this->db->query($query);
             $query = $this->db->placehold("DELETE FROM __options_aliases_values WHERE feature_id=?", intval($id));
             $this->db->query($query);
@@ -216,54 +224,6 @@ class Features extends Okay {
             $this->db->query($query);
             $this->db->query("DELETE FROM __lang_features WHERE feature_id=?", intval($id));
         }
-    }
-
-    /*Удаление значения свойства*/
-    public function delete_option($product_id, $feature_id) {
-        $lang_id  = $this->languages->lang_id();
-        $lang_id_filter = '';
-        if($lang_id) {
-            $lang_id_filter = $this->db->placehold("AND lang_id=?", $lang_id);
-        }
-        
-        $query = $this->db->placehold("DELETE FROM __options WHERE product_id=? AND feature_id=? $lang_id_filter LIMIT 1", intval($product_id), intval($feature_id));
-        $this->db->query($query);
-    }
-
-    /*Обновление значения свойства*/
-    public function update_option($product_id, $feature_id, $value, $translit = '') {
-        $lang_id  = $this->languages->lang_id();
-        $lang_id_filter = '';
-        $into_lang = '';
-        if($lang_id) {
-            $lang_id_filter = $this->db->placehold("AND lang_id=?", $lang_id);
-            $into_lang = $this->db->placehold("lang_id=?, ", $lang_id);
-        }
-        $translit = $this->db->placehold("translit=?, ", ($translit != '' ? $translit : $this->translit_alpha($value)));
-        
-        if($value != '') {
-            $query = $this->db->placehold("REPLACE INTO __options SET $into_lang $translit value=?, product_id=?, feature_id=?", $value, intval($product_id), intval($feature_id));
-            $this->db->query($query);
-        } else {
-            $query = $this->db->placehold("DELETE FROM __options WHERE feature_id=? AND product_id=? $lang_id_filter", intval($feature_id), intval($product_id));
-            $this->db->query($query);
-        }
-        return true;
-    }
-
-    public function update_option_all_languages($product_id, $feature_id, $value, $translit = '') {
-        $current_lang_id = $this->languages->lang_id();
-        // если нету lang_id значит нету языков вообще - обновим один раз
-        if (!$current_lang_id) {
-            $this->update_option($product_id, $feature_id, $value, $translit);
-            return true;
-        }
-        foreach ($this->languages->get_languages() as $language) {
-            $this->languages->set_lang_id($language->id);
-            $this->update_option($product_id, $feature_id, $value, $translit);
-        }
-        $this->languages->set_lang_id($current_lang_id);
-        return true;
     }
 
     /*Добавление связки категории и свойства*/
@@ -280,17 +240,20 @@ class Features extends Okay {
             $c_ids = $this->db->results('category_id');
             $diff = array_diff($c_ids, $categories);
             if (!empty($diff)) {
-                $this->db->query('select o.product_id 
-                    from __options o
-                    inner join __products_categories pc on(pc.product_id=o.product_id)
-                    where o.feature_id=? and pc.category_id in(?@) group by o.product_id', intval($id), $diff);
+                $this->db->query('SELECT `pv`.`product_id` 
+                                  FROM `__products_features_values` AS `pv`
+                                  INNER JOIN `__features_values` AS `fv` ON `pv`.`value_id`=`fv`.`id`
+                                  INNER JOIN `__products_categories` AS `pc` ON `pc`.`product_id`=`pv`.`product_id`
+                                  WHERE `fv`.`feature_id`=? AND `pc`.`category_id` IN (?@)', intval($id), $diff);
                 $p_ids = $this->db->results('product_id');
                 if (!empty($p_ids)) {
                     $this->db->query('update __products set last_modify=now() where id in(?@)', $p_ids);
                 }
             }
         } else {
-            $this->db->query('select product_id from __options where feature_id=?', intval($id));
+            $this->db->query("SELECT `pv`.`product_id`
+                              FROM `__products_features_values` AS `pf`
+                              INNER JOIN `__features_values` AS `fv` ON `pf`.`value_id`=`fv`.`id` AND `fv`.`feature_id` = ?", intval($id));
             $p_ids = $this->db->results('product_id');
             if (!empty($p_ids)) {
                 $this->db->query('update __products set last_modify=now() where id in(?@)', $p_ids);
@@ -310,184 +273,21 @@ class Features extends Okay {
             $query = $this->db->placehold("INSERT INTO __categories_features (feature_id, category_id) VALUES ".implode(', ', $values));
             $this->db->query($query);
             
-            // Удалим значения из options
-            $query = $this->db->placehold("DELETE o FROM __options o
-                LEFT JOIN __products_categories pc ON pc.product_id=o.product_id
-                WHERE 
-                    o.feature_id=? 
-                    AND pc.position=(SELECT MIN(pc2.position) FROM __products_categories pc2 WHERE pc.product_id=pc2.product_id) 
-                    AND pc.category_id not in(?@)", $id, $categories);
+            // Удаляем значения свойств из категорий которые не запостили (их могли отжать)
+            $query = $this->db->placehold("DELETE `pv` FROM `__products_features_values` AS `pv`
+                            INNER JOIN `__features_values` AS `fv` ON `pv`.`value_id`=`fv`.`id`
+                            LEFT JOIN `__products_categories` AS `pc` ON `pc`.`product_id`=`pv`.`product_id`
+                            WHERE 
+                                `fv`.`feature_id`=? 
+                                AND `pc`.`position`=(SELECT MIN(`pc2`.`position`) FROM `__products_categories` AS `pc2` WHERE `pc`.`product_id`=`pc2`.`product_id`) 
+                                AND `pc`.`category_id` not in(?@)", $id, $categories);
             $this->db->query($query);
         } else {
-            // Удалим значения из options
-            $query = $this->db->placehold("DELETE o FROM __options o WHERE o.feature_id=?", $id);
+            // Если не прислали категорий, тогда удаляем все значения этого свойства для товаров
+            $query = $this->db->placehold("DELETE `pv` FROM `__products_features_values` AS `pf`
+                              INNER JOIN `__features_values` AS `fv` ON `pf`.`value_id`=`fv`.`id` AND `fv`.`feature_id` = ?", $id);
             $this->db->query($query);
         }
-    }
-
-    /*Выборка значений свойств*/
-    public function get_options($filter = array()) {
-        $feature_id_filter = '';
-        $product_id_filter = '';
-        $category_id_filter = '';
-        $visible_filter = '';
-        $brand_id_filter = '';
-        $features_filter = '';
-        $other_filter = '';
-        
-        if(empty($filter['feature_id']) && empty($filter['product_id'])) {
-            return array();
-        }
-        
-        if(isset($filter['feature_id'])) {
-            $feature_id_filter = $this->db->placehold('AND po.feature_id in(?@)', (array)$filter['feature_id']);
-        }
-        
-        if(isset($filter['product_id'])) {
-            $product_id_filter = $this->db->placehold('AND po.product_id in(?@)', (array)$filter['product_id']);
-        }
-        
-        if(isset($filter['category_id'])) {
-            $category_id_filter = $this->db->placehold('INNER JOIN __products_categories pc ON pc.product_id=po.product_id AND pc.category_id in(?@)', (array)$filter['category_id']);
-        }
-        
-        if(isset($filter['visible'])) {
-            $visible_filter = $this->db->placehold('INNER JOIN __products p ON p.id=po.product_id AND visible=?', intval($filter['visible']));
-        }
-        
-        if(isset($filter['brand_id'])) {
-            $brand_id_filter = $this->db->placehold('AND po.product_id in(SELECT id FROM __products WHERE brand_id in(?@))', (array)$filter['brand_id']);
-        }
-        
-        if(isset($filter['features'])) {
-            foreach($filter['features'] as $feature=>$value) {
-                $features_filter .= $this->db->placehold('AND (po.feature_id=? OR po.product_id in (SELECT product_id FROM __options WHERE feature_id=? AND translit in(?@) )) ', $feature, $feature, $value);
-            }
-        }
-
-        if (!empty($filter['other_filter'])) {
-            $other_filter = "AND (";
-            if (in_array("featured", $filter['other_filter'])) {
-                $other_filter .= "po.product_id IN(SELECT id FROM __products WHERE featured=1) OR ";
-            }
-            if (in_array("discounted", $filter['other_filter'])) {
-                $other_filter .= "(SELECT 1 FROM __variants pv WHERE pv.product_id=po.product_id AND pv.compare_price>0 LIMIT 1) = 1 OR ";
-            }
-            $other_filter = substr($other_filter, 0, -4).")";
-        }
-        
-        $lang_id  = $this->languages->lang_id();
-        $lang_id_filter = '';
-        if($lang_id) {
-            $lang_id_filter = $this->db->placehold("AND po.lang_id=?", $lang_id);
-        }
-
-        // т.к. для MySQL 5.7 в ONLY_FULL_GROUP_BY режиме нужно применять ф-цию ANY_VALUE, а в MySQL 5.6 и более ранних её нет,
-        // принято решение для запросов где есть группировка отключать ONLY_FULL_GROUP_BY режим
-        $this->db->query("SET @mode := @@SESSION.sql_mode");
-        $this->db->query("SET SESSION sql_mode = ''");
-        
-        $query = $this->db->placehold("SELECT 
-                po.product_id,
-                po.feature_id,
-                po.value,
-                po.translit,
-                count(po.product_id) as count
-            FROM __options po
-            $visible_filter
-            $category_id_filter
-            WHERE 
-                1 
-                $lang_id_filter 
-                $feature_id_filter 
-                $product_id_filter 
-                $brand_id_filter 
-                $features_filter 
-                $other_filter
-            GROUP BY po.feature_id, po.value
-            ORDER BY po.value=0, -po.value DESC, po.value
-        ");
-        
-        $this->db->query($query);
-        $options = $this->db->results();
-
-        // Вернем MySQL в обычный режим
-        $this->db->query("SET SESSION sql_mode = @mode");
-        return $options;
-    }
-
-    /*Выборка значений свойств товара(ов)*/
-    public function get_product_options($filter = array()) {
-        $product_id_filter = '';
-        if (!empty($filter['product_id'])) {
-            $product_id_filter = $this->db->placehold("AND po.product_id in(?@)", (array)$filter['product_id']);
-        }
-        $yandex_filter = '';
-        if (isset($filter['yandex'])) {
-            $yandex_filter = $this->db->placehold("AND f.yandex=?", intval($filter['yandex']));
-        }
-        
-        $lang_id  = $this->languages->lang_id();
-        $lang_id_filter = '';
-        if($lang_id) {
-            $lang_id_filter = $this->db->placehold("AND po.lang_id=?", $lang_id);
-        }
-        
-        $lang_sql = $this->languages->get_query(array('object'=>'feature', 'px'=>'f'));
-        $query = $this->db->placehold("SELECT 
-                f.id as feature_id, 
-                f.auto_name_id, 
-                f.auto_value_id, 
-                f.url, 
-                f.in_filter, 
-                f.url_in_product,
-                po.value,
-                po.product_id, 
-                po.translit, 
-                $lang_sql->fields 
-            FROM __options po
-            LEFT JOIN __features f ON f.id=po.feature_id
-            $lang_sql->join
-            WHERE 
-                1 
-                $product_id_filter 
-                $yandex_filter 
-                $lang_id_filter 
-            ORDER BY f.position
-        ");
-
-        $this->db->query($query);
-        return $this->db->results();
-    }
-
-    /*Выборка свойств для товаров из списка сравнения*/
-    public function get_comparison_options($products_ids = array()) {
-        if(empty($products_ids)) {
-            return array();
-        }
-        
-        $lang_id  = $this->languages->lang_id();
-        $lang_id_filter = '';
-        if($lang_id) {
-            $lang_id_filter = $this->db->placehold("AND po.lang_id=?", $lang_id);
-        }
-        
-        $query = $this->db->placehold("SELECT 
-                po.product_id, 
-                po.feature_id, 
-                po.value 
-            FROM __options po
-            WHERE 
-                1 
-                AND po.product_id in(?@) 
-                $lang_id_filter
-            ORDER BY po.feature_id, po.value=0, -po.value DESC, po.value
-        ", (array)$products_ids);
-        
-        $this->db->query($query);
-        $res = $this->db->results();
-        
-        return $res;
     }
 
     public function check_auto_id($feature_id, $auto_id, $field = "auto_name_id") {

@@ -49,6 +49,7 @@ class IndexAdmin extends Okay {
             'left_setting_counter_title'=> array('SettingsCounterAdmin'),
             'left_seo_patterns_title'   => array('SeoPatternsAdmin'),
             'left_seo_filter_patterns_title'   => array('SeoFilterPatternsAdmin'),
+            'left_feature_aliases_title'       => array('FeaturesAliasesAdmin'),
         ),
         'left_design' => array(
             'left_theme_title'          => array('ThemeAdmin'),
@@ -147,7 +148,8 @@ class IndexAdmin extends Okay {
         'SeoPatternsAdmin'          => 'seo_patterns',
         'SeoFilterPatternsAdmin'    => 'seo_filter_patterns',
         'SupportAdmin'              => 'support',
-        'TopicAdmin'                => 'support'
+        'TopicAdmin'                => 'support',
+        'FeaturesAliasesAdmin'      => 'features_aliases'
     );
     
     // Конструктор
@@ -231,19 +233,6 @@ class IndexAdmin extends Okay {
         $this->design->assign('lang_id', $lang_id);
         
         $this->design->assign('lang_link', $this->languages->get_lang_link());
-        
-        // Если не запросили модуль - используем модуль первый из разрешенных
-        if(empty($module) || !is_file('backend/core/'.$module.'.php')) {
-            foreach($this->modules_permissions as $m=>$p) {
-                if($this->managers->access($p)) {
-                    $module = $m;
-                    break;
-                }
-            }
-        }
-        if(empty($module)) {
-            $module = 'ProductsAdmin';
-        }
 
         /*Формирование меню*/
         if($module != "AuthAdmin") {
@@ -256,15 +245,38 @@ class IndexAdmin extends Okay {
                     $modules = reset($modules);
                     if (!in_array($this->modules_permissions[$modules], $this->manager->permissions)) {
                         unset($this->left_menu[$section][$title]);
+                        unset($this->manager->menu[$section][$title]);
+                    } else {
+                        $this->manager->menu[$section][$title] = $modules;
                     }
                 }
                 if (count($this->left_menu[$section]) == 0) {
                     unset($this->left_menu[$section]);
                 }
+                if (count($this->manager->menu[$section]) == 0) {
+                    unset($this->manager->menu[$section]);
+                }
                 unset($modules);
             }
             unset($items);
-            $this->design->assign('left_menu', $this->left_menu);
+
+            // Если не запросили модуль - используем модуль первый из разрешенных
+            if(empty($module) || !is_file('backend/core/'.$module.'.php')) {
+                foreach ($this->manager->menu as $section => $items) {
+                    foreach ($items as $title => $modules) {
+                        if (empty($module) || !is_file('backend/core/' . $module . '.php')) {
+                            if ($this->managers->access($this->modules_permissions[$modules])) {
+                                $module = $modules;
+                                $menu_selected = $title;
+                                break 2;
+                            }
+                        }
+                    }
+                }
+                unset($modules);
+            }
+            
+            $this->design->assign('left_menu', $this->manager->menu);
             $this->design->assign('menu_selected', $menu_selected);
 
             $support_info = $this->supportinfo->get_info();
@@ -276,6 +288,10 @@ class IndexAdmin extends Okay {
             }
             $this->design->assign('support_info', $support_info);
             $this->design->assign('translit_pairs', $this->translit_pairs);
+        }
+        
+        if(empty($module)) {
+            $module = 'ProductsAdmin';
         }
         
         // Подключаем файл с необходимым модулем

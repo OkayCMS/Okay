@@ -4,10 +4,8 @@ require_once('api/Okay.php');
 
 class Liqpay extends Okay
 {	
-	public function checkout_form($order_id, $button_text = null)
+	public function checkout_form($order_id)
 	{
-		if(empty($button_text))
-			$button_text = 'Перейти к оплате';
 		
 		$order = $this->orders->get_order((int)$order_id);
 		$liqpay_order_id = $order->id."-".rand(100000, 999999);
@@ -38,19 +36,6 @@ class Liqpay extends Okay
         $res['server_url'] = $server_url;
         $res['sign'] = $sign;
 
-
-		$button =	'<form method="POST" action="https://www.liqpay.com/api/pay">
-						<input type="hidden" name="public_key" value="'.$public_key.'" />
-						<input type="hidden" name="amount" value="'.$price.'" />
-						<input type="hidden" name="currency" value="'.$payment_currency->code.'" />
-						<input type="hidden" name="description" value="'.$desc.'" />
-						<input type="hidden" name="order_id" value="'.$liqpay_order_id.'" />
-						<input type="hidden" name="result_url" value="'.$result_url.'" />
-						<input type="hidden" name="server_url" value="'.$server_url.'" />  
-						<input type="hidden" name="type" value="buy" />
-						<input type="hidden" name="signature" value="'.$sign.'" />
-						<input type=submit class=checkout_button value="'.$button_text.'">
-					</form>';
 		return $res;
 	}
 }

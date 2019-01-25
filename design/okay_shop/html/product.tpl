@@ -5,7 +5,7 @@
 
 <div class="block padding">
     <div class="fn_product product" itemscope itemtype="http://schema.org/Product">
-        
+
         {* The product name *}
         <h1 class="product_heading">
             <span data-product="{$product->id}" itemprop="name">{$product->name|escape} {if $product->variants|count == 1 && !empty($product->variant->name)}({$product->variant->name|escape}){/if}</span>
@@ -15,12 +15,12 @@
         <div class="sku clearfix">
             {if $brand}
                 <div class="product_brand_block clearfix">
-                    <span>{$lang->product_brand_name} <a href="{$lang_link}brands/{$brand->url}">{$brand->name|escape}</a></span>
+                    <span>{$lang->product_brand_name} <a href="{$lang_link}brands/{$brand->url}"><span itemprop="brand">{$brand->name|escape}</span></a></span>
                 </div>
             {/if}
             <div class="{if !$product->variant->sku} hidden{/if}">
                 <span data-language="product_sku">{$lang->product_sku}:</span>
-                <span class="fn_sku sku_nubmer">{$product->variant->sku|escape}</span>
+                <span class="fn_sku sku_nubmer" {if $product->variant->sku}itemprop = "sku"{/if}>{$product->variant->sku|escape}</span>
             </div>
         </div>
 
@@ -29,8 +29,8 @@
                 <div class="product_image">
                     {* Main product image *}
                     {if $product->image}
-                        <a href="{$product->image->filename|resize:800:600:w}" data-fancybox="group" data-caption="{$product->name|escape}">
-                            <img class="fn_img product_img" itemprop="image" src="{$product->image->filename|resize:300:300}" alt="{$product->name|escape}" title="{$product->name|escape}">
+                        <a href="{$product->image->filename|resize:1800:1200:w}" data-fancybox="group" data-caption="{$product->name|escape}">
+                            <img class="fn_img product_img" itemprop="image" src="{$product->image->filename|resize:600:340}" alt="{$product->name|escape}" title="{$product->name|escape}">
                         </a>
                     {else}
                         <img class="fn_img" src="design/{$settings->theme}/images/no_image.png" width="340" height="340" alt="{$product->name|escape}"/>
@@ -48,7 +48,7 @@
                         {* cut removes the first image, if you need start from the second - write cut:2 *}
                         {foreach $product->images|cut as $i=>$image}
                             <div class="images_item">
-                                <a class="images_link" href="{$image->filename|resize:800:600:w}" data-fancybox="group" data-caption="{$product->name|escape} #{$image@iteration}">
+                                <a class="images_link" href="{$image->filename|resize:1800:1200:w}" data-fancybox="group" data-caption="{$product->name|escape} #{$image@iteration}">
                                     <img src="{$image->filename|resize:75:75}" alt="{$product->name|escape}"/>
                                 </a>
                             </div>
@@ -121,7 +121,7 @@
                                 {* Product variants *}
                                 <select name="variant" class="fn_variant variant_select{if $product->variants|count < 2} hidden{/if}">
                                     {foreach $product->variants as $v}
-                                        <option value="{$v->id}" data-price="{$v->price|convert}" data-stock="{$v->stock}"{if $v->compare_price > 0} data-cprice="{$v->compare_price|convert}"{/if}{if $v->sku} data-sku="{$v->sku|escape}"{/if} {if $v->units}data-units="{$v->units}"{/if}>{if $v->name}{$v->name|escape}{else}{$product->name|escape}{/if}</option>
+                                        <option{if $smarty.get.variant == $v->id} selected{/if} value="{$v->id}" data-price="{$v->price|convert}" data-stock="{$v->stock}"{if $v->compare_price > 0} data-cprice="{$v->compare_price|convert}"{/if}{if $v->sku} data-sku="{$v->sku|escape}"{/if} {if $v->units}data-units="{$v->units}"{/if}>{if $v->name}{$v->name|escape}{else}{$product->name|escape}{/if}</option>
                                     {/foreach}
                                 </select>
                             </div>
@@ -141,6 +141,7 @@
                         </div>
                         
                         <div class="row" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+                            <link itemprop="url" href="{$config->root_url}{$lang_link}/products/{$product->url}" />
                             <div class="col-sm-6">
                                 {* Old price *}
                                 <div class="old_price{if !$product->variant->compare_price} hidden{/if}">
@@ -180,7 +181,7 @@
                                     {/if}
                                     <link itemprop="itemCondition" href="https://schema.org/NewCondition" />
                                     <span itemprop="seller" itemscope itemtype="http://schema.org/Organization">
-                                    <span itemprop="name">{$settings->company_name}</span></span>
+                                    <span itemprop="name">{$settings->site_name}</span></span>
                                 </span>
                             </div>
                         </div>
@@ -253,11 +254,13 @@
                                 <li>
                                     <span class="features_name"><span>{$f->name|escape}</span></span>
                                     <span class="features_value">
-                                        {if $category && $f->url_in_product && $f->in_filter}
-                                            <a href="{$lang_link}catalog/{$category->url}/{$f->url}-{$f->translit}">{$f->value|escape}</a>
-                                        {else}
-                                            {$f->value|escape}
-                                        {/if}
+                                        {foreach $f->values as $value}
+                                            {if $category && $f->url_in_product && $f->in_filter && $value->to_index}
+                                                <a href="{$lang_link}catalog/{$category->url}/{$f->url}-{$value->translit}">{$value->value|escape}</a>{if !$value@last},{/if}
+                                            {else}
+                                                {$value->value|escape}{if !$value@last},{/if}
+                                            {/if}
+                                        {/foreach}
                                     </span>
                                 </li>
                             {/foreach}
@@ -508,7 +511,7 @@
 {literal}
 "seller": {
 "@type": "Organization",
-"name": "{/literal}{$settings->company_name|escape}{literal}"
+"name": "{/literal}{$settings->site_name|escape}{literal}"
 }
 }
 }

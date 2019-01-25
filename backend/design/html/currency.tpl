@@ -8,7 +8,7 @@
                 {$btr->currency_currencies|escape}
             </div>
             <div class="box_btn_heading">
-                <a id="add_currency" class="btn btn_small btn-info" href="{url module=FeatureAdmin return=$smarty.server.REQUEST_URI}">
+                <a id="add_currency" class="btn btn_small btn-info" href="#">
                     {include file='svg_icon.tpl' svgId='plus'}
                     <span>{$btr->currency_add|escape}</span>
                 </a>
@@ -154,7 +154,7 @@
                                         <div class="okay_list_boding okay_list_close">
                                             {*delete*}
                                             {if !$c@first}
-                                                <button data-hint="{$btr->currency_delete|escape}" type="button" class=" btn_close fn_remove_currency hint-bottom-right-t-info-s-small-mobile  hint-anim" data-id="{$c->id}">
+                                                <button data-hint="{$btr->currency_delete|escape}" type="button" class=" btn_close fn_remove_currency hint-bottom-right-t-info-s-small-mobile  hint-anim" data-id="{$c->id}" data-toggle="modal" data-target="#fn_currency_delete">
                                                     {include file='svg_icon.tpl' svgId='delete'}
                                                 </button>
                                             {/if}
@@ -235,8 +235,50 @@
     </div>
 </div>
 
+<a data-toggle="modal" data-target="#fn_currency_recalculate" class="hidden"></a>
+<div id="fn_currency_delete" class="modal fade show" role="document">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="card-header">
+                <div class="heading_modal">{$btr->general_confirm_delete|escape}</div>
+            </div>
+            <div class="modal-body">
+                <button type="submit" class="btn btn_small btn_blue fn_delete_currency_confirm mx-h">
+                    {include file='svg_icon.tpl' svgId='checked'}
+                    <span>{$btr->index_yes|escape}</span>
+                </button>
+
+                <button type="button" class="btn btn_small btn-danger fn_dismiss_currency mx-h" data-dismiss="modal">
+                    {include file='svg_icon.tpl' svgId='delete'}
+                    <span>{$btr->index_no|escape}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="fn_currency_recalculate" class="modal fade show" role="document">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="card-header">
+                <div class="heading_modal"></div>
+            </div>
+            <div class="modal-body">
+                <button type="submit" class="btn btn_small btn_blue fn_recalculate_currency_confirm mx-h">
+                    {include file='svg_icon.tpl' svgId='checked'}
+                    <span>{$btr->index_yes|escape}</span>
+                </button>
+
+                <button type="button" class="btn btn_small btn-danger fn_recalculate_currency_dismiss mx-h" data-dismiss="modal">
+                    {include file='svg_icon.tpl' svgId='delete'}
+                    <span>{$btr->index_no|escape}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    var general_confirm_delete = '{$btr->general_confirm_delete|escape}';
     var сurrency_recalculate = '{$btr->currency_recalculate|escape}';
     var сurrency_recalculate_rate = '{$btr->currency_recalculate_rate|escape}';
 </script>
@@ -247,6 +289,7 @@
 <script>
     $(function() {
 
+        var confirm = true;
         // Добавление валюты
         var curr = $('#new_currency').clone(true);
         $('#new_currency').remove().removeAttr('id');
@@ -255,9 +298,28 @@
             return false;
         });
 
-        $(document).on("click", ".fn_remove_currency ", function () {
+        var currency_to_delete;
+        $(document).on("click", ".fn_remove_currency", function () {
+            currency_to_delete = $(this).data("id");
+        });
+        
+        $(document).on("click", ".fn_delete_currency_confirm", function () {
             $('input[type="hidden"][name="action"]').val('delete');
-            $('input[type="hidden"][name="action_id"]').val($(this).data("id"));
+            $('input[type="hidden"][name="action_id"]').val(currency_to_delete);
+            $(".fn_form_list").submit();
+        });
+        
+        // Подтвердили пересчет валюты
+        $(document).on("click", ".fn_recalculate_currency_confirm", function () {
+            $('input[name="recalculate"]').val(1);
+            confirm = false;
+            $(".fn_form_list").submit();
+        });
+        
+        // Отменили пересчет валют
+        $(document).on("click", ".fn_recalculate_currency_dismiss", function () {
+            $('input[name="recalculate"]').val(0);
+            confirm = false;
             $(".fn_form_list").submit();
         });
 
@@ -265,14 +327,12 @@
         var base_currency_id = $('input[name*="currency[id]"]').val();
 
         $(".fn_form_list").submit(function() {
-            if($('input[type="hidden"][name="action"]').val()=='delete' && !confirm(general_confirm_delete)) {
+            if(base_currency_id != $('input[name*="currency[id]"]:first').val() && confirm) {
+                $('#fn_currency_recalculate .heading_modal').text(сurrency_recalculate + ' ' + $('input[name*="name"]:first').val() + ' ' + сurrency_recalculate_rate);
+                $('[data-target="#fn_currency_recalculate"]').trigger('click');
                 return false;
             }
-            if(base_currency_id != $('input[name*="currency[id]"]:first').val() && confirm(сurrency_recalculate + ' ' +$('input[name*="name"]:first').val() + ' ' + сurrency_recalculate_rate, 'msgBox Title'))
-                $('input[name="recalculate"]').val(1);
         });
-
-
     });
 
 </script>

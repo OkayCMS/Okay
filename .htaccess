@@ -91,7 +91,7 @@ RewriteRule ^([a-z]{2}/)?comparison/?$	index.php?module=ComparisonView&lang_labe
 
 # Корзина и заказы
 RewriteRule ^([a-z]{2}/)?cart/?$	index.php?module=CartView&lang_label=$1   [L,QSA]
-RewriteRule ^([a-z]{2}/)?cart/([^/]+)/?$	index.php?module=CartView&add_variant=$2&lang_label=$1  [L,QSA]
+RewriteRule ^([a-z]{2}/)?cart/([0-9]+)/?$	index.php?module=CartView&variant=$2&lang_label=$1  [L,QSA]
 RewriteRule ^([a-z]{2}/)?cart/remove/([^/]+)/?$	index.php?module=CartView&delete_variant=$2&lang_label=$1  [L,QSA]
 RewriteRule ^([a-z]{2}/)?order/([^/]+)/?$	index.php?module=OrderView&url=$2&lang_label=$1  [L,QSA]
 RewriteRule ^([a-z]{2}/)?order/?$	index.php?module=OrderView&lang_label=$1  [L,QSA]

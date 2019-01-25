@@ -255,3 +255,5 @@ $lang['meta_page'] = ", страница";
 $lang['page404_text'] = "Страница, которую вы запрашиваете, не существует, или она удалена. Возможно, вы набрали неправильный адрес. Попробуйте ввести еще раз.";
 $lang['meta_organization'] = "Организация";
 $lang['features_catalog'] = "Категории";
+$lang['selected_features_heading'] = "Вы выбрали:";
+$lang['selected_features_reset'] = "Очистить все";

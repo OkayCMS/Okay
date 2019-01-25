@@ -163,16 +163,18 @@ class ImportAjax extends Import {
         
         // Подготовим вариант товара
         $variant = array();
+        $variant['price'] = 0;
+        $variant['compare_price'] = 0;
         
         if (isset($item['variant'])) {
             $variant['name'] = trim($item['variant']);
         }
 
-        if (isset($item['price'])) {
+        if (isset($item['price']) && !empty($item['price'])) {
             $variant['price'] = str_replace(',', '.', str_replace(' ', '', trim($item['price'])));
         }
         
-        if (isset($item['compare_price'])) {
+        if (isset($item['compare_price']) && !empty($item['compare_price'])) {
             $variant['compare_price'] = str_replace(',', '.', str_replace(' ', '', trim($item['compare_price'])));
         }
         
@@ -240,11 +242,6 @@ class ImportAjax extends Import {
             }
         }
 
-        /* Какую ф-ию обновления значений св-тв вызывать:
-         * если это новый товар то нужно значения добавить во все языки
-         * иначе - только для текущего - вызываем старую добрую update_option()
-        */
-        $update_option_function = "update_option";
         if (isset($imported_item->status)) {
             if (!empty($product)) {
                 if (!isset($product['url']) && !empty($product['name']) && empty($result->url)) {
@@ -252,7 +249,6 @@ class ImportAjax extends Import {
                 }
                 if (empty($product_id)) {
                     $product_id = $this->products->add_product($product);
-                    $update_option_function = "update_option_all_languages";
                 } else {
                     $this->products->update_product($product_id, $product);
                 }
@@ -318,12 +314,24 @@ class ImportAjax extends Import {
                     }
                 }
             }
-            
+
+            $main_info = array();
             $main_image = reset($images_ids);
-            $main_image_id = $main_image ? $main_image : null;
-            $this->products->update_product($product_id, array('main_category_id'=>$category_id, 'main_image_id'=>$main_image_id));
-            
-            // Характеристики товаров
+            if (!empty($main_image)) {
+                $main_info['main_image_id'] = $main_image;
+            }
+            if (!empty($category_id)) {
+                $main_info['main_category_id'] = $category_id;
+            }
+
+            if (!empty($main_info)) {
+                $this->products->update_product($product_id, $main_info);
+            }
+
+            // Характеристики товара
+            $features_names   = array();
+            $features_values  = array();
+            $values_translits = array();
             foreach($item as $feature_name=>$feature_value) {
                 // Если нет такого названия колонки, значит это название свойства
                 if(!in_array($feature_name, $this->internal_columns_names)) {
@@ -333,11 +341,68 @@ class ImportAjax extends Import {
                         if(!$feature_id = $this->db->result('id')) {
                             $feature_id = $this->features->add_feature(array('name'=>$feature_name));
                         }
-                        
-                        $this->features->add_feature_category($feature_id, $category_id);
-                        $this->features->{$update_option_function}($product_id, $feature_id, $feature_value);
+
+                        $features_names[$feature_id] = $feature_name;
+                        $features_values[$feature_id] = explode($this->values_delimiter, $feature_value);
+
+                        foreach ($features_values[$feature_id] as $value) {
+                            $values_translits[] = $this->translit_alpha($value);
+                        }
                     }
                 }
+            }
+
+            if (!empty($features_names)) {
+
+                // Получаем все ID значений текущего товара
+                foreach ($this->features_values->get_features_values(array('feature_id' => array_keys($features_names), 'translit' => $values_translits)) as $value) {
+                    $this->values_ids[$value->feature_id][$value->translit] = $value->id;
+                }
+
+                $values_transaction = $this->db->placehold("INSERT IGNORE INTO `__products_features_values` (`product_id`, `value_id`) VALUES ");
+                $sql_values = array();
+
+                // Удаляем значения свойства товара
+                $this->features_values->delete_product_value($product_id, null, array_keys($features_names));
+
+                foreach ($features_names as $feature_id => $feature_name) {
+
+                    $this->features->add_feature_category($feature_id, $category_id);
+
+                    $values = $features_values[$feature_id];
+                    foreach ($values as $value) {
+                        $value_id = null;
+                        $translit = $this->translit_alpha($value);
+
+                        // Ищем значение с таким транслитом
+                        if (isset($this->values_ids[$feature_id][$translit])) {
+                            $value_id = $this->values_ids[$feature_id][$translit];
+                        }
+
+                        // Если нет, тогда добавим значение
+                        if (empty($value_id)) {
+                            $feature_value = new stdClass();
+                            $feature_value->value = trim($value);
+                            $feature_value->feature_id = $feature_id;
+                            $feature_value->translit = $this->translit_alpha($value);;
+                            $value_id = $this->features_values->add_feature_value($feature_value);
+                        }
+
+                        if (!empty($value_id)) {
+                            /**
+                             * Чтобы не вызывать add_product_value() для каждого значения, собираем массив значений
+                             * и за один запрос вставляем все связки значения и товара для одного товара
+                             */
+                            $sql_values[] = "('$product_id', '$value_id')";
+                        }
+                    }
+                }
+
+                if ($sql_values) {
+                    $values_transaction .= implode(", ", $sql_values);
+                    $this->db->query($values_transaction);
+                }
+
             }
             return $imported_item;
         }

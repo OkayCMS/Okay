@@ -4,6 +4,7 @@ require_once('Okay.php');
 
 class Translations extends Okay {
     
+    public $debug = false;
     private $vars = array();
 
     public function __construct() {
@@ -49,7 +50,12 @@ class Translations extends Okay {
             if (file_exists($file)) {
                 $lang = array();
                 require_once $file;
-                $this->vars[$label] = $lang;
+                if ($this->debug === true) {
+                    $this->front_translations->register($lang);
+                    $this->vars[$label] = $this->front_translations;
+                } else {
+                    $this->vars[$label] = $lang;
+                }
             } else {
                 $this->vars[$label] = array();
             }

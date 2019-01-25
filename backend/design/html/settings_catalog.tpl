@@ -111,6 +111,48 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="boxed fn_toggle_wrap ">
+                <div class="heading_box">
+                    {$btr->title_truncate_table|escape}
+                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
+                        <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
+                    </div>
+                </div>
+                {*Параметры элемента*}
+                <div class="toggle_body_wrap on fn_card">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="heading_label">&nbsp;</div>
+                            <div class="mb-1">
+                                <button type="button" class="btn btn_small btn_blue fn_truncate_table">
+                                    {include file='svg_icon.tpl' svgId='checked'}
+                                    <span>{$btr->truncate_table_button|escape}</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="fn_truncate_table_confirm" style="display: none;">
+                            <div class="col-lg-4 col-md-6">
+                                <div class="heading_label">{$btr->truncate_table_password|escape}</div>
+                                <div class="mb-1">
+                                    <input name="truncate_table_password" class="form-control" type="password" value="" />
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="heading_label">&nbsp;</div>
+                                <button type="submit" class="btn btn_small btn-danger" name="truncate_table_confirm" value="1">
+                                    {include file='svg_icon.tpl' svgId='checked'}
+                                    <span>{$btr->truncate_table_confirm|escape}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-lg-12 col-md-12">
             <div class="boxed fn_toggle_wrap ">
@@ -250,6 +292,9 @@
     </div>
 </form>
 <script>
+    $(document).on("click", ".fn_truncate_table", function () {
+        $('.fn_truncate_table_confirm').fadeIn(500);
+    });
     $(document).on("input", ".fn_rating", function () {
         $(this).closest(".fn_range_wrap").find(".fn_show_range").html($(this).val());
         $(this).closest(".fn_range_wrap").find(".fn_range_value").val($(this).val());

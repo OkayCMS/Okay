@@ -23,13 +23,13 @@
 
     {if $current_page>1}
     <li class="page-item">
-        <a id="PrevLink" href="{url page=$current_page-1}">&lt;</a>
+        <a id="PrevLink" href="{if $current_page == 2}{url page=null}{else}{url page=$current_page-1}{/if}">&lt;</a>
     </li>
     {/if}
 
     {* Ссылка на 1 страницу отображается всегда *}
     <li class="page-item {if $current_page==1}active{/if}">
-        <a class="page-link {if $current_page==1}selected{else}droppable{/if}" href="{url page=1}">1</a>
+        <a class="page-link {if $current_page==1}selected{else}droppable{/if}" href="{url page=null}">1</a>
     </li>
     {* Выводим страницы нашего "окна" *}    
     {section name=pages loop=$page_to start=$page_from}

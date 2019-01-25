@@ -103,7 +103,7 @@
     <meta name="twitter:data1" content="{$lang->cart_head_price}">
     <meta name="twitter:label1" content="{$product->variant->price|convert:null:false} {$currency->code|escape}">
     <meta name="twitter:data2" content="{$lang->meta_organization}">
-    <meta name="twitter:label2" content="{$settings->company_name|escape}">
+    <meta name="twitter:label2" content="{$settings->site_name|escape}">
 {elseif $module == 'BlogView'}
     <meta property="og:url" content="{$config->root_url}{if $lang_link}/{str_replace('/', '', $lang_link)}{/if}{$canonical}">
     <meta property="og:type" content="article">
@@ -144,10 +144,8 @@
 {/if}
 
 {* Language attribute *}
-{if !$hide_alternate}
-    {foreach $languages as $l}
-        {if $l->enabled}
-            <link rel="alternate" hreflang="{$l->href_lang}" href="{$config->root_url}/{preg_replace('/^(.+)\/$/', '$1', $l->url)}">
-        {/if}
-    {/foreach}
-{/if}
+{foreach $languages as $l}
+    {if $l->enabled}
+        <link rel="alternate" hreflang="{$l->href_lang}" href="{preg_replace('/^(.+)\/$/', '$1', $l->url)}">
+    {/if}
+{/foreach}

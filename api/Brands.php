@@ -6,16 +6,21 @@ class Brands extends Okay {
 
     /*Выбираем все бренды*/
     public function get_brands($filter = array()) {
-        $limit = 100;
-        $page = 1;
+        $limit              = 100;
+        $page               = 1;
         $category_id_filter = '';
-        $category_join = '';
-        $visible_filter = '';
-        $product_id_filter = '';
-        $product_join = '';
+        $visible_filter     = '';
+        $product_id_filter  = '';
         $visible_brand_filter = '';
-        $features_filter = '';
-        $other_filter = '';
+        $features_filter    = '';
+        $other_filter       = '';
+        $price_filter       = '';
+        $selected_brands_filter = '';
+        
+        $variant_join       = '';
+        $currency_join      = '';
+        $category_join      = '';
+        $product_join       = '';
 
         if(isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));
@@ -40,18 +45,74 @@ class Brands extends Okay {
             $product_join = $this->db->placehold("LEFT JOIN __products p ON p.brand_id=b.id");
         }
 
+        if(!empty($filter['selected_brands'])) {
+            $selected_brands_filter = $this->db->placehold('OR b.id in (?@)', (array)$filter['selected_brands']);
+        }
+        
+        $first_currency = $this->money->get_currencies(array('enabled'=>1));
+        $first_currency = reset($first_currency);
+        $coef = 1;
+        
+        if(isset($_SESSION['currency_id']) && $first_currency->id != $_SESSION['currency_id']) {
+            $currency = $this->money->get_currency(intval($_SESSION['currency_id']));
+            $coef = $currency->rate_from / $currency->rate_to;
+        }
+        
+        if(isset($filter['price'])) {
+            if(isset($filter['price']['min'])) {
+                $price_filter .= $this->db->placehold("AND floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)>= ? ", $this->db->escape(trim($filter['price']['min'])));
+            }
+            if(isset($filter['price']['max'])) {
+                $price_filter .= $this->db->placehold("AND floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)<= ? ", $this->db->escape(trim($filter['price']['max'])));
+            }
+            $product_join = $this->db->placehold("LEFT JOIN __products p ON p.brand_id=b.id");
+            $variant_join = 'LEFT JOIN __variants pv ON pv.product_id = p.id';
+            $currency_join = 'LEFT JOIN __currencies c ON c.id=pv.currency_id';
+        }
+        
         if(!empty($filter['category_id'])) {
-            $category_join = $this->db->placehold("LEFT JOIN __products p ON p.brand_id=b.id LEFT JOIN __products_categories pc ON p.id = pc.product_id");
+            $product_join = $this->db->placehold("LEFT JOIN __products p ON p.brand_id=b.id");
+            $category_join = $this->db->placehold("LEFT JOIN __products_categories pc ON p.id = pc.product_id");
             $category_id_filter = $this->db->placehold("AND pc.category_id in(?@) $visible_filter", (array)$filter['category_id']);
         }
 
         if(!empty($filter['features'])) {
-            foreach($filter['features'] as $feature=>$value) {
-                $features_filter .= $this->db->placehold('AND p.id in (SELECT product_id FROM __options WHERE feature_id=? AND translit in(?@) ) ', $feature, (array)$value);
+
+            $lang_id_options_filter = '';
+            $lang_options_join      = '';
+            // Алиас для таблицы без языков
+            $options_px = 'fv';
+            if (!empty($lang_id)) {
+                $lang_id_options_filter = $this->db->placehold("AND `lfv`.`lang_id`=?", $lang_id);
+                $lang_options_join = $this->db->placehold("LEFT JOIN `__lang_features_values` AS `lfv` ON `pf`.`value_id`=`lfv`.`feature_value_id`");
+                // Алиас для таблицы с языками
+                $options_px = 'lfv';
             }
-            if (empty($category_join)) {
-                $features_filter .= $visible_filter;
-                $category_join = $this->db->placehold("LEFT JOIN __products p ON (p.brand_id=b.id)");
+
+            foreach($filter['features'] as $feature_id=>$value) {
+                $features_values[] = $this->db->placehold("(
+                            `{$options_px}`.`translit` in(?@)
+                            AND `{$options_px}`.`feature_id`=?)", (array)$value, $feature_id);
+            }
+
+            if (!empty($features_values)) {
+                $features_values = implode(' OR ', $features_values);
+
+                $features_values_products_join = '';
+                if (!empty($visible_filter)) {
+                    $features_values_products_join = $this->db->placehold("LEFT JOIN `__products` AS `p` ON `p`.`id`=`pf`.`product_id`");
+                }
+
+                $features_filter = $this->db->placehold("AND `p`.`id` in (SELECT 
+                    `pf`.`product_id`
+                FROM `__products_features_values` AS `pf`
+                $lang_options_join
+                $features_values_products_join
+                LEFT JOIN `__features_values` AS `fv` ON `fv`.`id`=`pf`.`value_id`
+                WHERE ($features_values) 
+                $lang_id_options_filter
+                $visible_filter
+                GROUP BY `pf`.`product_id` HAVING COUNT(*) >= ?)", count($filter['features']));
             }
         }
 
@@ -82,8 +143,10 @@ class Brands extends Okay {
                 $lang_sql->fields 
             FROM __brands b
             $lang_sql->join
-            $category_join
             $product_join
+            $category_join
+            $variant_join
+            $currency_join
             WHERE 
                 1 
                 $category_id_filter
@@ -91,6 +154,8 @@ class Brands extends Okay {
                 $visible_brand_filter
                 $product_id_filter
                 $other_filter
+                $price_filter
+                $selected_brands_filter
             ORDER BY b.position
             $sql_limit
         ");
@@ -100,13 +165,19 @@ class Brands extends Okay {
 
     public function count_brands($filter = array()) {
         $category_id_filter = '';
-        $category_join = '';
-        $visible_filter = '';
-        $product_id_filter = '';
-        $product_join = '';
+        $visible_filter     = '';
+        $product_id_filter  = '';
         $visible_brand_filter = '';
-        $features_filter = '';
-        $other_filter = '';
+        $features_filter    = '';
+        $other_filter       = '';
+        $price_filter       = '';
+        $selected_brands_filter = '';
+
+        $variant_join       = '';
+        $currency_join      = '';
+        $category_join      = '';
+        $product_join       = '';
+        
 
         if(isset($filter['visible'])) {
             $visible_filter = $this->db->placehold('AND p.visible=?', intval($filter['visible']));
@@ -121,18 +192,74 @@ class Brands extends Okay {
             $product_join = $this->db->placehold("LEFT JOIN __products p ON p.brand_id=b.id");
         }
 
+        if(!empty($filter['selected_brands'])) {
+            $selected_brands_filter = $this->db->placehold('OR b.id in (?@)', (array)$filter['selected_brands']);
+        }
+        
+        $first_currency = $this->money->get_currencies(array('enabled'=>1));
+        $first_currency = reset($first_currency);
+        $coef = 1;
+
+        if(isset($_SESSION['currency_id']) && $first_currency->id != $_SESSION['currency_id']) {
+            $currency = $this->money->get_currency(intval($_SESSION['currency_id']));
+            $coef = $currency->rate_from / $currency->rate_to;
+        }
+
+        if(isset($filter['price'])) {
+            if(isset($filter['price']['min'])) {
+                $price_filter .= $this->db->placehold("AND floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)>= ? ", $this->db->escape(trim($filter['price']['min'])));
+            }
+            if(isset($filter['price']['max'])) {
+                $price_filter .= $this->db->placehold("AND floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)<= ? ", $this->db->escape(trim($filter['price']['max'])));
+            }
+            $product_join = $this->db->placehold("LEFT JOIN __products p ON p.brand_id=b.id");
+            $variant_join = 'LEFT JOIN __variants pv ON pv.product_id = p.id';
+            $currency_join = 'LEFT JOIN __currencies c ON c.id=pv.currency_id';
+        }
+
         if(!empty($filter['category_id'])) {
-            $category_join = $this->db->placehold("LEFT JOIN __products p ON p.brand_id=b.id LEFT JOIN __products_categories pc ON p.id = pc.product_id");
+            $product_join = $this->db->placehold("LEFT JOIN __products p ON p.brand_id=b.id");
+            $category_join = $this->db->placehold("LEFT JOIN __products_categories pc ON p.id = pc.product_id");
             $category_id_filter = $this->db->placehold("AND pc.category_id in(?@) $visible_filter", (array)$filter['category_id']);
         }
 
         if(!empty($filter['features'])) {
-            foreach($filter['features'] as $feature=>$value) {
-                $features_filter .= $this->db->placehold('AND p.id in (SELECT product_id FROM __options WHERE feature_id=? AND translit in(?@) ) ', $feature, (array)$value);
+
+            $lang_id_options_filter = '';
+            $lang_options_join      = '';
+            // Алиас для таблицы без языков
+            $options_px = 'fv';
+            if (!empty($lang_id)) {
+                $lang_id_options_filter = $this->db->placehold("AND `lfv`.`lang_id`=?", $lang_id);
+                $lang_options_join = $this->db->placehold("LEFT JOIN `__lang_features_values` AS `lfv` ON `pf`.`value_id`=`lfv`.`feature_value_id`");
+                // Алиас для таблицы с языками
+                $options_px = 'lfv';
             }
-            if (empty($category_join)) {
-                $features_filter .= $visible_filter;
-                $category_join = $this->db->placehold("LEFT JOIN __products p ON (p.brand_id=b.id)");
+
+            foreach($filter['features'] as $feature_id=>$value) {
+                $features_values[] = $this->db->placehold("(
+                            `{$options_px}`.`translit` in(?@)
+                            AND `{$options_px}`.`feature_id`=?)", (array)$value, $feature_id);
+            }
+
+            if (!empty($features_values)) {
+                $features_values = implode(' OR ', $features_values);
+
+                $features_values_products_join = '';
+                if (!empty($visible_filter)) {
+                    $features_values_products_join = $this->db->placehold("LEFT JOIN `__products` AS `p` ON `p`.`id`=`pf`.`product_id`");
+                }
+
+                $features_filter = $this->db->placehold("AND `p`.`id` in (SELECT 
+                    `pf`.`product_id`
+                FROM `__products_features_values` AS `pf`
+                $lang_options_join
+                $features_values_products_join
+                LEFT JOIN `__features_values` AS `fv` ON `fv`.`id`=`pf`.`value_id`
+                WHERE ($features_values) 
+                $lang_id_options_filter
+                $visible_filter
+                GROUP BY `pf`.`product_id` HAVING COUNT(*) >= ?)", count($filter['features']));
             }
         }
 
@@ -157,8 +284,10 @@ class Brands extends Okay {
                 count(distinct b.id) as count
             FROM __brands b
             $lang_sql->join
-            $category_join
             $product_join
+            $category_join
+            $variant_join
+            $currency_join
             WHERE
                 1
                 $category_id_filter
@@ -166,6 +295,8 @@ class Brands extends Okay {
                 $visible_brand_filter
                 $product_id_filter
                 $other_filter
+                $price_filter
+                $selected_brands_filter
         ");
         $this->db->query($query);
         return $this->db->result('count');

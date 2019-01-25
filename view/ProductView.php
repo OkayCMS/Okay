@@ -44,8 +44,15 @@ class ProductView extends View {
         } else {
             $product->variant = reset($variants);
         }
-        
-        $product->features = $this->features->get_product_options(array('product_id'=>$product->id));
+
+        if ($product_values = $this->features_values->get_features_values(array('product_id'=>$product->id))) {
+            foreach ($product_values as $pv) {
+                if (!isset($product->features[$pv->feature_id])) {
+                    $product->features[$pv->feature_id] = $pv;
+                }
+                $product->features[$pv->feature_id]->values[] = $pv;
+            }
+        }
         
         // Автозаполнение имени для формы комментария
         if(!empty($this->user)) {
@@ -180,17 +187,19 @@ class ProductView extends View {
         $browsed_products[] = $product->id;
         $cookie_val = implode(',', array_slice($browsed_products, -$max_visited_products, $max_visited_products));
         setcookie("browsed_products", $cookie_val, $expire, "/");
+
+        $default_products_seo_pattern = (object)$this->settings->default_products_seo_pattern;
+        $parts = array(
+            '{$brand}'    => ($this->design->get_var('brand') ? $this->design->get_var('brand')->name : ''),
+            '{$product}'  => ($product->name ? $product->name : ''),
+            '{$price}'    => ($product->variant->price != null ? $this->money->convert($product->variant->price, $this->currency->id, false).' '.$this->currency->sign : ''),
+            '{$sitename}' => ($this->settings->site_name ? $this->settings->site_name : '')
+        );
         
         //Автоматичекска генерация мета тегов и описания товара
         if (!empty($category)) {
-            $parts = array(
-                '{$category}' => ($category->name ? $category->name : ''),
-                '{$category_h1}' => ($category->name_h1 ? $category->name_h1 : ''),
-                '{$brand}' => ($this->design->get_var('brand') ? $this->design->get_var('brand')->name : ''),
-                '{$product}' => ($product->name ? $product->name : ''),
-                '{$price}' => ($product->variant->price != null ? $this->money->convert($product->variant->price, $this->currency->id, false).' '.$this->currency->sign : ''),
-                '{$sitename}' => ($this->settings->site_name ? $this->settings->site_name : '')
-            );
+            $parts['{$category}']    = ($category->name ? $category->name : '');
+            $parts['{$category_h1}'] = ($category->name_h1 ? $category->name_h1 : '');
             foreach ($product->features as $feature) {
                 if ($feature->auto_name_id) {
                     $parts['{$'.$feature->auto_name_id.'}'] = $feature->name;
@@ -199,8 +208,6 @@ class ProductView extends View {
                     $parts['{$'.$feature->auto_value_id.'}'] = $feature->value;
                 }
             }
-
-            $default_products_seo_pattern = (object)$this->settings->default_products_seo_pattern;
 
             if ($category->auto_meta_title) {
                 $auto_meta_title = $category->auto_meta_title;
@@ -226,9 +233,6 @@ class ProductView extends View {
                 $auto_meta_description = $product->meta_description;
             }
 
-            $auto_meta_title = strtr($auto_meta_title, $parts);
-            $auto_meta_keywords = strtr($auto_meta_keywords, $parts);
-            $auto_meta_description = strtr($auto_meta_description, $parts);
             if (!empty($category->auto_description) && empty($product->description)) {
                 $product->description = strtr($category->auto_description, $parts);
                 $product->description = preg_replace('/\{\$[^\$]*\}/', '', $product->description);
@@ -236,18 +240,43 @@ class ProductView extends View {
                 $product->description = strtr($default_products_seo_pattern->auto_description, $parts);
                 $product->description = preg_replace('/\{\$[^\$]*\}/', '', $product->description);
             }
-            $auto_meta_title = preg_replace('/\{\$[^\$]*\}/', '', $auto_meta_title);
-            $auto_meta_keywords = preg_replace('/\{\$[^\$]*\}/', '', $auto_meta_keywords);
-            $auto_meta_description = preg_replace('/\{\$[^\$]*\}/', '', $auto_meta_description);
-
-            $this->design->assign('meta_title', $auto_meta_title);
-            $this->design->assign('meta_keywords', $auto_meta_keywords);
-            $this->design->assign('meta_description', $auto_meta_description);
         } else {
-            $this->design->assign('meta_title', $product->meta_title);
-            $this->design->assign('meta_keywords', $product->meta_keywords);
-            $this->design->assign('meta_description', $product->meta_description);
+
+            if ($default_products_seo_pattern->auto_meta_title) {
+                $auto_meta_title = $default_products_seo_pattern->auto_meta_title;
+            } else {
+                $auto_meta_title = $product->meta_title;
+            }
+
+            if ($default_products_seo_pattern->auto_meta_keywords) {
+                $auto_meta_keywords = $default_products_seo_pattern->auto_meta_keywords;
+            } else {
+                $auto_meta_keywords = $product->meta_keywords;
+            }
+
+            if ($default_products_seo_pattern->auto_meta_desc) {
+                $auto_meta_description = $default_products_seo_pattern->auto_meta_desc;
+            } else {
+                $auto_meta_description = $product->meta_description;
+            }
+
+            if (!empty($default_products_seo_pattern->auto_description) && empty($product->description)) {
+                $product->description = strtr($default_products_seo_pattern->auto_description, $parts);
+                $product->description = preg_replace('/\{\$[^\$]*\}/', '', $product->description);
+            }
         }
+
+        $auto_meta_title = strtr($auto_meta_title, $parts);
+        $auto_meta_keywords = strtr($auto_meta_keywords, $parts);
+        $auto_meta_description = strtr($auto_meta_description, $parts);
+        
+        $auto_meta_title = preg_replace('/\{\$[^\$]*\}/', '', $auto_meta_title);
+        $auto_meta_keywords = preg_replace('/\{\$[^\$]*\}/', '', $auto_meta_keywords);
+        $auto_meta_description = preg_replace('/\{\$[^\$]*\}/', '', $auto_meta_description);
+        
+        $this->design->assign('meta_title', $auto_meta_title);
+        $this->design->assign('meta_keywords', $auto_meta_keywords);
+        $this->design->assign('meta_description', $auto_meta_description);
         
         return $this->design->fetch('product.tpl');
     }

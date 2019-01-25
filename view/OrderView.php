@@ -150,15 +150,15 @@ class OrderView extends View {
     }
 
     /*Подлючение формы оплаты для выбранного способа*/
-    public function checkout_form($params, &$smarty) {
+    public function checkout_form($params) {
         $module_name = preg_replace("/[^A-Za-z0-9]+/", "", $params['module']);
         
         $form = '';
         if(!empty($module_name) && is_file("payment/$module_name/$module_name.php")) {
             include_once("payment/$module_name/$module_name.php");
             $module = new $module_name();
-            $form = $module->checkout_form($params['order_id'], $params['button_text']);
-            $tpl ="design/".$this->settings->theme."/html/payments_form.tpl";
+            $form = $module->checkout_form($params['order_id']);
+            $tpl = "payment/".$module_name."/form.tpl";
             if(!empty($form)) {
                 foreach ($form as $var => $val) {
                     $this->design->assign($var, $val);
@@ -166,7 +166,7 @@ class OrderView extends View {
             }
             $this->design->assign('payment_module',$module_name);
         }
-        if(!empty($tpl) && !empty($form)){
+        if(!empty($tpl) && !empty($form) && file_exists($this->config->root_dir.'/'.$tpl)){
             return $this->design->fetch($tpl);
         } else{
             return false;

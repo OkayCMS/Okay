@@ -301,6 +301,8 @@
 .sort_link {
     float: left;
     padding: 20px;
+    border: none;
+    background: none;
     border-right: 1px solid #e8e8e1;
 }
 .sort_link span {
@@ -491,8 +493,12 @@
     float: right;
     width: calc(100% - 300px);
 }
-.sidebar_top {
+.sidebar_center {
     margin: 0;
+}
+.sidebar_top {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
 }
 .subcategory {
     position: absolute;
@@ -906,7 +912,16 @@ body.openmenu::before {
 .features_name, .features_value {
     width: 100%;
     float: none;
- }    
+ }
+    .selected_filter_box .selected_filter_item .s_filter_link svg{
+        color: #f25050;
+    }
+    .selected_filter_box .selected_filter_item{
+        background: #38c0f3;
+    }
+    .selected_filter_box .selected_filter_item .s_filter_link{
+        color: #fff;
+    }
 }
 
 @media (max-width: 419px) {

@@ -41,28 +41,41 @@ class Comparison extends Okay {
                         }
                     }
                 }
-                
-                $options = array();
-                $features_ids = array();
-                foreach($this->features->get_comparison_options($products_ids) as $o) {
-                    $options[$o->feature_id][$o->product_id] = $o->value;
-                    $features_ids[] = $o->feature_id;
+
+                $features_values = array();
+                foreach ($this->features_values->get_features_values(array('product_id'=>$products_ids)) as $fv) {
+                    $features_values[$fv->id] = $fv;
                 }
+
+                $products_values = array();
+                foreach ($this->features_values->get_product_value_id($products_ids) as $pv) {
+                    $products_values[$pv->product_id][$pv->value_id] = $pv->value_id;
+                }
+
                 $features = array();
-                if (!empty($features_ids)) {
-                    foreach ($this->features->get_features(array('id' => $features_ids)) as $f) {
-                        $features[$f->id] = $f;
-                        foreach ($products as $p) {
-                            if(isset($options[$f->id][$p->id])){
-                                $features[$f->id]->products[$p->id] = $options[$f->id][$p->id];
-                            }
-                            else{
-                                $features[$f->id]->products[$p->id] = null;
-                            }
+                foreach ($features_values as $fv) {
+                    if (!isset($features[$fv->feature_id])) {
+                        $features[$fv->feature_id] = $fv;
+                    }
+
+                    foreach ($products as $p) {
+                        if(isset($products_values[$p->id][$fv->id])){
+                            $features[$fv->feature_id]->products[$p->id][] = $fv->value;
+                        } else {
+                            $features[$fv->feature_id]->products[$p->id] = null;
                         }
-                        $features[$f->id]->not_unique = (count(array_unique($features[$f->id]->products)) == 1) ? true : false;
                     }
                 }
+
+                foreach ($features_values as $fv) {
+                    foreach ($products as $p) {
+                        if(is_array($features[$fv->feature_id]->products[$p->id])){
+                            $features[$fv->feature_id]->products[$p->id] = implode(", ", $features[$fv->feature_id]->products[$p->id]);
+                        }
+                    }
+                    $features[$fv->feature_id]->not_unique = (count(array_unique($features[$fv->feature_id]->products)) == 1) ? true : false;
+                }
+
                 if(!empty($features)) {
                     $comparison->features = $features;
                 }
@@ -71,12 +84,21 @@ class Comparison extends Okay {
                     if(isset($product->variants[0])) {
                         $product->variant = $product->variants[0];
                     }
-                    foreach($features as $id=>$f) {
-                        if(isset($options[$id][$product->id])){
-                            $product->features[$id] = $options[$id][$product->id];
+
+                    $product_features = array();
+                    if (isset($products_values[$product->id])) {
+                        foreach ($products_values[$product->id] as $value_id) {
+                            if ($feature = $features_values[$value_id]) {
+                                $product_features[$feature->feature_id][] = $feature->value;
+                            }
                         }
-                        else{
-                            $product->features[$id] = null;
+                    }
+
+                    foreach($features as $f) {
+                        if (isset($product_features[$f->feature_id])) {
+                            $product->features[$f->feature_id] = implode(", ", $product_features[$f->feature_id]);
+                        } else {
+                            $product->features[$f->feature_id] = null;
                         }
                     }
                 }

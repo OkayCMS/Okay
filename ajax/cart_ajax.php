@@ -33,6 +33,7 @@
     $language = $okay->languages->get_language($okay->languages->lang_id());
     $okay->design->assign('language', $language);
     $okay->design->assign('lang_link', $okay->languages->get_lang_link());
+    $okay->translations->debug = (bool)$okay->config->debug_translation;
     $okay->design->assign('lang', $okay->translations->get_translations(array('lang'=>$language->label)));
 
     $cart = $okay->cart->get_cart();

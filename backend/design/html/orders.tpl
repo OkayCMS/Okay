@@ -124,7 +124,7 @@
                                 {foreach $all_status as $order_status}
                                     <option value="{url module=OrdersAdmin status=$order_status->id keyword=null id=null page=null label=null from_date=null to_date=null}" {if $status == $order_status->id}selected=""{/if} >{$order_status->name|escape}</option>
                                 {/foreach}
-                                <option value="{url module=OrdersAdmin status='all' keyword=null id=null page=null label=null from_date=null to_date=null}" {if $smarty.get.status && $status == "all" || !$status}selected{/if}>{$btr->general_all|escape}</option>
+                                <option value="{url module=OrdersAdmin status=null keyword=null id=null page=null label=null from_date=null to_date=null}" {if !$status}selected{/if}>{$btr->general_all|escape}</option>
                             </select>
                         </div>
                     {/if}

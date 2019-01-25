@@ -22,6 +22,7 @@ class Languages extends Okay {
         'seo_filter_pattern'    => 'seo_filter_patterns',
         'feature_alias'         => 'features_aliases',
         'feature_alias_value'   => 'features_aliases_values',
+        'feature_value'         => 'features_values',
     );
     
     private $languages = array();
@@ -56,6 +57,7 @@ class Languages extends Okay {
         $fields['orders_labels']   = array('name');
         $fields['orders_status']   = array('name');
         $fields['menu_items']      = array('name');
+        $fields['features_values'] = array('value', 'translit', 'feature_id');
         $fields['seo_filter_patterns'] = array('h1', 'title', 'keywords', 'meta_description', 'description');
         $fields['features_aliases']    = array('name');
         $fields['features_aliases_values'] = array('value');
@@ -71,7 +73,7 @@ class Languages extends Okay {
     public function get_query($params = array()) {
         $lang   = (isset($params['lang']) && $params['lang'] ? $params['lang'] : $this->lang_id());
         $object = $params['object'];
-        
+
         if(!empty($params['px'])) {
             $px = $params['px'];
         } else {
@@ -242,14 +244,6 @@ class Languages extends Okay {
             }
             
             if(isset($this->first_language) && !empty($this->first_language)) {
-                $this->db->query("SELECT * FROM __options WHERE lang_id=?", $this->first_language->id);
-                $options = $this->db->results();
-                if(!empty($options)) {
-                    foreach($options as $o) {
-                        $this->db->query("REPLACE INTO __options SET lang_id=?, value=?, product_id=?, feature_id=?, translit=?", $last_id, $o->value, $o->product_id, $o->feature_id, $o->translit);
-                    }
-                }
-
                 $settings = $this->settings->get_settings($this->first_language->id);
                 if (!empty($settings)) {
                     foreach ($settings as $s) {
@@ -257,7 +251,6 @@ class Languages extends Okay {
                     }
                 }
             } else {
-                $this->db->query("UPDATE __options SET lang_id=?", $last_id);
                 $this->db->query("UPDATE __settings_lang SET lang_id=?", $last_id);
             }
             $this->init_languages();
@@ -276,10 +269,8 @@ class Languages extends Okay {
             }
 
             if (!$save_main) {
-                $this->db->query("DELETE FROM  __options WHERE lang_id=?", intval($id));
                 $this->db->query("DELETE FROM __settings_lang WHERE lang_id=?", intval($id));
             } else {
-                $this->db->query("UPDATE __options set lang_id=0 where lang_id=?", intval($id));
                 $this->db->query("UPDATE __settings_lang SET lang_id=0 WHERE lang_id=?", intval($id));
             }
             $this->init_languages();

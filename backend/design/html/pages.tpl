@@ -40,7 +40,7 @@
     {if $pages}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <form id="list_form" method="post" class="fn_form_list">
+                <form id="list_form" method="post" class="fn_form_list fn_fast_button">
                     <input type="hidden" name="session_id" value="{$smarty.session.id}">
 
                     <div class="pages_wrap okay_list">

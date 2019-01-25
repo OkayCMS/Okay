@@ -4,11 +4,8 @@ require_once('api/Okay.php');
 
 class Pay2Pay extends Okay
 {	
-	public function checkout_form($order_id, $button_text = null)
+	public function checkout_form($order_id)
 	{
-		if(empty($button_text))
-			$button_text = 'Перейти к оплате';
-		
 		$order = $this->orders->get_order((int)$order_id);
 		$payment_method = $this->payment->get_payment_method($order->payment_method_id);
 		$payment_currency = $this->money->get_currency(intval($payment_method->currency_id));
@@ -16,13 +13,9 @@ class Pay2Pay extends Okay
 		
 		$price = round($this->money->convert($order->total_price, $payment_method->currency_id, false), 2);
 		
-		
 		// описание заказа
 		// order description
 		$desc = 'Оплата заказа №'.$order->id;
-		
-		// Способ оплаты
-		$paymode = $settings['pay2pay_paymode'];
 		
 		$success_url = $this->config->root_url.'/order/';
 		$result_url = $this->config->root_url.'/payment/Pay2Pay/callback.php';		
@@ -43,9 +36,10 @@ class Pay2Pay extends Okay
               <result_url>$result_url</result_url>
               <success_url>$success_url</success_url>
               <fail_url>$success_url</fail_url>";
-    if ($settings['pay2pay_testmode'] == '1')
-      $xml .= "<test_mode>1</test_mode>";
-    $xml .= "</request>"; 
+        if ($settings['pay2pay_testmode'] == '1') {
+            $xml .= "<test_mode>1</test_mode>";
+        }
+        $xml .= "</request>";
     
 		$xml_encoded = base64_encode($xml);
 		
@@ -55,11 +49,6 @@ class Pay2Pay extends Okay
         $res['xml_encoded'] = $xml_encoded;
         $res['sign_encoded'] = $sign_encoded;
 
-		$button =	'<form action="https://merchant.pay2pay.com/?page=init" method="POST" />'.
-					'<input type="hidden" name="xml" value="'.$xml_encoded.'" />'.
-					'<input type="hidden" name="sign" value="'.$sign_encoded.'" />'.
-					'<input type="submit" class="checkout_button" value="'.$button_text.'">'.
-					'</form>';
 		return $res;
 	}
 }

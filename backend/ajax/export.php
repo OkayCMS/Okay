@@ -28,6 +28,7 @@ class ExportAjax extends Okay {
     );
     
     private $column_delimiter = ';';
+    private $values_delimiter = ',,';
     private $subcategory_delimiter = '/';
     private $products_count = 100;
     private $export_files_dir = 'backend/files/export/';
@@ -68,6 +69,7 @@ class ExportAjax extends Okay {
         }
         
         // Добавим в список колонок свойства товаров
+        $features_filter['limit'] = $this->features->count_features($features_filter);
         $features = $this->features->get_features($features_filter);
         foreach($features as $feature) {
             $this->columns_names[$feature->name] = $feature->name;
@@ -82,22 +84,41 @@ class ExportAjax extends Okay {
         $products = array();
         foreach($this->products->get_products($filter) as $p) {
             $products[$p->id] = (array)$p;
-            
-            // Свойства товаров
-            $options = $this->features->get_product_options(array('product_id'=>$p->id));
-            foreach($options as $option) {
-                if(!isset($products[$option->product_id][$option->name])) {
-                    $products[$option->product_id][$option->name] = str_replace(',', '.', trim($option->value));
-                }
-            }
         }
         
         if(empty($products)) {
             return false;
         }
-        
-        // Категории товаров
+
+        $products_ids = array_keys($products);
+
+        $features_values = array();
+        foreach ($this->features_values->get_features_values(array('product_id' => $products_ids)) as $fv) {
+            $features_values[$fv->id] = $fv;
+        }
+
+        $products_values = array();
+        foreach ($this->features_values->get_product_value_id($products_ids) as $pv) {
+            $products_values[$pv->product_id][$pv->value_id] = $pv->value_id;
+        }
+
+        // Значения свойств товара
         foreach($products as $p_id=>&$product) {
+
+            if (isset($products_values[$p_id])) {
+                $product_feature_values = array();
+                foreach($products_values[$p_id] as $value_id) {
+                    if(isset($features_values[$value_id])) {
+                        $feature = $features_values[$value_id];
+                        $product_feature_values[$feature->name][] = str_replace(',', '.', trim($feature->value));
+                    }
+                }
+
+                foreach ($product_feature_values as $feature_name=>$values) {
+                    $product[$feature_name] = implode($this->values_delimiter, $values);
+                }
+            }
+
             $categories = array();
             $cats = $this->categories->get_product_categories($p_id);
             foreach($cats as $category) {
@@ -147,7 +168,8 @@ class ExportAjax extends Okay {
         }
         
         $all_brands = array();
-        foreach ($this->brands->get_brands() as $b) {
+        $brands_count = $this->brands->count_brands();
+        foreach ($this->brands->get_brands(array('limit'=>$brands_count)) as $b) {
             $all_brands[$b->id] = $b;
         }
         

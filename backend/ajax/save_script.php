@@ -13,12 +13,13 @@ $content = $okay->request->post('content');
 $script = $okay->request->post('script');
 $theme = $okay->request->post('theme', 'string');
 
-if(pathinfo($script, PATHINFO_EXTENSION) != 'js') {
+/*Сохранение скриптов из админки*/
+$file = $okay->config->root_dir.'design/'.$theme.'/js/'.$script;
+
+if(pathinfo($script, PATHINFO_EXTENSION) != 'js' || $file != realpath($file)) {
     exit();
 }
 
-/*Сохранение скриптов из админки*/
-$file = $okay->config->root_dir.'design/'.$theme.'/js/'.$script;
 if(is_file($file) && is_writable($file) && !is_file($okay->config->root_dir.'design/'.$theme.'/locked')) {
     file_put_contents($file, $content);
 

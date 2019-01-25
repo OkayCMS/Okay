@@ -21,7 +21,7 @@
 {*Главная форма страницы*}
 <div class="boxed fn_toggle_wrap">
     {if $categories}
-        <form method="post" class="fn_form_list">
+        <form method="post" class="fn_form_list fn_fast_button">
             <input type="hidden" name="session_id" value="{$smarty.session.id}" />
             <div class="okay_list products_list fn_sort_list">
                 {*Шапка таблицы*}
