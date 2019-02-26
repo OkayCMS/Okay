@@ -5,14 +5,24 @@ require_once('Okay.php');
 class Banners extends Okay {
 
     /*Выбираем все слайды*/
-    public function get_banners_images($filter = array()) {
+    public function get_banners_images($filter = array(), $count = false) {
         $limit = 100;  // По умолчанию
         $page = 1;
-        $banner_id_filter = '';
-        $banners_images_id_filter = '';
-        $visible_filter = '';
+        $joins = '';
+        $where = '1';
         $group_by = '';
         $order = 'bi.position DESC';
+        $lang_sql = $this->languages->get_query(array('object'=>'banner_image', 'px'=>'bi'));
+        $select = "bi.id, 
+                bi.banner_id, 
+                bi.image, 
+                bi.position, 
+                bi.visible, 
+                $lang_sql->fields ";
+
+        if ($count === true) {
+            $select = "COUNT(DISTINCT bi.id) as count";
+        }
         
         if(isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));
@@ -25,15 +35,15 @@ class Banners extends Okay {
         $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
         
         if(!empty($filter['id'])) {
-            $banners_images_id_filter = $this->db->placehold('AND bi.id in(?@)', (array)$filter['id']);
+            $where .= $this->db->placehold(' AND bi.id in(?@)', (array)$filter['id']);
         }
         
         if(!empty($filter['banner_id'])) {
-            $banner_id_filter = $this->db->placehold('AND bi.banner_id in(?@)', (array)$filter['banner_id']);
+            $where .= $this->db->placehold(' AND bi.banner_id in(?@)', (array)$filter['banner_id']);
         }
         
         if(isset($filter['visible'])) {
-            $visible_filter = $this->db->placehold('AND bi.visible=?', intval($filter['visible']));
+            $where .= $this->db->placehold(' AND bi.visible=?', intval($filter['visible']));
         }
         
         if(!empty($filter['sort'])) {
@@ -43,60 +53,40 @@ class Banners extends Okay {
                     break;
             }
         }
+
+        if (!empty($order)) {
+            $order = "ORDER BY $order";
+        }
+
+        // При подсчете нам эти переменные не нужны
+        if ($count === true) {
+            $order      = '';
+            $group_by   = '';
+            $sql_limit  = '';
+        }
         
-        $lang_sql = $this->languages->get_query(array('object'=>'banner_image', 'px'=>'bi'));
-        $query = "SELECT 
-                bi.id, 
-                bi.banner_id, 
-                bi.image, 
-                bi.position, 
-                bi.visible, 
-                $lang_sql->fields 
+        $query = $this->db->placehold("SELECT $select
             FROM __banners_images bi
             $lang_sql->join
+            $joins
             WHERE 
-                1 
-                $banners_images_id_filter 
-                $banner_id_filter 
-                $visible_filter 
-            $group_by
-            ORDER BY $order 
-            $sql_limit
-        ";
+                $where
+                $group_by
+                $order 
+                $sql_limit
+        ");
         
         $this->db->query($query);
-        return $this->db->results();
+        if ($count === true) {
+            return $this->db->result('count');
+        } else {
+            return $this->db->results();
+        }
     }
 
     /*Подсчитываем количество найденных слайдов*/
     public function count_banners_images($filter = array()) {
-        $banner_id_filter = '';
-        $banners_images_id_filter = '';
-        $visible_filter = '';
-        
-        if(!empty($filter['banner_id'])) {
-            $banner_id_filter = $this->db->placehold('AND bi.banner_id in(?@)', (array)$filter['banner_id']);
-        }
-        
-        if(!empty($filter['id'])) {
-            $banners_images_id_filter = $this->db->placehold('AND bi.id in(?@)', (array)$filter['id']);
-        }
-
-        if(isset($filter['visible'])) {
-            $visible_filter = $this->db->placehold('AND bi.visible=?', intval($filter['visible']));
-        }
-        
-        $query = "SELECT count(distinct bi.id) as count 
-            FROM __banners_images AS bi
-            WHERE 
-                1 
-                $banner_id_filter 
-                $banners_images_id_filter 
-                $visible_filter 
-        ";
-        
-        $this->db->query($query);
-        return $this->db->result('count');
+        return $this->get_banners_images($filter, true);
     }
 
     /*Выбираем конкретный слайд*/

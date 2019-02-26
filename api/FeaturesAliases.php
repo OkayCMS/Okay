@@ -4,30 +4,66 @@ require_once('Okay.php');
 
 class FeaturesAliases extends Okay {
 
-    public function get_features_aliases($filter = array()) {
-
-        $id_filter = '';
-
-        if(!empty($filter['id'])) {
-            $id_filter = $this->db->placehold('AND f.id in(?@)', (array)$filter['id']);
-        }
-        
+    public function get_features_aliases($filter = array(), $count = false) {
+        // По умолчанию
+        $limit = 100;
+        $page = 1;
+        $joins = '';
+        $where = '1';
+        $group_by = '';
+        $order = 'f.position';
         $lang_sql = $this->languages->get_query(array('object'=>'feature_alias'));
-        // Выбираем свойства
-        $query = $this->db->placehold("SELECT 
-                f.id, 
+        $select = "f.id, 
                 f.variable,
                 f.position,
-                $lang_sql->fields
-            FROM __features_aliases AS f
+                $lang_sql->fields";
+
+        if ($count === true) {
+            $select = "COUNT(DISTINCT f.id) as count";
+        }
+
+        if(isset($filter['limit'])) {
+            $limit = max(1, intval($filter['limit']));
+        }
+
+        if(isset($filter['page'])) {
+            $page = max(1, intval($filter['page']));
+        }
+
+        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
+        
+        if(!empty($filter['id'])) {
+            $where .= $this->db->placehold(' AND f.id in(?@)', (array)$filter['id']);
+        }
+
+        if (!empty($order)) {
+            $order = "ORDER BY $order";
+        }
+
+        // При подсчете нам эти переменные не нужны
+        if ($count === true) {
+            $order      = '';
+            $group_by   = '';
+            $sql_limit  = '';
+        }
+
+        $query = $this->db->placehold("SELECT $select
+            FROM __features_aliases f
             $lang_sql->join
+            $joins
             WHERE 
-                1
-                $id_filter 
-            ORDER BY f.position
+                $where
+                $group_by
+                $order 
+                $sql_limit
         ");
+
         $this->db->query($query);
-        return $this->db->results();
+        if ($count === true) {
+            return $this->db->result('count');
+        } else {
+            return $this->db->results();
+        }
     }
 
     public function get_features_alias($id) {

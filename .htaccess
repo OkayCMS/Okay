@@ -66,20 +66,15 @@ RewriteRule ^([a-z]{2}/)?products/([^/]+)/?$	index.php?module=ProductView&produc
 RewriteRule ^([a-z]{2}/)?all-products/?$	    index.php?module=ProductsView&lang_label=$1 [L,QSA]
 RewriteRule ^([a-z]{2}/)?all-products/([^/]+)	index.php?module=ProductsView&lang_label=$1&page_url=all-products [L,QSA]
 
-RewriteRule ^([a-z]{2}/)?discounted/?$	        index.php?module=ProductsView&lang_label=$1&mode=discounted [L,QSA]
-RewriteRule ^([a-z]{2}/)?discounted/([^/]+)	    index.php?module=ProductsView&lang_label=$1&page_url=discounted&mode=discounted [L,QSA]
-RewriteRule ^([a-z]{2}/)?bestsellers/?$	        index.php?module=ProductsView&lang_label=$1&mode=bestsellers [L,QSA]
-RewriteRule ^([a-z]{2}/)?bestsellers/([^/]+)    index.php?module=ProductsView&lang_label=$1&page_url=bestsellers&mode=bestsellers [L,QSA]
+RewriteRule ^([a-z]{2}/)?(discounted|bestsellers)/?$	    index.php?module=ProductsView&lang_label=$1&mode=$2 [L,QSA]
+RewriteRule ^([a-z]{2}/)?(discounted|bestsellers)/([^/]+)   index.php?module=ProductsView&lang_label=$1&page_url=$2&mode=$2 [L,QSA]
 
 RewriteRule ^([a-z]{2}/)?brands/?$	index.php?module=BrandsView&lang_label=$1 [L,QSA]
 RewriteRule ^([a-z]{2}/)?brands/([^/]+) index.php?module=ProductsView&brand=$2&lang_label=$1 [L,QSA]
 
-# Блог
-RewriteRule ^([a-z]{2}/)?blog/([^/]+)/?$	index.php?module=BlogView&url=$2&lang_label=$1&type_post=blog [L,QSA]
-RewriteRule ^([a-z]{2}/)?blog/?$	index.php?module=BlogView&lang_label=$1&type_post=blog [L,QSA]
-# Новости
-RewriteRule ^([a-z]{2}/)?news/([^/]+)/?$	index.php?module=BlogView&url=$2&lang_label=$1&type_post=news [L,QSA]
-RewriteRule ^([a-z]{2}/)?news/?$	index.php?module=BlogView&lang_label=$1&type_post=news [L,QSA]
+# Блог или новости
+RewriteRule ^([a-z]{2}/)?(blog|news)/([^/]+)/?$	index.php?module=BlogView&url=$3&lang_label=$1 [L,QSA]
+RewriteRule ^([a-z]{2}/)?(blog|news)/?$	index.php?module=BlogView&lang_label=$1 [L,QSA]
 
 # Избранное
 RewriteRule ^([a-z]{2}/)?wishlist/?$	index.php?module=WishlistView&lang_label=$1 [L,QSA]

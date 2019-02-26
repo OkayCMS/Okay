@@ -1,7 +1,7 @@
 {* Post page *}
 
 {* The canonical address of the page *}
-{if $smarty.get.type_post == "blog"}
+{if $type_post == "blog"}
     {$canonical="/blog/{$post->url}" scope=parent}
 {else}
     {$canonical="/news/{$post->url}" scope=parent}
@@ -15,7 +15,7 @@
 <div class="block padding">
     {* Post date *}
     <div class="post_date">
-        <span>{$post->date|date}</span>
+        <span>{$post->date|date:"d cFR Y, cD"}</span>
     </div>
 
     {* Post content *}
@@ -32,12 +32,12 @@
             <ol class="pager row">
                 <li class="col-xs-12{if $next_post} col-sm-6{else} col-sm-12{/if}">
                     {if $prev_post}
-                        <a href="{$smarty.get.type_post}/{$prev_post->url}">← <span>{$prev_post->name}</span></a>
+                        <a href="{$lang_link}{$type_post}/{$prev_post->url}">← <span>{$prev_post->name}</span></a>
                     {/if}
                 </li>
                 <li class="col-xs-12 col-sm-6">
                     {if $next_post}
-                        <a href="{$smarty.get.type_post}/{$next_post->url}"><span>{$next_post->name}</span> →</a>
+                        <a href="{$lang_link}{$type_post}/{$next_post->url}"><span>{$next_post->name}</span> →</a>
                     {/if}
                 </li>
             </ol>

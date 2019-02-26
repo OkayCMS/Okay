@@ -22,9 +22,10 @@ class Image extends Okay {
     public function resize($filename, $original_images_dir = null, $resized_images_dir = null) {
         list($source_file, $width , $height, $set_watermark, $crop_params) = $this->get_resize_params($filename);
 
-        $size = $width.'x'.$height;
-        $image_sizes = array();
-        if ($this->settings->image_sizes) {
+        $size = $width.'x'.$height.($set_watermark === true ? 'w' : '');
+        if ($resized_images_dir === null || $resized_images_dir == $this->config->resized_images_dir) {
+            $image_sizes = explode('|', $this->settings->products_image_sizes);
+        } else {
             $image_sizes = explode('|', $this->settings->image_sizes);
         }
         if (!in_array($size, $image_sizes)){
@@ -153,13 +154,30 @@ class Image extends Okay {
             }
         }
         
+        $local_file = $this->config->root_dir.$this->config->original_images_dir.$new_name;
         // Перед долгим копированием займем это имя
-        fclose(fopen($this->config->root_dir.$this->config->original_images_dir.$new_name, 'w'));
-        if (copy($filename, $this->config->root_dir.$this->config->original_images_dir.$new_name)) {
+        fclose(fopen($local_file, 'w'));
+        if (copy($filename, $local_file) && filesize($local_file) > 0) {
             $this->db->query('UPDATE __images SET filename=? WHERE filename=?', $new_name, $filename);
             return $new_name;
+        }
+        // Если по https не получилось сохранить изображение, попробуем на тот же урл постучаться на http
+        elseif (preg_match("~^https://~", $filename)) {
+            $filename_http = preg_replace("~^https://~", "http://", $filename);
+            $headers = @get_headers($filename_http);
+            if (!empty($headers[0])) {
+                preg_match('/\d{3}/', $headers[0], $matches);
+                // Если урл по http отдает 200, забираем изображение
+                if ($matches[0] == '200' && copy($filename_http, $local_file) && filesize($local_file) > 0) {
+                    $this->db->query('UPDATE __images SET filename=? WHERE filename=?', $new_name, $filename);
+                    return $new_name;
+                } else {
+                    @unlink($local_file);
+                    return false;
+                }
+            }
         } else {
-            @unlink($this->config->root_dir.$this->config->original_images_dir.$new_name);
+            @unlink($local_file);
             return false;
         }
     }

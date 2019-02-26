@@ -35,52 +35,15 @@ class Feedbacks extends Okay {
     }
 
     /*Выборка всех заявок с формы обратной связи*/
-    public function get_feedbacks($filter = array(), $new_on_top = false) {
+    public function get_feedbacks($filter = array(), $count = false) {
         // По умолчанию
         $limit = 100;
         $page = 1;
-        $keyword_filter = '';
-        $processed = '';
-        $has_parent_filter = '';
-        $parent_id_filter =  '';
-        if(isset($filter['limit'])) {
-            $limit = max(1, intval($filter['limit']));
-        }
-
-        if(isset($filter['processed'])) {
-            $processed = $this->db->placehold('AND f.processed=?',$filter['processed']);
-        }
-
-        if(isset($filter['page'])) {
-            $page = max(1, intval($filter['page']));
-        }
-        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
-        
-        if(!empty($filter['keyword'])) {
-            $keywords = explode(' ', $filter['keyword']);
-            foreach($keywords as $keyword) {
-                $keyword_filter .= $this->db->placehold('AND (
-                    f.name LIKE "%'.$this->db->escape(trim($keyword)).'%" 
-                    OR f.message LIKE "%'.$this->db->escape(trim($keyword)).'%" 
-                    OR f.email LIKE "%'.$this->db->escape(trim($keyword)).'%" 
-                ) ');
-            }
-        }
-        if (isset($filter['has_parent'])) {
-            $has_parent_filter = 'and f.parent_id'.($filter['has_parent'] ? '>0' : '=0');
-        }
-        
-        if(!empty($filter['parent_id'])) {
-            $parent_id_filter = $this->db->placehold('AND f.parent_id IN(?@)', (array)$filter['parent_id']);
-        }
-
-        if($new_on_top) {
-            $sort='DESC';
-        } else {
-            $sort='ASC';
-        }
-        $query = $this->db->placehold("SELECT 
-                f.id, 
+        $joins = '';
+        $where = '1';
+        $group_by = '';
+        $order = 'f.id ASC';
+        $select = "f.id, 
                 f.name, 
                 f.email, 
                 f.ip, 
@@ -89,38 +52,29 @@ class Feedbacks extends Okay {
                 f.parent_id,
                 f.processed,
                 f.date,
-                f.lang_id
-            FROM __feedbacks f 
-            WHERE 
-                1 
-                $keyword_filter
-                $processed
-                $has_parent_filter
-                $parent_id_filter
-            ORDER BY f.id 
-            $sort $sql_limit
-        ");
-        $this->db->query($query);
-        return $this->db->results();
-    }
+                f.lang_id";
 
-    /*Подсчет количества заявок с формы обратной связи*/
-    public function count_feedbacks($filter = array()) {
-        $keyword_filter = '';
-        $processed_filter = '';
-        $has_parent_filter = '';
+        if ($count === true) {
+            $select = "COUNT(DISTINCT f.id) as count";
+        }
+        
+        if(isset($filter['limit'])) {
+            $limit = max(1, intval($filter['limit']));
+        }
+
+        if(isset($filter['page'])) {
+            $page = max(1, intval($filter['page']));
+        }
+        
+        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
 
         if(isset($filter['processed'])) {
-            $processed_filter = $this->db->placehold('AND f.processed = ?', intval($filter['processed']));
+            $where .= $this->db->placehold(' AND f.processed=?',$filter['processed']);
         }
-
-        if (isset($filter['has_parent'])) {
-            $has_parent_filter = 'and f.parent_id'.($filter['has_parent'] ? '>0' : '=0');
-        }
-
-
+        
         if(!empty($filter['keyword'])) {
             $keywords = explode(' ', $filter['keyword']);
+            $keyword_filter = ' ';
             foreach($keywords as $keyword) {
                 $keyword_filter .= $this->db->placehold('AND (
                     f.name LIKE "%'.$this->db->escape(trim($keyword)).'%" 
@@ -128,19 +82,57 @@ class Feedbacks extends Okay {
                     OR f.email LIKE "%'.$this->db->escape(trim($keyword)).'%" 
                 ) ');
             }
+            $where .= $keyword_filter;
         }
         
-        $query = $this->db->placehold("SELECT count(distinct f.id) as count
-            FROM __feedbacks f 
-            WHERE 
-                1 
-                $keyword_filter
-                $processed_filter
-                $has_parent_filter
-            ");
+        if (isset($filter['has_parent'])) {
+            $where .= ' AND f.parent_id'.($filter['has_parent'] ? '>0' : '=0');
+        }
         
+        if(!empty($filter['parent_id'])) {
+            $where .= $this->db->placehold(' AND f.parent_id IN(?@)', (array)$filter['parent_id']);
+        }
+
+        if (!empty($filter['sort'])) {
+            switch ($filter['sort']) {
+                case 'new_first':
+                    $order = 'f.id DESC';
+                    break;
+            }
+        }
+
+        if (!empty($order)) {
+            $order = "ORDER BY $order";
+        }
+
+        // При подсчете нам эти переменные не нужны
+        if ($count === true) {
+            $order      = '';
+            $group_by   = '';
+            $sql_limit  = '';
+        }
+
+        $query = $this->db->placehold("SELECT $select
+            FROM __feedbacks f
+            $joins
+            WHERE 
+                $where
+                $group_by
+                $order 
+                $sql_limit
+        ");
+
         $this->db->query($query);
-        return $this->db->result('count');
+        if ($count === true) {
+            return $this->db->result('count');
+        } else {
+            return $this->db->results();
+        }
+    }
+
+    /*Подсчет количества заявок с формы обратной связи*/
+    public function count_feedbacks($filter = array()) {
+        return $this->get_feedbacks($filter, true);
     }
 
     /*Добавление заявки с формы обратной связи*/

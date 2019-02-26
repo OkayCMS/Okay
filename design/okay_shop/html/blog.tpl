@@ -1,9 +1,9 @@
 {* The blog page template *}
 
 {* The canonical address of the page *}
-{if $smarty.get.type_post == "blog"}
+{if $type_post == "blog"}
     {$canonical="/blog" scope=parent}
-    {else}
+{else}
     {$canonical="/news" scope=parent}
 {/if}
 
@@ -16,7 +16,7 @@
         <div class="blog_item no_padding col-sm-6 col-lg-4 col-xl-3">
 
             {* The post image *}
-            <a class="blog_image" href="{$lang_link}{$smarty.get.type_post}/{$post->url}">
+            <a class="blog_image" href="{$lang_link}{$type_post}/{$post->url}">
                 {if $post->image}
                     <img class="blog_img" src="{$post->image|resize:360:360:false:$config->resized_blog_dir}" alt="{$post->name|escape}" title="{$post->name|escape}">
                 {/if}
@@ -25,11 +25,11 @@
             <div class="blog_content">
                 {* The post name *}
                 <div class="h5">
-                    <a href="{$lang_link}{$smarty.get.type_post}/{$post->url}" data-post="{$post->id}">{$post->name|escape}</a>
+                    <a href="{$lang_link}{$type_post}/{$post->url}" data-post="{$post->id}">{$post->name|escape}</a>
                 </div>
 
                 {* The post date *}
-                <div class="blog_date"><span>{$post->date|date}</span></div>
+                <div class="blog_date"><span>{$post->date|date:"d cFR Y, cD"}</span></div>
 
                 {* The short description of the post *}
                 {if $post->annotation}

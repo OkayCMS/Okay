@@ -5,34 +5,16 @@ require_once('Okay.php');
 class Variants extends Okay {
 
     /*Выборка вариантов*/
-    public function get_variants($filter = array()) {
-        $product_id_filter = '';
-        $variant_id_filter = '';
-        $variant_sort = 'v.position, v.id';
-        $instock_filter = '';
-
-        if (defined('IS_CLIENT')) {
-            $variant_sort = 'IF(stock=0, 0, 1) DESC, v.position, v.id';
-        }
-        
-        if(!empty($filter['product_id'])) {
-            $product_id_filter = $this->db->placehold('AND v.product_id in(?@)', (array)$filter['product_id']);
-        }
-        
-        if(!empty($filter['id'])) {
-            $variant_id_filter = $this->db->placehold('AND v.id in(?@)', (array)$filter['id']);
-        }
-        
-        if(!empty($filter['in_stock']) && $filter['in_stock']) {
-            $instock_filter = $this->db->placehold('AND (v.stock>0 OR v.stock IS NULL)');
-        }
-        
-        if(!$product_id_filter && !$variant_id_filter) {
-            return array();
-        }
+    public function get_variants($filter = array(), $count = false) {
+        // По умолчанию
+        $limit = 1000;
+        $page = 1;
+        $joins = '';
+        $where = '1';
+        $group_by = '';
+        $order = 'v.position, v.id';
         $lang_sql = $this->languages->get_query(array('object'=>'variant'));
-        $query = $this->db->placehold("SELECT 
-                v.id, 
+        $select = $this->db->placehold("v.id, 
                 v.product_id,
                 v.weight,
                 v.price, 
@@ -46,30 +28,80 @@ class Variants extends Okay {
                 v.feed,
                 c.rate_from, 
                 c.rate_to, 
-                $lang_sql->fields
-            FROM __variants AS v
-            $lang_sql->join
-            left join __currencies as c on(c.id=v.currency_id)
-            WHERE
-                1
-                $product_id_filter
-                $variant_id_filter
-                $instock_filter
-            GROUP BY v.id
-            ORDER BY $variant_sort
-        ", $this->settings->max_order_amount);
+                $lang_sql->fields", $this->settings->max_order_amount);
+
+        if ($count === true) {
+            $select = "COUNT(DISTINCT v.id) as count";
+        }
+
+        if (defined('IS_CLIENT')) {
+            $order = 'IF(stock=0, 0, 1) DESC, v.position, v.id';
+        }
         
+        $joins .= "left join __currencies as c on(c.id=v.currency_id)";
+        
+        if(isset($filter['limit'])) {
+            $limit = max(1, intval($filter['limit']));
+        }
+
+        if(isset($filter['page'])) {
+            $page = max(1, intval($filter['page']));
+        }
+
+        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
+
+        if(empty($filter['product_id']) && empty($filter['id'])) {
+            return array();
+        }
+
+        if(!empty($filter['product_id'])) {
+            $where .= $this->db->placehold(' AND v.product_id in(?@)', (array)$filter['product_id']);
+        }
+        
+        if(!empty($filter['id'])) {
+            $where .= $this->db->placehold(' AND v.id in(?@)', (array)$filter['id']);
+        }
+        
+        if(!empty($filter['in_stock']) && $filter['in_stock']) {
+            $where .= $this->db->placehold(' AND (v.stock>0 OR v.stock IS NULL)');
+        }
+        
+        if (!empty($order)) {
+            $order = "ORDER BY $order";
+        }
+
+        // При подсчете нам эти переменные не нужны
+        if ($count === true) {
+            $order      = '';
+            $group_by   = '';
+            $sql_limit  = '';
+        }
+
+        $query = $this->db->placehold("SELECT $select
+            FROM __variants v
+            $lang_sql->join
+            $joins
+            WHERE 
+                $where
+                $group_by
+                $order 
+                $sql_limit
+        ");
         $this->db->query($query);
-        $variants = $this->db->results();
-        if (defined('IS_CLIENT') && !empty($variants)) {
-            foreach($variants as $row) {
-                if ($row->rate_from != $row->rate_to && $row->currency_id) {
-                    $row->price = $row->price*$row->rate_to/$row->rate_from;
-                    $row->compare_price = $row->compare_price*$row->rate_to/$row->rate_from;
+        if ($count === true) {
+            return $this->db->result('count');
+        } else {
+            $variants = $this->db->results();
+            if (defined('IS_CLIENT') && !empty($variants)) {
+                foreach($variants as $row) {
+                    if ($row->rate_from != $row->rate_to && $row->currency_id) {
+                        $row->price = $row->price*$row->rate_to/$row->rate_from;
+                        $row->compare_price = $row->compare_price*$row->rate_to/$row->rate_from;
+                    }
                 }
             }
+            return $variants;
         }
-        return $variants;
     }
 
     /*Выборка конкретного варианта*/

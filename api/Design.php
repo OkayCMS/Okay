@@ -145,15 +145,30 @@ class Design extends Okay {
 
         $resized_filename = $this->image->add_resize_params($filename, $width, $height, $set_watermark, $crop_params);
         $resized_filename_encoded = $resized_filename;
-        
-        $size = $width.'x'.$height;
-        $image_sizes = array();
-        if ($this->settings->image_sizes) {
+
+        $size = $width.'x'.$height.$set_watermark;
+
+        if ($resized_dir === null || $resized_dir == $this->config->resized_images_dir) {
+            $image_sizes = explode('|', $this->settings->products_image_sizes);
+            if (empty($image_sizes[0])) {
+                $image_sizes = array();
+            }
+            if (!in_array($size, $image_sizes)) {
+                if (empty($image_sizes[0])) {
+                    $image_sizes = array();
+                }
+                $image_sizes[] = $size;
+                $this->settings->products_image_sizes = implode('|', $image_sizes);
+            }
+        } else {
             $image_sizes = explode('|', $this->settings->image_sizes);
-        }
-        if (!in_array($size, $image_sizes)) {
-            $image_sizes[] = $size;
-            $this->settings->image_sizes = implode('|', $image_sizes);
+            if (empty($image_sizes[0])) {
+                $image_sizes = array();
+            }
+            if (!in_array($size, $image_sizes)) {
+                $image_sizes[] = $size;
+                $this->settings->image_sizes = implode('|', $image_sizes);
+            }
         }
 
         if (preg_match("~^https?://~", $resized_filename_encoded)) {
@@ -229,7 +244,26 @@ class Design extends Okay {
         if(empty($date)) {
             $date = date("Y-m-d");
         }
-        return date(empty($format)?$this->settings->date_format:$format, strtotime($date));
+
+        $time = strtotime($date);
+        if ($format !== null) {
+            $language = $this->languages->get_language($this->languages->lang_id());
+            $translations = $this->translations->get_translations(array('lang' => $language->label));
+
+            $day_num = date('N', $time);
+            $mon_num = date('n', $time);
+            $custom_format = array(
+                'cD' => addcslashes($translations->{"date_D_{$day_num}"}, 'A..z'), // Дни недели сокращенно
+                'cl' => addcslashes($translations->{"date_l_{$day_num}"}, 'A..z'), // Дни недели полностью
+                'cS' => addcslashes($translations->{"date_S_{$mon_num}"}, 'A..z'), // Месяцы сокращенно
+                'cF' => addcslashes($translations->{"date_F_{$mon_num}"}, 'A..z'), // Месяцы полностью
+                'cFR' => addcslashes($translations->{"date_FR_{$mon_num}"}, 'A..z') // Месяцы полностью, родительный падеж
+            );
+
+            $format = strtr($format, $custom_format);
+        }
+        
+        return date(empty($format)?$this->settings->date_format:$format, $time);
     }
 
     /*Функция отображения времени в разных видах*/
@@ -238,8 +272,16 @@ class Design extends Okay {
     }
 
     /*Функция отображения баланса тех.поддержки*/
-    public function balance_modifier($minutes = 0, $sign = true) {
-        $sign = ($minutes < 0 && $sign ? '+' : '');
+    public function balance_modifier($minutes = 0, $signed = true) {
+        $sign = '';
+        if ($signed === true) {
+            if ($minutes > 0) {
+                $sign = '+';
+            } elseif ($minutes < 0) {
+                $sign = '-';
+            }
+        }
+        
         $minutes = abs($minutes);
         $hours = intval(floor($minutes/60));
         $minutes -= $hours*60;

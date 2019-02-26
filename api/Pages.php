@@ -37,34 +37,71 @@ class Pages extends Okay {
     }
 
     /*Выборка всех страниц*/
-    public function get_pages($filter = array()) {
-        $visible_filter = '';
-        $pages = array();
-        
-        if(isset($filter['visible'])) {
-            $visible_filter = $this->db->placehold('AND p.visible = ?', intval($filter['visible']));
-        }
-        
+    public function get_pages($filter = array(), $count = false) {
+        // По умолчанию
+        $limit = 100;
+        $page = 1;
+        $joins = '';
+        $where = '1';
+        $group_by = '';
+        $order = 'p.position';
         $lang_sql = $this->languages->get_query(array('object'=>'page'));
-        $query = "SELECT 
-                p.id, 
+        $select = "p.id, 
                 p.url, 
                 p.position, 
                 p.visible, 
                 p.last_modify, 
-                $lang_sql->fields
-            FROM __pages p 
-            $lang_sql->join 
-            WHERE 
-                1 
-                $visible_filter 
-            ORDER BY p.position
-        ";
-        $this->db->query($query);
-        foreach($this->db->results() as $page) {
-            $pages[$page->id] = $page;
+                $lang_sql->fields";
+
+        if ($count === true) {
+            $select = "COUNT(DISTINCT f.id) as count";
         }
-        return $pages;
+
+        if(isset($filter['limit'])) {
+            $limit = max(1, intval($filter['limit']));
+        }
+
+        if(isset($filter['page'])) {
+            $page = max(1, intval($filter['page']));
+        }
+
+        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
+        
+        if(isset($filter['visible'])) {
+            $where .= $this->db->placehold(' AND p.visible = ?', intval($filter['visible']));
+        }
+
+        if (!empty($order)) {
+            $order = "ORDER BY $order";
+        }
+
+        // При подсчете нам эти переменные не нужны
+        if ($count === true) {
+            $order      = '';
+            $group_by   = '';
+            $sql_limit  = '';
+        }
+
+        $query = $this->db->placehold("SELECT $select
+            FROM __pages p
+            $lang_sql->join
+            $joins
+            WHERE 
+                $where
+                $group_by
+                $order 
+                $sql_limit
+        ");
+        $this->db->query($query);
+        if ($count === true) {
+            return $this->db->result('count');
+        } else {
+            $pages = array();
+            foreach($this->db->results() as $page) {
+                $pages[$page->id] = $page;
+            }
+            return $pages;
+        }
     }
 
     /*Добавление страницы*/

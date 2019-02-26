@@ -61,7 +61,7 @@
             {*Параметры элемента*}
             <div class="okay_list_body">
                 {foreach $translations as $label=>$value}
-                    <div class="fn_row okay_list_body_item fn_sort_item">
+                    <div class="fn_row okay_list_body_item fn_sort_item"{if !$translations_template[$label]} title="{$btr->translations_system_translation}"{/if}>
                         <div class="okay_list_row ">
                             <div class="okay_list_boding okay_list_check">
                                 <input class="hidden_check" type="checkbox" id="{$label}" name="check[]" value="{$label}" />
@@ -75,7 +75,7 @@
                                  <a href="{url module=TranslationAdmin id=$label return=$smarty.server.REQUEST_URI}">{$label|escape}</a>
                             </div>
                             <div class="okay_list_boding okay_list_close">
-                                {if !$locked_theme}
+                                {if !$locked_theme && $translations_template[$label]}
                                     <button data-hint="{$btr->general_delete|escape}" type="button" class="btn_close fn_remove hint-bottom-right-t-info-s-small-mobile  hint-anim" data-toggle="modal" data-target="#fn_action_modal" onclick="success_action($(this));">
                                         {include file='svg_icon.tpl' svgId='delete'}
                                     </button>

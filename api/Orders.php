@@ -55,79 +55,15 @@ class Orders extends Okay {
     }
 
     /*Выборка всех заказов*/
-    public function get_orders($filter = array()) {
+    public function get_orders($filter = array(), $count = false) {
         // По умолчанию
         $limit = 100;
         $page = 1;
-        $keyword_filter = '';
-        $label_filter = '';
-        $status_filter = '';
-        $user_filter = '';
-        $modified_since_filter = '';
-        $id_filter = '';
-        $date_filter = '';
-        
-        if(isset($filter['limit'])) {
-            $limit = max(1, intval($filter['limit']));
-        }
-        
-        if(isset($filter['page'])) {
-            $page = max(1, intval($filter['page']));
-        }
-        
-        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
-        
-        if(!empty($filter['status'])) {
-            $status_filter = $this->db->placehold('AND o.status_id = ?', intval($filter['status']));
-        }
-        
-        if(isset($filter['id'])) {
-            $id_filter = $this->db->placehold('AND o.id in(?@)', (array)$filter['id']);
-        }
-        
-        if(isset($filter['user_id'])) {
-            $user_filter = $this->db->placehold('AND o.user_id = ?', intval($filter['user_id']));
-        }
-        
-        if(isset($filter['modified_since'])) {
-            $modified_since_filter = $this->db->placehold('AND o.modified > ?', $filter['modified_since']);
-        }
-        
-        if(isset($filter['label'])) {
-            $label_filter = $this->db->placehold('AND ol.label_id = ?', $filter['label']);
-        }
-        
-        if(!empty($filter['keyword'])) {
-            $keywords = explode(' ', $filter['keyword']);
-            foreach($keywords as $keyword) {
-                $keyword_filter .= $this->db->placehold('AND (
-                    o.id = "'.$this->db->escape(trim($keyword)).'" 
-                    OR o.name LIKE "%'.$this->db->escape(trim($keyword)).'%" 
-                    OR REPLACE(o.phone, "-", "")  LIKE "%'.$this->db->escape(str_replace('-', '', trim($keyword))).'%" 
-                    OR o.address LIKE "%'.$this->db->escape(trim($keyword)).'%" 
-                    OR o.email LIKE "%'.$this->db->escape(trim($keyword)).'%"
-                    OR o.id in (SELECT order_id FROM __purchases WHERE product_name LIKE "%'.$this->db->escape(trim($keyword)).'%" OR variant_name LIKE "%'.$this->db->escape(trim($keyword)).'%")
-                ) ');
-            }
-        }
-
-        if(!empty($filter['from_date']) || !empty($filter['to_date'])){
-                if(!empty($filter['from_date'])){
-                    $from = date('Y-m-d',strtotime($filter['from_date']));
-                }else{
-                    $from = '1970-01-01'; /*если стартовой даты нет, берем время с эпохи UNIX*/
-                }
-                if(!empty($filter['to_date'])){
-                    $to = date('Y-m-d',strtotime($filter['to_date']));
-                }else{
-                    $to = date('Y-m-d'); /*если конечной даты нет, берем за дату "сегодня"*/
-                }
-                $date_filter = $this->db->placehold("AND (o.date BETWEEN ? AND ?)",$from,$to);
-        }
-        
-        // Выбираем заказы
-        $query = $this->db->placehold("SELECT 
-                o.id, 
+        $joins = '';
+        $where = '1';
+        $group_by = '';
+        $order = 'o.id DESC';
+        $select = "o.id, 
                 o.delivery_id, 
                 o.delivery_price, 
                 o.separate_delivery, 
@@ -150,55 +86,53 @@ class Orders extends Okay {
                 o.total_price, 
                 o.note, 
                 o.lang_id,
-                os.color as status_color
-            FROM __orders AS o
-            LEFT JOIN __orders_labels AS ol ON o.id=ol.order_id
-            LEFT JOIN __orders_status AS os ON o.status_id=os.id
-            WHERE 
-                1
-                $id_filter 
-                $status_filter 
-                $user_filter 
-                $keyword_filter 
-                $label_filter 
-                $modified_since_filter
-                $date_filter
-            GROUP BY o.id 
-            ORDER BY o.id DESC
-            $sql_limit
-        ", "%Y-%m-%d");
-        $this->db->query($query);
-        $orders = array();
-        foreach($this->db->results() as $order) {
-            $orders[$order->id] = $order;
-        }
-        return $orders;
-    }
+                os.color as status_color";
 
-    /*Подсчет количества заказов*/
-    public function count_orders($filter = array()) {
-        $keyword_filter = '';
-        $label_filter = '';
-        $status_filter = '';
-        $user_filter = '';
-        $date_filter = '';
+        if ($count === true) {
+            $select = "COUNT(DISTINCT o.id) as count";
+        }
+        
+        if(isset($filter['limit'])) {
+            $limit = max(1, intval($filter['limit']));
+        }
+        
+        if(isset($filter['page'])) {
+            $page = max(1, intval($filter['page']));
+        }
+        
+        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
+        
+        $joins .= " LEFT JOIN __orders_labels AS ol ON o.id=ol.order_id";
+        
+        if ($count === false) {
+            $joins .= " LEFT JOIN __orders_status AS os ON o.status_id=os.id";
+        }
         
         if(!empty($filter['status'])) {
-            $status_filter = $this->db->placehold('AND o.status_id = ?', intval($filter['status']));
+            $where .= $this->db->placehold(' AND o.status_id = ?', intval($filter['status']));
+        }
+        
+        if(isset($filter['id'])) {
+            $where .= $this->db->placehold(' AND o.id in(?@)', (array)$filter['id']);
         }
         
         if(isset($filter['user_id'])) {
-            $user_filter = $this->db->placehold('AND o.user_id = ?', intval($filter['user_id']));
+            $where .= $this->db->placehold(' AND o.user_id = ?', intval($filter['user_id']));
+        }
+        
+        if(isset($filter['modified_since'])) {
+            $where .= $this->db->placehold(' AND o.modified > ?', $filter['modified_since']);
         }
         
         if(isset($filter['label'])) {
-            $label_filter = $this->db->placehold('AND ol.label_id = ?', $filter['label']);
+            $where .= $this->db->placehold(' AND ol.label_id = ?', $filter['label']);
         }
         
         if(!empty($filter['keyword'])) {
             $keywords = explode(' ', $filter['keyword']);
+            $keyword_filter = ' ';
             foreach($keywords as $keyword) {
-                $keyword_filter .= $this->db->placehold('AND (
+                $keyword_filter .= $this->db->placehold(' AND (
                     o.id = "'.$this->db->escape(trim($keyword)).'" 
                     OR o.name LIKE "%'.$this->db->escape(trim($keyword)).'%" 
                     OR REPLACE(o.phone, "-", "")  LIKE "%'.$this->db->escape(str_replace('-', '', trim($keyword))).'%" 
@@ -207,36 +141,59 @@ class Orders extends Okay {
                     OR o.id in (SELECT order_id FROM __purchases WHERE product_name LIKE "%'.$this->db->escape(trim($keyword)).'%" OR variant_name LIKE "%'.$this->db->escape(trim($keyword)).'%")
                 ) ');
             }
+            $where .= $keyword_filter;
         }
 
-        if (!empty($filter['from_date']) || !empty($filter['to_date'])) {
-            if (!empty($filter['from_date'])) {
-                $from = date('Y-m-d', strtotime($filter['from_date']));
+        if (!empty($filter['from_date']) || !empty($filter['to_date'])){
+            if (!empty($filter['from_date'])){
+                $from = date('Y-m-d',strtotime($filter['from_date']));
             } else {
                 $from = '1970-01-01'; /*если стартовой даты нет, берем время с эпохи UNIX*/
             }
-            if (!empty($filter['to_date'])) {
-                $to = date('Y-m-d', strtotime($filter['to_date']));
+            if (!empty($filter['to_date'])){
+                $to = date('Y-m-d',strtotime($filter['to_date']));
             } else {
                 $to = date('Y-m-d'); /*если конечной даты нет, берем за дату "сегодня"*/
             }
-            $date_filter = $this->db->placehold("AND (o.date BETWEEN ? AND ?)", $from, $to);
+            $where .= $this->db->placehold(" AND (o.date BETWEEN ? AND ?)",$from,$to);
         }
-        
-        // Выбираем заказы
-        $query = $this->db->placehold("SELECT COUNT(DISTINCT id) as count
-            FROM __orders AS o
-            LEFT JOIN __orders_labels AS ol ON o.id=ol.order_id
+
+        if (!empty($order)) {
+            $order = "ORDER BY $order";
+        }
+
+        // При подсчете нам эти переменные не нужны
+        if ($count === true) {
+            $order      = '';
+            $group_by   = '';
+            $sql_limit  = '';
+        }
+
+        $query = $this->db->placehold("SELECT $select
+            FROM __orders o
+            $joins
             WHERE 
-                1
-                $status_filter 
-                $user_filter 
-                $label_filter 
-                $keyword_filter
-                $date_filter
+                $where
+                $group_by
+                $order 
+                $sql_limit
         ");
+
         $this->db->query($query);
-        return $this->db->result('count');
+        if ($count === true) {
+            return $this->db->result('count');
+        } else {
+            $orders = array();
+            foreach($this->db->results() as $order) {
+                $orders[$order->id] = $order;
+            }
+            return $orders;
+        }
+    }
+
+    /*Подсчет количества заказов*/
+    public function count_orders($filter = array()) {
+        return $this->get_orders($filter, true);
     }
 
     /*Обновление заказа*/

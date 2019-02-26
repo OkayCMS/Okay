@@ -17,32 +17,32 @@ class Settings extends Okay {
         $this->init_settings();
     }
     
-    public function __get($name) {
-        if($res = parent::__get($name)) {
+    public function __get($param) {
+        if($res = parent::__get($param)) {
             return $res;
         }
 
-        if (isset($this->vars_lang[$name])) {
-            return $this->vars_lang[$name];
-        } elseif (isset($this->vars[$name])) {
-            return $this->vars[$name];
+        if (isset($this->vars_lang[$param])) {
+            return $this->vars_lang[$param];
+        } elseif (isset($this->vars[$param])) {
+            return $this->vars[$param];
         } else {
             return null;
         }
     }
 
     /*Запись данных в общие настройки*/
-    public function __set($name, $value) {
+    public function __set($param, $value) {
 
-        if (!empty($this->vars['admin_theme']) && $name == 'theme' && $value == $this->vars['admin_theme']) {
-            $this->vars[$name] = $value;
+        if (!empty($this->vars['admin_theme']) && $param == 'theme' && $value == $this->vars['admin_theme']) {
+            $this->vars[$param] = $value;
             return;
         }
 
-        if (isset($this->vars_lang[$name])) {
+        if (isset($this->vars_lang[$param])) {
             return;
         }
-        $this->vars[$name] = $value;
+        $this->vars[$param] = $value;
         
         if(is_array($value)) {
             $value = serialize($value);
@@ -50,11 +50,11 @@ class Settings extends Okay {
             $value = (string) $value;
         }
         
-        $this->db->query('SELECT count(*) as count FROM __settings WHERE name=?', $name);
+        $this->db->query('SELECT count(*) as count FROM __settings WHERE param=?', $param);
         if($this->db->result('count')>0) {
-            $this->db->query('UPDATE __settings SET value=? WHERE name=?', $value, $name);
+            $this->db->query('UPDATE __settings SET value=? WHERE param=?', $value, $param);
         } else {
-            $this->db->query('INSERT INTO __settings SET value=?, name=?', $value, $name);
+            $this->db->query('INSERT INTO __settings SET value=?, param=?', $value, $param);
         }
     }
 
@@ -62,10 +62,10 @@ class Settings extends Okay {
     public function init_settings() {
         // Выбираем из базы ОБЩИЕ настройки и записываем их в переменную
         $this->vars = array();
-        $this->db->query('SELECT name, value FROM __settings');
+        $this->db->query('SELECT param, value FROM __settings');
         foreach($this->db->results() as $result) {
-            if(!($this->vars[$result->name] = @unserialize($result->value))) {
-                $this->vars[$result->name] = $result->value;
+            if(!($this->vars[$result->param] = @unserialize($result->value))) {
+                $this->vars[$result->param] = $result->value;
             }
         }
 
@@ -74,8 +74,8 @@ class Settings extends Okay {
         $multi = $this->get_settings();
         if (is_array($multi)) {
             foreach ($multi as $s) {
-                if(!($this->vars_lang[$s->name] = @unserialize($s->value))) {
-                    $this->vars_lang[$s->name] = $s->value;
+                if(!($this->vars_lang[$s->param] = @unserialize($s->value))) {
+                    $this->vars_lang[$s->param] = $s->value;
                 }
             }
         }
@@ -84,18 +84,18 @@ class Settings extends Okay {
     /* Multilanguage settings */
     /**
      * Adding a new setting for all languages
-     * @param string $name
+     * @param string $param
      * @param string $value
      * @return bool
      */
-    private function add($name, $value) {
+    private function add($param, $value) {
         $languages = $this->languages->get_languages();
         if (!empty($languages)) {
             foreach ($languages as $l) {
-                $this->db->query("REPLACE INTO __settings_lang SET lang_id=?, name=?, value=?", $l->id, $name, $value);
+                $this->db->query("REPLACE INTO __settings_lang SET lang_id=?, param=?, value=?", $l->id, $param, $value);
             }
         } else {
-            $q = $this->db->placehold("REPLACE INTO __settings_lang SET name=?, value=?", $name, $value);
+            $q = $this->db->placehold("REPLACE INTO __settings_lang SET param=?, value=?", $param, $value);
             if (!$this->db->query($q)) {
                 return false;
             }
@@ -104,18 +104,18 @@ class Settings extends Okay {
     }
 
     /**
-     * Updating by @param $name(current language), or adding;
-     * if a setting with specified $name is exist - it will be updated,
+     * Updating by @param $param(current language), or adding;
+     * if a setting with specified $param is exist - it will be updated,
      * otherwise it will be added(called add() function).
-     * @param string $name
+     * @param string $param
      * @param string $value
      * @return bool
      */
-    public function update($name, $value) {
-        if (empty($name)) {
+    public function update($param, $value) {
+        if (empty($param)) {
             return false;
         }
-        $this->vars_lang[$name] = $value;
+        $this->vars_lang[$param] = $value;
         $value = is_array($value) ? serialize($value) : (string) $value;
 
         $lang_id  = $this->languages->lang_id();
@@ -124,11 +124,11 @@ class Settings extends Okay {
             $into_lang = $this->db->placehold("lang_id=?, ", $lang_id);
         }
 
-        $this->db->query("SELECT 1 FROM __settings_lang WHERE name=? LIMIT 1", $name);
+        $this->db->query("SELECT 1 FROM __settings_lang WHERE param=? LIMIT 1", $param);
         if (!$this->db->result()) {
-            return $this->add($name, $value);
+            return $this->add($param, $value);
         } else {
-            $q = $this->db->placehold("REPLACE INTO __settings_lang SET $into_lang name=?, value=?", $name, $value);
+            $q = $this->db->placehold("REPLACE INTO __settings_lang SET $into_lang param=?, value=?", $param, $value);
             return $this->db->query($q) ? true : false;
         }
     }

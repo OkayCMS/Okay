@@ -39,13 +39,27 @@ class Coupons extends Okay {
     }
 
     /*Выборка всех купонов*/
-    public function get_coupons($filter = array()) {
+    public function get_coupons($filter = array(), $count = false) {
         // По умолчанию
         $limit = 1000;
         $page = 1;
-        $coupon_id_filter = '';
-        $valid_filter = '';
-        $keyword_filter = '';
+        $joins = '';
+        $where = '1';
+        $group_by = '';
+        $order = 'valid DESC, c.id DESC';
+        $select = "c.id, 
+                c.code, 
+                c.value, 
+                c.type, 
+                c.expire, 
+                c.min_order_price, 
+                c.single, 
+                c.usages, 
+        		((DATE(NOW()) <= DATE(c.expire) OR c.expire IS NULL) AND (c.usages=0 OR NOT c.single)) AS valid";
+
+        if ($count === true) {
+            $select = "COUNT(DISTINCT c.id) as count";
+        }
         
         if(isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));
@@ -54,95 +68,63 @@ class Coupons extends Okay {
         if(isset($filter['page'])) {
             $page = max(1, intval($filter['page']));
         }
+
+        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
         
         if(!empty($filter['id'])) {
-            $coupon_id_filter = $this->db->placehold('AND c.id in(?@)', (array)$filter['id']);
+            $where .= $this->db->placehold(' AND c.id in(?@)', (array)$filter['id']);
         }
         
         if(isset($filter['valid'])) {
             if($filter['valid']) {
-                $valid_filter = $this->db->placehold('AND ((DATE(NOW()) <= DATE(c.expire) OR c.expire IS NULL) AND (c.usages=0 OR NOT c.single))');
+                $where .= $this->db->placehold(' AND ((DATE(NOW()) <= DATE(c.expire) OR c.expire IS NULL) AND (c.usages=0 OR NOT c.single))');
             } else {
-                $valid_filter = $this->db->placehold('AND NOT ((DATE(NOW()) <= DATE(c.expire) OR c.expire IS NULL) AND (c.usages=0 OR NOT c.single))');
+                $where .= $this->db->placehold(' AND NOT ((DATE(NOW()) <= DATE(c.expire) OR c.expire IS NULL) AND (c.usages=0 OR NOT c.single))');
             }
         }
         
         if(isset($filter['keyword'])) {
             $keywords = explode(' ', $filter['keyword']);
+            $keyword_filter = ' ';
             foreach($keywords as $keyword) {
                 $keyword_filter .= $this->db->placehold('AND (
                     c.code LIKE "%'.$this->db->escape(trim($keyword)).'%" 
                 ) ');
             }
+            $where .= $keyword_filter;
         }
-        
-        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
-        
-        $query = $this->db->placehold("SELECT 
-                c.id, 
-                c.code, 
-                c.value, 
-                c.type, 
-                c.expire, 
-                c.min_order_price, 
-                c.single, 
-                c.usages, 
-        		((DATE(NOW()) <= DATE(c.expire) OR c.expire IS NULL) AND (c.usages=0 OR NOT c.single)) AS valid
+
+        if (!empty($order)) {
+            $order = "ORDER BY $order";
+        }
+
+        // При подсчете нам эти переменные не нужны
+        if ($count === true) {
+            $order      = '';
+            $group_by   = '';
+            $sql_limit  = '';
+        }
+
+        $query = $this->db->placehold("SELECT $select
             FROM __coupons c 
+            $joins
             WHERE 
-                1 
-                $coupon_id_filter 
-                $valid_filter 
-                $keyword_filter
-            ORDER BY valid DESC, id DESC 
-            $sql_limit
-        ",$this->settings->date_format);
-        
+                $where
+                $group_by
+                $order 
+                $sql_limit
+        ");
         $this->db->query($query);
-        return $this->db->results();
+        if ($count === true) {
+            return $this->db->result('count');
+        } else {
+            return $this->db->results();
+        }
     }
 
     /*Подсчитываем количество купонов*/
     public function count_coupons($filter = array()) {
-        $coupon_id_filter = '';
-        $valid_filter = '';
-        $keyword_filter = '';
-        
-        if(!empty($filter['id'])) {
-            $coupon_id_filter = $this->db->placehold('AND c.id in(?@)', (array)$filter['id']);
-        }
-        
-        if(isset($filter['valid'])) {
-            if($filter['valid']) {
-                $valid_filter = $this->db->placehold('AND ((DATE(NOW()) <= DATE(c.expire) OR c.expire IS NULL) AND (c.usages=0 OR NOT c.single))');
-            } else {
-                $valid_filter = $this->db->placehold('AND NOT ((DATE(NOW()) <= DATE(c.expire) OR c.expire IS NULL) AND (c.usages=0 OR NOT c.single))');
-            }
-        }
-        
-        if(isset($filter['keyword'])) {
-            $keywords = explode(' ', $filter['keyword']);
-            foreach($keywords as $keyword) {
-                $keyword_filter .= $this->db->placehold('AND (
-                    c.code LIKE "%'.$this->db->escape(trim($keyword)).'%" 
-                ) ');
-            }
-        }
-        
-        $query = "SELECT COUNT(distinct c.id) as count
-            FROM __coupons c 
-            WHERE 
-                1 
-                $coupon_id_filter 
-                $valid_filter
-                $keyword_filter
-        ";
-        
-        if($this->db->query($query)) {
-            return $this->db->result('count');
-        } else {
-            return false;
-        }
+        return $this->get_coupons($filter, true);
     }
 
     /*Добавление купона*/

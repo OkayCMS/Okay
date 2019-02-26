@@ -5,49 +5,66 @@ require_once('Okay.php');
 class Subscribes extends Okay {
 
     /*Выборка всех подписчиков*/
-    public function get_subscribes($filter = array()) {
+    public function get_subscribes($filter = array(), $count = false) {
+        // По умолчанию
         $limit = 100;
         $page = 1;
-        $keyword_filter = '';
+        $joins = '';
+        $where = '1';
+        $group_by = '';
+        $order = '';
+        $select = "s.id, 
+                s.email";
+
+        if ($count === true) {
+            $select = "COUNT(DISTINCT s.id) as count";
+        }
+
         if(isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));
         }
+
         if(isset($filter['page'])) {
             $page = max(1, intval($filter['page']));
         }
+
         $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
-        if (isset($filter['keyword'])) {
-            $keyword_filter = 'and s.email like "%'.$this->db->escape(trim($filter['keyword'])).'%"';
-        }
         
-        $query = $this->db->placehold("SELECT 
-                s.id, 
-                s.email
-            FROM __subscribe_mailing s 
+        if (isset($filter['keyword'])) {
+            $where .= ' AND s.email like "%'.$this->db->escape(trim($filter['keyword'])).'%"';
+        }
+
+        if (!empty($order)) {
+            $order = "ORDER BY $order";
+        }
+
+        // При подсчете нам эти переменные не нужны
+        if ($count === true) {
+            $order      = '';
+            $group_by   = '';
+            $sql_limit  = '';
+        }
+
+        $query = $this->db->placehold("SELECT $select
+            FROM __subescribe_mailing s
+            $joins
             WHERE 
-                1 
-                $keyword_filter 
-            $sql_limit
+                $where
+                $group_by
+                $order 
+                $sql_limit
         ");
         $this->db->query($query);
-        return $this->db->results();
+        if ($count === true) {
+            return $this->db->result('count');
+        } else {
+            return $this->db->results();
+        }
     }
 
     /*Подсчет количества подписчиков*/
     public function count_subscribes($filter = array()) {
-        $keyword_filter = '';
-        if (isset($filter['keyword'])) {
-            $keyword_filter = 'and s.email like "%'.$this->db->escape(trim($filter['keyword'])).'%"';
-        }
-        $query = "SELECT count(distinct s.id) as count
-            FROM __subscribe_mailing AS s
-            WHERE 
-                1
-                $keyword_filter
-        ";
-        
-        $this->db->query($query);
-        return $this->db->result('count');
+        return $this->get_subscribes($filter, true);
     }
 
     /*Выборка конкретного подписчика*/

@@ -31,7 +31,7 @@ class TranslationAdmin extends Okay {
                     $translation->values[$lang->id] = $translation->$field;
                 }
             }
-            $exist = $this->translations->get_translation($translation->label);
+            $exist = $this->translations->get_translation($translation->label, true);
             
             $okay_object = $this->{$translation->label};
             if(!$translation->label) {

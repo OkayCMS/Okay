@@ -39,9 +39,15 @@ class TranslationsAdmin extends Okay {
             $filter['sort'] = 'label';
         }
         $this->design->assign('sort', $filter['sort']);
-
+        $template_filter = $filter;
         $translations = $this->translations->get_translations($filter);
+        $template_filter['template_only'] = $template_filter['force'] = true;
+        // Нам нужно будет использовать их как массив
+        $translations_template = (array)$this->translations->get_translations($template_filter);
+        
         $this->design->assign('translations', $translations);
+        $this->design->assign('translations_template', $translations_template);
+        
         return $this->design->fetch('translations.tpl');
     }
     

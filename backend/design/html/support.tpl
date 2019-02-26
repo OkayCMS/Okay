@@ -84,7 +84,7 @@
                                             {/if}
                                         </div>
                                         <div class="okay_list_boding okay_list_support_time {if $topic->spent_time < 0}text_success{/if}">
-                                            {$topic->spent_time|balance}
+                                            {$topic->spent_time|balance:false}
                                         </div>
                                     </div>
                                 </div>

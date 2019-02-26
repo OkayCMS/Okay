@@ -66,7 +66,7 @@
                 </div>
 
                 {*Параметры элемента*}
-                <div class="okay_list_body sortable">
+                <div class="okay_list_body sort_extended">
                     {foreach $brands as $brand}
                         <div class="fn_row okay_list_body_item fn_sort_item">
                             <div class="okay_list_row ">
@@ -131,11 +131,23 @@
                             <label class="okay_ckeckbox" for="check_all_2"></label>
                         </div>
                         <div class="okay_list_option">
-                            <select name="action" class="selectpicker">
+                            <select name="action" class="selectpicker brands_action">
                                 <option value="in_feed">{$btr->brands_in_xml|escape}</option>
                                 <option value="out_feed">{$btr->brands_out_xml|escape}</option>
                                 <option value="delete">{$btr->general_delete|escape}</option>
+                                {if $pages_count>1}
+                                    <option value="move_to_page">{$btr->products_move_to_page|escape}</option>
+                                {/if}
                             </select>
+                        </div>
+                        <div class="col-lg-8 col-md-6 col-sm-12 fn_additional_params">
+                            <div class="fn_move_to_page col-lg-12 col-md-12 col-sm-12 hidden fn_hide_block">
+                                <select name="target_page" class="selectpicker">
+                                    {section target_page $pages_count}
+                                        <option value="{$smarty.section.target_page.index+1}">{$smarty.section.target_page.index+1}</option>
+                                    {/section}
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <button type="submit" class="btn btn_small btn_blue">
@@ -156,3 +168,17 @@
         </div>
     {/if}
 </div>
+
+{literal}
+    <script>
+        $(function() {
+            $(document).on('change', '.fn_action_block select.brands_action', function () {
+                var elem = $(this).find('option:selected').val();
+                $('.fn_hide_block').addClass('hidden');
+                if ($('.fn_' + elem).size() > 0) {
+                    $('.fn_' + elem).removeClass('hidden');
+                }
+            });
+        });
+    </script>
+{/literal}

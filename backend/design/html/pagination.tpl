@@ -1,6 +1,6 @@
 {if $pages_count>1}
 <!-- Листалка страниц -->
-<ul class="pagination">
+<ul class="pagination fn_pagination">
     
     {* Количество выводимых ссылок на страницы *}
     {$visible_pages = 5}

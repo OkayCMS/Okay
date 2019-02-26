@@ -21,6 +21,15 @@ class FeaturesAdmin extends Okay {
         $this->design->assign('current_limit', $filter['limit']);
 
         if($this->request->method('post')) {
+
+            // Сортировка
+            $positions = $this->request->post('positions');
+            $ids = array_keys($positions);
+            sort($positions);
+            foreach($positions as $i=>$position) {
+                $this->features->update_feature($ids[$i], array('position'=>$position));
+            }
+            
             // Действия с выбранными
             $ids = $this->request->post('check');
             if(is_array($ids)) {
@@ -62,15 +71,53 @@ class FeaturesAdmin extends Okay {
                         }
                         break;
                     }
+                    case 'move_to_page': {
+                        /*Переместить на страницу*/
+                        $target_page = $this->request->post('target_page', 'integer');
+    
+                        // Сразу потом откроем эту страницу
+                        $filter['page'] = $target_page;
+    
+                        // До какого свойства перемещать
+                        $limit = $filter['limit']*($target_page-1);
+                        if($target_page > $this->request->get('page', 'integer')) {
+                            $limit += count($ids)-1;
+                        } else {
+                            $ids = array_reverse($ids, true);
+                        }
+    
+                        $temp_filter = $filter;
+                        $temp_filter['page'] = $limit+1;
+                        $temp_filter['limit'] = 1;
+                        $tmp = $this->features->get_features($temp_filter);
+                        $target_feature = array_pop($tmp);
+                        $target_position = $target_feature->position;
+    
+                        // Если вылезли за последнее свойство - берем позицию последнего свойства в качестве цели перемещения
+                        if($target_page > $this->request->get('page', 'integer') && !$target_position) {
+                            $query = $this->db->placehold("SELECT distinct position AS target FROM __features ORDER BY position DESC LIMIT 1");
+                            $this->db->query($query);
+                            $target_position = $this->db->result('target');
+                        }
+    
+                        foreach($ids as $id) {
+                            $query = $this->db->placehold("SELECT position FROM __features WHERE id=? LIMIT 1", $id);
+                            $this->db->query($query);
+                            $initial_position = $this->db->result('position');
+    
+                            if($target_position > $initial_position) {
+                                $query = $this->db->placehold("	UPDATE __features set position=position-1 WHERE position>? AND position<=?", $initial_position, $target_position);
+                            } else {
+                                $query = $this->db->placehold("	UPDATE __features set position=position+1 WHERE position<? AND position>=?", $initial_position, $target_position);
+                            }
+    
+                            $this->db->query($query);
+                            $query = $this->db->placehold("UPDATE __features SET position = ? WHERE id = ?", $target_position, $id);
+                            $this->db->query($query);
+                        }
+                        break;
+                    }
                 }
-            }
-            
-            // Сортировка
-            $positions = $this->request->post('positions');
-            $ids = array_keys($positions);
-            sort($positions);
-            foreach($positions as $i=>$position) {
-                $this->features->update_feature($ids[$i], array('position'=>$position));
             }
         }
         

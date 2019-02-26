@@ -53,15 +53,15 @@ class SeoPatternsAdmin extends Okay {
                     $this->design->assign("category", $default_products_seo_pattern);
                     $result->success = true;
                 } else {
-                    $category = new stdClass();
-                    $category->id                   = $this->request->post("category_id", "integer");
-                    $category->auto_meta_title      = $this->request->post('auto_meta_title');
-                    $category->auto_meta_keywords   = $this->request->post('auto_meta_keywords');
-                    $category->auto_meta_desc       = $this->request->post('auto_meta_desc');
-                    $category->auto_description     = $this->request->post('auto_description');
 
-                    if ($cat_id = $this->categories->update_category($category->id, $category)) {
-                        $category = $this->categories->get_category(intval($cat_id));
+                    $category_id = $this->request->post("category_id", "integer");
+                    if ($category = $this->categories->get_category($category_id)) {
+                        $category->auto_meta_title      = $this->request->post('auto_meta_title');
+                        $category->auto_meta_keywords   = $this->request->post('auto_meta_keywords');
+                        $category->auto_meta_desc       = $this->request->post('auto_meta_desc');
+                        $category->auto_description     = $this->request->post('auto_description');
+
+                        $this->categories->update_category($category->id, $category);
                         $this->design->assign("category", $category);
                         $result->success = true;
                     } else {

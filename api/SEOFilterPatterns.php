@@ -5,42 +5,74 @@ require_once('Okay.php');
 class SEOFilterPatterns extends Okay {
 
 
-    public function get_patterns($filter = array()) {
-        $category_id_filter = '';
-        $type_filter = '';
-        $feature_id_filter = '';
-
-        if(!empty($filter['category_id'])) {
-            $category_id_filter = $this->db->placehold('AND p.category_id in (?@)', (array)$filter['category_id']);
-        }
-
-        if(!empty($filter['type'])) {
-            $type_filter = $this->db->placehold('AND p.type = ?', $filter['type']);
-        }
-
-        if(!empty($filter['feature_id'])) {
-            $feature_id_filter = $this->db->placehold('AND p.feature_id in (?@)', (array)$filter['feature_id']);
-        }
-
+    public function get_patterns($filter = array(), $count = false) {
+        // По умолчанию
+        $limit = 100;
+        $page = 1;
+        $joins = '';
+        $where = '1';
+        $group_by = '';
+        $order = '';
         $lang_sql = $this->languages->get_query(array('object'=>'seo_filter_pattern', 'px'=>'p'));
-        $query = $this->db->placehold("SELECT
-                p.id,
+        $select = "p.id,
                 p.category_id,
                 p.type,
                 p.feature_id,
-                $lang_sql->fields
+                $lang_sql->fields";
+
+        if ($count === true) {
+            $select = "COUNT(DISTINCT p.id) as count";
+        }
+
+        if(isset($filter['limit'])) {
+            $limit = max(1, intval($filter['limit']));
+        }
+
+        if(isset($filter['page'])) {
+            $page = max(1, intval($filter['page']));
+        }
+
+        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
+
+        if(!empty($filter['category_id'])) {
+            $where .= $this->db->placehold(' AND p.category_id in (?@)', (array)$filter['category_id']);
+        }
+
+        if(!empty($filter['type'])) {
+            $where .= $this->db->placehold(' AND p.type = ?', $filter['type']);
+        }
+
+        if(!empty($filter['feature_id'])) {
+            $where .= $this->db->placehold(' AND p.feature_id in (?@)', (array)$filter['feature_id']);
+        }
+
+        if (!empty($order)) {
+            $order = "ORDER BY $order";
+        }
+
+        // При подсчете нам эти переменные не нужны
+        if ($count === true) {
+            $order      = '';
+            $group_by   = '';
+            $sql_limit  = '';
+        }
+
+        $query = $this->db->placehold("SELECT $select
             FROM __seo_filter_patterns p
             $lang_sql->join
-            WHERE
-                1
-                $category_id_filter
-                $type_filter
-                $feature_id_filter
-            ");
-
+            $joins
+            WHERE 
+                $where
+                $group_by
+                $order 
+                $sql_limit
+        ");
         $this->db->query($query);
-        $patterns = $this->db->results();
-        return $patterns;
+        if ($count === true) {
+            return $this->db->result('count');
+        } else {
+            return $this->db->results();
+        }
     }
 
     public function get_pattern($id) {

@@ -5,10 +5,29 @@ require_once('Okay.php');
 class Features extends Okay {
 
     /*Выборка всех свойств товаров*/
-    public function get_features($filter = array()) {
+    public function get_features($filter = array(), $count = false) {
+        // По умолчанию
         $limit = 100;
         $page = 1;
-        $category_id_filter = '';
+        $joins = '';
+        $where = '1';
+        $group_by = '';
+        $order = 'f.position';
+        $lang_sql = $this->languages->get_query(array('object'=>'feature'));
+        $select = "f.id, 
+                f.position, 
+                f.in_filter, 
+                f.yandex, 
+                f.auto_name_id, 
+                f.auto_value_id, 
+                f.url, 
+                f.url_in_product,
+                f.to_index_new_value,
+                $lang_sql->fields";
+
+        if ($count === true) {
+            $select = "COUNT(DISTINCT f.id) as count";
+        }
 
         if(isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));
@@ -21,76 +40,49 @@ class Features extends Okay {
         $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
 
         if(isset($filter['category_id'])) {
-            $category_id_filter = $this->db->placehold('AND id in(SELECT feature_id FROM __categories_features AS cf WHERE cf.category_id in(?@))', (array)$filter['category_id']);
+            $where .= $this->db->placehold(' AND id in(SELECT feature_id FROM __categories_features AS cf WHERE cf.category_id in(?@))', (array)$filter['category_id']);
         }
         
-        $in_filter_filter = '';
         if(isset($filter['in_filter'])) {
-            $in_filter_filter = $this->db->placehold('AND f.in_filter=?', intval($filter['in_filter']));
+            $where .= $this->db->placehold(' AND f.in_filter=?', intval($filter['in_filter']));
         }
         
-        $id_filter = '';
         if(!empty($filter['id'])) {
-            $id_filter = $this->db->placehold('AND f.id in(?@)', (array)$filter['id']);
+            $where .= $this->db->placehold(' AND f.id in(?@)', (array)$filter['id']);
         }
-        
-        $lang_sql = $this->languages->get_query(array('object'=>'feature'));
-        // Выбираем свойства
-        $query = $this->db->placehold("SELECT 
-                f.id, 
-                f.position, 
-                f.in_filter, 
-                f.yandex, 
-                f.auto_name_id, 
-                f.auto_value_id, 
-                f.url, 
-                f.url_in_product,
-                f.to_index_new_value,
-                $lang_sql->fields
-            FROM __features AS f 
+
+        if (!empty($order)) {
+            $order = "ORDER BY $order";
+        }
+
+        // При подсчете нам эти переменные не нужны
+        if ($count === true) {
+            $order      = '';
+            $group_by   = '';
+            $sql_limit  = '';
+        }
+
+        $query = $this->db->placehold("SELECT $select
+            FROM __features f
             $lang_sql->join
+            $joins
             WHERE 
-                1 
-                $category_id_filter 
-                $in_filter_filter 
-                $id_filter 
-            ORDER BY f.position
-            $sql_limit
+                $where
+                $group_by
+                $order 
+                $sql_limit
         ");
+        
         $this->db->query($query);
-        return $this->db->results();
+        if ($count === true) {
+            return $this->db->result('count');
+        } else {
+            return $this->db->results();
+        }
     }
 
     public function count_features($filter = array()) {
-        $category_id_filter = '';
-        if(isset($filter['category_id'])) {
-            $category_id_filter = $this->db->placehold('AND id in(SELECT feature_id FROM __categories_features AS cf WHERE cf.category_id in(?@))', (array)$filter['category_id']);
-        }
-
-        $in_filter_filter = '';
-        if(isset($filter['in_filter'])) {
-            $in_filter_filter = $this->db->placehold('AND f.in_filter=?', intval($filter['in_filter']));
-        }
-
-        $id_filter = '';
-        if(!empty($filter['id'])) {
-            $id_filter = $this->db->placehold('AND f.id in(?@)', (array)$filter['id']);
-        }
-
-        $lang_sql = $this->languages->get_query(array('object'=>'feature'));
-        // Выбираем свойства
-        $query = $this->db->placehold("SELECT
-               count(distinct f.id) as count
-            FROM __features AS f
-            $lang_sql->join
-            WHERE
-                1
-                $category_id_filter
-                $in_filter_filter
-                $id_filter
-        ");
-        $this->db->query($query);
-        return $this->db->result('count');
+        return $this->get_features($filter, true);
     }
 
     /*Выборка конкретного свойства товара*/

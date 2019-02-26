@@ -1,6 +1,7 @@
 User-agent: *
 Disallow: /404
 Disallow: /backend/
+Disallow: /lang_general/
 Disallow: */order/
 Disallow: */user/
 Disallow: /captcha/
@@ -19,6 +20,7 @@ Allow: *.css
 Allow: *.js
 Disallow: /404
 Disallow: /backend/
+Disallow: /lang_general/
 Disallow: */order/
 Disallow: */user/
 Disallow: /captcha/
@@ -37,6 +39,7 @@ Allow: *.css
 Allow: *.js
 Disallow: /404
 Disallow: /backend/
+Disallow: /lang_general/
 Disallow: */order/
 Disallow: */user/
 Disallow: /captcha/

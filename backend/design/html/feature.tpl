@@ -260,11 +260,12 @@
                             </div>
                             <div class="okay_list_heading okay_list_close"></div>
                         </div>
-                        <div class="okay_list_body fn_feature_values_list sortable fn_values_list">
+                        <div class="okay_list_body fn_feature_values_list sort_extended fn_values_list">
                             {foreach $features_values as $fv}
                                 <div class="fn_row okay okay_list_body_item fn_sort_item">
                                     <div class="okay_list_row">
                                         <input type="hidden" name="feature_values[id][]" value="{$fv->id|escape}">
+                                        <input class="hidden_check" type="checkbox" name="check[]" value="{$fv->id}" />
                                         <input type="hidden" class="fn_value_to_delete" name="values_to_delete[]" disabled="" value="{$fv->id|escape}">
                                         <div class="okay_list_boding okay_list_drag move_zone">
                                             {include file='svg_icon.tpl' svgId='drag_vertical'}
@@ -305,6 +306,7 @@
                             <div class="fn_row okay okay_list_body_item fn_sort_item fn_new_value" style="display: none;">
                                 <div class="okay_list_row">
                                     <input type="hidden" class="fn_feature_alias_id" name="feature_values[id][]" value="">
+                                    <input class="hidden_check" type="checkbox" name="check[]" value="" />
                                     <div class="okay_list_boding okay_list_drag move_zone">
                                         {include file='svg_icon.tpl' svgId='drag_vertical'}
                                     </div>
@@ -341,6 +343,22 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="hidden">
+                        {*Здесь сделано на селектах, для общей савместимости скрипта Drag-and-drop*}
+                        <select name="action" class="selectpicker values_action">
+                            <option value="" selected></option>
+                            {if $pages_count>1}
+                                <option value="move_to_page"></option>
+                            {/if}
+                        </select>
+                        <select name="target_page" class="selectpicker">
+                            {section target_page $pages_count}
+                                <option value="{$smarty.section.target_page.index+1}">{$smarty.section.target_page.index+1}</option>
+                            {/section}
+                        </select>
+                    </div>
+                    
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm 12 txt_center">
                             {include file='pagination.tpl'}
@@ -359,7 +377,7 @@
                 <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
             </div>
         </div>
-        <div class="toggle_body_wrap on fn_card fn_sort_list">
+        <div class="toggle_body_wrap on fn_card">
             <div class="row">
                 <div class="col-lg-6 col-md-6 mb-2">
                     <div class="heading_label">{$btr->feature_union_main_value|escape}</div>

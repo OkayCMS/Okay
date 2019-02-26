@@ -8,36 +8,59 @@ class Users extends Okay {
     private $salt = '8e86a279d6e182b3c811c559e6b15484';
 
     /*Выборка пользователей*/
-    public function get_users($filter = array()) {
+    public function get_users($filter = array(), $count = false) {
+        // По умолчанию
         $limit = 1000;
         $page = 1;
-        $group_id_filter = '';
-        $keyword_filter = '';
-        
+        $joins = '';
+        $where = '1';
+        $group_by = '';
+        $order = 'u.name';
+        $select = "u.id, 
+                u.email, 
+                u.password, 
+                u.name,
+                u.phone,
+                u.address,
+                u.group_id, 
+                u.last_ip, 
+                u.created, 
+                g.discount, 
+                g.name as group_name";
+
+        if ($count === true) {
+            $select = "COUNT(DISTINCT u.id) as count";
+        }
+
         if(isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));
         }
-        
+
         if(isset($filter['page'])) {
             $page = max(1, intval($filter['page']));
         }
         
-        if(isset($filter['group_id'])) {
-            $group_id_filter = $this->db->placehold('AND u.group_id in(?@)', (array)$filter['group_id']);
+        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
+
+        $joins .= "LEFT JOIN __groups g ON u.group_id=g.id";
+        
+        if (isset($filter['group_id'])) {
+            $where .= $this->db->placehold(' AND u.group_id in(?@)', (array)$filter['group_id']);
         }
         
-        if(isset($filter['keyword'])) {
+        if (isset($filter['keyword'])) {
             $keywords = explode(' ', $filter['keyword']);
-            foreach($keywords as $keyword) {
+            $keyword_filter = ' ';
+            foreach ($keywords as $keyword) {
                 $keyword_filter .= $this->db->placehold('AND (
                     u.name LIKE "%'.$this->db->escape(trim($keyword)).'%" 
                     OR u.email LIKE "%'.$this->db->escape(trim($keyword)).'%" 
                     OR u.last_ip LIKE "%'.$this->db->escape(trim($keyword)).'%" 
                 ) ');
             }
+            $where .= $keyword_filter;
         }
         
-        $order = 'u.name';
         if(!empty($filter['sort'])) {
             switch ($filter['sort']) {
                 case 'date':
@@ -54,64 +77,38 @@ class Users extends Okay {
                     break;
             }
         }
-        
-        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
-        // Выбираем пользователей
-        $query = $this->db->placehold("SELECT 
-                u.id, 
-                u.email, 
-                u.password, 
-                u.name,
-                u.phone,
-                u.address,
-                u.group_id, 
-                u.last_ip, 
-                u.created, 
-                g.discount, 
-                g.name as group_name 
+
+        if (!empty($order)) {
+            $order = "ORDER BY $order";
+        }
+
+        // При подсчете нам эти переменные не нужны
+        if ($count === true) {
+            $order      = '';
+            $group_by   = '';
+            $sql_limit  = '';
+        }
+
+        $query = $this->db->placehold("SELECT $select
             FROM __users u
-            LEFT JOIN __groups g ON u.group_id=g.id
+            $joins
             WHERE 
-                1 
-                $group_id_filter 
-                $keyword_filter 
-            ORDER BY $order 
-            $sql_limit
+                $where
+                $group_by
+                $order 
+                $sql_limit
         ");
         $this->db->query($query);
-        return $this->db->results();
+        if ($count === true) {
+            return $this->db->result('count');
+        } else {
+            return $this->db->results();
+        }
     }
 
     /*Подсчет пользователей*/
     public function count_users($filter = array()) {
-        $group_id_filter = '';
-        $keyword_filter = '';
-        
-        if(isset($filter['group_id'])) {
-            $group_id_filter = $this->db->placehold('AND u.group_id in(?@)', (array)$filter['group_id']);
-        }
-        
-        if(isset($filter['keyword'])) {
-            $keywords = explode(' ', $filter['keyword']);
-            foreach($keywords as $keyword) {
-                $keyword_filter .= $this->db->placehold('AND (
-                    u.name LIKE "%'.$this->db->escape(trim($keyword)).'%" 
-                    OR u.email LIKE "%'.$this->db->escape(trim($keyword)).'%" 
-                    OR u.last_ip LIKE "%'.$this->db->escape(trim($keyword)).'%" 
-                ) ');
-            }
-        }
-        // Выбираем пользователей
-        $query = $this->db->placehold("SELECT count(*) as count 
-            FROM __users u
-            LEFT JOIN __groups g ON u.group_id=g.id
-            WHERE 
-                1 
-                $group_id_filter 
-                $keyword_filter 
-        ");
-        $this->db->query($query);
-        return $this->db->result('count');
+        return $this->get_users($filter, true);
     }
 
     /*Выборка конкретного пользователя*/

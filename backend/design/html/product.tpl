@@ -198,7 +198,7 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12 toggle_body_wrap on fn_card ">
-                        <select name="brand_id" class="selectpicker mb-1{if !$brands}hidden{/if} fn_meta_brand" data-live-search="true">
+                        <select name="brand_id" class="selectpicker mb-1{if !$brands} hidden{/if} fn_meta_brand" data-live-search="true">
                             <option value="0" {if !$product->brand_id}selected=""{/if} data-brand_name="">{$btr->general_not_set|escape}</option>
                             {foreach $brands as $brand}
                                 <option value="{$brand->id}" {if $product->brand_id == $brand->id}selected=""{/if} data-brand_name="{$brand->name|escape}">{$brand->name|escape}</option>
@@ -281,8 +281,8 @@
                                         <div class="okay_list_boding variants_item_currency">
                                             <div class="heading_label">{$btr->general_currency|escape}</div>
                                             <select name="variants[currency_id][]" class="selectpicker">
-                                                {foreach $currencies as $currency}
-                                                    <option value="{$currency->id}" {if $currency->id == $variant->currency_id}selected=""{/if}>{$currency->code|escape}</option>
+                                                {foreach $currencies as $c}
+                                                    <option value="{$c->id}" {if $c->id == $variant->currency_id}selected=""{/if}>{$c->code|escape}</option>
                                                 {/foreach}
                                             </select>
                                         </div>
@@ -360,8 +360,8 @@
                                     <div class="okay_list_boding variants_item_currency">
                                         <div class="heading_label">{$btr->general_currency|escape}</div>
                                         <select name="variants[currency_id][]" class="selectpicker">
-                                            {foreach $currencies as $currency}
-                                                <option value="{$currency->id}" >{$currency->code|escape}</option>
+                                            {foreach $currencies as $c}
+                                                <option value="{$c->id}" >{$c->code|escape}</option>
                                             {/foreach}
                                         </select>
                                     </div>

@@ -25,23 +25,23 @@
     <table width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="margin: 0 auto">
         <tbody>
         <tr>
-            <td style="border: 0; height: 5px" border="0" class="td"></td>
+            <td style="border: 0; height: 5px" border="0"></td>
         </tr>
         <tr>
-            <td class="td" border="0" valign="top" align="left" style="border: 0">
+            <td border="0" valign="top" align="left" style="border: 0">
                 <div style="border-width: 0px; border-style: solid; border-radius: 0px; border-color: rgb(204, 204, 204)">
                     <!-- CONTENT BEGIN  -->
                     <div>
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding: 5px; background-color: rgb(255, 255, 255); background: rgb(255, 255, 255) no-repeat; border-top-left-radius: 0px; border-top-right-radius: 0px; overflow: hidden">
                             <tbody>
                             <tr>
-                                <td border="0" class="td" valign="top" width="1%" align="left" style="border: 0">
+                                <td border="0" valign="top" width="1%" align="left" style="border: 0">
                                     <div>
                                         <div style="text-align: left"><a><img src="{$config->root_url}/design/{$settings->theme}/images/{$settings->site_logo}" width="200" align="left" style="border: 0; display: block; margin: 0 auto" /></a></div>
                                     </div>
                                 </td>
 
-                                <td border="0" class="td" valign="middle" align="left" style="border: 0">
+                                <td border="0" valign="middle" align="left" style="border: 0">
                                     <div>
                                         <div style="text-align: left; font-family: 'Trebuchet MS'; font-size: 14px; color: rgb(51, 51, 51); line-height: normal">
                                             <div style="text-align: right;">
@@ -65,7 +65,7 @@
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding: 5px;background: rgb(255, 255, 255)">
                             <tbody>
                             <tr>
-                                <td border="0" class="td" valign="top" align="left" style="border: 0">
+                                <td border="0" valign="top" align="left" style="border: 0">
                                     <div>
                                         <div style="text-align: left; font-family: 'Trebuchet MS'; font-size: 14px; color: rgb(51, 51, 51); line-height: 1.5">
                                             <span style="font-family:trebuchet ms,helvetica,sans-serif;">
@@ -104,7 +104,7 @@
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding: 5px;background: rgb(255, 255, 255)">
                                 <tbody>
                                 <tr>
-                                    <td border="0" class="td" valign="top" align="left" style="border: 0">
+                                    <td border="0" valign="top" align="left" style="border: 0">
                                         <div>
                                             <div style="text-align: left; font-family: 'Trebuchet MS'; font-size: 14px; color: rgb(51, 51, 51); line-height: 1.5"><span style="font-family:trebuchet ms,helvetica,sans-serif;"><span style="font-size: 18px;">{$btr->email_details_order|escape}</span></span><br />
                                                 <br />
@@ -175,7 +175,7 @@
                                                             <td valign="middle">
                                                                 <a href="{$config->root_url}/{$lang_link}products/{$purchase->product->url}" style="font-family: 'Trebuchet MS'; font-size: 14px; color: rgb(29, 103, 164); text-decoration: underline">{$purchase->product_name|escape}</a><br />
                                                                 <span style="font-family:verdana,geneva,sans-serif;"><em><span style="color: rgb(128, 128, 128); font-size: 11px;">{$purchase->variant_name|escape}</span></em></span>
-                                                                {if $purchase->variant->stock == 0}<span class="preorder_label">{$lang->product_pre_order}</span>{/if}
+                                                                {if $purchase->variant->stock == 0}{$lang->product_pre_order}{/if}
                                                                 {if $order->paid && $purchase->variant->attachment}
                                                                     <div style="font-family:verdana,geneva,sans-serif;">
                                                                         <a href="{$config->root_url}/{$lang_link}order/{$order->url}/{$purchase->variant->attachment}">
@@ -242,7 +242,7 @@
                             <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding: 5px; background: rgb(255, 255, 255)">
                                 <tbody>
                                 <tr>
-                                    <td align="center" valign="top" border="0" class="td" style="border: 0">
+                                    <td align="center" valign="top" border="0" style="border: 0">
                                         <div>
                                             <div style="text-align: center; font-family: 'Trebuchet MS'; font-size: 14px; color: rgb(51, 51, 51); line-height: 1.5">
                                                 <span style="font-family:trebuchet ms,helvetica,sans-serif;">

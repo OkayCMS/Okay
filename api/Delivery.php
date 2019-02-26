@@ -33,34 +33,69 @@ class Delivery extends Okay {
     }
 
     /*Выборка всех способов доставки*/
-    public function get_deliveries($filter = array()) {
+    public function get_deliveries($filter = array(), $count = false) {
         // По умолчанию
-        $enabled_filter = '';
-        
-        if(!empty($filter['enabled'])) {
-            $enabled_filter = $this->db->placehold('AND enabled=?', intval($filter['enabled']));
-        }
-        
+        $limit = 100;
+        $page = 1;
+        $joins = '';
+        $where = '1';
+        $group_by = '';
+        $order = 'd.position';
         $lang_sql = $this->languages->get_query(array('object'=>'delivery'));
-        $query = "SELECT 
-                d.id, 
+        $select = "d.id, 
                 d.free_from, 
                 d.price, 
                 d.enabled, 
                 d.position, 
                 d.separate_payment,
                 d.image,
-                $lang_sql->fields
+                $lang_sql->fields";
+
+        if ($count === true) {
+            $select = "COUNT(DISTINCT c.id) as count";
+        }
+
+        if(isset($filter['limit'])) {
+            $limit = max(1, intval($filter['limit']));
+        }
+
+        if(isset($filter['page'])) {
+            $page = max(1, intval($filter['page']));
+        }
+
+        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
+        
+        if(!empty($filter['enabled'])) {
+            $where .= $this->db->placehold(' AND enabled=?', intval($filter['enabled']));
+        }
+
+        if (!empty($order)) {
+            $order = "ORDER BY $order";
+        }
+
+        // При подсчете нам эти переменные не нужны
+        if ($count === true) {
+            $order      = '';
+            $group_by   = '';
+            $sql_limit  = '';
+        }
+
+        $query = $this->db->placehold("SELECT $select
             FROM __delivery d
             $lang_sql->join
+            $joins
             WHERE 
-                1 
-                $enabled_filter
-            ORDER BY position 
-        ";
-        
+                $where
+                $group_by
+                $order 
+                $sql_limit
+        ");
         $this->db->query($query);
-        return $this->db->results();
+        if ($count === true) {
+            return $this->db->result('count');
+        } else {
+            return $this->db->results();
+        }
     }
 
     /*Обновление способа доставки*/

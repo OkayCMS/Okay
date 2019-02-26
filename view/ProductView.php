@@ -162,7 +162,10 @@ class ProductView extends View {
         $this->design->assign('children', $children);
         
         // Категория и бренд товара
-        $this->design->assign('brand', $this->brands->get_brand(intval($product->brand_id)));
+        $brand = $this->brands->get_brand(intval($product->brand_id));
+        if ($brand->visible) {
+            $this->design->assign('brand', $brand);
+        }
         $category = $this->categories->get_category((int)$product->main_category_id);
         $this->design->assign('category', $category);
 

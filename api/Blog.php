@@ -45,14 +45,25 @@ class Blog extends Okay {
     }
 
     /*Выбираем все записи*/
-    public function get_posts($filter = array()) {
+    public function get_posts($filter = array(), $count = false) {
         $limit = 1000; // По умолчанию
         $page = 1;
-        $post_id_filter = '';
-        $visible_filter = '';
-        $keyword_filter = '';
-        $type_filter = '';
-        $posts = array();
+        $where = '1';
+        $order = 'b.date DESC, b.id DESC ';
+        $lang_sql = $this->languages->get_query(array('object'=>'blog'));
+        $select = "b.id, 
+                b.url, 
+                b.visible, 
+                b.date, 
+                b.image, 
+                b.type_post,
+                b.last_modify, 
+                $lang_sql->fields";
+
+        if ($count === true) {
+            $select = "COUNT(DISTINCT b.id) as count";
+        }
+        
         $lang_id  = $this->languages->lang_id();
         $px = ($lang_id ? 'l' : 'b');
         
@@ -62,94 +73,58 @@ class Blog extends Okay {
         if(isset($filter['page'])) {
             $page = max(1, intval($filter['page']));
         }
+
+        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
         
         if(!empty($filter['id'])) {
-            $post_id_filter = $this->db->placehold('AND b.id in(?@)', (array)$filter['id']);
+            $where .= $this->db->placehold(' AND b.id in(?@)', (array)$filter['id']);
         }
 
         if(!empty($filter['type_post'])) {
-            $type_filter = $this->db->placehold('AND b.type_post = ?', $filter['type_post']);
+            $where .= $this->db->placehold(' AND b.type_post = ?', $filter['type_post']);
         }
         
         if(isset($filter['visible'])) {
-            $visible_filter = $this->db->placehold('AND b.visible = ?', intval($filter['visible']));
+            $where .= $this->db->placehold(' AND b.visible = ?', intval($filter['visible']));
         }
         if(isset($filter['keyword'])) {
+            $keyword_filter = ' ';
             $keywords = explode(' ', $filter['keyword']);
             foreach($keywords as $keyword) {
                 $keyword_filter .= $this->db->placehold('AND ('.$px.'.name LIKE "%'.$this->db->escape(trim($keyword)).'%" OR '.$px.'.meta_keywords LIKE "%'.$this->db->escape(trim($keyword)).'%") ');
             }
+            $where .= $keyword_filter;
+        }
+
+        if (!empty($order)) {
+            $order = "ORDER BY $order";
+        }
+
+        // При подсчете нам эти переменные не нужны
+        if ($count === true) {
+            $order      = '';
+            $sql_limit  = '';
         }
         
-        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
-        $lang_sql = $this->languages->get_query(array('object'=>'blog'));
-        $query = $this->db->placehold("SELECT 
-                b.id, 
-                b.url, 
-                b.visible, 
-                b.date, 
-                b.image, 
-                b.type_post,
-                b.last_modify, 
-                $lang_sql->fields
+        $query = $this->db->placehold("SELECT $select
             FROM __blog b 
             $lang_sql->join 
             WHERE 
-                1 
-                $post_id_filter 
-                $visible_filter 
-                $keyword_filter
-                $type_filter
-            ORDER BY date DESC, id DESC 
-            $sql_limit
+                $where
+                $order
+                $sql_limit
         ");
         $this->db->query($query);
-        return $this->db->results();
+        if ($count === true) {
+            return $this->db->result('count');
+        } else {
+            return $this->db->results();
+        }
     }
 
     /*Подсчитываем количество найденных записей*/
-    public function count_posts($filter = array()) {    
-        $post_id_filter = '';
-        $visible_filter = '';
-        $keyword_filter = '';
-        $type_filter = '';
-        $lang_id  = $this->languages->lang_id();
-        $px = ($lang_id ? 'l' : 'b');
-
-        if(!empty($filter['id'])) {
-            $post_id_filter = $this->db->placehold('AND b.id in(?@)', (array)$filter['id']);
-        }
-
-        if(!empty($filter['type_post'])) {
-            $type_filter = $this->db->placehold('AND b.type_post = ?', $filter['type_post']);
-        }
-
-        if(isset($filter['visible'])) {
-            $visible_filter = $this->db->placehold('AND b.visible = ?', intval($filter['visible']));
-        }        
-        
-        if(isset($filter['keyword'])) {
-            $keywords = explode(' ', $filter['keyword']);
-            foreach($keywords as $keyword) {
-                $keyword_filter .= $this->db->placehold('AND ('.$px.'.name LIKE "%'.$this->db->escape(trim($keyword)).'%" OR '.$px.'.meta_keywords LIKE "%'.$this->db->escape(trim($keyword)).'%") ');
-            }
-        }
-        $lang_sql = $this->languages->get_query(array('object'=>'blog'));
-        $query = "SELECT COUNT(distinct b.id) as count
-            FROM __blog b
-            $lang_sql->join
-            WHERE 1 
-                $post_id_filter 
-                $visible_filter 
-                $keyword_filter
-                $type_filter
-        ";
-        
-        if($this->db->query($query)) {
-            return $this->db->result('count');
-        } else {
-            return false;
-        }
+    public function count_posts($filter = array()) {
+        return $this->get_posts($filter, true);
     }
 
     /*Добавляем запись*/

@@ -14,6 +14,7 @@ class View extends Okay {
     public $lang_link;
     public $js_version;
     public $css_version;
+    public $current_url;
 
     /* Класс View похож на синглтон, храним статически его инстанс */
     private static $view_instance;
@@ -57,6 +58,7 @@ class View extends Okay {
             $this->lang_link    = &self::$view_instance->lang_link;
             $this->js_version   = &self::$view_instance->js_version;
             $this->css_version  = &self::$view_instance->css_version;
+            $this->current_url  = &self::$view_instance->current_url;
         } else {
             // Сохраняем свой инстанс в статической переменной,
             // чтобы в следующий раз использовать его
@@ -175,6 +177,10 @@ class View extends Okay {
                 $strlen = $first_lang->id == $this->language->id ? "" : $first_lang->label;
                 $page_url = trim(substr($page_url, strlen($strlen)),"/");
             }
+            
+            // Сохраним урл, он может понадобиться в других view
+            $this->current_url = $page_url;
+            
             if (in_array($_GET['page_url'], array('all-products', 'discounted', 'bestsellers'))) {
                 $page_url = $_GET['page_url'];
             }

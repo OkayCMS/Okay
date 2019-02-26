@@ -19,20 +19,20 @@
     <table width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="margin: 0 auto">
         <tbody>
         <tr>
-            <td class="td" border="0" valign="top" align="left" style="border: 0">
+            <td border="0" valign="top" align="left" style="border: 0">
                 <div style="border-width: 0px; border-style: solid; border-radius: 0px; border-color: rgb(204, 204, 204)">
                     <!-- CONTENT BEGIN  -->
                     <div>
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding: 5px; background-color: rgb(255, 255, 255); background: rgb(255, 255, 255) no-repeat; border-top-left-radius: 0px; border-top-right-radius: 0px; overflow: hidden">
                             <tbody>
                             <tr>
-                                <td border="0" class="td" valign="top" width="1%" align="left" style="border: 0">
+                                <td border="0" valign="top" width="1%" align="left" style="border: 0">
                                     <div>
                                         <div style="text-align: left"><a><img src="{$config->root_url}/design/{$settings->theme}/images/{$settings->site_logo}" width="200" align="left" style="border: 0; display: block; margin: 0 auto" /></a></div>
                                     </div>
                                 </td>
 
-                                <td border="0" class="td" valign="middle" align="left" style="border: 0">
+                                <td border="0" valign="middle" align="left" style="border: 0">
                                     <div>
                                         <div style="text-align: left; font-family: 'Trebuchet MS'; font-size: 14px; color: rgb(51, 51, 51); line-height: normal">
                                             <div style="text-align: right;">
@@ -57,7 +57,7 @@
                             <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: rgb(255, 255, 255)">
                                 <tbody>
                                 <tr>
-                                    <td align="left" valign="top" border="0" class="td" style="border: 0">
+                                    <td align="left" valign="top" border="0" style="border: 0">
                                         <div>
                                             <div style="text-align: left; font-family: 'Trebuchet MS'; font-size: 14px; color: rgb(51, 51, 51); line-height: 1.5">
                                                 <div style="text-align: center;"><span style="font-size:14px;"><span style="font-family:trebuchet ms,helvetica,sans-serif;"><span style="font-size:16px;">{$btr->email_change_pass__link|escape}</span></span></span></div>
@@ -72,7 +72,7 @@
                             <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: rgb(255, 255, 255)">
                                 <tbody>
                                 <tr>
-                                    <td align="center" valign="top" border="0" class="td" style="border: 0">
+                                    <td align="center" valign="top" border="0" style="border: 0">
                                         <div>
                                             <div style="text-align: center; font-family: 'Trebuchet MS'; font-size: 14px; color: rgb(51, 51, 51); line-height: 1.5"><span style="border-style: solid; border-color: rgb(234, 182, 9); background-color: rgb(234, 182, 9); border-width: 0px 0px 0px 0px; display: inline-block; border-radius: 29px"><a href="{$recovery_url}" style="font-family: 'Trebuchet MS'; font-size: 14px; color: rgb(29, 103, 164); text-decoration: underline; border-style: solid; border-width: 8px 25px 8px 25px; display: inline-block; border-radius: 28px; border-color: rgb(242, 189, 11); background: rgb(242, 189, 11); font-size: 16px; font-family: 'Lucida Sans Unicode', 'Lucida Grande'; font-weight: bold; color: rgb(255, 255, 255); text-decoration: none">{$btr->email_change_pass|escape} &gt;</a></span></div>
                                         </div>
@@ -88,7 +88,7 @@
         </tr>
         <div style="height: 30px; width: 100%; background: transparent;"></div>
         <tr>
-            <td class="td" border="0" align="left" style="border: 0">
+            <td border="0" align="left" style="border: 0">
                 <div>
                     <div>
                         <div>

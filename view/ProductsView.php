@@ -48,6 +48,10 @@ class ProductsView extends View {
 
         if ($category_url = $this->request->get('category', 'string')) {
             $this->category = $this->categories->get_category((string)$category_url);
+
+            if (empty($this->category) || (!$this->category->visible && empty($_SESSION['admin']))) {
+                $this->is_wrong_params = 1;
+            }
             
             foreach($this->features->get_features(array('category_id'=>$this->category->id, 'in_filter'=>1)) as $feature) {
                 $this->category_features[$feature->id] = $feature;
@@ -496,13 +500,10 @@ class ProductsView extends View {
         }
 
         if (!empty($this->category)) {
-            if (empty($this->category) || (!$this->category->visible && empty($_SESSION['admin']))) {
-                return false;
-            }
             $this->design->assign('category', $this->category);
             $filter['category_id'] = $this->category->children;
         }
-
+        
         $price_filter = $this->reset_price_filter();
         if (isset($_COOKIE['price_filter'])) {
             $price_filter = unserialize($_COOKIE['price_filter']);
@@ -712,7 +713,7 @@ class ProductsView extends View {
         $prices = (object)$prices;
         $range_filter = $filter;
         $range_filter['get_price'] = 1;
-        $prices->range = $this->products->count_products($range_filter);
+        $prices->range = $this->products->get_products($range_filter);
         
         // Вдруг вылезли за диапазон доступного...
         if ($prices->range->min != '' && $prices->current->min < $prices->range->min) {

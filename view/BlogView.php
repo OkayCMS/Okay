@@ -4,7 +4,18 @@ require_once('View.php');
 
 class BlogView extends View {
     
+    private $type_post;
+    
     public function fetch() {
+        
+        $this->type_post = explode('/', $this->current_url)[0];
+        
+        if (!in_array($this->type_post, array('blog', 'news'))) {
+            return false;
+        }
+        
+        $this->design->assign('type_post', $this->type_post);
+        
         $url = $this->request->get('url', 'string');
         if(!empty($url)) {
             return $this->fetch_post($url);
@@ -15,8 +26,7 @@ class BlogView extends View {
 
     /*Выбираем пост из базы*/
     private function fetch_post($url) {
-        $type_post = $this->request->get('type_post');
-        $post = $this->blog->get_post($url, $type_post);
+        $post = $this->blog->get_post($url, $this->type_post);
         
         // Если не найден - ошибка
         if(!$post || (!$post->visible && empty($_SESSION['admin']))) {
@@ -131,10 +141,8 @@ class BlogView extends View {
 
     /*Отображение записей на странице*/
     private function fetch_blog() {
-        $type_post = $this->request->get('type_post');
-        $type_post_filter = $type_post ? $this->db->placehold("AND b.type_post=?", $type_post) : "";
         //lastModify
-        $this->db->query("SELECT b.last_modify FROM __blog b WHERE 1 $type_post_filter");
+        $this->db->query("SELECT b.last_modify FROM __blog b WHERE b.type_post=?", $this->type_post);
         $last_modify = $this->db->results('last_modify');
         $last_modify[] = $type_post == "news" ? $this->settings->lastModifyNews : $this->settings->lastModifyPosts;
         if ($this->page) {
@@ -149,9 +157,7 @@ class BlogView extends View {
         
         // Выбираем только видимые посты
         $filter['visible'] = 1;
-        if($type_post) {
-            $filter['type_post'] = $this->request->get('type_post');
-        }
+        $filter['type_post'] = $this->type_post;
         
         // Текущая страница в постраничном выводе
         $current_page = $this->request->get('page', 'integer');

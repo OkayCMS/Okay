@@ -1657,6 +1657,12 @@ label.switch_label {
     background-color: #48b0f7;
     border-color: #48b0f7;
 }
+.pagination .drop_active {
+    background-color: #c3def1;
+}
+.pagination .drop_hover {
+    background-color: #79c5fb;
+}
 
 .pagination-lg .page-link,
 .pagination-lg .pagination-datatables li a,

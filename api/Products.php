@@ -7,113 +7,126 @@ class Products extends Okay {
     private $all_brands = array();
 
     /*Выборка всех товаров*/
-    public function get_products($filter = array()) {
+    public function get_products($filter = array(), $count = false) {
         // По умолчанию
         $limit = 100;
         $page = 1;
-        $category_id_filter = '';
-        $without_category_filter = '';
-        $brand_id_filter = '';
-        $product_id_filter = '';
-        $features_filter = '';
-        $keyword_filter = '';
-        $visible_filter = '';
-        $is_featured_filter = '';
-        $discounted_filter = '';
-        $in_stock_filter = '';
-        $has_images_filter = '';
-        $feed_filter = '';
-        $other_filter = '';
+        $joins = '';
+        $where = '1';
         $group_by = '';
         $order = 'p.position DESC';
+        $lang_sql = $this->languages->get_query(array('object'=>'product'));
+        $select = "DISTINCT
+                p.id,
+                p.url,
+                p.brand_id,
+                p.position,
+                p.created as created,
+                p.visible,
+                p.featured,
+                p.rating,
+                p.votes,
+                p.last_modify,
+                p.main_category_id,
+                p.main_image_id,
+                $lang_sql->fields";
+
+        if ($count === true) {
+            $select = "COUNT(DISTINCT p.id) as count";
+        }
         
         $lang_id  = $this->languages->lang_id();
         $px = ($lang_id ? 'l' : 'p');
         
-        if(isset($filter['limit'])) {
+        if (isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));
         }
         
-        if(isset($filter['page'])) {
+        if (isset($filter['page'])) {
             $page = max(1, intval($filter['page']));
         }
         
         $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
         
-        if(!empty($filter['id'])) {
-            $product_id_filter = $this->db->placehold('AND p.id in(?@)', (array)$filter['id']);
+        if (!empty($filter['id'])) {
+            $where .= $this->db->placehold(' AND p.id in(?@)', (array)$filter['id']);
         }
         
-        if(!empty($filter['category_id'])) {
-            $category_id_filter = $this->db->placehold('INNER JOIN __products_categories pc ON pc.product_id = p.id AND pc.category_id in(?@)', (array)$filter['category_id']);
+        if (!empty($filter['category_id'])) {
+            $joins .= $this->db->placehold(' INNER JOIN __products_categories pc ON pc.product_id = p.id AND pc.category_id in(?@)', (array)$filter['category_id']);
             $group_by = "GROUP BY p.id";
         }
 
         if (isset($filter['without_category'])) {
-            $without_category_filter = $this->db->placehold('AND (SELECT count(*)=0 FROM __products_categories pc WHERE pc.product_id=p.id) = ?', intval($filter['without_category']));
+            $where .= $this->db->placehold(' AND (SELECT count(*)=0 FROM __products_categories pc WHERE pc.product_id=p.id) = ?', intval($filter['without_category']));
         }
         
         if(!empty($filter['brand_id'])) {
-            $brand_id_filter = $this->db->placehold('AND p.brand_id in(?@)', (array)$filter['brand_id']);
+            $where .= $this->db->placehold(' AND p.brand_id in(?@)', (array)$filter['brand_id']);
         }
         
         if(isset($filter['featured'])) {
-            $is_featured_filter = $this->db->placehold('AND p.featured=?', intval($filter['featured']));
+            $where .= $this->db->placehold(' AND p.featured=?', intval($filter['featured']));
         }
         
         if(isset($filter['discounted'])) {
-            $discounted_filter = $this->db->placehold('AND (SELECT 1 FROM __variants pv WHERE pv.product_id=p.id AND pv.compare_price>0 LIMIT 1) = ?', intval($filter['discounted']));
+            $where .= $this->db->placehold(' AND (SELECT 1 FROM __variants pv WHERE pv.product_id=p.id AND pv.compare_price>0 LIMIT 1) = ?', intval($filter['discounted']));
         }
 
         if (!empty($filter['other_filter'])) {
-            $other_filter = "AND (";
+            $other_filter = " AND (";
             if (in_array("featured", $filter['other_filter'])) {
                 $other_filter .= "p.featured=1 OR ";
             }
             if (in_array("discounted", $filter['other_filter'])) {
                 $other_filter .= "(SELECT 1 FROM __variants pv WHERE pv.product_id=p.id AND pv.compare_price>0 LIMIT 1) = 1 OR ";
             }
-            $other_filter = substr($other_filter, 0, -4).")";
+            $where .= substr($other_filter, 0, -4).")";
         }
         
-        if(isset($filter['in_stock'])) {
-            $in_stock_filter = $this->db->placehold('AND (SELECT count(*)>0 FROM __variants pv WHERE pv.product_id=p.id AND (pv.stock IS NULL OR pv.stock>0) LIMIT 1) = ?', intval($filter['in_stock']));
+        if (isset($filter['in_stock'])) {
+            $where .= $this->db->placehold(' AND (SELECT count(*)>0 FROM __variants pv WHERE pv.product_id=p.id AND (pv.stock IS NULL OR pv.stock>0) LIMIT 1) = ?', intval($filter['in_stock']));
         }
 
-        if(isset($filter['has_images'])) {
-            $has_images_filter = $this->db->placehold('AND (SELECT count(*)>0 FROM __images pi WHERE pi.product_id=p.id LIMIT 1) = ?', intval($filter['has_images']));
+        if (isset($filter['has_images'])) {
+            $where .= $this->db->placehold(' AND (SELECT count(*)>0 FROM __images pi WHERE pi.product_id=p.id LIMIT 1) = ?', intval($filter['has_images']));
         }
         
-        if(isset($filter['feed'])) {
-            $feed_filter = $this->db->placehold('inner join __variants v on v.product_id=p.id and v.feed=?', intval($filter['feed']));
+        if (isset($filter['feed'])) {
+            $joins .= $this->db->placehold(' inner join __variants v on v.product_id=p.id and v.feed=?', intval($filter['feed']));
         }
-        $price_filter = '';
-        $variant_join = '';
-        $currency_join = '';
         
         $first_currency = $this->money->get_currencies(array('enabled'=>1));
         $first_currency = reset($first_currency);
         $coef = 1;
-        if(isset($_SESSION['currency_id']) && $first_currency->id != $_SESSION['currency_id']) {
+        if (isset($_SESSION['currency_id']) && $first_currency->id != $_SESSION['currency_id']) {
             $currency = $this->money->get_currency(intval($_SESSION['currency_id']));
             $coef = $currency->rate_from / $currency->rate_to;
         }
-        if(isset($filter['price'])) {
+        
+        if (isset($filter['get_price'])) {
+            $select = "
+                floor(min(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)) as min,
+                floor(max(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)) as max
+            ";
+            $joins .= ' LEFT JOIN __variants pv ON pv.product_id = p.id';
+            $joins .= ' LEFT JOIN __currencies c ON c.id=pv.currency_id';
+        } elseif (isset($filter['price'])) {
             if(isset($filter['price']['min'])) {
-                $price_filter .= $this->db->placehold(" AND floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)>= ? ", $this->db->escape(trim($filter['price']['min'])));
+                $where .= $this->db->placehold(" AND floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)>= ? ", $this->db->escape(trim($filter['price']['min'])));
             }
             if(isset($filter['price']['max'])) {
-                $price_filter .= $this->db->placehold(" AND floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)<= ? ", $this->db->escape(trim($filter['price']['max'])));
+                $where .= $this->db->placehold(" AND floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)<= ? ", $this->db->escape(trim($filter['price']['max'])));
             }
-            $variant_join = 'LEFT JOIN __variants pv ON pv.product_id = p.id';
-            $currency_join = 'LEFT JOIN __currencies c ON c.id=pv.currency_id';
+            $joins .= ' LEFT JOIN __variants pv ON pv.product_id = p.id';
+            $joins .= ' LEFT JOIN __currencies c ON c.id=pv.currency_id';
         }
         
-        if(isset($filter['visible'])) {
-            $visible_filter = $this->db->placehold('AND p.visible=?', intval($filter['visible']));
+        if (isset($filter['visible'])) {
+            $where .= $this->db->placehold(' AND p.visible=?', intval($filter['visible']));
         }
         
-        if(!empty($filter['sort'])) {
+        if (!empty($filter['sort'])) {
             switch ($filter['sort']) {
                 case 'rand':
                     $order = 'RAND()';
@@ -167,6 +180,7 @@ class Products extends Okay {
         
         if(!empty($filter['keyword'])) {
             $keywords = explode(' ', $filter['keyword']);
+            $keyword_filter = ' ';
             foreach($keywords as $keyword) {
                 $kw = $this->db->escape(trim($keyword));
                 if($kw!=='') {
@@ -177,9 +191,10 @@ class Products extends Okay {
                     ) ");
                 }
             }
+            $where .= $keyword_filter;
         }
 
-        if(!empty($filter['features'])) {
+        if (!empty($filter['features'])) {
 
             $lang_id_options_filter = '';
             $lang_options_join      = '';
@@ -192,7 +207,7 @@ class Products extends Okay {
                 $options_px = 'lfv';
             }
 
-            foreach($filter['features'] as $feature_id=>$value) {
+            foreach ($filter['features'] as $feature_id=>$value) {
                 $features_values[] = $this->db->placehold("(
                             `{$options_px}`.`translit` in(?@)
                             AND `{$options_px}`.`feature_id`=?)", (array)$value, $feature_id);
@@ -200,8 +215,8 @@ class Products extends Okay {
 
             if (!empty($features_values)) {
                 $features_values = implode(' OR ', $features_values);
-                
-                $features_filter = $this->db->placehold("AND `p`.`id` in (SELECT 
+
+                $where .= $this->db->placehold(" AND `p`.`id` in (SELECT 
                         `pf`.`product_id`
                     FROM `__products_features_values` AS `pf`
                     $lang_options_join
@@ -212,241 +227,60 @@ class Products extends Okay {
             }
         }
         
-        $lang_sql = $this->languages->get_query(array('object'=>'product'));
-        $query = "SELECT DISTINCT
-                p.id,
-                p.url,
-                p.brand_id,
-                p.position,
-                p.created as created,
-                p.visible,
-                p.featured,
-                p.rating,
-                p.votes,
-                p.last_modify,
-                p.main_category_id,
-                p.main_image_id,
-                $lang_sql->fields
+        if (!empty($order)) {
+            $order = "ORDER BY $order";
+        }
+
+        // При подсчете нам эти переменные не нужны
+        if ($count === true || isset($filter['get_price'])) {
+            $order      = '';
+            $group_by   = '';
+            $sql_limit  = '';
+        }
+        
+        $query = $this->db->placehold("SELECT $select
             FROM __products p
             $lang_sql->join
-            $category_id_filter
-            $variant_join
-            $currency_join
-            $feed_filter
+            $joins
             WHERE
-                1
-                $product_id_filter
-                $brand_id_filter
-                $without_category_filter
-                $features_filter
-                $keyword_filter
-                $is_featured_filter
-                $discounted_filter
-                $other_filter
-                $in_stock_filter
-                $has_images_filter
-                $visible_filter
-                $price_filter
+                $where
                 $group_by
-            ORDER BY $order
-            $sql_limit
-        ";
+                $order
+                $sql_limit
+        ");
         
         $this->db->query($query);
-        $products = $this->db->results();
         
-        // field brand translation
-        /*if (empty($this->all_brands)) {
-            foreach ($this->brands->get_brands() as $b) {
-                $this->all_brands[$b->id] = $b;
-            }
-        }
-        if (!empty($this->all_brands)) {
-            foreach ($products as $p) {
-                if (isset($this->all_brands[$p->brand_id])) {
-                    $p->brand = $this->all_brands[$p->brand_id]->name;
-                    $p->brand_url = $this->all_brands[$p->brand_id]->url;
+        if ($count === true) {
+            $result = $this->db->result('count');
+        } elseif (isset($filter['get_price'])) {
+            $result = $this->db->result();
+        } else {
+            $result = $this->db->results();
+            
+            // field brand translation
+            /*if (empty($this->all_brands)) {
+                foreach ($this->brands->get_brands() as $b) {
+                    $this->all_brands[$b->id] = $b;
                 }
             }
-        }*/
-        return $products;
+            if (!empty($this->all_brands)) {
+                foreach ($result as $p) {
+                    if (isset($this->all_brands[$p->brand_id])) {
+                        $p->brand = $this->all_brands[$p->brand_id]->name;
+                        $p->brand_url = $this->all_brands[$p->brand_id]->url;
+                    }
+                }
+            }*/
+        }
+        
+        return $result;
     }
 
     /*Подсчет количества товаров*/
     public function count_products($filter = array()) {
-        $category_id_filter = '';
-        $without_category_filter = '';
-        $brand_id_filter = '';
-        $product_id_filter = '';
-        $keyword_filter = '';
-        $visible_filter = '';
-        $is_featured_filter = '';
-        $in_stock_filter = '';
-        $has_images_filter = '';
-        $feed_filter = '';
-        $discounted_filter = '';
-        $features_filter = '';
-        $other_filter = '';
-        
-        $lang_id  = $this->languages->lang_id();
-        $px = ($lang_id ? 'l' : 'p');
-        
-        if(!empty($filter['category_id'])) {
-            $category_id_filter = $this->db->placehold('INNER JOIN __products_categories pc ON pc.product_id = p.id AND pc.category_id in(?@)', (array)$filter['category_id']);
-        }
-
-        if (isset($filter['without_category'])) {
-            $without_category_filter = $this->db->placehold('AND (SELECT count(*)=0 FROM __products_categories pc WHERE pc.product_id=p.id) = ?', intval($filter['without_category']));
-        }
-        
-        if(!empty($filter['brand_id'])) {
-            $brand_id_filter = $this->db->placehold('AND p.brand_id in(?@)', (array)$filter['brand_id']);
-        }
-        
-        if(!empty($filter['id'])) {
-            $product_id_filter = $this->db->placehold('AND p.id in(?@)', (array)$filter['id']);
-        }
-        
-        if(isset($filter['keyword'])) {
-            $keywords = explode(' ', $filter['keyword']);
-            foreach($keywords as $keyword) {
-                $kw = $this->db->escape(trim($keyword));
-                if($kw!=='') {
-                    $keyword_filter .= $this->db->placehold("AND (
-                        $px.name LIKE '%$kw%' 
-                        OR $px.meta_keywords LIKE '%$kw%' 
-                        OR p.id in (SELECT product_id FROM __variants WHERE sku LIKE '%$kw%') 
-                    ) ");
-                }
-            }
-        }
-        
-        if(isset($filter['featured'])) {
-            $is_featured_filter = $this->db->placehold('AND p.featured=?', intval($filter['featured']));
-        }
-        
-        if(isset($filter['in_stock'])) {
-            $in_stock_filter = $this->db->placehold('AND (SELECT count(*)>0 FROM __variants pv WHERE pv.product_id=p.id AND (pv.stock IS NULL OR pv.stock>0) LIMIT 1) = ?', intval($filter['in_stock']));
-        }
-
-        if(isset($filter['has_images'])) {
-            $has_images_filter = $this->db->placehold('AND (SELECT count(*)>0 FROM __images pi WHERE pi.product_id=p.id LIMIT 1) = ?', intval($filter['has_images']));
-        }
-        
-        if(isset($filter['feed'])) {
-            $feed_filter = $this->db->placehold('inner join __variants v on v.product_id=p.id and v.feed=?', intval($filter['feed']));
-        }
-        $price_filter = '';
-        $variant_join = '';
-        $select = 'count(distinct p.id) as count';
-        $currency_join = '';
-        
-        $first_currency = $this->money->get_currencies(array('enabled'=>1));
-        $first_currency = reset($first_currency);
-        $coef = 1;
-        if(isset($_SESSION['currency_id']) && $first_currency->id != $_SESSION['currency_id']) {
-            $currency = $this->money->get_currency(intval($_SESSION['currency_id']));
-            $coef = $currency->rate_from / $currency->rate_to;
-        }
-        if(isset($filter['get_price'])) {
-            $variant_join = 'LEFT JOIN __variants pv ON pv.product_id = p.id';
-            $currency_join = 'LEFT JOIN __currencies c ON c.id=pv.currency_id';
-            $select = "
-                floor(min(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)) as min,
-                floor(max(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)) as max
-            ";
-        } elseif(isset($filter['price'])) {
-            if(isset($filter['price']['min'])) {
-                $price_filter .= $this->db->placehold(" AND floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)>= ? ", $this->db->escape(trim($filter['price']['min'])));
-            }
-            if(isset($filter['price']['max'])) {
-                $price_filter .= $this->db->placehold(" AND floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)<= ? ", $this->db->escape(trim($filter['price']['max'])));
-            }
-            $variant_join = 'LEFT JOIN __variants pv ON pv.product_id = p.id';
-            $currency_join = 'LEFT JOIN __currencies c ON c.id=pv.currency_id';
-        }
-        
-        if(isset($filter['discounted'])) {
-            $discounted_filter = $this->db->placehold('AND (SELECT 1 FROM __variants pv WHERE pv.product_id=p.id AND pv.compare_price>0 LIMIT 1) = ?', intval($filter['discounted']));
-        }
-
-        if (!empty($filter['other_filter'])) {
-            $other_filter = "AND (";
-            if (in_array("featured", $filter['other_filter'])) {
-                $other_filter .= "p.featured=1 OR ";
-            }
-            if (in_array("discounted", $filter['other_filter'])) {
-                $other_filter .= "(SELECT 1 FROM __variants pv WHERE pv.product_id=p.id AND pv.compare_price>0 LIMIT 1) = 1 OR ";
-            }
-            $other_filter = substr($other_filter, 0, -4).")";
-        }
-        
-        if(isset($filter['visible'])) {
-            $visible_filter = $this->db->placehold('AND p.visible=?', intval($filter['visible']));
-        }
-
-        if(!empty($filter['features'])) {
-
-            $lang_id_options_filter = '';
-            $lang_options_join      = '';
-            // Алиас для таблицы без языков
-            $options_px = 'fv';
-            if (!empty($lang_id)) {
-                $lang_id_options_filter = $this->db->placehold("AND `lfv`.`lang_id`=?", $lang_id);
-                $lang_options_join = $this->db->placehold("LEFT JOIN `__lang_features_values` AS `lfv` ON `pf`.`value_id`=`lfv`.`feature_value_id`");
-                // Алиас для таблицы с языками
-                $options_px = 'lfv';
-            }
-            
-            foreach($filter['features'] as $feature_id=>$value) {
-                $features_values[] = $this->db->placehold("(
-                            `{$options_px}`.`translit` in(?@)
-                            AND `{$options_px}`.`feature_id`=?)", (array)$value, $feature_id);
-            }
-
-            if (!empty($features_values)) {
-                $features_values = implode(' OR ', $features_values);
-
-                $features_filter = $this->db->placehold("AND `p`.`id` in (SELECT 
-                        `pf`.`product_id`
-                    FROM `__products_features_values` AS `pf`
-                    $lang_options_join
-                    LEFT JOIN `__features_values` AS `fv` ON `fv`.`id`=`pf`.`value_id`
-                    WHERE ($features_values) 
-                    $lang_id_options_filter
-                    GROUP BY `pf`.`product_id` HAVING COUNT(*) >= ?)", count($filter['features']));
-            }
-        }
-        
-        $lang_sql = $this->languages->get_query(array('object'=>'product'));
-        $query = "SELECT $select
-            FROM __products AS p
-            $lang_sql->join
-            $category_id_filter
-            $feed_filter
-            $variant_join
-            $currency_join
-            WHERE 
-                1
-                $brand_id_filter
-                $without_category_filter
-                $product_id_filter
-                $keyword_filter
-                $is_featured_filter
-                $in_stock_filter
-                $has_images_filter
-                $discounted_filter
-                $visible_filter
-                $features_filter
-                $other_filter
-                $price_filter
-        ";
-        $this->db->query($query);
-        if(isset($filter['get_price'])) {
-            return $this->db->result();
-        } else {
-            return $this->db->result('count');
-        }
+        // Для обратной совместимости оставим метод count_products()
+        return $this->get_products($filter, true);
     }
 
     /*Выборка конкретного товара*/
@@ -631,9 +465,22 @@ class Products extends Okay {
         }
         
         // Дублируем изображения
+        $images_ids = array();
         $images = $this->get_images(array('product_id'=>$id));
         foreach($images as $image) {
-            $this->add_image($new_id, $image->filename);
+            $images_ids[] = $this->add_image($new_id, $image->filename);
+        }
+
+        $main_info = array();
+        if (!empty($images_ids)) {
+            $main_info['main_image_id'] = reset($images_ids);
+        }
+        if (!empty($categories)) {
+            $main_info['main_category_id'] = reset($categories)->category_id;
+        }
+
+        if (!empty($main_info)) {
+            $this->products->update_product($new_id, $main_info);
         }
         
         // Дублируем варианты

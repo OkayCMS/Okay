@@ -136,7 +136,7 @@
                             <div class="okay_list_heading okay_list_close"></div>
                         </div>
                         {*Параметры элемента*}
-                        <div class="okay_list_body sortable">
+                        <div class="okay_list_body sort_extended">
                             {foreach $products as $product}
                                 <div class="fn_row okay_list_body_item fn_sort_item">
                                     <div class="okay_list_row">

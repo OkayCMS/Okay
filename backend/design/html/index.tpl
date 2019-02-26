@@ -149,7 +149,7 @@
                     {*Техподдержка*}
                     <div class="admin_techsupport">
                         <div class="techsupport_inner">
-                            <a {if $support_info->public_key} data-hint="{$support_info->balance|balance:false}"{else} data-hint="Not active" {/if}  class="hint-bottom-middle-t-info-s-small-mobile  hint-anim"  href="index.php?module=SupportAdmin">
+                            <a {if $support_info->public_key} data-hint="{$support_info->balance|balance}"{else} data-hint="Not active" {/if}  class="hint-bottom-middle-t-info-s-small-mobile  hint-anim"  href="index.php?module=SupportAdmin">
                                 <span class="quickview_hidden">{$btr->index_support|escape}</span>
                                 {include file='svg_icon.tpl' svgId='techsupport'}
                                 {if $support_info->public_key}
@@ -158,7 +158,7 @@
                             </a>
                             <div class="techsupport_toggle hidden-md-up">
                                 {if $support_info->public_key}
-                                    <span>{$support_info->balance|balance:false}</span>
+                                    <span>{$support_info->balance|balance}</span>
                                 {else}
                                     <span>Not active</span>
                                 {/if}
@@ -464,7 +464,7 @@
         Sortable.create(document.getElementById("fn_sort_menu_section"), {
             sort: true,  // sorting inside list
             animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
-            scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
+            scrollSensitivity: 100, // px, how near the mouse must be to an edge to start scrolling.
             scrollSpeed: 10, // px
             // Changed sorting within list
             onUpdate: function (evt) {
@@ -476,8 +476,9 @@
             $(".fn_sort_menu_item").each(function() {
                 Sortable.create(this, {
                     sort: true,  // sorting inside list
-                    animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
-                    scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
+                    animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation.
+                    scroll: true,
+                    scrollSensitivity: 100, // px, how near the mouse must be to an edge to start scrolling.
                     scrollSpeed: 10, // px
                     // Changed sorting within list
                     onUpdate: function (evt) {
@@ -509,8 +510,9 @@
                     ghostClass: "sortable-ghost",  // Class name for the drop placeholder
                     chosenClass: "sortable-chosen",  // Class name for the chosen item
                     dragClass: "sortable-drag",  // Class name for the dragging item
-                    scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
+                    scrollSensitivity: 100, // px, how near the mouse must be to an edge to start scrolling.
                     scrollSpeed: 10, // px
+                    
                     // Changed sorting within list
                     onUpdate: function (evt) {
                         if ($(".product_images_list").size() > 0) {
@@ -526,6 +528,68 @@
             {/literal}
         }
 
+        if($(".sort_extended").size()>0) {
+            
+            /*Явно указываем высоту списка, иначе когда скрипт удаляет элемент и ставит на его место заглушку, страница подпрыгивает*/
+            $(".fn_sort_list").css('height', $(".fn_sort_list").outerHeight());
+            
+            $(".sort_extended").sortable({
+                items: ".fn_sort_item",
+                tolerance: "pointer",
+                handle: ".move_zone",
+                scrollSensitivity: 50,
+                scrollSpeed: 100,
+                scroll: true,
+                opacity: 0.5,
+                containment: "document",
+                helper: function(event, ui){
+                    if ($('input[type="checkbox"][name*="check"]:checked').size()<1) return ui;
+                    var helper = $('<div/>');
+                    $('input[type="checkbox"][name*="check"]:checked').each(function() {
+                        var item = $(this).closest('.fn_row');
+                        helper.height(helper.height()+item.innerHeight());
+                        if (item[0]!=ui[0]) {
+                            helper.append(item.clone());
+                            $(this).closest('.fn_row').remove();
+                        } else {
+                            helper.append(ui.clone());
+                            item.find('input[type="checkbox"][name*="check"]').attr('checked', false);
+                        }
+                    });
+                    return helper;
+                },
+                start: function(event, ui) {
+                    if(ui.helper.children('.fn_row').size()>0)
+                        $('.ui-sortable-placeholder').height(ui.helper.height());
+                },
+                beforeStop:function(event, ui){
+                    if(ui.helper.children('.fn_row').size()>0){
+                        ui.helper.children('.fn_row').each(function(){
+                            $(this).insertBefore(ui.item);
+                        });
+                        ui.item.remove();
+                    }
+                },
+                update: function (event, ui) {
+                    $("#list_form input[name*='check']").attr('checked', false);
+
+                }
+            });
+        }
+        
+        $(".fn_pagination a.droppable").droppable({
+            activeClass: "drop_active",
+            hoverClass: "drop_hover",
+            tolerance: "pointer",
+            drop: function(event, ui){
+                $(ui.helper).find('input[type="checkbox"][name*="check"]').attr('checked', true);
+                $(ui.draggable).closest("form").find('select[name="action"] option[value=move_to_page]').attr("selected", "selected");
+                $(ui.draggable).closest("form").find('select[name=target_page] option[value='+$(this).html()+']').attr("selected", "selected");
+                $(ui.draggable).closest("form").submit();
+                return false;
+            }
+        });
+        
         /* Call an ajax entity update */
         if($(".fn_ajax_action").size()>0){
             $(document).on("click",".fn_ajax_action",function () {

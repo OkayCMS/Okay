@@ -104,7 +104,7 @@
     <meta name="twitter:label1" content="{$product->variant->price|convert:null:false} {$currency->code|escape}">
     <meta name="twitter:data2" content="{$lang->meta_organization}">
     <meta name="twitter:label2" content="{$settings->site_name|escape}">
-{elseif $module == 'BlogView'}
+{elseif $module == 'BlogView' && $post}
     <meta property="og:url" content="{$config->root_url}{if $lang_link}/{str_replace('/', '', $lang_link)}{/if}{$canonical}">
     <meta property="og:type" content="article">
     <meta property="og:title" content="{$post->name|escape}">

@@ -87,9 +87,9 @@
         {elseif $smarty.get.module == "BlogView"}
             {if $smarty.get.url}
                 <li itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
-                    <a itemprop="url" href="{$lang_link}{$smarty.get.type_post}" data-language="breadcrumbs_blog">
+                    <a itemprop="url" href="{$lang_link}{$type_post}" data-language="breadcrumbs_blog">
                         <span itemprop="title">
-                            {if $smarty.get.type_post == "news"}
+                            {if $type_post == "news"}
                                 {$lang->main_news}
                             {else}
                                 {$lang->breadcrumbs_blog}
@@ -102,7 +102,7 @@
                 </li>
             {else}
                 <li data-language="breadcrumbs_blog">
-                    {if $smarty.get.type_post == "news"}
+                    {if $type_post == "news"}
                         {$lang->main_news}
                     {else}
                         {$lang->breadcrumbs_blog}

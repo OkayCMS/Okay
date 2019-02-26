@@ -172,6 +172,18 @@
                 captcha_code: form_error_captcha
             }
         });
+        
+        var submitted_cart = false;
+        $('.fn_validate_cart').on('submit', function () {
+            if ($('.fn_validate_cart').valid() === true) {
+                if (submitted_cart === true) {
+                    return false;
+                } else {
+                    submitted_cart = true;
+                }
+            }
+        });
+        
     }
 
     if($(".fn_validate_login").length>0) {

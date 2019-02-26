@@ -247,7 +247,7 @@ class Languages extends Okay {
                 $settings = $this->settings->get_settings($this->first_language->id);
                 if (!empty($settings)) {
                     foreach ($settings as $s) {
-                        $this->db->query("REPLACE INTO __settings_lang SET lang_id=?, name=?, value=?", $last_id, $s->name, $s->value);
+                        $this->db->query("REPLACE INTO __settings_lang SET lang_id=?, param=?, value=?", $last_id, $s->param, $s->value);
                     }
                 }
             } else {

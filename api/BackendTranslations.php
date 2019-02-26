@@ -2,7 +2,7 @@
 
 require_once('Okay.php');
 
-class BackendTranslations extends Okay {
+class BackendTranslations {
     
     public function get_translation($var)
     {

@@ -37,67 +37,15 @@ class Comments extends Okay {
     }
 
     /*Выбираем все комментарии*/
-    public function get_comments($filter = array()) {
+    public function get_comments($filter = array(), $count = false) {
         // По умолчанию
         $limit = 0;
         $page = 1;
-        $object_id_filter = '';
-        $type_filter = '';
-        $keyword_filter = '';
-        $approved_filter = '';
-        $has_parent_filter = '';
-        $ip_filter = '';
-        $parent_id_filter =  '';
-        
-        if(isset($filter['limit'])) {
-            $limit = max(1, intval($filter['limit']));
-        }
-        
-        if(isset($filter['page'])) {
-            $page = max(1, intval($filter['page']));
-        }
-        
-        if(isset($filter['ip'])) {
-            $ip_filter = $this->db->placehold("OR c.ip=?", $filter['ip']);
-        }
-        
-        if(isset($filter['approved'])) {
-            $approved_filter = $this->db->placehold("AND (c.approved=? $ip_filter)", intval($filter['approved']));
-        }
-        
-        $sql_limit = ($limit ? $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit) : '');
-        
-        if(!empty($filter['object_id'])) {
-            $object_id_filter = $this->db->placehold('AND c.object_id in(?@)', (array)$filter['object_id']);
-        }
-        
-        if(!empty($filter['type'])) {
-            $type_filter = $this->db->placehold('AND c.type=?', $filter['type']);
-        }
-
-        if (isset($filter['has_parent'])) {
-            $has_parent_filter = 'and c.parent_id'.($filter['has_parent'] ? '>0' : '=0');
-        }
-
-        if(!empty($filter['parent_id'])) {
-            $parent_id_filter = $this->db->placehold('AND c.parent_id IN(?@)', (array)$filter['parent_id']);
-        }
-        
-        if(!empty($filter['keyword'])) {
-            $keywords = explode(' ', $filter['keyword']);
-            foreach($keywords as $keyword) {
-                $keyword_filter .= $this->db->placehold('AND (
-                        c.name LIKE "%'.$this->db->escape(trim($keyword)).'%" 
-                        OR c.text LIKE "%'.$this->db->escape(trim($keyword)).'%"
-                        OR c.email LIKE "%'.$this->db->escape(trim($keyword)).'%"
-                    ) ');
-            }
-        }
-        
-        $sort='DESC';
-        
-        $query = $this->db->placehold("SELECT 
-                c.id,
+        $joins = '';
+        $where = '1';
+        $group_by = '';
+        $order = 'c.id DESC';
+        $select = "c.id,
                 c.parent_id,
                 c.object_id, 
                 c.ip, 
@@ -107,50 +55,49 @@ class Comments extends Okay {
                 c.type, 
                 c.date, 
                 c.approved,
-                c.lang_id
-            FROM __comments c 
-            WHERE 
-                1 
-                $object_id_filter 
-                $type_filter
-                $has_parent_filter
-                $keyword_filter 
-                $approved_filter 
-                $parent_id_filter 
-            ORDER BY id $sort 
-            $sql_limit
-        ");
+                c.lang_id";
         
-        $this->db->query($query);
-        return $this->db->results();
-    }
+        if ($count === true) {
+            $select = "COUNT(DISTINCT c.id) as count";
+        }
+        
+        if(isset($filter['limit'])) {
+            $limit = max(1, intval($filter['limit']));
+        }
+        
+        if(isset($filter['page'])) {
+            $page = max(1, intval($filter['page']));
+        }
 
-    /*Подсчитываем количество комментариев*/
-    public function count_comments($filter = array()) {    
-        $object_id_filter = '';
-        $type_filter = '';
-        $approved_filter = '';
-        $keyword_filter = '';
-        $has_parent_filter = '';
+        $sql_limit = ($limit ? $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit) : '');
+        
+        if(isset($filter['approved'])) {
+            $ip_filter = '';
+            if(isset($filter['ip'])) {
+                $ip_filter = $this->db->placehold(" OR c.ip=?", $filter['ip']);
+            }
+            $where .= $this->db->placehold(" AND (c.approved=? $ip_filter)", intval($filter['approved']));
+        }
         
         if(!empty($filter['object_id'])) {
-            $object_id_filter = $this->db->placehold('AND c.object_id in(?@)', (array)$filter['object_id']);
+            $where .= $this->db->placehold(' AND c.object_id in(?@)', (array)$filter['object_id']);
         }
         
         if(!empty($filter['type'])) {
-            $type_filter = $this->db->placehold('AND c.type=?', $filter['type']);
-        }
-        
-        if(isset($filter['approved'])) {
-            $approved_filter = $this->db->placehold('AND c.approved=?', intval($filter['approved']));
+            $where .= $this->db->placehold(' AND c.type=?', $filter['type']);
         }
 
         if (isset($filter['has_parent'])) {
-            $has_parent_filter = 'and c.parent_id'.($filter['has_parent'] ? '>0' : '=0');
+            $where .= ' AND c.parent_id'.($filter['has_parent'] ? '>0' : '=0');
+        }
+
+        if(!empty($filter['parent_id'])) {
+            $where .= $this->db->placehold(' AND c.parent_id IN(?@)', (array)$filter['parent_id']);
         }
         
         if(!empty($filter['keyword'])) {
             $keywords = explode(' ', $filter['keyword']);
+            $keyword_filter = ' ';
             foreach($keywords as $keyword) {
                 $keyword_filter .= $this->db->placehold('AND (
                         c.name LIKE "%'.$this->db->escape(trim($keyword)).'%" 
@@ -158,20 +105,44 @@ class Comments extends Okay {
                         OR c.email LIKE "%'.$this->db->escape(trim($keyword)).'%"
                     ) ');
             }
+            $where .= $keyword_filter;
+        }
+
+        if(isset($filter['ip'])) {
+            $where .= $this->db->placehold(" OR c.ip=?", $filter['ip']);
+        }
+
+        if (!empty($order)) {
+            $order = "ORDER BY $order";
+        }
+
+        // При подсчете нам эти переменные не нужны
+        if ($count === true) {
+            $order      = '';
+            $group_by   = '';
+            $sql_limit  = '';
         }
         
-        $query = $this->db->placehold("SELECT count(distinct c.id) as count
+        $query = $this->db->placehold("SELECT $select
             FROM __comments c 
+            $joins
             WHERE 
-                1 
-                $object_id_filter 
-                $type_filter
-                $has_parent_filter
-                $keyword_filter 
-                $approved_filter
+                $where
+                $group_by
+                $order 
+                $sql_limit
         ");
         $this->db->query($query);
-        return $this->db->result('count');
+        if ($count === true) {
+            return $this->db->result('count');
+        } else {
+            return $this->db->results();
+        }
+    }
+
+    /*Подсчитываем количество комментариев*/
+    public function count_comments($filter = array()) {    
+        return $this->get_comments($filter, true);
     }
 
     /*Добавление комментария*/

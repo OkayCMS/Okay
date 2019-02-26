@@ -84,8 +84,9 @@ class FeedbacksAdmin extends Okay {
         if($this->request->get('page') == 'all') {
             $filter['limit'] = $feedbacks_count;
         }
-        
-        $feedbacks = $this->feedbacks->get_feedbacks($filter, true);
+
+        $filter['sort'] = 'new_first';
+        $feedbacks = $this->feedbacks->get_feedbacks($filter);
 
         // Сохраняем id сообщений для выборки ответов
         $feedback_ids = array();

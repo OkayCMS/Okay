@@ -8,7 +8,7 @@ class FeatureAdmin extends Okay {
     
     public function fetch() {
         $feature = new stdClass;
-        if($this->request->method('post')) {
+        if ($this->request->method('post')) {
             $feature->id = $this->request->post('id', 'integer');
             $feature->name = $this->request->post('name');
             $feature->in_filter = intval($this->request->post('in_filter'));
@@ -161,6 +161,47 @@ class FeatureAdmin extends Okay {
             } else {
                 $pages_count = 0;
             }
+
+            if ($this->request->post('action') == 'move_to_page' && $this->request->post('check')) {
+                /*Переместить на страницу*/
+                $target_page = $this->request->post('target_page', 'integer');
+
+                // Сразу потом откроем эту страницу
+                $features_values_filter['page'] = $target_page;
+
+                $check = $this->request->post('check');
+                $query = $this->db->placehold("SELECT id FROM __features_values WHERE feature_id=? AND id not in (?@) ORDER BY position ASC", $feature->id, (array)$check);
+                $this->db->query($query);
+
+                $ids = $this->db->results('id');
+
+                // вычисляем после какого значения вставить то, которое меремещали
+                $offset = $features_values_filter['limit'] * ($target_page)-1;
+                $feature_values_ids = array();
+                
+                // Собираем общий массив id значений, и в нужное место добавим значение которое перемещали
+                // По сути иммитация если выбрали page=all и мереместили приблизительно в нужное место значение
+                foreach ($ids as $k=>$id) {
+                    if ($k == $offset) {
+                        $feature_values_ids = array_merge($feature_values_ids, $check);
+                        unset($check);
+                    }
+                    $feature_values_ids[] = $id;
+                }
+                
+                if (!empty($check)) {
+                    $feature_values_ids = array_merge($feature_values_ids, $check);
+                }
+
+                asort($feature_values_ids);
+                $i = 0;
+                
+                foreach($feature_values_ids as $features_value_id) {
+                    $this->features_values->update_feature_value($feature_values_ids[$i], array('position'=>$features_value_id));
+                    $i++;
+                }
+            }
+
             $features_values_filter['page'] = min($features_values_filter['page'], $pages_count);
             $this->design->assign('feature_values_count', $feature_values_count);
             $this->design->assign('pages_count', $pages_count);
