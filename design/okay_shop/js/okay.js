@@ -531,6 +531,12 @@ $(function(){
         serviceUrl: 'ajax/search_products.php',
         minChars: 1,
         noCache: true,
+        onSearchStart: function(params) {
+            ut_tracker.start('search_products');
+        },
+        onSearchComplete: function(params) {
+            ut_tracker.end('search_products');
+        },
         onSelect: function(suggestion) {
             $( "#fn_search" ).submit();
         },

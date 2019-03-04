@@ -22,6 +22,8 @@ class Brands extends Okay {
                 $lang_sql->fields";
         $visible = '';
         
+        $joins .= $this->db->placehold(" LEFT JOIN __products p ON p.brand_id=b.id");
+
         if ($count === true) {
             $select = "COUNT(DISTINCT b.id) as count";
         }
@@ -46,7 +48,6 @@ class Brands extends Okay {
 
         if(isset($filter['product_id'])) {
             $where .= $this->db->placehold(' AND p.id in (?@)', (array)$filter['product_id']);
-            $joins = $this->db->placehold(" LEFT JOIN __products p ON p.brand_id=b.id");
         }
         
         $first_currency = $this->money->get_currencies(array('enabled'=>1));
@@ -65,13 +66,11 @@ class Brands extends Okay {
             if(isset($filter['price']['max'])) {
                 $where .= $this->db->placehold(" AND floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)<= ? ", $this->db->escape(trim($filter['price']['max'])));
             }
-            $joins .= $this->db->placehold(" LEFT JOIN __products p ON p.brand_id=b.id");
-            $joins .= ' LEFT JOIN __variants pv ON pv.product_id = p.id';
-            $joins .= ' LEFT JOIN __currencies c ON c.id=pv.currency_id';
+            $joins .= $this->db->placehold(" LEFT JOIN __variants pv ON pv.product_id = p.id");
+            $joins .= $this->db->placehold(" LEFT JOIN __currencies c ON c.id=pv.currency_id");
         }
         
         if(!empty($filter['category_id'])) {
-            $joins .= $this->db->placehold(" LEFT JOIN __products p ON p.brand_id=b.id");
             $joins .= $this->db->placehold(" LEFT JOIN __products_categories pc ON p.id = pc.product_id");
             $where .= $this->db->placehold(" AND pc.category_id in(?@) $visible", (array)$filter['category_id']);
         }
@@ -125,8 +124,6 @@ class Brands extends Okay {
                 $other_filter .= "(SELECT 1 FROM __variants pv WHERE pv.product_id=p.id AND pv.compare_price>0 LIMIT 1) = 1 OR ";
             }
             $where .= substr($other_filter, 0, -4).")";
-            
-            $joins .= $this->db->placehold(" LEFT JOIN __products p ON (p.brand_id=b.id)");
         }
 
         if(!empty($filter['selected_brands'])) {

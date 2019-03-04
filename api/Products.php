@@ -376,61 +376,59 @@ class Products extends Okay {
     }
 
     /*Удаление товара*/
-    public function delete_product($id) {
-        if(!empty($id)) {
+    public function delete_product($ids) {
+        if (!empty($ids)) {
+            $ids = (array)$ids;
             // Удаляем варианты
-            $variants = $this->variants->get_variants(array('product_id'=>$id));
-            foreach($variants as $v) {
-                $this->variants->delete_variant($v->id);
+            foreach ($this->variants->get_variants(array('product_id'=>$ids)) as $v) {
+                $variants_ids[] = $v->id;
+            }
+            if (!empty($variants_ids)) {
+                $this->variants->delete_variant($variants_ids);
             }
             
             // Удаляем изображения
-            $images = $this->get_images(array('product_id'=>$id));
+            $images = $this->get_images(array('product_id'=>$ids));
             foreach($images as $i) {
                 $this->delete_image($i->id);
             }
             
             // Удаляем категории
-            $categories = $this->categories->get_categories(array('product_id'=>$id));
-            foreach($categories as $c) {
-                $this->categories->delete_product_category($id, $c->id);
-            }
+            $this->categories->delete_product_category($ids);
             
             // Удаляем свойства
-            $this->features_values->delete_product_value($id);
-            
+            $this->features_values->delete_product_value($ids);
+
             // Удаляем связанные товары
-            $related = $this->get_related_products($id);
-            foreach($related as $r) {
-                $this->delete_related_product($id, $r->related_id);
-            }
+            $query = $this->db->placehold("DELETE FROM __related_products WHERE product_id IN (?@)", $ids);
+            $this->db->query($query);
             
             // Удаляем товар из связанных с другими
-            $query = $this->db->placehold("DELETE FROM __related_products WHERE related_id=?", intval($id));
+            $query = $this->db->placehold("DELETE FROM __related_products WHERE related_id IN (?@)", $ids);
             $this->db->query($query);
             
             // Удаляем отзывы
-            $comments = $this->comments->get_comments(array('object_id'=>$id, 'type'=>'product'));
+            $comments = $this->comments->get_comments(array('object_id'=>$ids, 'type'=>'product'));
             foreach($comments as $c) {
                 $this->comments->delete_comment($c->id);
             }
             
             // Удаляем из покупок
-            $this->db->query('UPDATE __purchases SET product_id=NULL WHERE product_id=?', intval($id));
+            $this->db->query('UPDATE __purchases SET product_id=NULL WHERE product_id IN (?@)', $ids);
             
             //lastModify
-            $this->db->query('select brand_id from __products where id=?', intval($id));
-            $bid = (int)$this->db->result('brand_id');
-            if ($bid) {
-                $this->db->query('update __brands set last_modify=now() where id=?', $bid);
+            $this->db->query('SELECT brand_id FROM __products WHERE id IN (?@)', $ids);
+            $bid = $this->db->results('brand_id');
+            if (!empty($bid)) {
+                $this->db->query('UPDATE __brands SET last_modify=NOW() WHERE id IN (?@)', $bid);
             }
             
             // Удаляем языки
-            $query = $this->db->placehold("DELETE FROM __lang_products WHERE product_id=?", intval($id));
+            $query = $this->db->placehold("DELETE FROM __lang_products WHERE product_id IN (?@)", $ids);
             $this->db->query($query);
             
             // Удаляем товар
-            $query = $this->db->placehold("DELETE FROM __products WHERE id=? LIMIT 1", intval($id));
+            $query = $this->db->placehold("DELETE FROM __products WHERE id IN (?@)", $ids);
             if($this->db->query($query)) {
                 return true;
             }

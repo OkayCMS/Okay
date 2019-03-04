@@ -46,7 +46,7 @@ class Subscribes extends Okay {
         }
 
         $query = $this->db->placehold("SELECT $select
-            FROM __subescribe_mailing s
+            FROM __subscribe_mailing s
             $joins
             WHERE 
                 $where

@@ -460,43 +460,45 @@
             });
         }
 
-        {literal}
-        Sortable.create(document.getElementById("fn_sort_menu_section"), {
-            sort: true,  // sorting inside list
-            animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
-            scrollSensitivity: 100, // px, how near the mouse must be to an edge to start scrolling.
-            scrollSpeed: 10, // px
-            // Changed sorting within list
-            onUpdate: function (evt) {
-                save_menu();
-            }
-        });
-
-        if($(".fn_sort_menu_item").size()>0) {
-            $(".fn_sort_menu_item").each(function() {
-                Sortable.create(this, {
-                    sort: true,  // sorting inside list
-                    animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation.
-                    scroll: true,
-                    scrollSensitivity: 100, // px, how near the mouse must be to an edge to start scrolling.
-                    scrollSpeed: 10, // px
-                    // Changed sorting within list
-                    onUpdate: function (evt) {
-                        save_menu();
-                    }
+        {if $is_mobile === false && $is_tablet === false}
+            {literal}
+            Sortable.create(document.getElementById("fn_sort_menu_section"), {
+                sort: true,  // sorting inside list
+                animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation
+                scrollSensitivity: 100, // px, how near the mouse must be to an edge to start scrolling.
+                scrollSpeed: 10, // px
+                // Changed sorting within list
+                onUpdate: function (evt) {
+                    save_menu();
+                }
+            });
+    
+            if($(".fn_sort_menu_item").size()>0) {
+                $(".fn_sort_menu_item").each(function() {
+                    Sortable.create(this, {
+                        sort: true,  // sorting inside list
+                        animation: 150,  // ms, animation speed moving items when sorting, `0` — without animation.
+                        scroll: true,
+                        scrollSensitivity: 100, // px, how near the mouse must be to an edge to start scrolling.
+                        scrollSpeed: 10, // px
+                        // Changed sorting within list
+                        onUpdate: function (evt) {
+                            save_menu();
+                        }
+                    });
                 });
-            });
-        }
-
-        function save_menu() {
-            $.ajax({
-                type: "POST",
-                dataType: 'json',
-                url: "ajax/update_object.php",
-                data: $('.fn_manager_menu').serialize()
-            });
-        }
-        {/literal}
+            }
+    
+            function save_menu() {
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    url: "ajax/update_object.php",
+                    data: $('.fn_manager_menu').serialize()
+                });
+            }
+            {/literal}
+        {/if}
 
         /* Initializing sorting */
         if($(".sortable").size()>0) {
@@ -531,7 +533,7 @@
         if($(".sort_extended").size()>0) {
             
             /*Явно указываем высоту списка, иначе когда скрипт удаляет элемент и ставит на его место заглушку, страница подпрыгивает*/
-            $(".fn_sort_list").css('height', $(".fn_sort_list").outerHeight());
+            $(".fn_sort_list").css('min-height', $(".fn_sort_list").outerHeight());
             
             $(".sort_extended").sortable({
                 items: ".fn_sort_item",

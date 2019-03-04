@@ -12,6 +12,8 @@
     <link href="design/{$settings->theme}/images/favicon.png" type="image/x-icon" rel="shortcut icon">
 
     {* JQuery *}
+    <script>ut_tracker.start('parsing:page');</script>
+    <script>ut_tracker.start('parsing:head:js');</script>
     <script src="design/{$settings->theme}/js/jquery-3.3.1.min.js{if $js_version}?v={$js_version}{/if}"></script>
 
     {* JQuery migrate*}
@@ -23,21 +25,29 @@
 
     {* Match height *}
     <script src="design/{$settings->theme}/js/jquery.matchHeight-min.js{if $js_version}?v={$js_version}{/if}"></script>
+    <script>ut_tracker.end('parsing:head:js');</script>
 
     {* Fonts *}
+    <script>ut_tracker.start('parsing:head:fonts');</script>
     <link href="//fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i&amp;subset=cyrillic" rel="stylesheet">
+    <script>ut_tracker.end('parsing:head:fonts');</script>
 
     {* CSS *}
+    <script>ut_tracker.start('parsing:head:css');</script>
     <link href="design/{$settings->theme|escape}/css/libs.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
     <link href="design/{$settings->theme|escape}/css/style.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
     <link href="design/{$settings->theme|escape}/css/responsive.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
+    <script>ut_tracker.end('parsing:head:css');</script>
 
     {if $counters['head']}
+        <script>ut_tracker.start('parsing:head:counters');</script>
         {foreach $counters['head'] as $counter}
             {$counter->code}
         {/foreach}
+        <script>ut_tracker.end('parsing:head:counters');</script>
     {/if}
 
+    <script>ut_tracker.start('render:recaptcha');</script>
     {if $settings->captcha_type == "v2"}
         <script type="text/javascript">
             var onloadCallback = function() {
@@ -69,14 +79,18 @@
         </script>
         <script src='https://www.google.com/recaptcha/api.js'></script>
     {/if}
+    <script>ut_tracker.end('render:recaptcha');</script>
 
 </head>
 
 <body>
+
 {if $counters['body_top']}
+    <script>ut_tracker.start('parsing:body_top:counters');</script>
     {foreach $counters['body_top'] as $counter}
         {$counter->code}
     {/foreach}
+    <script>ut_tracker.end('parsing:body_top:counters');</script>
 {/if}
 
 <header class="header">
@@ -424,17 +438,26 @@
 {* Форма обратного звонка *}
 {include file='callback.tpl'}
 
+<script>ut_tracker.start('parsing:body_bottom:css');</script>
+{* Fancybox *}
+<link href="design/{$settings->theme|escape}/css/jquery.fancybox.min.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
+{if $smarty.get.module == 'ProductView' || $smarty.get.module == "BlogView"}
+    <link href="design/{$settings->theme|escape}/css/font-awesome.min.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
+    <link href="design/{$settings->theme|escape}/css/jssocials.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
+    <link href="design/{$settings->theme|escape}/css/jssocials-theme-flat.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
+{/if}
+<script>ut_tracker.end('parsing:body_bottom:css');</script>
 
 {*template scripts*}
 {* JQuery UI *}
 {* Библиотека с "Slider", "Transfer Effect" *}
+<script>ut_tracker.start('parsing:body_bottom:js');</script>
 <script src="design/{$settings->theme}/js/jquery-ui.min.js{if $js_version}?v={$js_version}{/if}"></script>
 
 {* Библиотека touch-punch *}
 <script src="design/{$settings->theme}/js/ui.touch-punch.min.js{if $js_version}?v={$js_version}{/if}"></script>
 
 {* Fancybox *}
-<link href="design/{$settings->theme|escape}/css/jquery.fancybox.min.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
 <script src="design/{$settings->theme|escape}/js/jquery.fancybox.min.js{if $js_version}?v={$js_version}{/if}" defer></script>
 
 {* Autocomplete *}
@@ -448,9 +471,6 @@
 
 {* Social share buttons *}
 {if $smarty.get.module == 'ProductView' || $smarty.get.module == "BlogView"}
-    <link href="design/{$settings->theme|escape}/css/font-awesome.min.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
-    <link href="design/{$settings->theme|escape}/css/jssocials.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
-    <link href="design/{$settings->theme|escape}/css/jssocials-theme-flat.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
     <script src="design/{$settings->theme|escape}/js/jssocials.min.js{if $js_version}?v={$js_version}{/if}" ></script>
 {/if}
 
@@ -458,11 +478,14 @@
 {include file="scripts.tpl"}
 <script src="design/{$settings->theme}/js/okay.js{if $js_version}?v={$js_version}{/if}"></script>
 {*template scripts*}
+<script>ut_tracker.end('parsing:body_bottom:js');</script>
 
 {if $counters['body_bottom']}
+    <script>ut_tracker.start('parsing:body_bottom:counters');</script>
     {foreach $counters['body_bottom'] as $counter}
         {$counter->code}
     {/foreach}
+    <script>ut_tracker.end('parsing:body_bottom:counters');</script>
 {/if}
 
 </body>

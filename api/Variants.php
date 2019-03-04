@@ -179,27 +179,32 @@ class Variants extends Okay {
         return $variant_id;
     }
     
-    public function delete_variant($id) {
-        if(!empty($id)) {
-            $this->delete_attachment($id);
-            $query = $this->db->placehold("DELETE FROM __variants WHERE id = ? LIMIT 1", intval($id));
+    public function delete_variant($ids) {
+        $ids = (array)$ids;
+        if (!empty($ids)) {
+            $this->delete_attachment($ids);
+            $query = $this->db->placehold("DELETE FROM __variants WHERE id IN (?@)", $ids);
             $this->db->query($query);
-            $this->db->query('UPDATE __purchases SET variant_id=NULL WHERE variant_id=?', intval($id));
-            $this->db->query("DELETE FROM __lang_variants WHERE variant_id = ?", intval($id));
+            $this->db->query('UPDATE __purchases SET variant_id=NULL WHERE variant_id IN (?@)', $ids);
+            $this->db->query("DELETE FROM __lang_variants WHERE variant_id IN (?@)", $ids);
         }
     }
     
-    public function delete_attachment($id) {
-        $query = $this->db->placehold("SELECT attachment FROM __variants WHERE id=?", $id);
+    public function delete_attachment($ids) {
+        $ids = (array)$ids;
+        $query = $this->db->placehold("SELECT id, attachment FROM __variants WHERE id IN (?@) AND attachment !=''", $ids);
         $this->db->query($query);
-        $filename = $this->db->result('attachment');
-        $query = $this->db->placehold("SELECT 1 FROM __variants WHERE attachment=? AND id!=?", $filename, $id);
-        $this->db->query($query);
-        $exists = $this->db->num_rows();
-        if(!empty($filename) && $exists == 0) {
-            @unlink($this->config->root_dir.'/'.$this->config->downloads_dir.$filename);
+        $results = (array)$this->db->results();
+        
+        foreach ($results as $result) {
+            $query = $this->db->placehold("SELECT 1 FROM __variants WHERE attachment=? AND id!=?", $result->filename, $result->id);
+            $this->db->query($query);
+            $exists = $this->db->num_rows();
+            if (!empty($result->filename) && $exists == 0) {
+                @unlink($this->config->root_dir . '/' . $this->config->downloads_dir . $result->filename);
+            }
+            $this->update_variant($result->id, array('attachment' => null));
         }
-        $this->update_variant($id, array('attachment'=>null));
     }
     
 }

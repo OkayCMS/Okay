@@ -1,3 +1,18 @@
+{literal}
+    <script>
+        ut_tracker = {
+            start: function(name) {
+                performance.mark(name + ':start');
+            },
+            end: function(name) {
+                performance.mark(name + ':end');
+                performance.measure(name, name + ':start', name + ':end');
+                console.log(name + ' duration: ' + performance.getEntriesByName(name)[0].duration);
+            }
+        }
+    </script>
+{/literal}
+
 {* Title *}
 <title>{strip}
         {if $seo_filter_pattern->title}

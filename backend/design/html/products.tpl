@@ -318,7 +318,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-lg-8 col-md-6 col-sm-12 fn_additional_params">
+                                <div class="fn_additional_params">
                                     <div class="fn_move_to_page col-lg-12 col-md-12 col-sm-12 hidden fn_hide_block">
                                         <select name="target_page" class="selectpicker">
                                             {section target_page $pages_count}

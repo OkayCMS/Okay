@@ -144,9 +144,7 @@ class ProductsAdmin extends Okay {
                     }
                     case 'delete': {
                         /*Удалить товар*/
-                        foreach($ids as $id) {
-                            $this->products->delete_product($id);
-                        }
+                        $this->products->delete_product($ids);
                         break;
                     }
                     case 'duplicate': {

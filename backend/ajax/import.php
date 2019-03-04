@@ -203,7 +203,20 @@ class ImportAjax extends Import {
         
         // Если задан артикул варианта, найдем этот вариант и соответствующий товар
         if (!empty($variant['sku'])) {
-            $this->db->query('SELECT v.id as variant_id, v.product_id, p.url FROM __variants v, __products p WHERE v.sku=? AND v.product_id = p.id LIMIT 1', $variant['sku']);
+            
+            // Если у варианта есть еще и название, тогда ищем по артикулу + название, это как бы первичный ключ будет,
+            // чтобы можно было импортировать варианты с одинаковым артикулом
+            $variant_filter = '';
+            if (!empty($variant['name'])) {
+                $variant_filter = $this->db->placehold(" AND v.name=?", $variant['name']);
+            }
+            
+            $this->db->query("SELECT v.id as variant_id, v.product_id
+                          FROM __variants v
+                          WHERE 
+                          v.sku=? 
+                          $variant_filter 
+                          LIMIT 1", $variant['sku']);
             $result = $this->db->result();
             if ($result) {
                 $product_id = $result->product_id;
@@ -211,7 +224,7 @@ class ImportAjax extends Import {
                 $imported_item->status = 'updated';
             } elseif (!empty($product['name'])) {
                 // если по артикулу не нашли попробуем по названию(если он задано)
-                $this->db->query('SELECT p.id as product_id, p.url FROM __products p WHERE p.name=? LIMIT 1', $product['name']);
+                $this->db->query('SELECT p.id as product_id FROM __products p WHERE p.name=? LIMIT 1', $product['name']);
                 $result = $this->db->result();
                 if ($result) {
                     $product_id = $result->product_id;
@@ -222,7 +235,7 @@ class ImportAjax extends Import {
             }
         } else {
             // если нет артикула попробуем по названию товара
-            $this->db->query('SELECT v.id as variant_id, p.id as product_id, p.url
+            $this->db->query('SELECT v.id as variant_id, p.id as product_id
                 FROM __products p
                 LEFT JOIN __variants v ON v.product_id=p.id AND v.name=?
                 WHERE p.name=?
@@ -248,6 +261,20 @@ class ImportAjax extends Import {
                     $product['url'] = $this->translit($product['name']);
                 }
                 if (empty($product_id)) {
+                    
+                    // Если для нового товара не заданы метаданные, запишем туда название товара
+                    if (!isset($product['meta_title']) || empty($product['meta_title'])) {
+                        $product['meta_title'] = $product['name'];
+                    }
+
+                    if (!isset($product['meta_keywords']) || empty($product['meta_keywords'])) {
+                        $product['meta_keywords'] = $product['name'];
+                    }
+
+                    if (!isset($product['meta_description']) || empty($product['meta_description'])) {
+                        $product['meta_description'] = $product['name'];
+                    }
+                    
                     $product_id = $this->products->add_product($product);
                 } else {
                     $this->products->update_product($product_id, $product);

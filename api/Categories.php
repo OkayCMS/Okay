@@ -217,6 +217,11 @@ class Categories extends Okay {
             $this->update_level_depth($id, $category->level_depth);
         }
         
+        $category = (array)$category;
+        unset($category['path']);
+        unset($category['level']);
+        unset($category['subcategories']);
+        unset($category['children']);
         $category = (object)$category;
         $result = $this->languages->get_description($category, 'category');
         
@@ -283,9 +288,21 @@ class Categories extends Okay {
     }
 
     /*Удаление категории из товара*/
-    public function delete_product_category($product_id, $category_id) {
-        $this->db->query("update __categories set last_modify=now() where id=?", intval($category_id));
-        $query = $this->db->placehold("DELETE FROM __products_categories WHERE product_id=? AND category_id=? LIMIT 1", intval($product_id), intval($category_id));
+    public function delete_product_category($products_ids, $categories_ids = array()) {
+
+        $products_ids = (array)$products_ids;
+        $categories_ids = (array)$categories_ids;
+        $category_id_filter = '';
+        if (empty($category_id)) {
+            foreach ($this->get_categories(array('product_id'=>$products_ids)) as $c) {
+                $categories_ids[] = $c->id;
+            }
+        }
+        if (!empty($categories_ids)) {
+            $this->db->query("UPDATE __categories SET last_modify=NOW() WHERE id IN (?@)", $categories_ids);
+            $category_id_filter = $this->db->placehold("AND category_id IN (?@)", $categories_ids);
+        }
+        $query = $this->db->placehold("DELETE FROM __products_categories WHERE product_id IN (?@) $category_id_filter", $products_ids);
         $this->db->query($query);
     }
 
