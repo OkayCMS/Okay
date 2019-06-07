@@ -133,7 +133,7 @@ class ImportAjax extends Import {
         }
         
         if (!empty($item['url'])) {
-            $product['url'] = trim($item['url']);
+            $product['url'] = $this->translit(trim($item['url']));
         }
         
         // Если задан бренд
@@ -330,6 +330,10 @@ class ImportAjax extends Import {
                         // Имя файла
                         $image_filename = pathinfo($image, PATHINFO_BASENAME);
                         
+                        if (preg_match("~^https?://~", $image)) {
+                            $image_filename = $this->image->correct_filename($image_filename);
+                            $image = rawurlencode($image);
+                        }
                         // Добавляем изображение только если такого еще нет в этом товаре
                         $this->db->query('SELECT id, filename FROM __images WHERE product_id=? AND (filename=? OR filename=?) LIMIT 1', $product_id, $image_filename, $image);
                         $result = $this->db->result();

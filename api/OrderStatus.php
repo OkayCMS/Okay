@@ -88,7 +88,7 @@ class OrderStatus extends Okay {
     /*Удаления статуса заказа*/
     public function delete_status($id) {
         if(!empty($id)) {
-            $order_query = $this->db->placehold("SELECT COUNT(o.id) as count FROM __orders WHERE status_id = ?", intval($id));
+            $order_query = $this->db->placehold("SELECT COUNT(id) as count FROM __orders WHERE status_id = ?", intval($id));
             $this->db->query($order_query);
             $check_cnt = $this->db->result("count");
 

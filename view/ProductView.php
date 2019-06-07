@@ -208,7 +208,18 @@ class ProductView extends View {
                     $parts['{$'.$feature->auto_name_id.'}'] = $feature->name;
                 }
                 if ($feature->auto_value_id) {
-                    $parts['{$'.$feature->auto_value_id.'}'] = $feature->value;
+                    
+                    if (count($feature->values) > 1) {
+                        $value = array();
+                        foreach ($feature->values as $fv) {
+                            $value[] = $fv->value;
+                        }
+                        $value = implode(', ', $value);
+                    } else {
+                        $value = $feature->value;
+                    }
+                    
+                    $parts['{$'.$feature->auto_value_id.'}'] = $value;
                 }
             }
 

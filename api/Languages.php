@@ -57,7 +57,7 @@ class Languages extends Okay {
         $fields['orders_labels']   = array('name');
         $fields['orders_status']   = array('name');
         $fields['menu_items']      = array('name');
-        $fields['features_values'] = array('value', 'translit', 'feature_id');
+        $fields['features_values'] = array('value', 'translit');
         $fields['seo_filter_patterns'] = array('h1', 'title', 'keywords', 'meta_description', 'description');
         $fields['features_aliases']    = array('name');
         $fields['features_aliases_values'] = array('value');
@@ -300,7 +300,7 @@ class Languages extends Okay {
     }
 
     /*Выборка мультиязычных данных*/
-    public function get_description($data, $object) {
+    public function get_description($data, $object, $clear = true) {
         if(!in_array($object, array_keys($this->tables)) || empty($this->languages)) {
             return false;
         }
@@ -313,7 +313,7 @@ class Languages extends Okay {
                 if (isset($data->$f)) {
                     $description->$f = $data->$f;
                 }
-                if($this->first_language->id != $this->lang_id()) {
+                if ($this->first_language->id != $this->lang_id() && $clear === true) {
                     unset($data->$f);
                 }
             }

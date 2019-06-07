@@ -137,7 +137,7 @@
                             <div class="col-lg-4 col-md-6">
                                 <div class="heading_label">{$btr->truncate_table_password|escape}</div>
                                 <div class="mb-1">
-                                    <input name="truncate_table_password" class="form-control" type="password" value="" />
+                                    <input name="truncate_table_password" class="form-control" type="password" value="" disabled />
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-6">
@@ -146,34 +146,6 @@
                                     {include file='svg_icon.tpl' svgId='checked'}
                                     <span>{$btr->truncate_table_confirm|escape}</span>
                                 </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 col-md-12">
-            <div class="boxed fn_toggle_wrap ">
-                <div class="heading_box">
-                    {$btr->settings_catalog_1c|escape}
-                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
-                        <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
-                    </div>
-                </div>
-                <div class="toggle_body_wrap on fn_card">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6">
-                            <div class="heading_label">{$btr->settings_catalog_login_sync|escape}</div>
-                            <div class="mb-1">
-                                <input name="login_1c" class="form-control" type="text" value="{$login_1c|escape}" />
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6">
-                            <div class="heading_label">{$btr->settings_catalog_pass_sync|escape}</div>
-                            <div class="mb-1">
-                                <input name="pass_1c" class="form-control" type="text" value="" />
                             </div>
                         </div>
                     </div>
@@ -294,6 +266,7 @@
 <script>
     $(document).on("click", ".fn_truncate_table", function () {
         $('.fn_truncate_table_confirm').fadeIn(500);
+        $('[name="truncate_table_password"]').prop('disabled', false);
     });
     $(document).on("input", ".fn_rating", function () {
         $(this).closest(".fn_range_wrap").find(".fn_show_range").html($(this).val());

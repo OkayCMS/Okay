@@ -10,15 +10,16 @@ require_once('Okay.php');
 class Config {
 
     /*Версия системы*/
-    public $version = '2.3.2';
+    public $version = '2.3.3';
     /*Тип системы*/
     public $version_type = 'pro';
     
     /*Файл для хранения настроек*/
     public $config_file = 'config/config.php';
-    public $config_develop_file = 'config/config.local.php';
+    public $config_local_file = 'config/config.local.php';
 
     private $vars = array();
+    private $local_vars = array();
 
     /*
      * В конструкторе записываем настройки файла в переменные этого класса
@@ -33,10 +34,10 @@ class Config {
         }
 
         /*Заменяем настройки, если есть локальный конфиг*/
-        if (file_exists(dirname(dirname(__FILE__)).'/'.$this->config_develop_file)) {
-            $ini = parse_ini_file(dirname(dirname(__FILE__)) . '/' . $this->config_develop_file);
+        if (file_exists(dirname(dirname(__FILE__)).'/'.$this->config_local_file)) {
+            $ini = parse_ini_file(dirname(dirname(__FILE__)) . '/' . $this->config_local_file);
             foreach ($ini as $var => $value) {
-                $this->vars[$var] = $value;
+                $this->local_vars[$var] = $this->vars[$var] = $value;
             }
         }
 
@@ -99,10 +100,18 @@ class Config {
 
     /*Запись данных в конфиг*/
     public function __set($name, $value) {
-        if(isset($this->vars[$name])) {
-            $conf = file_get_contents(dirname(dirname(__FILE__)).'/'.$this->config_file);
+        if(isset($this->vars[$name]) || isset($this->local_vars[$name])) {
+            
+            // Определяем в каком файле конфига переопределять значения
+            if (isset($this->local_vars[$name])) {
+                $config_file = $this->config_local_file;
+            } else {
+                $config_file = $this->config_file;
+            }
+            
+            $conf = file_get_contents(dirname(dirname(__FILE__)).'/'.$config_file);
             $conf = preg_replace("/".$name."\s*=.*\n/i", $name.' = '.$value."\r\n", $conf);
-            $cf = fopen(dirname(dirname(__FILE__)).'/'.$this->config_file, 'w');
+            $cf = fopen(dirname(dirname(__FILE__)).'/'.$config_file, 'w');
             fwrite($cf, $conf);
             fclose($cf);
             $this->vars[$name] = $value;

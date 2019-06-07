@@ -20,18 +20,17 @@ class OrderSettingsAdmin extends Okay {
 
             /*Создание статуса*/
             if($this->request->post('new_name')){
-                $new_status = array();
-                $new_params = array();
-                $new_colors = array();
                 $new_status = $this->request->post('new_name');
                 $new_params = $this->request->post('new_is_close');
                 $new_colors = $this->request->post('new_color');
+                $new_status_1c = $this->request->post('new_status_1c');
 
                 foreach ($new_status as $id=>$value) {
                     if(!empty($value)) {
                         $new_stat = new stdClass();
                         $new_stat->name = $value;
                         $new_stat->is_close = $new_params[$id];
+                        $new_stat->status_1c = $new_status_1c[$id];
                         $new_stat->color = $new_colors[$id];
                         $this->orderstatus->add_status($new_stat);
                     }
@@ -40,10 +39,8 @@ class OrderSettingsAdmin extends Okay {
 
             /*Обновление статуса*/
             if($this->request->post('name')) {
-                $current_status = array();
-                $is_close = array();
-                $ids_status = array();
                 $current_status = $this->request->post('name');
+                $status_1c = $this->request->post('status_1c');
                 $is_close = $this->request->post('is_close');
                 $ids_status = $this->request->post('id');
                 $colors_status = $this->request->post('color');
@@ -51,6 +48,7 @@ class OrderSettingsAdmin extends Okay {
                     $update_status = new stdClass();
                     $update_status->name = $value;
                     $update_status->is_close = $is_close[$id];
+                    $update_status->status_1c = $status_1c[$id];
                     $update_status->color = $colors_status[$id];
                     $this->orderstatus->update_status($id,$update_status);
                 }
@@ -89,8 +87,6 @@ class OrderSettingsAdmin extends Okay {
 
             /*Добавление метки*/
             if($this->request->post('new_name')){
-                $new_labels = array();
-                $new_colors = array();
                 $new_labels = $this->request->post('new_name');
                 $new_colors = $this->request->post('new_color');
                 foreach ($new_labels as $id=>$value) {
@@ -105,9 +101,6 @@ class OrderSettingsAdmin extends Okay {
 
             /*Обновление метки*/
             if($this->request->post('name')) {
-                $current_labels = array();
-                $colors = array();
-                $ids = array();
                 $current_labels = $this->request->post('name');
                 $colors = $this->request->post('color');
                 $ids = $this->request->post('id');

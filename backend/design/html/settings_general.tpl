@@ -159,6 +159,7 @@
                             <div class="mb-1">
                                 <select name="captcha_type" class="selectpicker">
                                     <option value="default" {if $settings->captcha_type == "default"}selected{/if}>{$btr->captcha_default}</option>
+                                    <option value="v3" {if $settings->captcha_type == "v3"}selected{/if}>reCAPTCHA V3</option>
                                     <option value="v2" {if $settings->captcha_type == "v2"}selected{/if}>reCAPTCHA V2</option>
                                     <option value="invisible" {if $settings->captcha_type == "invisible"}selected{/if}>reCAPTCHA Invisible</option>
                                 </select>
@@ -275,6 +276,60 @@
                                             <div class="heading_label">{$btr->recaptcha_secret_key|escape}</div>
                                             <div class="mb-1">
                                                 <input name="secret_recaptcha_invisible" class="form-control" type="text" value="{$settings->secret_recaptcha_invisible|escape}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-12">
+                            <div class="boxed">
+                                <div class="heading_box">
+                                    reCAPTCHA V3
+                                 </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="heading_label">{$btr->recaptcha_key|escape}</div>
+                                            <div class="mb-1">
+                                                <input name="public_recaptcha_v3" class="form-control" type="text" value="{$settings->public_recaptcha_v3|escape}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="heading_label">{$btr->recaptcha_secret_key|escape}</div>
+                                            <div class="mb-1">
+                                                <input name="secret_recaptcha_v3" class="form-control" type="text" value="{$settings->secret_recaptcha_v3|escape}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12">
+                            <div class="boxed">
+                                <div class="heading_box">
+                                    {$btr->recaptcha_v3_scores|escape}
+                                </div>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="heading_label">{$btr->recaptcha_scores_product|escape}</div>
+                                            <div class="mb-1">
+                                                <input name="recaptcha_scores[product]" class="form-control" type="text" value="{$settings->recaptcha_scores['product']|escape}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="heading_label">{$btr->recaptcha_scores_cart|escape}</div>
+                                            <div class="mb-1">
+                                                <input name="recaptcha_scores[cart]" class="form-control" type="text" value="{$settings->recaptcha_scores['cart']|escape}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="heading_label">{$btr->recaptcha_scores_other|escape}</div>
+                                            <div class="mb-1">
+                                                <input name="recaptcha_scores[other]" class="form-control" type="text" value="{$settings->recaptcha_scores['other']|escape}" />
                                             </div>
                                         </div>
                                     </div>

@@ -50,6 +50,7 @@ class Okay {
         'seo_filter_patterns'  => 'SEOFilterPatterns',
         'features_aliases'     => 'FeaturesAliases',
         'features_values'      => 'FeaturesValues',
+        'recaptcha'            => 'Recaptcha',
 
     );
     
@@ -146,27 +147,6 @@ class Okay {
 
         // Возвращаем созданный объект
         return self::$objects[$name];
-    }
-
-    public function recaptcha() {
-        $g_recaptcha_response = $this->request->post('g-recaptcha-response');
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://www.google.com/recaptcha/api/siteverify',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => http_build_query(array('secret'=>$this->settings->secret_recaptcha,
-                'response'=>$g_recaptcha_response,
-                'remoteip'=>$_SERVER['REMOTE_ADDR']))
-        ));
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        if (strpos($response, 'invalid-input-secret')){
-            return true;
-        } else {
-            return !strpos($response, 'false');
-        }
     }
 
     public function translit($text) {

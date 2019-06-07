@@ -141,7 +141,7 @@
                         </div>
                         
                         <div class="row" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
-                            <link itemprop="url" href="{$config->root_url}{$lang_link}/products/{$product->url}" />
+                            <link itemprop="url" href="{$config->root_url}{$lang_link}products/{$product->url}" />
                             <div class="col-sm-6">
                                 {* Old price *}
                                 <div class="old_price{if !$product->variant->compare_price} hidden{/if}">
@@ -362,7 +362,13 @@
 
                                 {* Captcha *}
                                 {if $settings->captcha_product}
-                                    {if $settings->captcha_type == "v2"}
+                                    {if $settings->captcha_type == "v3"}
+                                        <div class="captcha row" style="display: none;">
+                                            <div class="fn_recaptchav3">
+                                                <input type="hidden" name="recaptcha_token"  value="" class="fn_recaptcha_token" />
+                                            </div>
+                                        </div>
+                                    {elseif $settings->captcha_type == "v2"}
                                         <div class="captcha">
                                              <div id="recaptcha1"></div>
                                         </div>

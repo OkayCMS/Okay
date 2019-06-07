@@ -103,7 +103,7 @@ foreach($okay->products->get_images(array('product_id' => $p_ids)) as $image) {
 
 // Получаем список свойств для фида
 $features_values = array();
-foreach ($okay->features_values->get_features_values(array('product_id'=>$p_ids, 'yandex'=>1)) as $fv) {
+foreach ($okay->features_values->get_features_values(array('yandex'=>1)) as $fv) {
     $features_values[$fv->id] = $fv;
 }
 

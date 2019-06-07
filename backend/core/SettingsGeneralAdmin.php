@@ -26,6 +26,17 @@ class SettingsGeneralAdmin extends Okay {
             $this->settings->captcha_type = $this->request->post('captcha_type');
             $this->settings->iframe_map_code = $this->request->post('iframe_map_code');
             $this->settings->gather_enabled = $this->request->post('gather_enabled', 'boolean');
+            $this->settings->public_recaptcha_v3 = $this->request->post('public_recaptcha_v3');
+            $this->settings->secret_recaptcha_v3 = $this->request->post('secret_recaptcha_v3');
+
+            if ($recaptcha_scores = $this->request->post('recaptcha_scores')) {
+                foreach ($recaptcha_scores as $k=>$score) {
+                    $score = (float)str_replace(',', '.', $score);
+                    $recaptcha_scores[$k] = round($score, 1);
+                }
+            }
+            $this->settings->recaptcha_scores = $recaptcha_scores;
+            
             if(is_null($this->request->post('site_logo'))) {
                if(file_exists($this->config->root_dir .'/design/'. $this->settings->theme . '/images/'.$this->settings->site_logo)) {
                    @unlink($this->config->root_dir .'/design/'. $this->settings->theme . '/images/'.$this->settings->site_logo);
@@ -34,7 +45,7 @@ class SettingsGeneralAdmin extends Okay {
             } else {
                 $this->settings->site_logo = $this->request->post('site_logo');
             }
-
+            
             if(!empty($_FILES['site_logo']['tmp_name']) && !empty($_FILES['site_logo']['name'])) {
                 $tmp_name = $_FILES['site_logo']['tmp_name'];
                 $site_logo_name = $_FILES['site_logo']['name'];

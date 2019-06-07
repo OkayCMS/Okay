@@ -39,28 +39,39 @@
                     </div>
                 </div>
                 <div class="boxed_sorting toggle_body_wrap off fn_card">
-                <div class="row">
-                    <div class="col-md-4 col-lg-4 col-sm-12">
-                        <div>
-                            <select class="selectpicker" onchange="location = this.value;">
-                                <option value="{url brand_id=null banner_id=null keyword=null page=null filter=null}" {if !$filter}{/if}>{$btr->banners_images_all|escape}</option>
-                                <option value="{url keyword=null brand_id=null banner_id=null page=null filter='visible'}" {if $filter=='visible'}selected{/if}>{$btr->banners_images_enable|escape}</option>
-                                <option value="{url keyword=null brand_id=null banner_id=null page=null filter='hidden'}" {if $filter=='hidden'}selected{/if}>{$btr->banners_images_disable|escape}</option>
-                            </select>
+                    <div class="row">
+                        <div class="col-md-4 col-lg-4 col-sm-12">
+                            <div>
+                                <select class="selectpicker" onchange="location = this.value;">
+                                    <option value="{url brand_id=null banner_id=null keyword=null page=null filter=null}" {if !$filter}{/if}>{$btr->banners_images_all|escape}</option>
+                                    <option value="{url keyword=null brand_id=null banner_id=null page=null filter='visible'}" {if $filter=='visible'}selected{/if}>{$btr->banners_images_enable|escape}</option>
+                                    <option value="{url keyword=null brand_id=null banner_id=null page=null filter='hidden'}" {if $filter=='hidden'}selected{/if}>{$btr->banners_images_disable|escape}</option>
+                                </select>
+                            </div>
+                        </div>
+                        {if $banners}
+                            <div class="col-md-4 col-lg-4 col-sm-12">
+                                <select class="selectpicker" onchange="location = this.value;">
+                                    <option value="{url banner_id=null brand_id=null}" {if !$banner->id}selected{/if}>{$btr->general_groups|escape}</option>
+                                    {foreach $banners as $b}
+                                        <option value="{url keyword=null page=null banner_id=$b->id}" {if $banner->id == $b->id}selected{/if}>{$b->name|escape}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        {/if}
+                        <div class="col-lg-4 col-md-4 col-sm 12">
+                            <div class="pull-right">
+                                <select onchange="location = this.value;" class="selectpicker">
+                                    <option value="{url limit=5}" {if $current_limit == 5}selected{/if}>{$btr->general_show_by|escape} 5</option>
+                                    <option value="{url limit=10}" {if $current_limit == 10}selected{/if}>{$btr->general_show_by|escape} 10</option>
+                                    <option value="{url limit=25}" {if $current_limit == 25}selected{/if}>{$btr->general_show_by|escape} 25</option>
+                                    <option value="{url limit=50}" {if $current_limit == 50}selected{/if}>{$btr->general_show_by|escape} 50</option>
+                                    <option value="{url limit=100}" {if $current_limit == 100}selected=""{/if}>{$btr->general_show_by|escape} 100</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                    {if $banners}
-                        <div class="col-md-4 col-lg-4 col-sm-12">
-                            <select class="selectpicker" onchange="location = this.value;">
-                                <option value="{url banner_id=null brand_id=null}" {if !$banner->id}selected{/if}>{$btr->general_groups|escape}</option>
-                                {foreach $banners as $b}
-                                    <option value="{url keyword=null page=null banner_id=$b->id}" {if $banner->id == $b->id}selected{/if}>{$b->name|escape}</option>
-                                {/foreach}
-                            </select>
-                        </div>
-                    {/if}
                 </div>
-            </div>
             </div>
         </div>
     </div>
@@ -178,6 +189,9 @@
                         </div>
                     </div>
                 </form>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm 12 txt_center">
+                {include file='pagination.tpl'}
             </div>
         {else}
             <div class="heading_box mt-1">

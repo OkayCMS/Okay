@@ -65,7 +65,13 @@
             </div>
 
             {if $settings->captcha_register}
-                {if $settings->captcha_type == "v2"}
+                {if $settings->captcha_type == "v3"}
+                    <div class="captcha row" style="display: none;">
+                        <div class="fn_recaptchav3">
+                            <input type="hidden" name="recaptcha_token"  value="" class="fn_recaptcha_token" />
+                        </div>
+                    </div>
+                {elseif $settings->captcha_type == "v2"}
                     <div class="captcha">
                         <div id="recaptcha1"></div>
                     </div>

@@ -931,9 +931,6 @@
                                 onSelect:function(suggestion){
                                     id_input.val(suggestion.data.id);
                                     $(this).trigger('change');
-                                },
-                                onSearchStart:function(params){
-                                    id_input.val("");
                                 }
                             });
                             if (iv > 0) {
@@ -982,9 +979,6 @@
                 onSelect:function(suggestion){
                     id_input.val(suggestion.data.id);
                     $(this).trigger('change');
-                },
-                onSearchStart:function(params){
-                    id_input.val("");
                 }
             });
             new_value.appendTo(".fn_feature_block_"+feature_id).fadeIn('slow');
@@ -1007,9 +1001,6 @@
                 onSelect:function(suggestion){
                     id_input.val(suggestion.data.id);
                     $(this).trigger('change');
-                },
-                onSearchStart:function(params){
-                    id_input.val("");
                 }
             });
         });

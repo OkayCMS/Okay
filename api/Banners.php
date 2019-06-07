@@ -168,25 +168,76 @@ class Banners extends Okay {
     }
 
     /*Выбираем все группы баннеров*/
-    public function get_banners($filter = array()) {
-        $visible_filter = '';
-        $banners = array();
-        
-        if(isset($filter['visible'])) {
-            $visible_filter = $this->db->placehold('AND visible = ?', intval($filter['visible']));
+    public function get_banners($filter = array(), $count = false) {
+        $limit = 100;  // По умолчанию
+        $page = 1;
+        $joins = '';
+        $where = '1';
+        $group_by = '';
+        $order = 'b.position DESC';
+        $select = "b.*";
+        if ($count === true) {
+            $select = "COUNT(DISTINCT b.id) as count";
         }
+
+        if(isset($filter['limit'])) {
+            $limit = max(1, intval($filter['limit']));
+        }
+
+        if(isset($filter['page'])) {
+            $page = max(1, intval($filter['page']));
+        }
+
+        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
         
-        $query = "SELECT * FROM __banners WHERE 1 $visible_filter ORDER BY position";
-        
+        if (isset($filter['visible'])) {
+            $where .= $this->db->placehold(' AND visible = ?', intval($filter['visible']));
+        }
+
+        // При подсчете нам эти переменные не нужны
+        if ($count === true) {
+            $order      = '';
+            $group_by   = '';
+            $sql_limit  = '';
+        }
+
+        if (!empty($order)) {
+            $order = "ORDER BY $order";
+        }
+
+        // При подсчете нам эти переменные не нужны
+        if ($count === true) {
+            $order      = '';
+            $group_by   = '';
+            $sql_limit  = '';
+        }
+
+        $query = $this->db->placehold("SELECT $select
+            FROM __banners b
+            $joins
+            WHERE 
+                $where
+                $group_by
+                $order 
+                $sql_limit
+        ");
+
         $this->db->query($query);
-        
-        foreach($this->db->results() as $banner) {
-            $banners[$banner->id] = $banner;
+        if ($count === true) {
+            return $this->db->result('count');
+        } else {
+            $banners = array();
+            foreach($this->db->results() as $banner) {
+                $banners[$banner->id] = $banner;
+            }
+            return $banners;
         }
-        
-        return $banners;
     }
 
+    public function count_banners($filter = array()) {
+        return $this->get_banners($filter, true);
+    }
+    
     /*Выбираем определенную группу баннеров*/
     public function get_banner($id, $visible = false, $show_filter_array = array()) {
         if (empty($id)) {

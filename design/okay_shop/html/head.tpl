@@ -161,6 +161,61 @@
 {* Language attribute *}
 {foreach $languages as $l}
     {if $l->enabled}
-        <link rel="alternate" hreflang="{$l->href_lang}" href="{preg_replace('/^(.+)\/$/', '$1', $l->url)}">
+        <link rel="alternate" hreflang="{if $l@first}x-default{else}{$l->href_lang}{/if}" href="{preg_replace('/^(.+)\/$/', '$1', $l->url)}">
     {/if}
 {/foreach}
+
+<script>ut_tracker.start('render:recaptcha');</script>
+{if $settings->captcha_type == "v3"}
+    <script src="https://www.google.com/recaptcha/api.js?render={$settings->public_recaptcha_v3}"></script>
+    <script>
+        grecaptcha.ready(function () {
+            {if $module == 'ProductView' || $module == 'BlogView'}
+                var recaptcha_action = 'product';
+            {elseif $module == 'CartView'}
+                var recaptcha_action = 'cart';
+            {else}
+                var recaptcha_action = 'other';
+            {/if}
+            
+            var all_captchеs = document.getElementsByClassName('fn_recaptchav3');
+            grecaptcha.execute('{$settings->public_recaptcha_v3}', { action: recaptcha_action })
+                .then(function (token) {
+                    for (var i=0; i<all_captchеs.length; i++) {
+                        all_captchеs[i].getElementsByClassName('fn_recaptcha_token')[0].value = token;
+                    }
+                });
+        });
+    </script>
+{elseif $settings->captcha_type == "v2"}
+    <script type="text/javascript">
+        var onloadCallback = function() {
+            mysitekey = "{$settings->public_recaptcha}";
+            if($('#recaptcha1').length>0){
+                grecaptcha.render('recaptcha1', {
+                    'sitekey' : mysitekey
+                });
+            }
+            if($('#recaptcha2').length>0){
+                grecaptcha.render('recaptcha2', {
+                    'sitekey' : mysitekey
+                });
+            }
+        };
+    </script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+{elseif $settings->captcha_type == "invisible"}
+    <script>
+        function onSubmit(token) {
+            document.getElementById("captcha_id").submit();
+        }
+        function onSubmitCallback(token) {
+            document.getElementById("fn_callback").submit();
+        }
+        function onSubmitBlog(token) {
+            document.getElementById("fn_blog_comment").submit();
+        }
+    </script>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+{/if}
+<script>ut_tracker.end('render:recaptcha');</script>

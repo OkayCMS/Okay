@@ -130,7 +130,7 @@ class Money extends Okay {
     }
 
     /*Конвертация валюты в определнный формат*/
-    public function convert($price, $currency_id = null, $format = true) {
+    public function convert($price, $currency_id = null, $format = true, $revers = false) {
         if(isset($currency_id)) {
             if(is_numeric($currency_id)) {
                 $currency = $this->get_currency((integer)$currency_id);
@@ -146,7 +146,11 @@ class Money extends Okay {
         $result = $price;
         if(!empty($currency)) {
             // Умножим на курс валюты
-            $result = $result*$currency->rate_from/$currency->rate_to;
+            if ($revers === true) {
+                $result = $result*$currency->rate_to/$currency->rate_from;
+            } else {
+                $result = $result*$currency->rate_from/$currency->rate_to;
+            }
             
             // Точность отображения, знаков после запятой
             $precision = isset($currency->cents)?$currency->cents:2;

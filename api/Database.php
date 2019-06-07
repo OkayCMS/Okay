@@ -38,7 +38,8 @@ class Database extends Okay {
         // Выводим сообщение, в случае ошибки
         if($this->mysqli->connect_error)
         {
-            trigger_error("Could not connect to the database: ".$this->mysqli->connect_error, E_USER_WARNING);
+            ini_set('display_errors', 'on');
+            trigger_error("Could not connect to the database: ".$this->mysqli->connect_error, E_USER_ERROR);
             return false;
         }
         // Или настраиваем соединение
@@ -66,7 +67,14 @@ class Database extends Okay {
         $l->domains = explode(',', $l->domains);
         $h = getenv("HTTP_HOST");
         if(substr($h, 0, 4) == 'www.') {$h = substr($h, 4);}
-        if((!in_array($h, $l->domains) || (strtotime($l->expiration)<time() && $l->expiration!='*'))) {
+        $sv = false;$da = explode('.', $h);$it = count($da);
+        for ($i=1;$i<=$it;$i++) {
+            unset($da[0]);$da = array_values($da);$d = '*.'.implode('.', $da);
+            if (in_array($d, $l->domains) || in_array('*.'.$h, $l->domains)) {
+                $sv = true;break;
+            }
+        }
+        if(((!in_array($h, $l->domains) && !$sv) || (strtotime($l->expiration)<time() && $l->expiration!='*')) && strtolower(php_sapi_name()) != 'cli') {
             $this->rev = true;
         }
         return $this->mysqli;

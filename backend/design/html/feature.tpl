@@ -165,7 +165,19 @@
                            {$btr->feature_message|escape}
                         </div>
                     </div>
-                    <select class="selectpicker col-xs-12 px-0" multiple name="feature_categories[]" size="10" data-selected-text-format="count" >
+
+                    <div class="activity_of_switch_item"> {* row block *}
+                        <div class="okay_switch clearfix">
+                            <label class="switch_label">{$btr->feature_select_all_categories|escape}</label>
+                            <label class="switch switch-default">
+                                <input class="switch-input" name="" value='' type="checkbox" id="select_all_categories"/>
+                                <span class="switch-label"></span>
+                                <span class="switch-handle"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <select class="selectpicker fn_select_all_categories col-xs-12 px-0" multiple name="feature_categories[]" size="10" data-selected-text-format="count" >
                         {function name=category_select selected_id=$product_category level=0}
                             {foreach $categories as $category}
                                 <option value='{$category->id}' {if in_array($category->id, $feature_categories)}selected{/if} category_name='{$category->single_name}'>{section name=sp loop=$level}&nbsp;&nbsp;&nbsp;&nbsp;{/section}{$category->name}</option>
@@ -446,6 +458,12 @@
 
 {literal}
     <script>
+
+        $(document).on('change', '#select_all_categories', function () {
+            $('.fn_select_all_categories option').prop("selected", $(this).is(':checked'));
+            $('.fn_select_all_categories').selectpicker('refresh');
+        });
+        
         var new_value = $(".fn_new_value").clone(false);
         $(".fn_new_value").remove();
         $(document).on("click", ".fn_add_value", function () {

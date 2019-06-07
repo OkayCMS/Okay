@@ -7,12 +7,17 @@ class BannersImagesAdmin extends Okay {
     public function fetch() {
         $filter = array();
         $filter['page'] = max(1, $this->request->get('page', 'integer'));
-        
-        $filter['limit'] = 20;
-        
-        // Баннера
-        $banners = $this->banners->get_banners();
-        $this->design->assign('banners', $banners);
+
+        if ($filter['limit'] = $this->request->get('limit', 'integer')) {
+            $filter['limit'] = max(5, $filter['limit']);
+            $filter['limit'] = min(100, $filter['limit']);
+            $_SESSION['banners_images_num_admin'] = $filter['limit'];
+        } elseif (!empty($_SESSION['banners_images_num_admin'])) {
+            $filter['limit'] = $_SESSION['banners_images_num_admin'];
+        } else {
+            $filter['limit'] = 25;
+        }
+        $this->design->assign('current_limit', $filter['limit']);
         
         // Текущий баннер
         $banner_id = $this->request->get('banner_id', 'integer');
@@ -104,6 +109,13 @@ class BannersImagesAdmin extends Okay {
         $banners_images = array();
         foreach($this->banners->get_banners_images($filter) as $p) {
             $banners_images[$p->id] = $p;
+        }
+
+        if (!empty($banners_images)) {
+            // Баннера
+            $count_banners = $this->banners->count_banners();
+            $banners = $this->banners->get_banners(array('limit' => $count_banners));
+            $this->design->assign('banners', $banners);
         }
         
         $this->design->assign('banners_images', $banners_images);

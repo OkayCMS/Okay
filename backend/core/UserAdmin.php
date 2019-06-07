@@ -21,7 +21,7 @@ class UserAdmin extends Okay {
             } elseif(empty($user->email)) {
                 $this->design->assign('message_error', 'empty_email');
             } elseif(($u = $this->users->get_user($user->email)) && $u->id!=$user->id) {
-                $this->design->assign('message_error', 'login_existed');
+                $this->design->assign('message_error', 'login_exists');
             } else {
                 /*Обновление пользователя*/
                 $user->id = $this->users->update_user($user->id, $user);

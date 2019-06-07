@@ -245,6 +245,11 @@
             <th>{$btr->general_total|escape}</th>
             <td class="total">{$order->total_price|convert:$currency->id}&nbsp;{$currency->sign|escape}</td>
         </tr>
+        {if $delivery}
+        <tr>
+            <td colspan="2">{$btr->order_print_delivery|escape} {$delivery->name}</td>
+        </tr>
+        {/if}
         {if $payment_method}
         <tr>
             <td colspan="2">{$btr->order_print_payment|escape} {$payment_method->name}</td>

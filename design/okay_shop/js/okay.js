@@ -241,7 +241,7 @@ function price_slider_init() {
                     $('.fn_selected_features').html(data.selected_features);
                     $('.products_item').matchHeight();
                     // Выпадающие блоки
-                    $('.fn_switch').click(function(e){
+                    $('.fn_features .fn_switch').click(function(e){
                         e.preventDefault();
 
                         $(this).next().slideToggle(300);

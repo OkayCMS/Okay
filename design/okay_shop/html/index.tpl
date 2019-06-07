@@ -47,40 +47,6 @@
         <script>ut_tracker.end('parsing:head:counters');</script>
     {/if}
 
-    <script>ut_tracker.start('render:recaptcha');</script>
-    {if $settings->captcha_type == "v2"}
-        <script type="text/javascript">
-            var onloadCallback = function() {
-                mysitekey = "{$settings->public_recaptcha}";
-                if($('#recaptcha1').length>0){
-                    grecaptcha.render('recaptcha1', {
-                        'sitekey' : mysitekey
-                    });
-                }
-                if($('#recaptcha2').length>0){
-                    grecaptcha.render('recaptcha2', {
-                        'sitekey' : mysitekey
-                    });
-                }
-            };
-        </script>
-        <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
-    {elseif $settings->captcha_type == "invisible"}
-        <script>
-            function onSubmit(token) {
-                document.getElementById("captcha_id").submit();
-            }
-            function onSubmitCallback(token) {
-                document.getElementById("fn_callback").submit();
-            }
-            function onSubmitBlog(token) {
-                document.getElementById("fn_blog_comment").submit();
-            }
-        </script>
-        <script src='https://www.google.com/recaptcha/api.js'></script>
-    {/if}
-    <script>ut_tracker.end('render:recaptcha');</script>
-
 </head>
 
 <body>
@@ -426,7 +392,7 @@
             {* Copyright *}
             <div class="copyright">
                 <span>© {$smarty.now|date_format:"%Y"}</span>
-                <a href="http://okay-cms.com" target="_blank">
+                <a href="https://okay-cms.com" target="_blank">
                     <span data-language="index_copyright">{$lang->index_copyright}</span>
                 </a>
             </div>

@@ -1,0 +1,11 @@
+{
+    "autoload": {
+        "psr-4": {
+            "Integration1C\\": "integration/",
+            "Integration1C\\Export\\": "integration/export",
+            "Integration1C\\Import\\": "integration/import",
+            "Integration1C\\Export\\ExportFactory\\": "integration/export/exportFactory",
+            "Integration1C\\Import\\ImportFactory\\": "integration/import/importFactory"
+        }
+    }
+}

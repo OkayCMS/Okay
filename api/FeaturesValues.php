@@ -51,7 +51,17 @@ class FeaturesValues extends Okay {
         }
 
         if (isset($filter['yandex'])) {
-            $yandex_filter = $this->db->placehold("AND `f`.`yandex`=?", (int)$filter['yandex']);
+            $yandex_filter = $this->db->placehold("AND `f`.`yandex`=? AND `pf`.`product_id` IN (
+                SELECT 
+                    distinct(p.id)
+                FROM ok_variants v 
+                LEFT JOIN ok_products p ON v.product_id=p.id
+                WHERE 
+                    p.visible 
+                    AND v.feed = 1 
+                    AND (v.stock >0 OR v.stock is NULL) 
+                    AND v.price >0 
+            )", (int)$filter['yandex']);
         }
 
         if(isset($filter['id'])) {
@@ -192,11 +202,10 @@ class FeaturesValues extends Okay {
             $sql_limit = "";
         } else {
             $select = $this->db->placehold("
-                MAX(`fv`.`id`)            AS `id`,
-                MAX(`fv`.`feature_id`)    AS `feature_id`,
-                MAX(`fv`.`position`)      AS `position`,
+                `fv`.`id`,
+                `fv`.`feature_id`,
+                `fv`.`position`,
                 count(`pf`.`product_id`)  AS `count`,
-                MAX(`f`.`id`)             AS `feature_id`, 
                 MAX(`f`.`auto_name_id`)   AS `auto_name_id`, 
                 MAX(`f`.`auto_value_id`)  AS `auto_value_id`, 
                 MAX(`f`.`url`)            AS `url`, 
@@ -388,20 +397,25 @@ class FeaturesValues extends Okay {
 
         $feature_value->value = trim($feature_value->value);
 
-        if (!$feature_value->translit) {
+        if (empty($feature_value->translit)) {
             $feature_value->translit = $this->translit_alpha($feature_value->value);
         }
         $feature_value->translit = strtr(strtolower(trim($feature_value->translit)), $this->spec_pairs);
 
-        $result = $this->languages->get_description($feature_value, 'feature_value');
+        $result = $this->languages->get_description($feature_value, 'feature_value', false);
 
-        if($this->db->query("INSERT INTO `__features_values` SET ?%", $feature_value)) {
+        if ($this->db->query("INSERT INTO `__features_values` SET ?%", $feature_value)) {
             $id = $this->db->insert_id();
             if (empty($feature_value->position)) {
                 $this->db->query("UPDATE `__features_values` SET `position`=`id` WHERE `id`=?", $id);
             }
 
-            if(!empty($result->description)) {
+            if (!empty($result->description)) {
+                
+                if (!empty($feature_value->feature_id)) {
+                    $result->description->feature_id = $feature_value->feature_id;
+                }
+                
                 $this->languages->action_description($id, $result->description, 'feature_value');
             }
             return $id;
@@ -418,7 +432,7 @@ class FeaturesValues extends Okay {
             $feature_value->value = trim($feature_value->value);
         }
 
-        if (!$feature_value->translit && $feature_value->value) {
+        if (empty($feature_value->translit) && !empty($feature_value->value)) {
             $feature_value->translit = $this->translit_alpha($feature_value->value);
         }
 
@@ -428,15 +442,20 @@ class FeaturesValues extends Okay {
 
         $result = $this->languages->get_description($feature_value, 'feature_value');
 
-        $query = $this->db->placehold("UPDATE `__features_values` SET ?% WHERE `id`=? LIMIT 1", $feature_value, (int)$id);
-        if($this->db->query($query)) {
-            if(!empty($result->description)) {
-                $this->languages->action_description($id, $result->description, 'feature_value', $this->languages->lang_id());
-            }
-            return $id;
-        } else {
-            return false;
+        if (!empty((array)$feature_value)) {
+            $query = $this->db->placehold("UPDATE `__features_values` SET ?% WHERE `id`=? LIMIT 1", $feature_value, (int)$id);
+            $this->db->query($query);
         }
+        
+        if (!empty($result->description)) {
+
+            if (!empty($feature_value->feature_id)) {
+                $result->description->feature_id = $feature_value->feature_id;
+            }
+            
+            $this->languages->action_description($id, $result->description, 'feature_value', $this->languages->lang_id());
+        }
+        return $id;
     }
 
     /*добавление значения свойства товара*/

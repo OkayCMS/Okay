@@ -102,6 +102,7 @@ class ManagerAdmin extends Okay {
             'left_auto'     => array(
                 'import'        => $btr->left_import_title,
                 'export'        => $btr->left_export_title,
+                'integration_1c' => $btr->integration_1c,
             ),
             'left_stats'    => array(
                 'stats'         => $btr->left_stats,

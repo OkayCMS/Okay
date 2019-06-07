@@ -207,7 +207,14 @@ class IndexAdmin extends Okay {
             preg_match_all('/./us', $bt, $ar);$bt =  implode(array_reverse($ar[0]));}
             unset($bt);
             if(substr($h, 0, 4) == 'www.') $h = substr($h, 4);
-            if((!in_array($h, $l->domains) || (strtotime($l->expiration)<time() && $l->expiration!='*')) && $module!='LicenseAdmin') {
+            $sv = false;$da = explode('.', $h);$it = count($da);
+            for ($i=1;$i<=$it;$i++) {
+                unset($da[0]);$da = array_values($da);$d = '*.'.implode('.', $da);
+                if (in_array($d, $l->domains) || in_array('*.'.$h, $l->domains)) {
+                    $sv = true;break;
+                }
+            }
+            if(((!in_array($h, $l->domains) && !$sv) || (strtotime($l->expiration)<time() && $l->expiration!='*')) && $module!='LicenseAdmin') {
                 header('location: '.$this->config->root_url.'/backend/index.php?module=LicenseAdmin');
             } else {
                 $l->valid = true;

@@ -56,7 +56,16 @@ $h = getenv("HTTP_HOST");
 if(substr($h, 0, 4) == 'www.') {
     $h = substr($h, 4);
 }
-if((!in_array($h, $l->domains) || (strtotime($l->expiration)<time() && $l->expiration!='*'))) {
+
+$sv = false;$da = explode('.', $h);$it = count($da);
+for ($i=1;$i<=$it;$i++) {
+    unset($da[0]);$da = array_values($da);$d = '*.'.implode('.', $da);
+    if (in_array($d, $l->domains) || in_array('*.'.$h, $l->domains)) {
+        $sv = true;break;
+    }
+}
+
+if(((!in_array($h, $l->domains) && !$sv) || (strtotime($l->expiration)<time() && $l->expiration!='*'))) {
     print "<div style='text-align:center; font-size:22px; height:100px;'>Лицензия недействительна<br><a href='http://okay-cms.com'>Скрипт интернет-магазина Okay</a></div>";
 }
 

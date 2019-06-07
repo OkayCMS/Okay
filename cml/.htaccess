@@ -1,5 +1,0 @@
-AddType application/octet-stream csv
-AuthName "OkayCMS 1C"
-AuthType Basic
-AuthUserFile /home/mt1sk/www/okay-git/cml/.passwd
-require valid-user

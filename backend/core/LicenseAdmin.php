@@ -29,7 +29,14 @@ class LicenseAdmin extends Okay {
             $h = substr($h, 4);
         }
         $l->valid = true;
-        if(!in_array($h, $l->domains)) {
+        $sv = false;$da = explode('.', $h);$it = count($da);
+        for ($i=1;$i<=$it;$i++) {
+            unset($da[0]);$da = array_values($da);$d = '*.'.implode('.', $da);
+            if (in_array($d, $l->domains) || in_array('*.'.$h, $l->domains)) {
+                $sv = true;break;
+            }
+        }
+        if(!in_array($h, $l->domains) && !$sv) {
             $l->valid = false;
         }
         if(strtotime($l->expiration)<time() && $l->expiration!='*') {

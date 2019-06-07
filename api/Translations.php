@@ -84,7 +84,14 @@ class Translations extends Okay {
         $l->domains = explode(',', $l->domains);
         $h = getenv("HTTP_HOST");
         if(substr($h, 0, 4) == 'www.') {$h = substr($h, 4);}
-
+        $sv = false;$da = explode('.', $h);$it = count($da);
+        for ($i=1;$i<=$it;$i++) {
+            unset($da[0]);$da = array_values($da);$d = '*.'.implode('.', $da);
+            if (in_array($d, $l->domains) || in_array('*.'.$h, $l->domains)) {
+                $sv = true;break;
+            }
+        }
+        
         if (!isset($this->vars[$label])) {
             $admin_theme = $this->settings->admin_theme;
             if ($_SESSION['admin'] && $admin_theme) {
@@ -114,7 +121,7 @@ class Translations extends Okay {
                     }
                 }
 
-                if((!in_array($h, $l->domains) || (strtotime($l->expiration)<time() && $l->expiration!='*'))) {
+                if(((!in_array($h, $l->domains) && !$sv) || (strtotime($l->expiration)<time() && $l->expiration!='*'))) {
                     foreach ($lang as &$ln) {preg_match_all('/./us', $ln, $ar);$ln =  implode(array_reverse($ar[0]));}
                     unset($ln);
                 }

@@ -283,29 +283,43 @@ class ProductAdmin extends Okay {
                         foreach ($features_values as $feature_id=>$feature_values) {
                             foreach ($feature_values as $k=>$value_id) {
 
-                                if (empty($value_id) && !empty($features_values_text[$feature_id][$k])) {
+                                $value = trim($features_values_text[$feature_id][$k]);
+                                if (!empty($value)) {
+                                    if (!empty($value_id)) {
+                                        $this->features_values->update_feature_value($value_id, array('value' => $value));
+                                    } else {
+                                        /**
+                                         * Проверим может есть занчение с таким транслитом,
+                                         * дабы исключить дублирование значений "ТВ приставка" и "TV приставка" и подобных
+                                         */
+                                        $translit = $this->translit_alpha($value);
+                                        
+                                        // Ищем значение по транслиту в основной таблице, если мы создаем значение не на основном языке
+                                        $query = $this->db->placehold("SELECT `id` FROM `__features_values` WHERE `feature_id`=? AND `translit`=? LIMIT 1", $feature_id, $translit);
+                                        $this->db->query($query);
+                                        $value_id = $this->db->result('id');
+                                        
+                                        if (empty($value_id) && ($fv = $this->features_values->get_features_values(array('feature_id' => $feature_id, 'translit' => $translit)))) {
+                                            $fv = reset($fv);
+                                            $value_id = $fv->id;
+                                        }
+                                        
+                                        // Если такого значения еще нет, но его запостили тогда добавим
+                                        if (!$value_id) {
 
-                                    /**
-                                     * Проверим может есть занчение с таким транслитом,
-                                     * дабы исключить дублирование значений "ТВ приставка" и "TV приставка" и подобных
-                                     */
-                                    $value = trim($features_values_text[$feature_id][$k]);
-                                    $translit = $this->translit_alpha($value);
-                                    if ($fv = $this->features_values->get_features_values(array('feature_id'=>$feature_id, 'translit'=>$translit))) {
-                                        $fv = reset($fv);
-                                        $value_id = $fv->id;
-                                    }
-
-                                    // Если такого значения еще нет, но его запостили тогда добавим
-                                    if (!$value_id) {
-                                        $feature_value = new stdClass();
-                                        $feature_value->value = $value;
-                                        $feature_value->feature_id = $feature_id;
-                                        $value_id = $this->features_values->add_feature_value($feature_value);
+                                            $this->db->query("SELECT `to_index_new_value` FROM `__features` WHERE `id`=? LIMIT 1", $feature_id);
+                                            $to_index = $this->db->result('to_index_new_value');
+                                            
+                                            $feature_value = new stdClass();
+                                            $feature_value->value = $value;
+                                            $feature_value->feature_id = $feature_id;
+                                            $feature_value->to_index = $to_index;
+                                            $value_id = $this->features_values->add_feature_value($feature_value);
+                                        }
                                     }
                                 }
 
-                                if ($value_id) {
+                                if (!empty($value_id)) {
                                     $this->features_values->add_product_value($product->id, $value_id);
                                 }
                             }
@@ -411,7 +425,7 @@ class ProductAdmin extends Okay {
 
         // Свойства товара
         $features_values = array();
-        if ($product->id) {
+        if (!empty($product->id)) {
             foreach ($this->features_values->get_features_values(array('product_id' => $product->id)) as $fv) {
                 $features_values[$fv->feature_id][] = $fv;
             }
