@@ -132,6 +132,8 @@
                         </div>
                         <div class="okay_list_option">
                             <select name="action" class="selectpicker brands_action">
+                                <option value="enable">{$btr->general_do_enable|escape}</option>
+                                <option value="disable">{$btr->general_do_disable|escape}</option>
                                 <option value="in_feed">{$btr->brands_in_xml|escape}</option>
                                 <option value="out_feed">{$btr->brands_out_xml|escape}</option>
                                 <option value="delete">{$btr->general_delete|escape}</option>

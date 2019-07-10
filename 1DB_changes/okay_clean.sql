@@ -5865,7 +5865,7 @@ CREATE TABLE `ok_variants` (
   `weight` decimal(10,2) DEFAULT '0.00',
   `price` decimal(14,2) NOT NULL DEFAULT '0.00',
   `compare_price` decimal(14,2) DEFAULT NULL,
-  `stock` mediumint(9) DEFAULT NULL,
+  `stock` mediumint(9) unsigned DEFAULT NULL,
   `position` int(11) NOT NULL DEFAULT '0',
   `attachment` varchar(255) NOT NULL DEFAULT '',
   `external_id` varchar(36) NOT NULL DEFAULT '',

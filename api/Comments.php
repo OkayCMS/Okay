@@ -108,10 +108,6 @@ class Comments extends Okay {
             $where .= $keyword_filter;
         }
 
-        if(isset($filter['ip'])) {
-            $where .= $this->db->placehold(" OR c.ip=?", $filter['ip']);
-        }
-
         if (!empty($order)) {
             $order = "ORDER BY $order";
         }

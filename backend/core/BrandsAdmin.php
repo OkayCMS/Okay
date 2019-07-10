@@ -36,6 +36,20 @@ class BrandsAdmin extends Okay {
             
             if(is_array($ids)) {
                 switch($this->request->post('action')) {
+                    case 'disable': {
+                        /*Выключить бренд*/
+                        foreach ($ids as $id) {
+                            $this->brands->update_brand($id, array('visible' => 0));
+                        }
+                        break;
+                    }
+                    case 'enable': {
+                        /*Включить бренд*/
+                        foreach ($ids as $id) {
+                            $this->brands->update_brand($id, array('visible' => 1));
+                        }
+                        break;
+                    }
                     case 'delete': {
                         /*Удаление брендов*/
                         foreach($ids as $id) {

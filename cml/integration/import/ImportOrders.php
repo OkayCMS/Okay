@@ -69,6 +69,10 @@ class ImportOrders extends Import
                 $order->id = $this->okay->orders->add_order($order);
             }
 
+            if (empty($order->id)) {
+                return "error: empty order_id\n";
+            }
+            
             $purchases_ids = array();
             // Товары
             foreach ($xml_order->Товары->Товар as $xml_product) {

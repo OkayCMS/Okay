@@ -452,6 +452,7 @@ $backend_translations->product_rating = 'Product rating';
 $backend_translations->product_rating_number = 'Number of votes:';
 $backend_translations->product_rating_value = 'Rating value:';
 $backend_translations->product_updated = 'Product updated';
+$backend_translations->product_features_values_change_notice = 'Property management occurs only in the main language. To translate the value, go to the property page.';
 $backend_translations->products_add = 'Add products';
 $backend_translations->products_bestsellers = 'Bestsellers';
 $backend_translations->products_create_dublicate = 'Create dublicate';

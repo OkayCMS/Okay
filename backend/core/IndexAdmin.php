@@ -256,6 +256,9 @@ class IndexAdmin extends Okay {
         $lang_id = $this->languages->lang_id();
         $this->design->assign('lang_id', $lang_id);
         
+        $main_lang = $this->languages->get_first_language();
+        $this->design->assign('main_lang_id', $main_lang->id);
+        
         $this->design->assign('lang_link', $this->languages->get_lang_link());
 
         /*Формирование меню*/

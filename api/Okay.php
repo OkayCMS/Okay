@@ -180,6 +180,33 @@ class Okay {
         return $res;
     }
 
+    public function clear_catalog() {
+        $this->db->query("DELETE FROM `__comments` WHERE `type`='product'");
+        $this->db->query("UPDATE `__purchases` SET `product_id`=0, `variant_id`=0");
+        $this->db->query("TRUNCATE TABLE `__brands`");
+        $this->db->query("TRUNCATE TABLE `__categories`");
+        $this->db->query("TRUNCATE TABLE `__categories_features`");
+        $this->db->query("TRUNCATE TABLE `__features`");
+        $this->db->query("TRUNCATE TABLE `__features_aliases_values`");
+        $this->db->query("TRUNCATE TABLE `__features_values`");
+        $this->db->query("TRUNCATE TABLE `__images`");
+        $this->db->query("TRUNCATE TABLE `__import_log`");
+        $this->db->query("TRUNCATE TABLE `__lang_brands`");
+        $this->db->query("TRUNCATE TABLE `__lang_categories`");
+        $this->db->query("TRUNCATE TABLE `__lang_features`");
+        $this->db->query("TRUNCATE TABLE `__lang_features_aliases_values`");
+        $this->db->query("TRUNCATE TABLE `__lang_features_values`");
+        $this->db->query("TRUNCATE TABLE `__lang_products`");
+        $this->db->query("TRUNCATE TABLE `__lang_variants`");
+        $this->db->query("TRUNCATE TABLE `__options_aliases_values`");
+        $this->db->query("TRUNCATE TABLE `__products`");
+        $this->db->query("TRUNCATE TABLE `__products_categories`");
+        $this->db->query("TRUNCATE TABLE `__products_features_values`");
+        $this->db->query("TRUNCATE TABLE `__related_blogs`");
+        $this->db->query("TRUNCATE TABLE `__related_products`");
+        $this->db->query("TRUNCATE TABLE `__variants`");
+    }
+    
     //Добавляет к массиву пар для транслита, пары для замены спецсимволов на буквенные обозначения
     private function spec_pairs($pair) {
         foreach ($this->spec_pairs as $symbol => $alias) {

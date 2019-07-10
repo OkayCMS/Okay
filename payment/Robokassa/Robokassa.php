@@ -55,7 +55,7 @@ class Robokassa extends Okay {
 
         foreach ($purchases as $key => $p) {
             $one_product = array();
-            $one_product['name'] = substr(htmlentities($p->product_name . ($p->variant_name ? ' ' . $p->variant_name : '')), 0, 64);
+            $one_product['name'] = mb_substr(htmlentities($p->product_name . ($p->variant_name ? ' ' . $p->variant_name : '')), 0, 64);
             if ($key == end($purchases)) {
                 $one_product['sum'] = $total_price;
             } else {

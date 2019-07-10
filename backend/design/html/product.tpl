@@ -495,6 +495,11 @@
                 <div class="toggle_arrow_wrap fn_toggle_card text-primary">
                     <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
                 </div>
+                {if $lang_id != $main_lang_id}
+                    <div class="boxed boxed_attention mt-h mb-0">
+                        {$btr->product_features_values_change_notice}
+                    </div>
+                {/if}
             </div>
             <div class="toggle_body_wrap on fn_card">
                 <div class="features_wrap fn_features_wrap">
@@ -513,7 +518,7 @@
                                         {/if}
                                     </div>
                                     <div class="feature_value">
-                                        <input class="feature_input fn_auto_option" data-id="{$feature_id}" type="text" name="features_values_text[{$feature_id}][]" value="{$feature_value->value|escape}"/>
+                                        <input class="feature_input fn_auto_option" data-id="{$feature_id}" type="text" name="features_values_text[{$feature_id}][]" value="{$feature_value->value|escape}"{if $lang_id != $main_lang_id} readonly{/if}/>
                                         <input class="fn_value_id_input" type="hidden" name="features_values[{$feature_id}][]" value="{$feature_value->id}"/>
                                         <button type="button" class="btn btn_mini{if $feature_value@first} btn-info fn_add{else} btn-danger fn_remove{/if} fn_feature_multi_values feature_multi_values">
                                             <span class="fn_plus" {if !$feature_value@first}style="display: none;"{/if}>
@@ -535,7 +540,7 @@
                                         </span>
                                     </div>
                                     <div class="feature_value">
-                                        <input class="feature_input fn_auto_option" data-id="{$feature_id}" type="text" name="features_values_text[{$feature_id}][]" value=""/>
+                                        <input class="feature_input fn_auto_option" data-id="{$feature_id}" type="text" name="features_values_text[{$feature_id}][]" value=""{if $lang_id != $main_lang_id} readonly{/if}/>
                                         <input class="fn_value_id_input" type="hidden" name="features_values[{$feature_id}][]" value=""/>
                                         <button type="button" class="btn btn_mini btn-info fn_add fn_feature_multi_values feature_multi_values">
                                             <span class="fn_plus">
@@ -569,7 +574,7 @@
                                 </span>
                             </div>
                             <div class="feature_value">
-                                <input class="feature_input fn_auto_option" data-id="" type="text" name="" value=""/>
+                                <input class="feature_input fn_auto_option" data-id="" type="text" name="" value=""{if $lang_id != $main_lang_id} readonly{/if}/>
                                 <input class="fn_value_id_input" type="hidden" name="" value=""/>
                                 <button type="button" class="btn btn_mini btn-info fn_add fn_feature_multi_values feature_multi_values">
                                     <span class="fn_plus">
@@ -922,17 +927,26 @@
                             value.attr('name', "features_values_text["+feature.id+"][]");
                             id_input.attr('name', "features_values["+feature.id+"][]");
                             id_input.val(feature.values[iv].id)
-                            value.devbridgeAutocomplete({
-                                serviceUrl:'ajax/options_autocomplete.php',
-                                minChars:0,
-                                orientation:'auto',
-                                params: {feature_id:feature.id},
-                                noCache: false,
-                                onSelect:function(suggestion){
-                                    id_input.val(suggestion.data.id);
-                                    $(this).trigger('change');
-                                }
-                            });
+                            {/literal}
+                            {if $lang_id == $main_lang_id}
+                            {literal}
+                                value.devbridgeAutocomplete({
+                                    serviceUrl:'ajax/options_autocomplete.php',
+                                    minChars:0,
+                                    orientation:'auto',
+                                    params: {feature_id:feature.id},
+                                    noCache: false,
+                                    onSelect:function(suggestion){
+                                        id_input.val(suggestion.data.id);
+                                        $(this).trigger('change');
+                                    },
+                                    onSearchStart:function(params){
+                                        id_input.val("");
+                                    }
+                                });
+                            {/literal}
+                            {/if}
+                            {literal}
                             if (iv > 0) {
                                 new_line.find(".fn_feature_multi_values")
                                     .removeClass("fn_add")
@@ -952,6 +966,9 @@
             return false;
         }
 
+        {/literal}
+        {if $lang_id == $main_lang_id}
+        {literal}
         $(document).on("click",".fn_feature_multi_values.fn_add", function () {
             var feature_id  = $(this).closest(".feature_value").find(".fn_auto_option").data("id"),
                 new_value   = new_feature_category.clone(true),
@@ -979,6 +996,9 @@
                 onSelect:function(suggestion){
                     id_input.val(suggestion.data.id);
                     $(this).trigger('change');
+                },
+                onSearchStart:function(params){
+                    id_input.val("");
                 }
             });
             new_value.appendTo(".fn_feature_block_"+feature_id).fadeIn('slow');
@@ -1001,9 +1021,15 @@
                 onSelect:function(suggestion){
                     id_input.val(suggestion.data.id);
                     $(this).trigger('change');
+                },
+                onSearchStart:function(params){
+                    id_input.val("");
                 }
             });
         });
+        {/literal}
+        {/if}
+        {literal}
 
         // Добавление нового свойства товара
         var new_feature = $(".fn_new_feature").clone(true);

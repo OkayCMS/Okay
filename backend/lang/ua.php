@@ -453,6 +453,7 @@ $backend_translations->product_rating = 'Рейтинг товару';
 $backend_translations->product_rating_number = 'Кількість голосів:';
 $backend_translations->product_rating_value = 'Значення рейтингу:';
 $backend_translations->product_updated = 'Товар змінений';
+$backend_translations->product_features_values_change_notice = 'Управління властивостями відбувається тільки на основній мові. Для перекладу значення, перейдіть на сторінку властивості.';
 $backend_translations->products_add = 'Додати товар';
 $backend_translations->products_bestsellers = 'Хіти продажу';
 $backend_translations->products_create_dublicate = 'Створити дублікат';

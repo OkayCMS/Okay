@@ -129,8 +129,9 @@ class Image extends Okay {
 
     /*Загрузка изображения*/
     public function download_image($filename) {
+        $encoded_filename = rawurlencode($filename);
         // Заливаем только есть такой файл есть в базе
-        $this->db->query('SELECT 1 FROM __images WHERE filename=? LIMIT 1', $filename);
+        $this->db->query('SELECT 1 FROM __images WHERE filename=? LIMIT 1', $encoded_filename);
         if(!$this->db->result()) {
             return false;
         }
@@ -158,7 +159,7 @@ class Image extends Okay {
         // Перед долгим копированием займем это имя
         fclose(fopen($local_file, 'w'));
         if (copy($filename, $local_file) && filesize($local_file) > 0) {
-            $this->db->query('UPDATE __images SET filename=? WHERE filename=?', $new_name, $filename);
+            $this->db->query('UPDATE __images SET filename=? WHERE filename=?', $new_name, $encoded_filename);
             return $new_name;
         }
         // Если по https не получилось сохранить изображение, попробуем на тот же урл постучаться на http
@@ -169,7 +170,7 @@ class Image extends Okay {
                 preg_match('/\d{3}/', $headers[0], $matches);
                 // Если урл по http отдает 200, забираем изображение
                 if ($matches[0] == '200' && copy($filename_http, $local_file) && filesize($local_file) > 0) {
-                    $this->db->query('UPDATE __images SET filename=? WHERE filename=?', $new_name, $filename);
+                    $this->db->query('UPDATE __images SET filename=? WHERE filename=?', $new_name, $encoded_filename);
                     return $new_name;
                 } else {
                     @unlink($local_file);

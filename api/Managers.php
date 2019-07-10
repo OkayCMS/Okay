@@ -169,8 +169,10 @@ class Managers extends Okay {
     }
 
     /*Проверка доступа к определнному модулю сайта*/
-    public function access($module) {
-        $manager = $this->get_manager();
+    public function access($module, $manager = null) {
+        if (empty($manager)) {
+            $manager = $this->get_manager();
+        }
         if(is_array($manager->permissions)) {
             return in_array($module, $manager->permissions);
         } else {

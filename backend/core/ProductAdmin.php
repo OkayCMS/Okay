@@ -267,13 +267,6 @@ class ProductAdmin extends Okay {
                             $i++;
                         }
                     }
-                    
-                    // Характеристики товара
-                    // Свойства текущей категории
-                    $category_features = array();
-                    foreach($this->features->get_features(array('category_id'=>reset($product_categories)->id)) as $f) {
-                        $category_features[] = $f->id;
-                    }
 
                     // Удалим все значения свойств товара
                     $this->features_values->delete_product_value($product->id);

@@ -1,0 +1,1 @@
+ALTER TABLE `ok_variants` CHANGE `stock` `stock` mediumint(9) unsigned NULL AFTER `compare_price`;
