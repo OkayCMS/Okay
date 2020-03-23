@@ -937,10 +937,12 @@
                                     params: {feature_id:feature.id},
                                     noCache: false,
                                     onSelect:function(suggestion){
+                                        var id_input = $(this).closest('.feature_value').find('.fn_value_id_input');
                                         id_input.val(suggestion.data.id);
                                         $(this).trigger('change');
                                     },
                                     onSearchStart:function(params){
+                                        var id_input = $(this).closest('.feature_value').find('.fn_value_id_input');
                                         id_input.val("");
                                     }
                                 });
@@ -994,10 +996,12 @@
                 params: {feature_id:feature_id},
                 noCache: false,
                 onSelect:function(suggestion){
+                    var id_input = $(this).closest('.feature_value').find('.fn_value_id_input');
                     id_input.val(suggestion.data.id);
                     $(this).trigger('change');
                 },
                 onSearchStart:function(params){
+                    var id_input = $(this).closest('.feature_value').find('.fn_value_id_input');
                     id_input.val("");
                 }
             });
@@ -1019,10 +1023,12 @@
                 params: {feature_id:feature_id},
                 noCache: false,
                 onSelect:function(suggestion){
+                    var id_input = $(this).closest('.feature_value').find('.fn_value_id_input');
                     id_input.val(suggestion.data.id);
                     $(this).trigger('change');
                 },
                 onSearchStart:function(params){
+                    var id_input = $(this).closest('.feature_value').find('.fn_value_id_input');
                     id_input.val("");
                 }
             });

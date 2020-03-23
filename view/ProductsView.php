@@ -83,7 +83,7 @@ class ProductsView extends View {
                 $this->is_wrong_params = 1;
             } else {
                 @list($param_name, $param_values) = explode('-',$v);
-                if (in_array($this->page->url, array('all-products', 'discounted', 'bestsellers'))
+                if (!empty($this->page->url) && in_array($this->page->url, array('all-products', 'discounted', 'bestsellers'))
                         && !in_array($param_name, array('page', 'sort'))) {
                     $this->is_wrong_params = 1;
                     break;
@@ -513,7 +513,7 @@ class ProductsView extends View {
         
         $price_filter = $this->reset_price_filter();
         if (isset($_COOKIE['price_filter'])) {
-            $price_filter = unserialize($_COOKIE['price_filter']);
+            $price_filter = json_decode($_COOKIE['price_filter'], true);
         }
         
         // Когда перешли на другой тип каталога, забываем диапазон цен
@@ -603,7 +603,11 @@ class ProductsView extends View {
                 return false;
             }
 
-            if (($filter['price']['min'] != '' && $filter['price']['max'] != '') || $filter['features'] || $filter['other_filter'] || $filter['brand_id']) {
+            if ((!empty($filter['price']) && $filter['price']['min'] !== '' && $filter['price']['max'] !== '')
+                || !empty($filter['features'])
+                || !empty($filter['other_filter'])
+                || !empty($filter['brand_id'])
+            ) {
                 $this->is_filter_page = true;
                 $this->design->assign('is_filter_page', $this->is_filter_page);
             }
@@ -627,7 +631,7 @@ class ProductsView extends View {
                 $brands_filter['other_filter'] = $filter['other_filter'];
             }
 
-            if ($filter['price']['min'] != '' && $filter['price']['max'] != '') {
+            if (!empty($filter['price']) && $filter['price']['min'] !== '' && $filter['price']['max'] !== '') {
                 $brands_filter['price'] = $filter['price'];
             }
             
@@ -670,7 +674,7 @@ class ProductsView extends View {
                 $features_values_filter['other_filter'] = $filter['other_filter'];
             }
 
-            if ($filter['price']['min'] != '' && $filter['price']['max'] != '') {
+            if (!empty($filter['price']) && $filter['price']['min'] !== '' && $filter['price']['max'] !== '') {
                 $features_values_filter['price'] = $filter['price'];
             }
 
@@ -702,7 +706,7 @@ class ProductsView extends View {
         }
 
         $other_filters = array();
-        if (!in_array($this->page->url, array('all-products', 'discounted', 'bestsellers'))) {
+        if (!empty($this->page->url) && !in_array($this->page->url, array('all-products', 'discounted', 'bestsellers'))) {
             $this->translations->debug = (bool)$this->config->debug_translation;
             $translations = $this->translations->get_translations(array('lang'=>$this->language->label));
             foreach ($this->other_filters as $f) {
@@ -739,17 +743,27 @@ class ProductsView extends View {
         }
         
         // Вдруг вылезли за диапазон доступного...
-        if ($prices->range->min != '' && $prices->current->min < $prices->range->min) {
-            $prices->current->min = $filter['price']['min'] = $prices->range->min;
+        if (isset($prices->current->min) && $prices->range->min !== '') {
+            if ($prices->current->min < $prices->range->min) {
+                $prices->current->min = $filter['price']['min'] = $prices->range->min;
+            }
+            if ($prices->current->min > $prices->range->max) {
+                $prices->current->min = $filter['price']['min'] = $prices->range->max;
+            }
         }
-        if ($prices->range->max != '' && $prices->current->max > $prices->range->max) {
-            $prices->current->max = $filter['price']['max'] = $prices->range->max;
+        if (isset($prices->current->max) && $prices->range->max !== '') {
+            if ($prices->current->max > $prices->range->max) {
+                $prices->current->max = $filter['price']['max'] = $prices->range->max;
+            }
+            if ($prices->current->max < $prices->range->min) {
+                $prices->current->max = $filter['price']['max'] = $prices->range->min;
+            }
         }
         
         $this->design->assign('prices', $prices);
         
         // Сохраняем фильтр в куки
-        setcookie("price_filter", serialize($price_filter), time()+3600*24*1, "/");
+        setcookie("price_filter", json_encode($price_filter), time()+3600*24*1, "/");
         
         // Постраничная навигация
         $items_per_page = $this->settings->products_num;
@@ -882,12 +896,12 @@ class ProductsView extends View {
                 }
             }
 
-            if ($this->meta_array['brand'] && count($this->meta_array['brand']) == 1 && !$this->meta_array['features_values']) {
+            if (!empty($this->meta_array['brand']) && count($this->meta_array['brand']) == 1 && !$this->meta_array['features_values']) {
                 $parts['{$brand}'] = reset($this->meta_array['brand']);
                 $seo_filter_patterns = $this->seo_filter_patterns->get_patterns(array('category_id'=>$this->category->id, 'type'=>'brand'));
                 $seo_filter_pattern = reset($seo_filter_patterns);
 
-            } elseif ($this->meta_array['features_values']  && count($this->meta_array['features_values']) == 1 && !$this->meta_array['brand']) {
+            } elseif (!empty($this->meta_array['features_values'])  && count($this->meta_array['features_values']) == 1 && empty($this->meta_array['brand'])) {
 
                 foreach($this->seo_filter_patterns->get_patterns(array('category_id'=>$this->category->id, 'type'=>'feature')) as $p) {
                     $key = 'feature'.(!empty($p->feature_id) ? '_'.$p->feature_id : '');
@@ -901,7 +915,7 @@ class ProductsView extends View {
                 // Определяем какой шаблон брать, для категории + определенное свойство, или категории и любое свойство
                 if (isset($seo_filter_patterns['feature_'.$feature->id])) {
                     $seo_filter_pattern = $seo_filter_patterns['feature_'.$feature->id];
-                } else {
+                } elseif (isset($seo_filter_patterns['feature'])) {
                     $seo_filter_pattern = $seo_filter_patterns['feature'];
                 }
 
@@ -909,17 +923,19 @@ class ProductsView extends View {
                 $parts['{$feature_val}'] = implode($this->meta_delimiter, reset($this->meta_array['features_values']));
             }
 
-            $this->seo_filter_pattern['h1']               = strtr($seo_filter_pattern->h1, $parts);
-            $this->seo_filter_pattern['title']            = strtr($seo_filter_pattern->title, $parts);
-            $this->seo_filter_pattern['keywords']         = strtr($seo_filter_pattern->keywords, $parts);
-            $this->seo_filter_pattern['meta_description'] = strtr($seo_filter_pattern->meta_description, $parts);
-            $this->seo_filter_pattern['description']      = strtr($seo_filter_pattern->description, $parts);
+            if (!empty($seo_filter_pattern)) {
+                $this->seo_filter_pattern['h1'] = strtr($seo_filter_pattern->h1, $parts);
+                $this->seo_filter_pattern['title'] = strtr($seo_filter_pattern->title, $parts);
+                $this->seo_filter_pattern['keywords'] = strtr($seo_filter_pattern->keywords, $parts);
+                $this->seo_filter_pattern['meta_description'] = strtr($seo_filter_pattern->meta_description, $parts);
+                $this->seo_filter_pattern['description'] = strtr($seo_filter_pattern->description, $parts);
+            }
 
-            $this->seo_filter_pattern['h1']               = preg_replace('/\{\$[^\$]*\}/', '', $this->seo_filter_pattern['h1']);
-            $this->seo_filter_pattern['title']            = preg_replace('/\{\$[^\$]*\}/', '', $this->seo_filter_pattern['title']);
-            $this->seo_filter_pattern['keywords']         = preg_replace('/\{\$[^\$]*\}/', '', $this->seo_filter_pattern['keywords']);
-            $this->seo_filter_pattern['meta_description'] = preg_replace('/\{\$[^\$]*\}/', '', $this->seo_filter_pattern['meta_description']);
-            $this->seo_filter_pattern['description']      = preg_replace('/\{\$[^\$]*\}/', '', $this->seo_filter_pattern['description']);
+            $this->seo_filter_pattern['h1']               = preg_replace('/{\$[^$]*}/', '', $this->seo_filter_pattern['h1']);
+            $this->seo_filter_pattern['title']            = preg_replace('/{\$[^$]*}/', '', $this->seo_filter_pattern['title']);
+            $this->seo_filter_pattern['keywords']         = preg_replace('/{\$[^$]*}/', '', $this->seo_filter_pattern['keywords']);
+            $this->seo_filter_pattern['meta_description'] = preg_replace('/{\$[^$]*}/', '', $this->seo_filter_pattern['meta_description']);
+            $this->seo_filter_pattern['description']      = preg_replace('/{\$[^$]*}/', '', $this->seo_filter_pattern['description']);
 
             $this->design->assign('seo_filter_pattern', (object)$this->seo_filter_pattern);
         }

@@ -11,7 +11,7 @@ class Comparison extends Okay {
         $comparison->features = array();
         $comparison->ids = array();
 
-        $items = !empty($_COOKIE['comparison']) ? unserialize($_COOKIE['comparison']) : array();
+        $items = !empty($_COOKIE['comparison']) ? json_decode($_COOKIE['comparison']) : array();
         if(!empty($items) && is_array($items)) {
             $products = array();
             $images_ids = array();
@@ -110,7 +110,7 @@ class Comparison extends Okay {
 
     /*Добавление товара в список сравнения*/
     public function add_item($product_id) {
-        $items = !empty($_COOKIE['comparison']) ? unserialize($_COOKIE['comparison']) : array();
+        $items = !empty($_COOKIE['comparison']) ? json_decode($_COOKIE['comparison']) : array();
         $items = $items && is_array($items) ? $items : array();
         if (!in_array($product_id, $items)) {
             $items[] = $product_id;
@@ -118,13 +118,14 @@ class Comparison extends Okay {
                 array_shift($items);
             }
         }
-        $_COOKIE['comparison'] = serialize($items);
+        $_COOKIE['comparison'] = json_encode(array_values($items));
         setcookie('comparison', $_COOKIE['comparison'], time()+30*24*3600, '/');
     }
 
     /*Удаление товара из списка сравнения*/
     public function delete_item($product_id) {
-        $items = !empty($_COOKIE['comparison']) ? unserialize($_COOKIE['comparison']) : array();
+        $items = !empty($_COOKIE['comparison']) ? json_decode($_COOKIE['comparison']) : array();
+        
         if (!is_array($items)) {
             return;
         }
@@ -132,7 +133,7 @@ class Comparison extends Okay {
         if ($i !== false) {
             unset($items[$i]);
         }
-        $_COOKIE['comparison'] = serialize($items);
+        $_COOKIE['comparison'] = json_encode(array_values($items));
         setcookie('comparison', $_COOKIE['comparison'], time()+30*24*3600, '/');
     }
 

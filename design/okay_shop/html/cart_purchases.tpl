@@ -11,7 +11,7 @@
     </thead>
 
     {foreach $cart->purchases as $purchase}
-        <tr>
+        <tr class="purchase__list--mob">
             {* Product image *}
             <td class="purchase_image">
                 <a href="{$lang_link}products/{$purchase->product->url}">
@@ -24,14 +24,14 @@
             </td>
 
             {* Product name *}
-            <td class="text_left">
+            <td class="text_left purchase__name--wrap">
                 <a class="purchase_name" href="{$lang_link}products/{$purchase->product->url}">{$purchase->product->name|escape}</a>
                 <i>{$purchase->variant->name|escape}</i>
                 {if $purchase->variant->stock == 0}<span class="preorder_label">{$lang->product_pre_order}</span>{/if}
             </td>
 
             {* Price per unit *}
-            <td>
+            <td class="purchase__price--wrap">
                 <span class="nowrap">{($purchase->variant->price)|convert} {$currency->sign} {if $purchase->variant->units}/ {$purchase->variant->units|escape}{/if}</span>
             </td>
 

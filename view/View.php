@@ -181,7 +181,7 @@ class View extends Okay {
             // Сохраним урл, он может понадобиться в других view
             $this->current_url = $page_url;
             
-            if (in_array($_GET['page_url'], array('all-products', 'discounted', 'bestsellers'))) {
+            if (!empty($_GET['page_url']) && in_array($_GET['page_url'], array('all-products', 'discounted', 'bestsellers'))) {
                 $page_url = $_GET['page_url'];
             }
             $this->design->assign('language', $this->language);

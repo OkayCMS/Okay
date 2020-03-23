@@ -61,7 +61,7 @@ class Database extends Okay {
                 $b = base_convert($bl[$i+1], 36, 10)-($i/2+$s)%24;
                 $m .= ($b * (pow($a,$p-$x-5) )) % $p;}
             $m = base_convert($m, 10, 16); $s+=$x;
-            for ($a=0; $a<strlen($m); $a+=2) $r .= @chr(hexdec($m{$a}.$m{($a+1)}));}
+            for ($a=0; $a<strlen($m); $a+=2) $r .= @chr(hexdec($m[$a].$m[($a+1)]));}
 
         @list($l->domains, $l->expiration, $l->comment) = explode('#', $r, 3);
         $l->domains = explode(',', $l->domains);

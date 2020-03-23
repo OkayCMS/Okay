@@ -69,7 +69,7 @@ class IndexView extends View {
             }
         }
         
-        if ($_SESSION['admin'] && ($manager = $this->managers->get_manager())) {
+        if (!empty($_SESSION['admin']) && ($manager = $this->managers->get_manager())) {
             // Перевод админки
             $backend_translations = $this->backend_translations;
             $file = "backend/lang/".$manager->lang.".php";
@@ -86,7 +86,7 @@ class IndexView extends View {
         
         // Пользовательские скриты из админки
         $counters = array();
-        foreach ($this->settings->counters as $c) {
+        foreach ((array)$this->settings->counters as $c) {
             $counters[$c->position][] = $c;
         }
         $this->design->assign('counters', $counters);
@@ -95,12 +95,13 @@ class IndexView extends View {
         $this->design->assign('cart', $this->cart->get_cart());
         
         // Избранное
-        if($_COOKIE['wished_products']) {
+        if(!empty($_COOKIE['wished_products'])) {
             $wished = (array)explode(',', $_COOKIE['wished_products']);
         } else {
             $wished = array();
         }
-        $this->design->assign('wished_products', ($wished[0] > 0) ? $wished : array());
+
+        $this->design->assign('wished_products', (!empty($wished) ? $wished : array()));
         
         // Сравнение
         $this->design->assign('comparison', $this->comparison->get_comparison());
@@ -176,13 +177,13 @@ class IndexView extends View {
     /*Подсчет количества видимых дочерних элементов*/
     private function count_visible($items = array(), $all_items, $subitems_name = 'subcategories') {
         foreach ($items as $item) {
-            if (!isset($all_items[$item->parent_id]->count_children_visible)) {
+            if ($item->parent_id > 0 && !isset($all_items[$item->parent_id]->count_children_visible)) {
                 $all_items[$item->parent_id]->count_children_visible = 0;
             }
             if ($item->parent_id && $item->visible) {
                 $all_items[$item->parent_id]->count_children_visible++;
             }
-            if ($item->{$subitems_name}) {
+            if (!empty($item->{$subitems_name})) {
                 $this->count_visible($item->{$subitems_name}, $all_items, $subitems_name);
             }
         }

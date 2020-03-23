@@ -37,7 +37,7 @@
     </thead>
 
     {foreach $purchases as $purchase}
-        <tr>
+        <tr class="purchase__list--mob">
             {* Product image *}
             <td class="purchase_image">
                 <a href="{$lang_link}products/{$purchase->product->url}">
@@ -50,7 +50,7 @@
             </td>
 
             {* Product name *}
-            <td class="text_left">
+            <td class="text_left purchase__name--wrap purchase__name--wrap_order">
                 <a class="purchase_name" href="{$lang_link}products/{$purchase->product->url}">{$purchase->product_name|escape}</a>
                 <i>{$purchase->variant_name|escape}</i>
                 {if $purchase->variant->stock == 0}<span class="preorder_label">{$lang->product_pre_order}</span>{/if}
@@ -60,12 +60,13 @@
             </td>
 
             {* Price per unit *}
-            <td class="purchase_price">
-                <span class="nowrap">{($purchase->variant->price)|convert} {$currency->sign|escape} {if $purchase->units}/ {$purchase->units|escape}{/if}</span>
+            <td class="purchase_price purchase__price--wrap">
+                <span class="nowrap">
+                    {($purchase->variant->price)|convert} {$currency->sign|escape} {if $purchase->units}/ {$purchase->units|escape}{/if}</span>
             </td>
 
             {* Quantity *}
-            <td>{$purchase->amount|escape}</td>
+            <td>{$purchase->amount|escape} {$lang->amount_pieces}</td>
 
             {* Extended price *}
             <td class="purchase_sum">

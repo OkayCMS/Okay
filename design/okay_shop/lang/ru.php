@@ -257,3 +257,4 @@ $lang['meta_organization'] = "Организация";
 $lang['features_catalog'] = "Категории";
 $lang['selected_features_heading'] = "Вы выбрали:";
 $lang['selected_features_reset'] = "Очистить все";
+$lang['amount_pieces'] = "шт.";

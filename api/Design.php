@@ -138,6 +138,10 @@ class Design extends Okay {
     /*Функция ресайза для изображений*/
     public function resize_modifier($filename, $width=0, $height=0, $set_watermark=false, $resized_dir = null, $crop_position_x = null, $crop_position_y = null) {
 
+        $crop_params = array(
+            'x_pos' => null,
+            'y_pos' => null,
+        );
         if (!empty($crop_position_x) && !empty($crop_position_y)) {
             $crop_params['x_pos'] = $crop_position_x;
             $crop_params['y_pos'] = $crop_position_y;

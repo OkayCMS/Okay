@@ -81,7 +81,6 @@ class Notify extends Okay {
         /*/lang_modify...*/
         
         $purchases = $this->orders->get_purchases(array('order_id'=>$order->id));
-        $this->design->assign('purchases', $purchases);
         
         $products_ids = array();
         $variants_ids = array();

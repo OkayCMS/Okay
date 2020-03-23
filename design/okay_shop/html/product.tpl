@@ -415,7 +415,7 @@
 
         
 {* Related products *}
-{if $related_products}
+{if !empty($related_products)}
     <div class="h2">
         <span data-language="product_recommended_products">{$lang->product_recommended_products}</span>
     </div>
@@ -429,7 +429,7 @@
     </div>
 {/if}
 
-{if $related_posts}
+{if !empty($related_posts)}
     <div class="h2">
         <span data-language="product_related_post">{$lang->product_related_post}</span>
     </div>

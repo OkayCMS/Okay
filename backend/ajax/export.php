@@ -62,7 +62,23 @@ class ExportAjax extends Okay {
         $filter = array('page'=>$page, 'limit'=>$this->products_count);
         $features_filter = array();
         if (($cid = $this->request->get('category_id', 'integer')) && ($category = $this->categories->get_category($cid))) {
-            $filter['category_id'] = $features_filter['category_id'] = $category->children;
+            $categories_ids = $category->children;
+            $this->db->query("SELECT DISTINCT product_id FROM __products_categories WHERE category_id in (?@)", $category->children);
+            $products_ids = $this->db->results('product_id');
+            
+            if (!empty($products_ids)) {
+                $this->db->query("SELECT DISTINCT category_id FROM __products_categories WHERE product_id in (?@) AND position=0", $products_ids);
+                $cat_ids = $this->db->results('category_id');
+
+                foreach ($cat_ids as $cat_id) {
+                    if ($tmp_cat = $this->categories->get_category((int)$cat_id)) {
+                        $categories_ids = array_merge($categories_ids, $tmp_cat->children);
+                    }
+                }
+            }
+            
+            $filter['category_id'] = $category->children;
+            $features_filter['category_id'] = array_unique($categories_ids);
         }
         if ($brand_id = $this->request->get('brand_id', 'integer')) {
             $filter['brand_id'] = $brand_id;
@@ -208,7 +224,58 @@ class ExportAjax extends Okay {
             return array('end'=>true, 'page'=>$page, 'totalpages'=>$total_products/$this->products_count);
         }
     }
-    
+
+
+    // Strips leading zeros
+    // And returns str in UPPERCASE letters with a U+ prefix
+    private function format($str) {
+        $copy = false;
+        $len = strlen($str);
+        $res = '';
+
+        for ($i = 0; $i < $len; ++$i) {
+            $ch = $str[$i];
+
+            if (!$copy) {
+                if ($ch != '0') {
+                    $copy = true;
+                }
+                // Prevent format("0") from returning ""
+                else if (($i + 1) == $len) {
+                    $res = '0';
+                }
+            }
+
+            if ($copy) {
+                $res .= $ch;
+            }
+        }
+
+        return 'U+'.strtoupper($res);
+    }
+
+    private function convert_emoji($emoji) {
+        // ?? --> 0000270a0001f3fe
+        $emoji = mb_convert_encoding($emoji, 'UTF-32', 'UTF-8');
+        $hex = bin2hex($emoji);
+
+        // Split the UTF-32 hex representation into chunks
+        $hex_len = strlen($hex) / 8;
+        $chunks = array();
+
+        for ($i = 0; $i < $hex_len; ++$i) {
+            $tmp = substr($hex, $i * 8, 8);
+
+            // Format each chunk
+            $chunks[$i] = $this->format($tmp);
+        }
+
+        // Convert chunks array back to a string
+        return implode($chunks, ' ');
+    }
+
+//echo convert_emoji('??');
+
 }
 
 $export_ajax = new ExportAjax();

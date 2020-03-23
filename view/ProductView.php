@@ -223,25 +223,25 @@ class ProductView extends View {
                 }
             }
 
-            if ($category->auto_meta_title) {
+            if (!empty($category->auto_meta_title)) {
                 $auto_meta_title = $category->auto_meta_title;
-            } elseif ($default_products_seo_pattern->auto_meta_title) {
+            } elseif (!empty($default_products_seo_pattern->auto_meta_title)) {
                 $auto_meta_title = $default_products_seo_pattern->auto_meta_title;
             } else {
                 $auto_meta_title = $product->meta_title;
             }
 
-            if ($category->auto_meta_keywords) {
+            if (!empty($category->auto_meta_keywords)) {
                 $auto_meta_keywords = $category->auto_meta_keywords;
-            } elseif ($default_products_seo_pattern->auto_meta_keywords) {
+            } elseif (!empty($default_products_seo_pattern->auto_meta_keywords)) {
                 $auto_meta_keywords = $default_products_seo_pattern->auto_meta_keywords;
             } else {
                 $auto_meta_keywords = $product->meta_keywords;
             }
 
-            if ($category->auto_meta_desc) {
+            if (!empty($category->auto_meta_desc)) {
                 $auto_meta_description = $category->auto_meta_desc;
-            } elseif ($default_products_seo_pattern->auto_meta_desc) {
+            } elseif (!empty($default_products_seo_pattern->auto_meta_desc)) {
                 $auto_meta_description = $default_products_seo_pattern->auto_meta_desc;
             } else {
                 $auto_meta_description = $product->meta_description;
@@ -276,7 +276,7 @@ class ProductView extends View {
 
             if (!empty($default_products_seo_pattern->auto_description) && empty($product->description)) {
                 $product->description = strtr($default_products_seo_pattern->auto_description, $parts);
-                $product->description = preg_replace('/\{\$[^\$]*\}/', '', $product->description);
+                $product->description = preg_replace('/{\$[^$]*}/', '', $product->description);
             }
         }
 
@@ -284,9 +284,9 @@ class ProductView extends View {
         $auto_meta_keywords = strtr($auto_meta_keywords, $parts);
         $auto_meta_description = strtr($auto_meta_description, $parts);
         
-        $auto_meta_title = preg_replace('/\{\$[^\$]*\}/', '', $auto_meta_title);
-        $auto_meta_keywords = preg_replace('/\{\$[^\$]*\}/', '', $auto_meta_keywords);
-        $auto_meta_description = preg_replace('/\{\$[^\$]*\}/', '', $auto_meta_description);
+        $auto_meta_title = preg_replace('/{\$[^$]*}/', '', $auto_meta_title);
+        $auto_meta_keywords = preg_replace('/{\$[^$]*}/', '', $auto_meta_keywords);
+        $auto_meta_description = preg_replace('/{\$[^$]*}/', '', $auto_meta_description);
         
         $this->design->assign('meta_title', $auto_meta_title);
         $this->design->assign('meta_keywords', $auto_meta_keywords);

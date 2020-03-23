@@ -415,7 +415,7 @@ class ImportAjax extends Import {
                             $feature_value = new stdClass();
                             $feature_value->value = trim($value);
                             $feature_value->feature_id = $feature_id;
-                            $feature_value->translit = $this->translit_alpha($value);;
+                            $feature_value->translit = $this->translit_alpha($value);
                             $value_id = $this->features_values->add_feature_value($feature_value);
                         }
 

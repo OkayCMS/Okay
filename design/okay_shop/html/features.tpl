@@ -1,10 +1,16 @@
 {if ($category->subcategories && $category->count_children_visible) ||
 ($category->path[$category->level_depth-2]->subcategories && $category->path[$category->level_depth-2]->count_children_visible)}
-    <div class="catalog_nav filters tablet-hidden">
-        <div class="h2 filter_name">
+    <div class="filters__item--mob">
+    <div class="filters_heading fn_switch lg-hidden">
         <span data-language="features_catalog">{$lang->features_catalog}</span>
+        <i class="angle_icon"></i>
     </div>
-        <div class="filters">
+
+    <div class="filters tablet-hidden">
+        <div class="h2 filter_name tablet-hidden">
+        <span data-language="features_catalog">{$lang->features_catalog}</span>
+        </div>
+        <div class="">
             {function name=categories_tree_sidebar}
                 {if $categories}
                     <div class="level_{$level} {if $level == 1}catalog_menu {else}subcatalog {/if}">
@@ -27,6 +33,7 @@
             {/if}
         </div>
     </div>
+</div>
 {/if}
 
 {if $brand->categories}
