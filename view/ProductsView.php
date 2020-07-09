@@ -51,6 +51,10 @@ class ProductsView extends View {
 
             if (empty($this->category) || (!$this->category->visible && empty($_SESSION['admin']))) {
                 $this->is_wrong_params = 1;
+            } else {
+                foreach ($this->brands->get_brands(array('category_id' => $this->category->children, 'visible' => 1, 'visible_brand' => 1)) as $b) {
+                    $this->category_brands[$b->id] = $b;
+                }
             }
             
             foreach($this->features->get_features(array('category_id'=>$this->category->id, 'in_filter'=>1)) as $feature) {
