@@ -8,7 +8,7 @@ class DeliveryAdmin extends Okay {
         $delivery = new stdClass;
         /*Принимаем данные о способе доставки*/
         if($this->request->method('post')) {
-            $delivery->id               = $this->request->post('id', 'intgeger');
+            $delivery->id               = $this->request->post('id', 'integer');
             $delivery->enabled          = $this->request->post('enabled', 'boolean');
             $delivery->name             = $this->request->post('name');
             $delivery->description      = $this->request->post('description');
