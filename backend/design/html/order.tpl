@@ -185,7 +185,7 @@
                                                     <div class="hidden-lg-up mt-q">
                                                         <span class="text_primary text_600">{$purchase->price}</span>
                                                         <span class="hidden-md-up text_500">
-                                                        {$purchase->amount} {if $purchase->units}{$purchase->units|escape}{else}{$settings->units|escape}{/if}</span>
+                                                        {$purchase->amount} {if $purchase->variant->units}{$purchase->variant->units|escape}{else}{$settings->units|escape}{/if}</span>
                                                     </div>
                                                 </div>
 
@@ -217,7 +217,7 @@
                                                 <div class="input-group">
                                                     <input class="form-control fn_purchase_amount" type="text" name="purchases[amount][{$purchase->id}]" value="{$purchase->amount}"/>
                                                     <span class="input-group-addon p-0 fn_purchase_units">
-                                                         {if $purchase->units}{$purchase->units|escape}{else}{$settings->units|escape}{/if}
+                                                        {$purchase->amount} {if $purchase->units}{$purchase->units|escape}{else}{$settings->units|escape}{/if}</span>
                                                     </span>
                                                 </div>
                                             </div>
