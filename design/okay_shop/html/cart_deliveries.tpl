@@ -10,7 +10,7 @@
 
                 <label class="delivery_label{if $delivery@first} active{/if}" for="deliveries_{$delivery->id}">
 
-                    <input class="input_delivery" id="deliveries_{$delivery->id}" onclick="change_payment_method({$delivery->id})" type="radio" name="delivery_id" value="{$delivery->id}" {if $delivery_id==$delivery->id || $delivery@first} checked{/if} />
+                    <input class="input_delivery" id="deliveries_{$delivery->id}" onclick="change_payment_method({$delivery->id})" type="radio" name="delivery_id" value="{$delivery->id}" {if $delivery@first} checked{/if} />
 
                     <span class="delivery_name">
                         {if $delivery->image}
