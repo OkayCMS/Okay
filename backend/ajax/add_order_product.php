@@ -78,7 +78,6 @@
             if ($variant->currency_id && ($currency = $okay->money->get_currency(intval($variant->currency_id)))) {
                 if ($currency->rate_from != $currency->rate_to) {
                     $variant->price = round($variant->price*$currency->rate_to/$currency->rate_from,2);
-                    $variant->compare_price = round($variant->compare_price*$currency->rate_to/$currency->rate_from,2);
                 }
             }
         }
