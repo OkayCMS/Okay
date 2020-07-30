@@ -22,7 +22,7 @@
                         {if $cart->total_price < $delivery->free_from && $delivery->price>0 && !$delivery->separate_payment}
                             <span class="nowrap">({$delivery->price|convert} {$currency->sign|escape})</span>
                         {elseif $delivery->separate_payment}
-                            <span data-language="cart_free">({$lang->cart_paid_separate})</span>
+                            <span data-language="cart_paid_separate">({$lang->cart_paid_separate})</span>
                         {elseif $cart->total_price >= $delivery->free_from && !$delivery->separate_payment}
                             <span data-language="cart_free">({$lang->cart_free})</span>
                         {/if}
