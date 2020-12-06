@@ -710,7 +710,7 @@ class ProductsView extends View {
         }
 
         $other_filters = array();
-        if (!empty($this->page->url) && !in_array($this->page->url, array('all-products', 'discounted', 'bestsellers'))) {
+        if (empty($this->page->url) || (!empty($this->page->url) && !in_array($this->page->url, array('all-products', 'discounted', 'bestsellers')))) {
             $this->translations->debug = (bool)$this->config->debug_translation;
             $translations = $this->translations->get_translations(array('lang'=>$this->language->label));
             foreach ($this->other_filters as $f) {
