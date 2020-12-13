@@ -839,7 +839,6 @@ class ProductsView extends View {
             $images_ids = array();
             foreach($products as $product) {
                 $product->variants = array();
-                $product->properties = array();
                 $images_ids[] = $product->main_image_id;
             }
 
