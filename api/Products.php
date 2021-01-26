@@ -135,10 +135,10 @@ class Products extends Okay {
                     $order = 'p.position DESC';
                     break;
                 case 'name':
-                    $order = 'p.name ASC';
+                    $order = $px.'.name ASC';
                     break;
                 case 'name_desc':
-                    $order = 'p.name DESC';
+                    $order = $px.'.name DESC';
                     break;
                 case 'rating':
                     $order = 'p.rating ASC';

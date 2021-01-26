@@ -196,7 +196,7 @@ class Features extends Okay {
     public function delete_feature($id = array()) {
         if(!empty($id)) {
             //lastModify
-            $this->db->query("SELECT `pv`.`product_id`
+            $this->db->query("SELECT `pf`.`product_id`
                               FROM `__products_features_values` AS `pf`
                               INNER JOIN `__features_values` AS `fv` ON `pf`.`value_id`=`fv`.`id` AND `fv`.`feature_id` = ?", intval($id));
             $p_ids = $this->db->results('product_id');
@@ -243,7 +243,7 @@ class Features extends Okay {
                 }
             }
         } else {
-            $this->db->query("SELECT `pv`.`product_id`
+            $this->db->query("SELECT `pf`.`product_id`
                               FROM `__products_features_values` AS `pf`
                               INNER JOIN `__features_values` AS `fv` ON `pf`.`value_id`=`fv`.`id` AND `fv`.`feature_id` = ?", intval($id));
             $p_ids = $this->db->results('product_id');
