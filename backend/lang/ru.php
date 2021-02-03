@@ -985,3 +985,5 @@ $backend_translations->recaptcha_scores_cart = 'Корзина';
 $backend_translations->recaptcha_scores_other = 'Остальные';
 $backend_translations->recaptcha_v3_scores = 'reCAPTCHA V3 "Человечность", 0.0 точно робот, 1.0 точно человек';
 $backend_translations->integration_1c = 'Интеграция с 1С';
+$backend_translations->orders_all_statuses = 'Все статусы';
+$backend_translations->orders_all_labels = 'Все метки';

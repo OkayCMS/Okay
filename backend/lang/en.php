@@ -985,3 +985,5 @@ $backend_translations->recaptcha_scores_cart = 'Cart';
 $backend_translations->recaptcha_scores_other = 'Other';
 $backend_translations->recaptcha_v3_scores = 'reCAPTCHA V3 "Humanness", 0.0 exactly robot, 1.0 exactly man';
 $backend_translations->integration_1c = 'Integration with 1C';
+$backend_translations->orders_all_statuses = 'All Statuses';
+$backend_translations->orders_all_labels = 'All labels';

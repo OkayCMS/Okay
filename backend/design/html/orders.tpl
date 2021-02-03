@@ -124,7 +124,7 @@
                                 {foreach $all_status as $order_status}
                                     <option value="{url module=OrdersAdmin status=$order_status->id keyword=null id=null page=null label=null from_date=null to_date=null}" {if $status == $order_status->id}selected=""{/if} >{$order_status->name|escape}</option>
                                 {/foreach}
-                                <option value="{url module=OrdersAdmin status=null keyword=null id=null page=null label=null from_date=null to_date=null}" {if !$status}selected{/if}>{$btr->general_all|escape}</option>
+                                <option value="{url module=OrdersAdmin status=null keyword=null id=null page=null label=null from_date=null to_date=null}" {if !$status}selected{/if}>{$btr->orders_all_statuses|escape}</option>
                             </select>
                         </div>
                     {/if}
@@ -134,7 +134,7 @@
                                 {foreach $labels as $l}
                                     <option value="{url label=$l->id}" {if $label->id == $l->id}selected{/if}>{$l->name|escape}</option>
                                 {/foreach}
-                                <option value="{url label=null}" {if !$label} selected{/if}>{$btr->general_all|escape}</option>
+                                <option value="{url label=null}" {if !$label} selected{/if}>{$btr->orders_all_labels|escape}</option>
                             </select>
                         </div>
                     {/if}

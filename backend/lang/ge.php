@@ -985,3 +985,5 @@ $backend_translations->recaptcha_scores_cart = 'კალათა';
 $backend_translations->recaptcha_scores_other = 'დანარჩენი';
 $backend_translations->recaptcha_v3_scores = 'reCAPTCHA V3 "Humanness", 0.0 ზუსტად რობოტი, 1.0 ზუსტად რობოტი';
 $backend_translations->integration_1c = 'ინტეგრირება 1C';
+$backend_translations->orders_all_statuses = 'ყველა სტატუსი';
+$backend_translations->orders_all_labels = 'ყველა ნიშანი';

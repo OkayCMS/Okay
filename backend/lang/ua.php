@@ -985,3 +985,5 @@ $backend_translations->recaptcha_scores_cart = 'Кошик';
 $backend_translations->recaptcha_scores_other = 'Решта';
 $backend_translations->recaptcha_v3_scores = 'reCAPTCHA V3 "Людяність", 0.0 точно робот, 1.0 точно людина';
 $backend_translations->integration_1c = 'Інтеграція з 1С';
+$backend_translations->orders_all_statuses = 'Усі статуси';
+$backend_translations->orders_all_labels = 'Усі мітки';
