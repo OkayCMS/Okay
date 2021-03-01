@@ -99,7 +99,7 @@ class Image extends Okay {
             $resized_filename = $file.($set_watermark?'.w':'').$ext;
         }
 
-        if ($crop_params['x_pos'] && $crop_params['y_pos']) {
+        if (!empty($crop_params['x_pos']) && !empty($crop_params['y_pos'])) {
             $resized_filename .= '.'.$crop_params['x_pos'].'.'.$crop_params['y_pos'];
         }
 
@@ -120,6 +120,7 @@ class Image extends Okay {
         $ext = $matches[8];                  // расширение файла
 
         // crop params
+        $crop_params = [];
         if (!empty($matches[5])) {
             $crop_params['x_pos'] = $matches[6];
             $crop_params['y_pos'] = $matches[7];
