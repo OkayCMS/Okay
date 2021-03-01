@@ -18,7 +18,7 @@ class Interkassa extends Okay
 		$desc = 'Оплата заказа №'.$order->id;
 		
 		$success_url = $this->config->root_url.'/order/'.$order->url;
-		$callback_url = $this->config->root_url.'/payment/Interkassa2/callback.php';
+		$callback_url = $this->config->root_url.'/payment/Interkassa/callback.php';
 
 
         $res['settings_pay'] = $settings;
