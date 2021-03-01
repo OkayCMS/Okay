@@ -135,10 +135,10 @@ class Products extends Okay {
                     $order = 'p.position DESC';
                     break;
                 case 'name':
-                    $order = 'p.name ASC';
+                    $order = $px.'.name ASC';
                     break;
                 case 'name_desc':
-                    $order = 'p.name DESC';
+                    $order = $px.'.name DESC';
                     break;
                 case 'rating':
                     $order = 'p.rating ASC';
@@ -325,10 +325,10 @@ class Products extends Okay {
     /*Обновление товара*/
     public function update_product($id, $product) {
         $product = (object)$product;
-        $result = $this->languages->get_description($product, 'product');
 
         $query = $this->db->placehold("UPDATE __products SET ?%, last_modify=NOW() WHERE id in (?@) LIMIT ?", $product, (array)$id, count((array)$id));
         if($this->db->query($query)) {
+            $result = $this->languages->get_description($product, 'product');
             if(!empty($result->description)) {
                 $this->languages->action_description($id, $result->description, 'product', $this->languages->lang_id());
             }

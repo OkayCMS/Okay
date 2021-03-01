@@ -276,7 +276,8 @@ class Orders extends Okay {
         
         // Не допустить нехватки на складе
         $variant = $this->variants->get_variant($purchase->variant_id);
-        if($order->closed && !empty($purchase->amount) && !empty($variant) && !$variant->infinity && $variant->stock<($purchase->amount-$old_purchase->amount)) {
+        $amount = ($old_purchase->variant_id != $purchase->variant_id) ? $purchase->amount : $purchase->amount-$old_purchase->amount;
+        if($order->closed && !empty($purchase->amount) && !empty($variant) && !$variant->infinity && $variant->stock<$amount) {
             return false;
         }
         

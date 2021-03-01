@@ -143,6 +143,9 @@ class FeaturesAliasesAdmin extends Okay {
                     foreach ($this->features_aliases->get_features_aliases() as $f) {
                         $features_aliases[$f->id] = $f;
                     }
+                    foreach ($this->features_aliases->get_feature_aliases_values(array('feature_id'=>$feature->id)) as $fv) {
+                        $features_aliases[$fv->feature_alias_id]->value = $fv;
+                    }
                     $this->design->assign('features_aliases', $features_aliases);
 
                     // Удалим все алиасы значений свойств для текущего языка

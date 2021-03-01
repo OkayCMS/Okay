@@ -51,6 +51,10 @@ class ProductsView extends View {
 
             if (empty($this->category) || (!$this->category->visible && empty($_SESSION['admin']))) {
                 $this->is_wrong_params = 1;
+            } else {
+                foreach ($this->brands->get_brands(array('category_id' => $this->category->children, 'visible' => 1, 'visible_brand' => 1)) as $b) {
+                    $this->category_brands[$b->id] = $b;
+                }
             }
             
             foreach($this->features->get_features(array('category_id'=>$this->category->id, 'in_filter'=>1)) as $feature) {
@@ -706,7 +710,7 @@ class ProductsView extends View {
         }
 
         $other_filters = array();
-        if (!empty($this->page->url) && !in_array($this->page->url, array('all-products', 'discounted', 'bestsellers'))) {
+        if (empty($this->page->url) || (!empty($this->page->url) && !in_array($this->page->url, array('all-products', 'discounted', 'bestsellers')))) {
             $this->translations->debug = (bool)$this->config->debug_translation;
             $translations = $this->translations->get_translations(array('lang'=>$this->language->label));
             foreach ($this->other_filters as $f) {
@@ -835,7 +839,6 @@ class ProductsView extends View {
             $images_ids = array();
             foreach($products as $product) {
                 $product->variants = array();
-                $product->properties = array();
                 $images_ids[] = $product->main_image_id;
             }
 
