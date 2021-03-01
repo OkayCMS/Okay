@@ -871,6 +871,7 @@ $backend_translations->import_field_sku = 'კოდი';
 $backend_translations->import_field_price = 'ფასი';
 $backend_translations->import_field_compare_price = 'ძველი ფასი';
 $backend_translations->import_field_currency = 'ვალუტის ID';
+$backend_translations->import_field_currency_code = 'ვალუტის code';
 $backend_translations->import_field_weight = 'წონა';
 $backend_translations->import_field_stock = 'რაოდენობა';
 $backend_translations->import_field_units = 'განზომილების ერთეული';

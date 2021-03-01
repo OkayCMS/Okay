@@ -871,6 +871,7 @@ $backend_translations->import_field_sku = 'SKU';
 $backend_translations->import_field_price = 'Price';
 $backend_translations->import_field_compare_price = 'Old price';
 $backend_translations->import_field_currency = 'Currency ID';
+$backend_translations->import_field_currency_code = 'Currency code';
 $backend_translations->import_field_weight = 'Weight';
 $backend_translations->import_field_stock = 'Stock';
 $backend_translations->import_field_units = 'Units';
