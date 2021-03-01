@@ -1,7 +1,5 @@
 ;<? exit(); ?>
 
-license = 9tsd9gwzfs bcicnizugw ohqmpyqjml lznmnruyui row877flsy qurqbuqavh jevhqhmkuk xwonzrmppn kvvrzztgph ouwmt8sh7h tpcxswzwrt pzruknuqjz jxijjvynun zwwum4yqm4 uin9ybvxv9 rnog8tgwug ifbsanejdj vkxrytkmuw lqruh5r7rk vfqwqvyisn tjvuusak6s ywfrwkamtm qtoszzuuvu his6t4inyg oyqasbqnzt okpntwtyru tutzoyaz7o wy7yjsroi7 gokly5irhl ugoevnorsg umvvywqwro zrtzarfnpw fwavlu8pih ouxfptcys7 yfjqgf
-
 [database]
 
 ;Сервер базы данных

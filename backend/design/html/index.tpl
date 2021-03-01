@@ -264,11 +264,7 @@
                     <div class="col-md-12 font_12 text_white">
                         <a href="https://okay-cms.com">OkayCMS </a> &copy; {$smarty.now|date_format:"%Y"} v.{$config->version} | {$btr->index_logged|escape}  {$manager->login|escape}
                         <div class="float-md-right">
-                            {if $license->valid}
-                            <a href='index.php?module=LicenseAdmin' class="text_success">{$btr->index_valid|escape} </a>
-                            {else}
-                            <a href='index.php?module=LicenseAdmin' class="text_warning">{$btr->index_not_valid|escape}</a>
-                            {/if},
+                            <a href='index.php?module=LicenseAdmin' class="text_white">{$btr->license_text|escape}</a>,
                             {if $support_info->public_key}
                             <a class="text_success" href="index.php?module=SupportAdmin">{$btr->index_support_active|escape} ({$support_info->new_messages})</a>
                             {else}

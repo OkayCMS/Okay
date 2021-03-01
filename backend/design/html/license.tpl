@@ -1,62 +1,15 @@
-{$meta_title = $btr->license_lecense scope=parent}
+{$meta_title = $btr->license_text scope=parent}
 
 {*Название страницы*}
 <div class="row">
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
             <div class="box_heading heading_page">
-                {$btr->license_lecense|escape}
-            </div>
-            <div class="box_btn_heading">
-                <a class="btn btn_small btn-info" target="_blank" href="http://okay-cms.com/check?domain={$smarty.server.HTTP_HOST|escape}">
-                <i class="fa fa-link"></i>
-                <span>{$btr->license_check|escape}</span>
-            </a>
+                {$btr->license_text|escape}
             </div>
         </div>
     </div>
 </div>
-
-{*Главная форма страницы*}
-<form method="post" enctype="multipart/form-data">
-    <input type=hidden name="session_id" value="{$smarty.session.id}">
-
-    <div class="row">
-        <div class="col-lg-12 col-md-12">
-            <div class="boxed fn_toggle_wrap">
-                <div class="heading_box">
-                    {if $license->valid}
-                        <div class="text_success">
-                            {$btr->index_valid|escape} {if $license->expiration != '*'}{$btr->license_to|escape} {$license->expiration}{/if} {$btr->license_on|escape} {foreach $license->domains as $d}{$d}{if !$d@last}, {/if}{/foreach}
-                        </div>
-                    {else}
-                        <div class="text_warning">
-                            {$btr->index_not_valid|escape}
-                        </div>
-                    {/if}
-                    <div class="toggle_arrow_wrap fn_toggle_card text-primary">
-                        <a class="btn-minimize" href="javascript:;" ><i class="icon-arrow-down"></i></a>
-                    </div>
-                </div>
-                <div class="toggle_body_wrap on fn_card">
-                    <div class="row">
-                        <div class="col-md-12 mb-h">
-                            <textarea name="license" class="form-control okay_textarea mb-h" rows="5">{$config->license|escape}</textarea>
-                        </div>
-                    </div>
-                    <div class="row">
-                       <div class="col-lg-12 col-md-12 ">
-                            <button type="submit" class="btn btn_small btn_blue float-md-right">
-                                {include file='svg_icon.tpl' svgId='checked'}
-                                <span>{$btr->general_apply|escape}</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
 
 {*Текст лицензии*}
 <div class="row">

@@ -183,46 +183,8 @@ class IndexAdmin extends Okay {
             }
         }
         require_once($file);
-        
-        if ($module != 'AuthAdmin') {
-            $p=13; $g=3; $x=5; $r = ''; $s = $x;
-            $bs = explode(' ', $this->config->license);
-            $t = chr(98).chr(97).chr(99).chr(107).chr(101).chr(110)
-                .chr(87+$p).chr(95).chr(116).chr(114).chr(97).chr(110);
-            foreach($bs as $bl){
-                for($i=0, $m=''; $i<strlen($bl)&&isset($bl[$i+1]); $i+=2){
-                    $a = base_convert($bl[$i], 36, 10)-($i/2+$s)%27;
-                    $b = base_convert($bl[$i+1], 36, 10)-($i/2+$s)%24;
-                    $m .= ($b * (pow($a,$p-$x-5) )) % $p;}
-                $m = base_convert($m, 10, 16); $s+=$x;
-                for ($a=0; $a<strlen($m); $a+=2) $r .= @chr(hexdec($m{$a}.$m{($a+1)}));}
-            $t .= chr(115).chr(105+$g).chr(97).chr(116).chr(105)
-                .chr(111).chr(110).chr(120-$x);
-            @list($l->domains, $l->expiration, $l->comment) = explode('#', $r, 3);
 
-            $l->domains = explode(',', $l->domains);
-            $h = getenv("HTTP_HOST");
-            $this->design->assign('manager', $this->manager);
-            foreach ($$t as &$bt) {
-            preg_match_all('/./us', $bt, $ar);$bt =  implode(array_reverse($ar[0]));}
-            unset($bt);
-            if(substr($h, 0, 4) == 'www.') $h = substr($h, 4);
-            $sv = false;$da = explode('.', $h);$it = count($da);
-            for ($i=1;$i<=$it;$i++) {
-                unset($da[0]);$da = array_values($da);$d = '*.'.implode('.', $da);
-                if (in_array($d, $l->domains) || in_array('*.'.$h, $l->domains)) {
-                    $sv = true;break;
-                }
-            }
-            if(((!in_array($h, $l->domains) && !$sv) || (strtotime($l->expiration)<time() && $l->expiration!='*')) && $module!='LicenseAdmin') {
-                header('location: '.$this->config->root_url.'/backend/index.php?module=LicenseAdmin');
-            } else {
-                $l->valid = true;
-                $this->design->assign('license', $l);
-            }
-
-            $this->design->assign('license', $l);
-        }
+        $this->design->assign('manager', $this->manager);
 
         $this->design->set_templates_dir('backend/design/html');
         $this->design->set_compiled_dir('backend/design/compiled');
@@ -269,7 +231,7 @@ class IndexAdmin extends Okay {
                     if (in_array($module, $modules)) {
                         $menu_selected = $title;
                     }
-                    $modules = ($l->valid === true ? reset($modules) : 'LicenseAdmin');
+                    $modules = reset($modules);
                     if (!in_array($this->modules_permissions[$modules], $this->manager->permissions)) {
                         unset($this->left_menu[$section][$title]);
                         unset($this->manager->menu[$section][$title]);
@@ -323,12 +285,6 @@ class IndexAdmin extends Okay {
         
         // Подключаем файл с необходимым модулем
         require_once('backend/core/'.$module.'.php');
-
-        foreach ($backend_translations as &$bt) {
-            preg_match_all('/./us', $bt, $ar);
-            $bt = implode(array_reverse($ar[0]));
-        }
-        unset($bt);
         
         $this->design->assign('btr', $backend_translations);
         
