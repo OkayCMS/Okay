@@ -24,14 +24,14 @@
     {/if}
 
     {* Обратный звонок, отправка формы *}
-    {if $call_sent}
+    {if !empty($call_sent)}
         $( function() {
             $.fancybox.open( {
                 src: '#fn_callback_sent',
                 type : 'inline',
             } );
         } );
-    {elseif $call_error}
+    {elseif !empty($call_error)}
         $(function() {
             $.fancybox.open({
                 src: '#fn_callback',
@@ -60,14 +60,14 @@
         } );
     {/if}
 
-    {if $subscribe_success}
+    {if !empty($subscribe_success)}
         $( function() {
             $.fancybox.open( {
                 src: '#fn_subscribe_sent',
                 type : 'inline',
             } );
         } );
-    {elseif $subscribe_error}
+    {elseif !empty($subscribe_error)}
         $( window ).on( 'load', function() {
             location.href = location.href + '#subscribe_error';
             $.fancybox.open( {

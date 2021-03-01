@@ -229,7 +229,7 @@ class View extends Okay {
         return false;
     }
 
-    public function get_captcha_plugin($params, &$smarty) {
+    public function get_captcha_plugin($params, $smarty) {
         if(isset($params['var'])) {
             $number = 0;
             unset($_SESSION[$params['var']]);
@@ -244,13 +244,13 @@ class View extends Okay {
         }
     }
 
-    public function get_categories_plugin($params, &$smarty) {
+    public function get_categories_plugin($params, $smarty) {
         if(!empty($params['var'])) {
             $smarty->assign($params['var'], $this->categories->get_categories($params));
         }
     }
     
-    public function get_posts_plugin($params, &$smarty) {
+    public function get_posts_plugin($params, $smarty) {
         if(!isset($params['visible'])) {
             $params['visible'] = 1;
         }
@@ -259,7 +259,7 @@ class View extends Okay {
         }
     }
     
-    public function get_brands_plugin($params, &$smarty) {
+    public function get_brands_plugin($params, $smarty) {
         if(!isset($params['visible'])) {
             $params['visible'] = 1;
         }
@@ -268,7 +268,7 @@ class View extends Okay {
         }
     }
     
-    public function get_browsed_products($params, &$smarty) {
+    public function get_browsed_products($params, $smarty) {
         if(!empty($_COOKIE['browsed_products']) && !empty($params['var'])) {
             $browsed_products_ids = explode(',', $_COOKIE['browsed_products']);
             $browsed_products_ids = array_reverse($browsed_products_ids);
@@ -315,7 +315,7 @@ class View extends Okay {
         }
     }
     
-    public function get_featured_products_plugin($params, &$smarty) {
+    public function get_featured_products_plugin($params, $smarty) {
         if(!isset($params['visible'])) {
             $params['visible'] = 1;
         }
@@ -361,7 +361,7 @@ class View extends Okay {
         }
     }
     
-    public function get_new_products_plugin($params, &$smarty) {
+    public function get_new_products_plugin($params, $smarty) {
         if(!isset($params['visible'])) {
             $params['visible'] = 1;
         }
@@ -409,7 +409,7 @@ class View extends Okay {
         }
     }
     
-    public function get_discounted_products_plugin($params, &$smarty) {
+    public function get_discounted_products_plugin($params, $smarty) {
         if(!isset($params['visible'])) {
             $params['visible'] = 1;
         }
@@ -461,7 +461,7 @@ class View extends Okay {
         }
     }
     
-    public function get_banner_plugin($params, &$smarty){
+    public function get_banner_plugin($params, $smarty){
         if(!isset($params['group']) || empty($params['group'])) {
             return false;
         }
