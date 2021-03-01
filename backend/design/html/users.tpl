@@ -1,5 +1,5 @@
 {* Title *}
-{$meta_title=$btr->users_users scope=parent}
+{$meta_title=$btr->users_users scope=global}
 
 {if $users_count>0}
     <div class="row">

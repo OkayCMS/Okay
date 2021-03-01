@@ -1,5 +1,5 @@
 {* Письмо ответа на комметарий пользователю *}
-{$subject = "{$lang->email_comment_theme} `{$settings->site_name}`" scope=parent}
+{$subject = "{$lang->email_comment_theme} `{$settings->site_name}`" scope=global}
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>

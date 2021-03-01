@@ -1,5 +1,5 @@
 {if $style_file}
-    {$meta_title = "`$btr->styles_styles` $style_file" scope=parent}
+    {$meta_title = "`$btr->styles_styles` $style_file" scope=global}
 {/if}
 
 {* Подключаем редактор кода *}

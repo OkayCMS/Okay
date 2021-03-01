@@ -1,6 +1,6 @@
 {* The main page template *}
 {* The canonical address of the page *}
-{$canonical="" scope=parent}
+{$canonical="" scope=global}
 
 <div class="container">
     {if $is_mobile === false && $is_tablet === false}

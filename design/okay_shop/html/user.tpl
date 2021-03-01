@@ -1,7 +1,7 @@
 {* Account page *}
 
 {* The page title *}
-{$meta_title = $lang->user_title scope=parent}
+{$meta_title = $lang->user_title scope=global}
 
 {* The page heading*}
 <h1 class="h1">

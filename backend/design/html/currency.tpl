@@ -1,4 +1,4 @@
-{$meta_title = $btr->currency_currencies scope=parent}
+{$meta_title = $btr->currency_currencies scope=global}
 
 {*Название страницы*}
 <div class="row">

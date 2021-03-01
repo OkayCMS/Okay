@@ -1,6 +1,6 @@
 {* Страница заказа *}
 
-{$meta_title = "Ваш заказ №`$invoice.transaction`" scope=parent}
+{$meta_title = "Ваш заказ №`$invoice.transaction`" scope=global}
 
 {if $invoice.status == 'CREATED'}
 	<H1>Создано платежное поручение.</H1>

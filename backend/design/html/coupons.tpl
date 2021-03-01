@@ -1,5 +1,5 @@
 {* Title *}
-{$meta_title = $btr->coupons_coupons scope=parent}
+{$meta_title = $btr->coupons_coupons scope=global}
 
 {*Название страницы*}
 <div class="row">

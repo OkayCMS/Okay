@@ -1,4 +1,4 @@
-{$meta_title=$btr->export_products scope=parent}
+{$meta_title=$btr->export_products scope=global}
 
 {*Название страницы*}
 <div class="row">

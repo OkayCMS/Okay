@@ -1,7 +1,7 @@
 {if $product->id}
-    {$meta_title = $product->name scope=parent}
+    {$meta_title = $product->name scope=global}
 {else}
-    {$meta_title = $btr->product_new scope=parent}
+    {$meta_title = $btr->product_new scope=global}
 {/if}
 
 {*Название страницы*}

@@ -1,5 +1,5 @@
 
-{$meta_title=$btr->category_stats_sales scope=parent}
+{$meta_title=$btr->category_stats_sales scope=global}
 
 {*Название страницы*}
 <div class="row">

@@ -1,7 +1,7 @@
 {if $category->id}
-    {$meta_title = $category->name scope=parent}
+    {$meta_title = $category->name scope=global}
 {else}
-    {$meta_title = $btr->category_new  scope=parent}
+    {$meta_title = $btr->category_new  scope=global}
 {/if}
 
 {*Название страницы*}

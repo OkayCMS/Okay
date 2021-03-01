@@ -1,7 +1,7 @@
 {* The cart page template *}
 
 {* The page title *}
-{$meta_title = $lang->cart_title scope=parent}
+{$meta_title = $lang->cart_title scope=global}
 
 {if $cart->purchases}
     {* Cart form *}

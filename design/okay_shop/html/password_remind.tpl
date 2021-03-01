@@ -1,10 +1,10 @@
 {* Password remind page *}
 
 {* The canonical address of the page *}
-{$canonical="/user/password_remind" scope=parent}
+{$canonical="/user/password_remind" scope=global}
 
 {* The page title *}
-{$meta_title = $lang->password_remind_title scope=parent}
+{$meta_title = $lang->password_remind_title scope=global}
 
 
 {* The page heading *}

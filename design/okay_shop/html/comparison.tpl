@@ -1,7 +1,7 @@
 {* The products comparison page *}
 
 {* The page title *}
-{$meta_title = $lang->comparison_title scope=parent}
+{$meta_title = $lang->comparison_title scope=global}
 
 {* The page heading *}
 <h1 class="h1">

@@ -1,7 +1,7 @@
 {* Page template *}
 
 {* The canonical address of the page *}
-{$canonical="/{$page->url}" scope=parent}
+{$canonical="/{$page->url}" scope=global}
 
 {if $page->url == '404'}
     {include file='page_404.tpl'}

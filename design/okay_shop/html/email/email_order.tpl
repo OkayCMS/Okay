@@ -1,4 +1,4 @@
-{$subject = "`$lang->email_order_title` `$order->id`" scope=parent}
+{$subject = "`$lang->email_order_title` `$order->id`" scope=global}
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>

@@ -1,5 +1,5 @@
 {* Title *}
-{$meta_title=$btr->callbacks_order scope=parent}
+{$meta_title=$btr->callbacks_order scope=global}
 
 {*Название страницы*}
 <div class="row">

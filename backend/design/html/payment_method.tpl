@@ -1,7 +1,7 @@
 {if $payment_method->id}
-    {$meta_title = $payment_method->name scope=parent}
+    {$meta_title = $payment_method->name scope=global}
 {else}
-    {$meta_title = $btr->payment_method_new scope=parent}
+    {$meta_title = $btr->payment_method_new scope=global}
 {/if}
 
 {*Название страницы*}

@@ -1,7 +1,7 @@
 {if $order->paid}
-    {$subject = "`$btr->email_order` `$order->id` `$btr->email_paid`" scope=parent}
+    {$subject = "`$btr->email_order` `$order->id` `$btr->email_paid`" scope=global}
 {else}
-    {$subject = "`$btr->email_new_order` `$order->id`" scope=parent}
+    {$subject = "`$btr->email_new_order` `$order->id`" scope=global}
 {/if}
 
 <html xmlns="http://www.w3.org/1999/xhtml">

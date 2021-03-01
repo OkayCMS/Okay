@@ -1,7 +1,7 @@
 {* Order page *}
 
 {* The page title *}
-{$meta_title = "`$lang->email_order_title` `$order->id`" scope=parent}
+{$meta_title = "`$lang->email_order_title` `$order->id`" scope=global}
 
 {* The page heading *}
 <div class="order_notify_v2">

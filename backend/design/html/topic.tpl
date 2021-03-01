@@ -1,8 +1,8 @@
 {* Title *}
 {if $topic->id}
-    {$meta_title = $topic->header|escape scope=parent}
+    {$meta_title = $topic->header|escape scope=global}
 {else}
-    {$meta_title = $btr->topic_new scope=parent}
+    {$meta_title = $btr->topic_new scope=global}
 {/if}
 
 {*Название страницы*}

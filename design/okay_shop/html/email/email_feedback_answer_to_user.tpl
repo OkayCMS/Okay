@@ -1,5 +1,5 @@
 {* Письмо ответа на комментарий пользователю *}
-{$subject = {$lang->email_feedback_subject} scope=parent}
+{$subject = {$lang->email_feedback_subject} scope=global}
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title></title>

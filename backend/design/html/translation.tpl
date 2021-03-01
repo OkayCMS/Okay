@@ -1,7 +1,7 @@
 {if $translation->id}
-    {$meta_title = $translation->label scope=parent}
+    {$meta_title = $translation->label scope=global}
 {else}
-    {$meta_title = $btr->translation_new scope=parent}
+    {$meta_title = $btr->translation_new scope=global}
 {/if}
 
 {*Название страницы*}

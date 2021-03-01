@@ -1,7 +1,7 @@
 {if $post->id}
-    {$meta_title = $post->name scope=parent}
+    {$meta_title = $post->name scope=global}
 {else}
-    {$meta_title = $btr->post_new scope=parent}
+    {$meta_title = $btr->post_new scope=global}
 {/if}
 
 {*Название страницы*}

@@ -3,17 +3,17 @@
 {* The canonical address of the page *}
 {if $set_canonical || $self_canonical}
     {if $category}
-        {$canonical="/catalog/{$category->url}" scope=parent}
+        {$canonical="/catalog/{$category->url}" scope=global}
     {elseif $brand}
-        {$canonical="/brands/{$brand->url}" scope=parent}
+        {$canonical="/brands/{$brand->url}" scope=global}
     {elseif $page->url=='discounted'}
-        {$canonical="/discounted" scope=parent}
+        {$canonical="/discounted" scope=global}
     {elseif $page->url=='bestsellers'}
-        {$canonical="/bestsellers" scope=parent}
+        {$canonical="/bestsellers" scope=global}
     {elseif $keyword}
-        {$canonical="/all-products" scope=parent}
+        {$canonical="/all-products" scope=global}
     {else}
-        {$canonical="/all-products" scope=parent}
+        {$canonical="/all-products" scope=global}
     {/if}
 {/if}
 

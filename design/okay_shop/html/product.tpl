@@ -1,7 +1,7 @@
 {* Product page *}
 
 {* The canonical address of the page *}
-{$canonical="/products/{$product->url}" scope=parent}
+{$canonical="/products/{$product->url}" scope=global}
 
 <div class="block padding">
     <div class="fn_product product" itemscope itemtype="http://schema.org/Product">

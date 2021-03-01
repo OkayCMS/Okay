@@ -1,7 +1,7 @@
 {if $menu->id}
-    {$meta_title = $menu->name scope=parent}
+    {$meta_title = $menu->name scope=global}
 {else}
-    {$meta_title = $btr->menu_new_menu scope=parent}
+    {$meta_title = $btr->menu_new_menu scope=global}
 {/if}
 {*Название страницы*}
 <div class="row">

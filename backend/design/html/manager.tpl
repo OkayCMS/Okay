@@ -1,7 +1,7 @@
 {if $m->login}
-    {$meta_title = $m->login scope=parent}
+    {$meta_title = $m->login scope=global}
 {else}
-    {$meta_title = $btr->manager_new scope=parent}
+    {$meta_title = $btr->manager_new scope=global}
 {/if}
 
 {*Название страницы*}

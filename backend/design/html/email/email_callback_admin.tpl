@@ -1,4 +1,4 @@
-{$subject="`$btr->email_callback_request` `$callback->name|escape`" scope=parent}
+{$subject="`$btr->email_callback_request` `$callback->name|escape`" scope=global}
 
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
     <title></title>

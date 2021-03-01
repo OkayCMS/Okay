@@ -1,4 +1,4 @@
-{$meta_title = $btr->settings_catalog_catalog scope=parent}
+{$meta_title = $btr->settings_catalog_catalog scope=global}
 
 {*Название страницы*}
 <div class="row">

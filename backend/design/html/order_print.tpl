@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {*Печать заказа*}
-{$wrapper='' scope=parent}
+{$wrapper='' scope=global}
 <html>
 <head>
     <base href="{$config->root_url}/"/>

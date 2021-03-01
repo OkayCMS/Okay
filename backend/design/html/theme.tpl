@@ -1,5 +1,5 @@
 {if $theme->name}
-    {$meta_title = "`$btr->general_theme` {$theme->name}" scope=parent}
+    {$meta_title = "`$btr->general_theme` {$theme->name}" scope=global}
 {/if}
 
 {*Название страницы*}

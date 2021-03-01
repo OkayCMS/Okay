@@ -1,5 +1,5 @@
 {* Title *}
-{$meta_title=$btr->subscribe_mailing_subscribes scope=parent}
+{$meta_title=$btr->subscribe_mailing_subscribes scope=global}
 
 {if $subscribes_count>0}
     <div class="row">

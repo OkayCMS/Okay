@@ -2,9 +2,9 @@
 
 {* The canonical address of the page *}
 {if $type_post == "blog"}
-    {$canonical="/blog/{$post->url}" scope=parent}
+    {$canonical="/blog/{$post->url}" scope=global}
 {else}
-    {$canonical="/news/{$post->url}" scope=parent}
+    {$canonical="/news/{$post->url}" scope=global}
 {/if}
 
 {* The page heading *}

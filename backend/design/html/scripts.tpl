@@ -1,5 +1,5 @@
 {if $script_file}
-    {$meta_title = "`$btr->scripts_scripts` $script_file" scope=parent}
+    {$meta_title = "`$btr->scripts_scripts` $script_file" scope=global}
 {/if}
 
 {* Подключаем редактор кода *}

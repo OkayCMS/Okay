@@ -1,7 +1,7 @@
 {if $order->id}
-    {$meta_title = "`$btr->general_order_number` `$order->id`" scope=parent}
+    {$meta_title = "`$btr->general_order_number` `$order->id`" scope=global}
 {else}
-    {$meta_title = $btr->order_new scope=parent}
+    {$meta_title = $btr->order_new scope=global}
 {/if}
 
 <form method="post" enctype="multipart/form-data" class="fn_fast_button">

@@ -1,7 +1,7 @@
 {if $language->id}
-    {$meta_title = $language->current_name|escape scope=parent}
+    {$meta_title = $language->current_name|escape scope=global}
 {else}
-    {$meta_title = $btr->language_new scope=parent}
+    {$meta_title = $btr->language_new scope=global}
 {/if}
 
 {*Название страницы*}

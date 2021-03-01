@@ -1,4 +1,4 @@
-{$meta_title = $btr->counters_title scope=parent}
+{$meta_title = $btr->counters_title scope=global}
 
 {*Название страницы*}
 <div class="row">

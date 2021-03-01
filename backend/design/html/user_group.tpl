@@ -1,7 +1,7 @@
 {if $group->id}
-    {$meta_title = $group->name scope=parent}
+    {$meta_title = $group->name scope=global}
 {else}
-    {$meta_title = $btr->user_group_new scope=parent}
+    {$meta_title = $btr->user_group_new scope=global}
 {/if}
 
 {*Название страницы*}

@@ -1,4 +1,4 @@
-{$meta_title = $btr->feature_feature_aliases scope=parent}
+{$meta_title = $btr->feature_feature_aliases scope=global}
 
 {*Название страницы*}
 <div class="row">

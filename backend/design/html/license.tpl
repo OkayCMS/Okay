@@ -1,4 +1,4 @@
-{$meta_title = $btr->license_text scope=parent}
+{$meta_title = $btr->license_text scope=global}
 
 {*Название страницы*}
 <div class="row">

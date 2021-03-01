@@ -1,4 +1,4 @@
-{$meta_title = $btr->settings_feed_yml scope=parent}
+{$meta_title = $btr->settings_feed_yml scope=global}
 
 {*Название страницы*}
 <div class="row">

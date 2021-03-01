@@ -1,6 +1,6 @@
 {* Feedback page *}
 {* The canonical address of the page *}
-{$canonical="/{$page->url}" scope=parent}
+{$canonical="/{$page->url}" scope=global}
 
 <div class="wrap_block clearfix">
 

@@ -1,7 +1,7 @@
 {if $feature->id}
-    {$meta_title = $feature->name scope=parent}
+    {$meta_title = $feature->name scope=global}
 {else}
-    {$meta_title = $btr->feature_new scope=parent}
+    {$meta_title = $btr->feature_new scope=global}
 {/if}
 
 {*Название страницы*}

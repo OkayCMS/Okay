@@ -1,4 +1,4 @@
-{$meta_title = $btr->seo_filter_patterns_auto scope=parent}
+{$meta_title = $btr->seo_filter_patterns_auto scope=global}
 
 {*Название страницы*}
 <div class="row">

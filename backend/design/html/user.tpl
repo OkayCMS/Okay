@@ -1,5 +1,5 @@
 {if $user->id}
-    {$meta_title = $user->name|escape scope=parent}
+    {$meta_title = $user->name|escape scope=global}
 {/if}
 
 {*Название страницы*}

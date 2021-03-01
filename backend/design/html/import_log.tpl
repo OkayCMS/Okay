@@ -1,5 +1,5 @@
 {* Title *}
-{$meta_title=$btr->import_log_products scope=parent}
+{$meta_title=$btr->import_log_products scope=global}
 
 
 {*Название страницы*}

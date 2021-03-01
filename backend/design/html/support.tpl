@@ -1,5 +1,5 @@
 {* Title *}
-{$meta_title=$btr->support_support scope=parent}
+{$meta_title=$btr->support_support scope=global}
 
 {*Название страницы*}
 <div class="row">

@@ -1,7 +1,7 @@
 {if $banner->id}
-    {$meta_title = $banner->name scope=parent}
+    {$meta_title = $banner->name scope=global}
 {else}
-    {$meta_title = $btr->banner_new_group scope=parent}
+    {$meta_title = $btr->banner_new_group scope=global}
 {/if}
 {*Название страницы*}
 <div class="row">

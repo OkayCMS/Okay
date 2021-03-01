@@ -1,8 +1,8 @@
 {* Title *}
 {if $category}
-	{$meta_title=$category->name scope=parent}
+	{$meta_title=$category->name scope=global}
 {else}
-	{$meta_title=$btr->general_products scope=parent}
+	{$meta_title=$btr->general_products scope=global}
 {/if}
 
 {*Название страницы*}

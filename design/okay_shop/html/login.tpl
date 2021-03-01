@@ -1,10 +1,10 @@
 {* Login page *}
 
 {* The canonical address of the page *}
-{$canonical="/user/login" scope=parent}
+{$canonical="/user/login" scope=global}
 
 {* The page title *}
-{$meta_title = $lang->login_title scope=parent}
+{$meta_title = $lang->login_title scope=global}
 
 {* The page heading *}
 <h1 class="h1"><span data-language="login_enter">{$lang->login_enter}</span></h1>

@@ -1,5 +1,5 @@
 {* page title *}
-{$meta_title = $lang->wishlist_title scope=parent}
+{$meta_title = $lang->wishlist_title scope=global}
 
 {* Page heading *}
 <h1 class="h1">

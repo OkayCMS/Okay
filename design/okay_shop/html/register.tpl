@@ -1,10 +1,10 @@
 {* Registration page *}
 
 {* The canonical address of the page *}
-{$canonical="/user/register" scope=parent}
+{$canonical="/user/register" scope=global}
 
 {* The page title *}
-{$meta_title = $lang->register_title scope=parent}
+{$meta_title = $lang->register_title scope=global}
 
 {* The page heading *}
 <h1 class="h1">

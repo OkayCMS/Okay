@@ -1,8 +1,8 @@
 {* Title *}
 {if $banner}
-    {$meta_title=$banner->name scope=parent}
+    {$meta_title=$banner->name scope=global}
 {else}
-    {$meta_title=$btr->banners_images_banners  scope=parent}
+    {$meta_title=$btr->banners_images_banners  scope=global}
 {/if}
 
 {*Название страницы*}

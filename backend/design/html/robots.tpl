@@ -1,4 +1,4 @@
-{$meta_title = $btr->robots_file scope=parent}
+{$meta_title = $btr->robots_file scope=global}
 
 {*Название страницы*}
 <div class="row">

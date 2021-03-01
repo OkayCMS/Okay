@@ -1,4 +1,4 @@
-{$meta_title = $btr->settings_notify_notifications scope=parent}
+{$meta_title = $btr->settings_notify_notifications scope=global}
 
 {*Название страницы*}
 <div class="row">
