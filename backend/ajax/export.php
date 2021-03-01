@@ -2,7 +2,7 @@
 
 class ExportAjax extends Okay {
 
-    /*Поля(столбцы) для файла экспорта*/
+    /*пїЅпїЅпїЅпїЅ(пїЅпїЅпїЅпїЅпїЅпїЅпїЅ) пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ*/
     private $columns_names = array(
         'category'=>         'Category',
         'brand'=>            'Brand',
@@ -12,6 +12,7 @@ class ExportAjax extends Okay {
         'price'=>            'Price',
         'compare_price'=>    'Old price',
         'currency'=>         'Currency ID',
+        'currency_code'=>    'Currency code',
         'weight'=>           'Weight',
         'stock'=>            'Stock',
         'units'=>            'Units',
@@ -42,21 +43,21 @@ class ExportAjax extends Okay {
         unset($_SESSION['lang_id']);
         unset($_SESSION['admin_lang_id']);
 
-        // Эксель кушает только 1251
+        // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 1251
         setlocale(LC_ALL, 'ru_RU.1251');
         $this->db->query('SET NAMES cp1251');
         
-        // Страница, которую экспортируем
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         $page = $this->request->get('page');
         if(empty($page) || $page==1) {
             $page = 1;
-            // Если начали сначала - удалим старый файл экспорта
+            // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if(is_writable($this->export_files_dir.$this->filename)) {
                 unlink($this->export_files_dir.$this->filename);
             }
         }
         
-        // Открываем файл экспорта на добавление
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         $f = fopen($this->export_files_dir.$this->filename, 'ab');
 
         $filter = array('page'=>$page, 'limit'=>$this->products_count);
@@ -84,19 +85,19 @@ class ExportAjax extends Okay {
             $filter['brand_id'] = $brand_id;
         }
         
-        // Добавим в список колонок свойства товаров
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         $features_filter['limit'] = $this->features->count_features($features_filter);
         $features = $this->features->get_features($features_filter);
         foreach($features as $feature) {
             $this->columns_names[$feature->name] = $feature->name;
         }
         
-        // Если начали сначала - добавим в первую строку названия колонок
+        // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         if($page == 1) {
             fputcsv($f, $this->columns_names, $this->column_delimiter);
         }
 
-        // Все товары
+        // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         $products = array();
         foreach($this->products->get_products($filter) as $p) {
             $products[$p->id] = (array)$p;
@@ -118,7 +119,7 @@ class ExportAjax extends Okay {
             $products_values[$pv->product_id][$pv->value_id] = $pv->value_id;
         }
 
-        // Значения свойств товара
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         foreach($products as $p_id=>&$product) {
 
             if (isset($products_values[$p_id])) {
@@ -141,21 +142,21 @@ class ExportAjax extends Okay {
                 $path = array();
                 $cat = $this->categories->get_category((int)$category->category_id);
                 if(!empty($cat)) {
-                    // Вычисляем составляющие категории
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                     foreach($cat->path as $p) {
                         $path[] = str_replace($this->subcategory_delimiter, '\\'.$this->subcategory_delimiter, $p->name);
                     }
-                    // Добавляем категорию к товару
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
                     $categories[] = implode('/', $path);
                 }
             }
             $product['category'] = implode(',, ', $categories);
         }
         
-        // Изображения товаров
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         $images = $this->products->get_images(array('product_id'=>array_keys($products)));
         foreach($images as $image) {
-            // Добавляем изображения к товару чезер запятую
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if(empty($products[$image->product_id]['images'])) {
                 $products[$image->product_id]['images'] = $image->filename;
             } else {
@@ -164,6 +165,13 @@ class ExportAjax extends Okay {
         }
         
         $variants = $this->variants->get_variants(array('product_id'=>array_keys($products)));
+        
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ID пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ
+        $currencies = $this->money->get_currencies();        
+        $currencies_list = array();
+        foreach($currencies as $currencie) {
+            $currencies_list[$currencie->id] = $currencie->code;
+        }
         
         foreach($variants as $variant) {
             if(isset($products[$variant->product_id])) {
@@ -176,6 +184,7 @@ class ExportAjax extends Okay {
                 $v['weight']           = $variant->weight;
                 $v['units']           = $variant->units;
                 $v['currency']        = $variant->currency_id;
+                $v['currency_code']   = $currencies_list[$variant->currency_id];
                 if($variant->infinity) {
                     $v['stock']           = '';
                 }

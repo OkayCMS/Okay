@@ -14,6 +14,7 @@ class Import extends Okay {
         'price'=>            array('price', 'цена'),
         'compare_price'=>    array('compare price', 'old price', 'старая цена'),
         'currency'=>         array('currency_id', 'currency', 'currency id', 'ID валюты'),
+        'currency_code'=>    array('currency_code', 'currency code', 'код валюты', 'валюта'),
         'weight'=>           array('weight', 'вес варианта'),
         'stock'=>            array('stock', 'склад', 'на складе'),
         'units'=>            array('units', 'ед. изм.'),

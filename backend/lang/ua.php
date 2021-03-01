@@ -871,6 +871,7 @@ $backend_translations->import_field_sku = 'Артикул';
 $backend_translations->import_field_price = 'Ціна';
 $backend_translations->import_field_compare_price = 'Стара ціна';
 $backend_translations->import_field_currency = 'ID валюти';
+$backend_translations->import_field_currency_code = 'Код валюти';
 $backend_translations->import_field_weight = 'Вага';
 $backend_translations->import_field_stock = 'Кількість';
 $backend_translations->import_field_units = 'Одиниця вимірювання';
