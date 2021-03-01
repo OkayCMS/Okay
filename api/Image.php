@@ -264,7 +264,9 @@ class Image extends Okay {
      */
     private function image_constrain_gd($src_file, $dst_file, $max_w, $max_h, $watermark=null, $watermark_offet_x=0, $watermark_offet_y=0) {
         $quality = 100;
-        
+        if (!is_dir($dst_dir = pathinfo($dst_file,PATHINFO_DIRNAME))) {
+           mkdir($dst_dir, 0777, true);
+        }
         // Параметры исходного изображения
         @list($src_w, $src_h, $src_type) = array_values(getimagesize($src_file));
         $src_type = image_type_to_mime_type($src_type);
@@ -403,6 +405,9 @@ class Image extends Okay {
         $thumb = new Imagick();
 
         $sharpen = 0.2;
+        if (!is_dir($dst_dir = pathinfo($dst_file,PATHINFO_DIRNAME))) {
+           mkdir($dst_dir, 0777, true);
+        }
         
         // Читаем изображение
         if(!$thumb->readImage($src_file)) {
