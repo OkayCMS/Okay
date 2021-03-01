@@ -54,7 +54,7 @@ class FeaturesValues extends Okay {
             $yandex_filter = $this->db->placehold("AND `f`.`yandex`=? AND `pf`.`product_id` IN (
                 SELECT 
                     distinct(p.id)
-                FROM ok_variants v 
+                FROM __variants v 
                 LEFT JOIN ok_products p ON v.product_id=p.id
                 WHERE 
                     p.visible 
