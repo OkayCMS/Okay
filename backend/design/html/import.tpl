@@ -51,7 +51,7 @@
 
 {*Главная форма страницы*}
 {if $message_error != 'no_permission'}
-    <form class="form-horizontal mt-1 hidden-xs-down" method="post" enctype="multipart/form-data">
+    <form class="form-horizontal mt-1" method="post" enctype="multipart/form-data">
         <input type=hidden name="session_id" value="{$smarty.session.id}">
         {if $filename || $import}
             <div class="row">
@@ -154,41 +154,42 @@
                         <div class="heading_box">
                             {$btr->import_download|escape}
                             <div class="toggle_arrow_wrap fn_toggle_card text-primary">
-                                <a class="btn-minimize" href="javascript:;" ><i class="icon-arrow-down"></i></a>
+                                <a class="btn-minimize" href="javascript:;" ><i class="fa fn_icon_arrow fa-angle-down"></i></a>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12">
-                                <div class="text_warning">
-                                    <div class="heading_normal text_warning">
-                                        <span class="text_warning">{$btr->import_backup|escape}</span>
+                        <div class="toggle_body_wrap on fn_card">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <div class="text_warning">
+                                        <div class="heading_normal text_warning">
+                                            <span class="text_warning">{$btr->import_backup|escape}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12">
-                                <div class="text_primary">
-                                    <div class="heading_normal text_primary">
-                                        <span class="text_primary">
-                                         {$btr->import_maxsize|escape}
-                                            {if $config->max_upload_filesize>1024*1024}
-                                                {$config->max_upload_filesize/1024/1024|round:'2'} {$btr->general_mb|escape}
-                                            {else}
-                                                {$config->max_upload_filesize/1024|round:'2'} {$btr->general_kb|escape}
-                                            {/if}
-                                        </span>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <div class="text_primary">
+                                        <div class="heading_normal text_primary">
+                                            <span class="text_primary">
+                                             {$btr->import_maxsize|escape}
+                                                {if $config->max_upload_filesize>1024*1024}
+                                                    {$config->max_upload_filesize/1024/1024|round:'2'} {$btr->general_mb|escape}
+                                                {else}
+                                                    {$config->max_upload_filesize/1024|round:'2'} {$btr->general_kb|escape}
+                                                {/if}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-5 col-md-6 col-sm-12 my-h">
-                                <input name="file" class="import_file" style="padding:0px;" type="file" value="" />
-                            </div>
-                            <div class="col-lg-7 col-md-6 my-h">
-                                <button type="submit" class="btn btn_small btn_blue float-md-right"><i class="fa fa-upload"></i>&nbsp;{$btr->import_to_download|escape}</button>
+                            <div class="row">
+                                <div class="col-lg-5 col-md-6 col-sm-12 my-h">
+                                    <input name="file" class="import_file" style="padding:0px;" type="file" value="" />
+                                </div>
+                                <div class="col-lg-7 col-md-6 my-h">
+                                    <button type="submit" class="btn btn_small btn_blue float-md-right"><i class="fa fa-upload"></i>&nbsp;{$btr->import_to_download|escape}</button>
+                                </div>
                             </div>
                         </div>
                     </div>
