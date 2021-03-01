@@ -283,6 +283,37 @@ class Products extends Okay {
         return $this->get_products($filter, true);
     }
 
+    /*Выборка компиляции товаров*/
+    public function get_products_compile($filter = array()) {
+        $products = array();
+        $images_ids = array();
+        foreach ($this->get_products($filter) as $p) {
+            $products[$p->id] = $p;
+            if(!empty($p->main_image_id)) {
+                $images_ids[] = $p->main_image_id;
+            }
+        }
+
+        if(!empty($products)) {
+            foreach ($this->variants->get_variants(array('product_id'=>array_keys($products))) as $variant) {
+                $products[$variant->product_id]->variants[] = $variant;
+            }
+
+            if(!empty($images_ids)) {
+                foreach ($this->products->get_images(array('id'=>$images_ids)) as $image) {
+                    $products[$image->product_id]->image = $image;
+                }
+            }
+
+            foreach($products as $product) {
+                if(isset($product->variants[0])) {
+                    $product->variant = $product->variants[0];
+                }
+            }
+        }
+        return $products;
+    }
+
     /*Выборка конкретного товара*/
     public function get_product($id) {
         if (empty($id)) {
