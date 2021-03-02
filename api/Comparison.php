@@ -13,42 +13,15 @@ class Comparison extends Okay {
 
         $items = !empty($_COOKIE['comparison']) ? json_decode($_COOKIE['comparison']) : array();
         if(!empty($items) && is_array($items)) {
-            $products = array();
-            $images_ids = array();
-            foreach ($this->products->get_products(array('id'=>$items, 'visible'=>1)) as $p) {
-                $products[$p->id] = $p;
-                $images_ids[] = $p->main_image_id;
-            }
-            if(!empty($products)) {
-                $products_ids = array_keys($products);
-                $comparison->ids = $products_ids;
-                foreach($products as $product) {
-                    $product->variants = array();
-                    $product->features = array();
-                }
-                
-                $variants = $this->variants->get_variants(array('product_id'=>$products_ids));
-                
-                foreach($variants as $variant) {
-                    $products[$variant->product_id]->variants[] = $variant;
-                }
-
-                if (!empty($images_ids)) {
-                    $images = $this->products->get_images(array('id'=>$images_ids));
-                    foreach ($images as $image) {
-                        if (isset($products[$image->product_id])) {
-                            $products[$image->product_id]->image = $image;
-                        }
-                    }
-                }
+            if($products = $this->products->get_products_compile(array('id'=>$items, 'visible'=>1))) {
 
                 $features_values = array();
-                foreach ($this->features_values->get_features_values(array('product_id'=>$products_ids)) as $fv) {
+                foreach ($this->features_values->get_features_values(array('product_id'=>array_keys($products))) as $fv) {
                     $features_values[$fv->id] = $fv;
                 }
 
                 $products_values = array();
-                foreach ($this->features_values->get_product_value_id($products_ids) as $pv) {
+                foreach ($this->features_values->get_product_value_id(array_keys($products)) as $pv) {
                     $products_values[$pv->product_id][$pv->value_id] = $pv->value_id;
                 }
 
@@ -81,9 +54,6 @@ class Comparison extends Okay {
                 }
                 
                 foreach($products as $product) {
-                    if(isset($product->variants[0])) {
-                        $product->variant = $product->variants[0];
-                    }
 
                     $product_features = array();
                     if (isset($products_values[$product->id])) {

@@ -824,42 +824,15 @@ class ProductsView extends View {
         /*Постраничная навигация END*/
 
         // Товары
-        $products = array();
-        foreach($this->products->get_products($filter) as $p) {
-            $products[$p->id] = $p;
-        }
-        
+        $products = $this->products->get_products_compile($filter);
+
         // Если искали товар и найден ровно один - перенаправляем на него
         if(!empty($keyword) && $products_count == 1 && !$this->request->get('ajax','boolean')) {
+            $p = reset($products);
             header('Location: '.$this->config->root_url.'/'.$this->lang_link.'products/'.$p->url);
         }
         
         if(!empty($products)) {
-            $products_ids = array_keys($products);
-            $images_ids = array();
-            foreach($products as $product) {
-                $product->variants = array();
-                $images_ids[] = $product->main_image_id;
-            }
-
-            $variants = $this->variants->get_variants(array('product_id'=>$products_ids));
-
-            foreach($variants as $variant) {
-                $products[$variant->product_id]->variants[] = $variant;
-            }
-
-            if (!empty($images_ids)) {
-                $images = $this->products->get_images(array('id'=>$images_ids));
-                foreach ($images as $image) {
-                    $products[$image->product_id]->image = $image;
-                }
-            }
-
-            foreach($products as $product) {
-                if(isset($product->variants[0])) {
-                    $product->variant = $product->variants[0];
-                }
-            }
             $this->design->assign('products', $products);
         }
         
