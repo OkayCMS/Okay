@@ -982,3 +982,4 @@ $backend_translations->recaptcha_v3_scores = 'reCAPTCHA V3 "Людяність",
 $backend_translations->integration_1c = 'Інтеграція з 1С';
 $backend_translations->orders_all_statuses = 'Усі статуси';
 $backend_translations->orders_all_labels = 'Усі мітки';
+$backend_translations->settings_enable_webp = 'Включити підтримку WebP';

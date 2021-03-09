@@ -982,3 +982,4 @@ $backend_translations->recaptcha_v3_scores = 'reCAPTCHA V3 "Humanness", 0.0 exac
 $backend_translations->integration_1c = 'Integration with 1C';
 $backend_translations->orders_all_statuses = 'All Statuses';
 $backend_translations->orders_all_labels = 'All labels';
+$backend_translations->settings_enable_webp = 'Enable WebP support';

@@ -241,7 +241,13 @@
                         <a href="{$bi->url}" target="_blank">
                             {/if}
                             {if $bi->image}
-                                <img src="{$bi->image|resize:1170:390:false:$config->resized_banners_images_dir}" alt="{$bi->alt}" title="{$bi->title}"/>
+                                <picture>
+                                    {if $settings->support_webp}
+                                        <source type="image/webp" srcset="{$bi->image|resize:1170:390:false:$config->resized_banners_images_dir}.webp">
+                                    {/if}
+                                    <source srcset="{$bi->image|resize:1170:390:false:$config->resized_banners_images_dir}">
+                                    <img src="{$bi->image|resize:1170:390:false:$config->resized_banners_images_dir}" alt="{$bi->alt}" title="{$bi->title}"/>
+                                </picture>
                             {/if}
                             {if $bi->url}
                         </a>

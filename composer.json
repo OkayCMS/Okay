@@ -22,6 +22,7 @@
         "gregwar/image": "2.*",
         "smarty/smarty": "3.1.39",
         "mobiledetect/mobiledetectlib": "^2.8",
-        "phpmailer/phpmailer": "~6.0"
+        "phpmailer/phpmailer": "~6.0",
+        "rosell-dk/webp-convert": "^2.4"
     }
 }

@@ -94,12 +94,24 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-8 col-md-6 mt-2">
+                        <div class="col-lg-4 col-md-6 mt-2">
                             <div class="heading_label boxes_inline">{$btr->settings_catalog_not_in_stock|escape}</div>
                             <div class="boxes_inline">
                                <div class="okay_switch clearfix">
                                     <label class="switch switch-default">
                                         <input class="switch-input" name="is_preorder" value='1' type="checkbox" {if $settings->is_preorder}checked=""{/if}/>
+                                        <span class="switch-label"></span>
+                                        <span class="switch-handle"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mt-2">
+                            <div class="heading_label boxes_inline">{$btr->settings_enable_webp|escape}</div>
+                            <div class="boxes_inline">
+                                <div class="okay_switch clearfix">
+                                    <label class="switch switch-default">
+                                        <input class="switch-input" name="support_webp" value='1' type="checkbox" {if $settings->support_webp}checked=""{/if}/>
                                         <span class="switch-label"></span>
                                         <span class="switch-handle"></span>
                                     </label>

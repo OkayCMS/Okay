@@ -18,7 +18,13 @@
             {* The post image *}
             <a class="blog_image" href="{$lang_link}{$type_post}/{$post->url}">
                 {if $post->image}
-                    <img class="blog_img" src="{$post->image|resize:360:360:false:$config->resized_blog_dir}" alt="{$post->name|escape}" title="{$post->name|escape}">
+                    <picture>
+                        {if $settings->support_webp}
+                            <source type="image/webp" srcset="{$post->image|resize:360:360:false:$config->resized_blog_dir}.webp">
+                        {/if}
+                        <source srcset="{$post->image|resize:360:360:false:$config->resized_blog_dir}">
+                        <img class="blog_img" src="{$post->image|resize:360:360:false:$config->resized_blog_dir}" alt="{$post->name|escape}" title="{$post->name|escape}">
+                    </picture>
                 {/if}
             </a>
 

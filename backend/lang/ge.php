@@ -982,3 +982,4 @@ $backend_translations->recaptcha_v3_scores = 'reCAPTCHA V3 "Humanness", 0.0 ზ�
 $backend_translations->integration_1c = 'ინტეგრირება 1C';
 $backend_translations->orders_all_statuses = 'ყველა სტატუსი';
 $backend_translations->orders_all_labels = 'ყველა ნიშანი';
+$backend_translations->settings_enable_webp = 'მხარდაჭერის ჩართვა WebP';

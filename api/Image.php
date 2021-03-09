@@ -1,5 +1,7 @@
 <?php
 
+use WebPConvert\WebPConvert;
+
 require_once('Okay.php');
 
 class Image extends Okay {
@@ -20,7 +22,7 @@ class Image extends Okay {
      * @return $string имя файла превью
      */
     public function resize($filename, $original_images_dir = null, $resized_images_dir = null) {
-        list($source_file, $width , $height, $set_watermark, $crop_params) = $this->get_resize_params($filename);
+        list($source_file, $width , $height, $set_watermark, $crop_params, $pseudo_webp) = $this->get_resize_params($filename);
 
         $size = $width.'x'.$height.($set_watermark === true ? 'w' : '');
         if ($resized_images_dir === null || $resized_images_dir == $this->config->resized_images_dir) {
@@ -79,8 +81,17 @@ class Image extends Okay {
         } else {
             $this->image_constrain_gd($originals_dir.$original_file, $preview_dir.$resized_file, $width, $height, $watermark, $watermark_offet_x, $watermark_offet_y);
         }
-        
-        return $preview_dir.$resized_file;
+
+        $destination = $preview_dir.$resized_file;
+
+        // Если запросили псевдо webp, создаем еще дубль такого изображения в формате webp
+        if ($pseudo_webp) {
+            $source = $destination;
+            $destination = $source.'.webp';
+            WebPConvert::convert($source, $destination);
+        }
+
+        return $destination;
     }
 
     /*Добавление параметров ресайза для изображения*/
@@ -109,7 +120,7 @@ class Image extends Okay {
     /*Выборка параметров изображения для ресайза*/
     public function get_resize_params($filename) {
         // Определаяем параметры ресайза
-        if(!preg_match('/(.+)\.([0-9]*)x([0-9]*)(w)?(\.(left|center|right)\.(top|center|bottom))?\.([^\.]+)$/', $filename, $matches)) {
+        if(!preg_match('/(.+)\.([0-9]*)x([0-9]*)(w)?(\.(left|center|right)\.(top|center|bottom))?\.([^.]+)(\.webp)?$/', $filename, $matches)) {
             return false;
         }
 
@@ -118,6 +129,7 @@ class Image extends Okay {
         $height = $matches[3];               // высота будущего изображения
         $set_watermark = $matches[4] == 'w'; // ставить ли водяной знак
         $ext = $matches[8];                  // расширение файла
+        $pseudo_webp = !empty($matches[9]);   // признак что запрашивается webp, но оригинал в jpeg или png
 
         // crop params
         $crop_params = [];
@@ -126,7 +138,7 @@ class Image extends Okay {
             $crop_params['y_pos'] = $matches[7];
         }
 
-        return array($file.'.'.$ext, $width, $height, $set_watermark, $crop_params);
+        return array($file.'.'.$ext, $width, $height, $set_watermark, $crop_params, $pseudo_webp);
     }
 
     /*Загрузка изображения*/
