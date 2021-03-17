@@ -161,7 +161,7 @@
 {* Language attribute *}
 {foreach $languages as $l}
     {if $l->enabled}
-        <link rel="alternate" hreflang="{if $l@first}x-default{else}{$l->href_lang}{/if}" href="{preg_replace('/^(.+)\/$/', '$1', $l->url)}">
+        <link rel="alternate" hreflang="{$l->href_lang}" href="{preg_replace('/^(.+)\/$/', '$1', $l->url)}">
     {/if}
 {/foreach}
 
