@@ -160,15 +160,15 @@
         $(".fn_validate_cart").validate({
             rules: {
                 name: "required",
+                phone: "required",
                 email: {
-                    required: true,
                     email: true
                 },
                 captcha_code: "required"
             },
             messages: {
                 name: form_enter_name,
-                email: form_enter_email,
+                phone: form_enter_phone,
                 captcha_code: form_error_captcha
             }
         });

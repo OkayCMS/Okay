@@ -56,9 +56,9 @@ class CartView extends View {
             /*Валидация данных клиента*/
             if(!$this->validate->is_name($order->name, true)) {
                 $this->design->assign('error', 'empty_name');
-            } elseif(!$this->validate->is_email($order->email, true)) {
+            } elseif(!empty($order->email) && !$this->validate->is_email($order->email)) {
                 $this->design->assign('error', 'empty_email');
-            } elseif(!$this->validate->is_phone($order->phone)) {
+            } elseif(!$this->validate->is_phone($order->phone, true)) {
                 $this->design->assign('error', 'empty_phone');
             } elseif(!$this->validate->is_address($order->address)) {
                 $this->design->assign('error', 'empty_address');
@@ -92,7 +92,9 @@ class CartView extends View {
                 }
 
                 // Отправляем письмо пользователю
-                $this->notify->email_order_user($order->id);
+                if(!empty($order->email)) {
+                    $this->notify->email_order_user($order->id);
+                }
 
                 // Отправляем письмо администратору
                 $this->notify->email_order_admin($order->id);
