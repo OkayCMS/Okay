@@ -164,6 +164,8 @@
         <link rel="alternate" hreflang="{$l->href_lang}" href="{preg_replace('/^(.+)\/$/', '$1', $l->url)}">
     {/if}
 {/foreach}
+{$first_language = $languages|reset}
+<link rel="alternate" hreflang="x-default" href="{preg_replace('/^(.+)\/$/', '$1', $first_language->url)}">
 
 <script>ut_tracker.start('render:recaptcha');</script>
 {if $settings->captcha_type == "v3"}
