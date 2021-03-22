@@ -592,6 +592,13 @@ class Image extends Okay {
                                 @unlink($f);
                             }
                         }
+
+                        $rezised_images = glob($this->config->root_dir.$resized_dir.$file.".*x*.".$ext.".webp");
+                        if(is_array($rezised_images)) {
+                            foreach ($rezised_images as $f) {
+                                @unlink($f);
+                            }
+                        }
                     }
     
                     @unlink($this->config->root_dir.$original_dir.$filename);
@@ -616,6 +623,13 @@ class Image extends Okay {
                     // Удалить все ресайзы
                     if (!empty($resized_dir)) {
                         $rezised_images = glob($this->config->root_dir.$resized_dir.$file.".*x*.".$ext);
+                        if(is_array($rezised_images)) {
+                            foreach ($rezised_images as $f) {
+                                @unlink($f);
+                            }
+                        }
+
+                        $rezised_images = glob($this->config->root_dir.$resized_dir.$file.".*x*.".$ext.".webp");
                         if(is_array($rezised_images)) {
                             foreach ($rezised_images as $f) {
                                 @unlink($f);
