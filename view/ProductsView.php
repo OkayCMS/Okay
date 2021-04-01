@@ -262,6 +262,9 @@ class ProductsView extends View {
         if(!empty($this->meta['keywords'])) {
             $this->meta['keywords']     = ' '.$this->meta['keywords'];
         }
+        if(!empty($this->meta['description'])) {
+            $this->meta['description']     = ' '.$this->meta['description'];
+        }
 
         if($this->set_canonical) {
             $this->meta['h1'] = $this->meta['title'] = $this->meta['keywords'] = $this->meta['description'] = '';
