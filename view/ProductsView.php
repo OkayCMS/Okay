@@ -279,7 +279,7 @@ class ProductsView extends View {
         $this->design->smarty->registerPlugin('function', 'furl', array($this, 'filter_chpu_url'));
     }
 
-    public function filter_chpu_url($params, &$smarty) {
+    public function filter_chpu_url($params, $smarty) {
         if(is_array(reset($params))) {
             $params = reset($params);
         }
