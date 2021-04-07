@@ -10,6 +10,7 @@ class OrderAdmin extends Okay {
         if($this->request->method('post')) {
             $order->id = $this->request->post('id', 'integer');
             $order->name = $this->request->post('name');
+            $order->surname = $this->request->post('surname');
             $order->email = $this->request->post('email');
             $order->phone = $this->request->post('phone');
             $order->address = $this->request->post('address');
@@ -195,6 +196,9 @@ class OrderAdmin extends Okay {
             }
             if(empty($order->name)) {
                 $order->name = $this->request->get('name', 'string');
+            }
+            if(empty($order->surname)) {
+                $order->surname = $this->request->get('surname', 'string');
             }
             if(empty($order->address)) {
                 $order->address = $this->request->get('address', 'string');

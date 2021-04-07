@@ -30,6 +30,7 @@ class Orders extends Okay {
                 o.date, 
                 o.user_id, 
                 o.name, 
+                o.surname, 
                 o.address, 
                 o.phone, 
                 o.email, 
@@ -77,6 +78,7 @@ class Orders extends Okay {
                 o.date, 
                 o.user_id, 
                 o.name, 
+                o.surname, 
                 o.address, 
                 o.phone, 
                 o.email, 
@@ -135,6 +137,7 @@ class Orders extends Okay {
                 $keyword_filter .= $this->db->placehold(' AND (
                     o.id = "'.$this->db->escape(trim($keyword)).'" 
                     OR o.name LIKE "%'.$this->db->escape(trim($keyword)).'%" 
+                    OR o.surname LIKE "%'.$this->db->escape(trim($keyword)).'%" 
                     OR REPLACE(o.phone, "-", "")  LIKE "%'.$this->db->escape(str_replace('-', '', trim($keyword))).'%" 
                     OR o.address LIKE "%'.$this->db->escape(trim($keyword)).'%" 
                     OR o.email LIKE "%'.$this->db->escape(trim($keyword)).'%"

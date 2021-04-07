@@ -7,7 +7,7 @@
     <div class="col-lg-12 col-md-12">
         <div class="wrap_heading">
             <div class="box_heading heading_page">
-                {$btr->user_user|escape} {$user->name|escape}
+                {$btr->user_user|escape} {$user->name|escape} {$user->surname|escape}
             </div>
         </div>
     </div>
@@ -46,7 +46,9 @@
                     {if $message_error=='login_exists'}
                         {$btr->user_already_registered|escape}
                     {elseif $message_error=='empty_name'}
-                        {$btr->user_name|escape}
+                        {$btr->user_enter_name|escape}
+                    {elseif $message_error=='empty_surname'}
+                        {$btr->user_enter_surname|escape}
                     {elseif $message_error=='empty_email'}
                         {$btr->user_email|escape}
                     {else}
@@ -106,6 +108,12 @@
 
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <div class="mb-1">
+                                <div class="heading_label">{$btr->user_surname|escape}</div>
+                                <div class="">
+                                    <input class="form-control mb-h" name="surname" type="text" value="{$user->surname|escape}"/>
+                                </div>
+                            </div>
+                            <div class="mb-1">
                                 <div class="heading_label">{$btr->general_group|escape}</div>
                                 <div class="">
                                     <select name="group_id" class="selectpicker">
@@ -163,7 +171,7 @@
                                                 <a href="{url module=OrderAdmin id=$order->id return=$smarty.server.REQUEST_URI}">{$btr->general_order_number|escape} {$order->id}</a>
                                             </div>
                                             <div class="okay_list_boding okay_list_user_name">
-                                                <span>{$order->name|escape}</span>
+                                                <span>{$order->name|escape} {$order->surname|escape}</span>
                                                 {if $order->note}
                                                     <div class="note">{$order->note|escape}</div>
                                                 {/if}

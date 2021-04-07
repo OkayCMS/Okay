@@ -162,7 +162,7 @@
                     <td>
                         <span data-language="order_name">{$lang->order_name}</span>
                     </td>
-                    <td>{$order->name|escape}</td>
+                    <td>{$order->name|escape} {$order->surname|escape}</td>
                 </tr>
                 <tr>
                     <td>
