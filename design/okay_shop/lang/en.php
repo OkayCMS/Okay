@@ -258,3 +258,5 @@ $lang['features_catalog'] = "Categories";
 $lang['selected_features_heading'] = "You choosed:";
 $lang['selected_features_reset'] = "Clear all";
 $lang['amount_pieces'] = "pc.";
+$lang['form_surname'] = "Surname";
+$lang['form_enter_surname'] = "Enter surname";

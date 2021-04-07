@@ -30,7 +30,13 @@
                     {* Main product image *}
                     {if $product->image}
                         <a href="{$product->image->filename|resize:1800:1200:w}" data-fancybox="group" data-caption="{$product->name|escape}">
-                            <img class="fn_img product_img" itemprop="image" src="{$product->image->filename|resize:600:340}" alt="{$product->name|escape}" title="{$product->name|escape}">
+                            <picture>
+                                {if $settings->support_webp}
+                                    <source type="image/webp" srcset="{$product->image->filename|resize:600:340}.webp">
+                                {/if}
+                                <source srcset="{$product->image->filename|resize:600:340}">
+                                <img class="fn_img product_img" itemprop="image" src="{$product->image->filename|resize:600:340}" alt="{$product->name|escape}" title="{$product->name|escape}">
+                            </picture>
                         </a>
                     {else}
                         <img class="fn_img" src="design/{$settings->theme}/images/no_image.png" width="340" height="340" alt="{$product->name|escape}"/>
@@ -49,7 +55,13 @@
                         {foreach $product->images|cut as $i=>$image}
                             <div class="images_item">
                                 <a class="images_link" href="{$image->filename|resize:1800:1200:w}" data-fancybox="group" data-caption="{$product->name|escape} #{$image@iteration}">
-                                    <img src="{$image->filename|resize:75:75}" alt="{$product->name|escape}"/>
+                                    <picture>
+                                        {if $settings->support_webp}
+                                            <source type="image/webp" srcset="{$image->filename|resize:75:75}.webp">
+                                        {/if}
+                                        <source srcset="{$image->filename|resize:75:75}">
+                                        <img src="{$image->filename|resize:75:75}" alt="{$product->name|escape}"/>
+                                    </picture>
                                 </a>
                             </div>
                         {/foreach}
@@ -440,7 +452,13 @@
                 {* The post image *}
                 <a class="blog_image" href="{$lang_link}{$r_p->type_post}/{$r_p->url}">
                     {if $r_p->image}
-                        <img class="blog_img" src="{$r_p->image|resize:360:360:false:$config->resized_blog_dir}" />
+                        <picture>
+                            {if $settings->support_webp}
+                                <source type="image/webp" srcset="{$r_p->image|resize:360:360:false:$config->resized_blog_dir}.webp">
+                            {/if}
+                            <source srcset="{$r_p->image|resize:360:360:false:$config->resized_blog_dir}">
+                            <img class="blog_img" src="{$r_p->image|resize:360:360:false:$config->resized_blog_dir}" />
+                        </picture>
                     {/if}
                 </a>
 

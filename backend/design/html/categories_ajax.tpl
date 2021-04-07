@@ -26,7 +26,7 @@
 
                 <div class="okay_list_boding okay_list_photo hidden-sm-down">
                     {if $ajax_category->image}
-                        <a href="{url module=CategoryAdmin id=$ajax_category->id return=$smarty.server.REQUEST_URI}">
+                        <a href="index.php?module=CategoryAdmin&id={$ajax_category->id}">
                             <img src="{$ajax_category->image|resize:55:55:false:$config->resized_categories_dir}" alt="" />
                         </a>
                     {else}

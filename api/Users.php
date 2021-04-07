@@ -20,6 +20,7 @@ class Users extends Okay {
                 u.email, 
                 u.password, 
                 u.name,
+                u.surname,
                 u.phone,
                 u.address,
                 u.group_id, 
@@ -54,6 +55,7 @@ class Users extends Okay {
             foreach ($keywords as $keyword) {
                 $keyword_filter .= $this->db->placehold('AND (
                     u.name LIKE "%'.$this->db->escape(trim($keyword)).'%" 
+                    OR u.surname LIKE "%'.$this->db->escape(trim($keyword)).'%" 
                     OR u.email LIKE "%'.$this->db->escape(trim($keyword)).'%" 
                     OR u.last_ip LIKE "%'.$this->db->escape(trim($keyword)).'%" 
                 ) ');
@@ -68,6 +70,9 @@ class Users extends Okay {
                     break;
                 case 'name':
                     $order = 'u.name';
+                    break;
+                case 'surname':
+                    $order = 'u.surname';
                     break;
                 case 'email':
                     $order = 'u.email';
@@ -128,6 +133,7 @@ class Users extends Okay {
                 u.email, 
                 u.password, 
                 u.name,
+                u.surname,
                 u.phone,
                 u.address,
                 u.group_id, 

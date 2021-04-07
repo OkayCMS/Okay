@@ -155,7 +155,7 @@
     <h2>{$btr->order_print_recipient|escape}</h2>
     <table>
         <tr>
-            <td>{$order->name|escape}</td>
+            <td>{$order->name|escape} {$order->surname|escape}</td>
         </tr>    
         <tr>
             <td>{$order->phone|escape}</td>

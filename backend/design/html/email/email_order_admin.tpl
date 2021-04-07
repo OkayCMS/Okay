@@ -112,7 +112,7 @@
                                                     <tbody>
                                                     <tr>
                                                         <td style="background-color:#38c0f3; border-bottom: 1px solid #fff;"><span style="font-size:14px;"><span style="color:#ffffff;"><strong><span style="font-family:trebuchet ms,helvetica,sans-serif;">{$btr->email_order_name}</span></strong></span></span></td>
-                                                        <td style="border: 1px solid #38c0f3;"><span style="font-size:14px;">{$order->name|escape}</span></td>
+                                                        <td style="border: 1px solid #38c0f3;"><span style="font-size:14px;">{$order->name|escape} {$order->surname|escape}</span></td>
                                                     </tr>
                                                     <tr>
                                                         <td style="background-color:#38c0f3;border-bottom: 1px solid #fff;"><span style="font-size:14px;"><span style="color:#ffffff;"><strong><span style="font-family:trebuchet ms,helvetica,sans-serif;">{$btr->email_order_email}</span></strong></span></span></td>

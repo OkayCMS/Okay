@@ -217,7 +217,7 @@
                                                 <div class="input-group">
                                                     <input class="form-control fn_purchase_amount" type="text" name="purchases[amount][{$purchase->id}]" value="{$purchase->amount}"/>
                                                     <span class="input-group-addon p-0 fn_purchase_units">
-                                                        {if $purchase->variant->units}{$purchase->variant->units|escape}{else}{$settings->units|escape}{/if}</span>
+                                                        {if $purchase->variant->units}{$purchase->variant->units|escape}{else}{$settings->units|escape}{/if}
                                                     </span>
                                                 </div>
                                             </div>
@@ -441,8 +441,12 @@
                             <div class="boxes_inline text_dark text_600">{$order->date|date} {$order->date|time}</div>
                         </div>
                         <div class="mb-1">
-                            <div class="heading_label">{$btr->general_name|escape}</div>
+                            <div class="heading_label">{$btr->user_name|escape}</div>
                             <input name="name" class="form-control" type="text" value="{$order->name|escape}" />
+                        </div>
+                        <div class="mb-1">
+                            <div class="heading_label">{$btr->user_surname|escape}</div>
+                            <input name="surname" class="form-control" type="text" value="{$order->surname|escape}" />
                         </div>
                         <div class="mb-1">
                             <div class="heading_label">{$btr->general_phone|escape}</div>
@@ -483,7 +487,7 @@
                                         <div class="heading_label boxes_inline">
                                             {$btr->order_buyer|escape}
                                             <a href="{url module=UserAdmin id=$user->id}" target=_blank>
-                                                 {$user->name|escape}
+                                                 {$user->name|escape} {$user->surname|escape}
                                             </a>
                                         </div>
                                         <a href="javascript:;" data-hint="{$btr->users_delete|escape}" class="btn_close delete_grey fn_delete_user hint-bottom-right-t-info-s-small-mobile  hint-anim boxes_inline" >

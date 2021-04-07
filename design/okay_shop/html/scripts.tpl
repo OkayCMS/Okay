@@ -78,6 +78,7 @@
     {/if}
 
     var form_enter_name = "{$lang->form_enter_name|escape}";
+    var form_enter_surname = "{$lang->form_enter_surname|escape}";
     var form_enter_phone = "{$lang->form_enter_phone|escape}";
     var form_error_captcha = "{$lang->form_error_captcha|escape}";
     var form_enter_email = "{$lang->form_enter_email|escape}";
@@ -160,15 +161,17 @@
         $(".fn_validate_cart").validate({
             rules: {
                 name: "required",
+                surname: "required",
+                phone: "required",
                 email: {
-                    required: true,
                     email: true
                 },
                 captcha_code: "required"
             },
             messages: {
                 name: form_enter_name,
-                email: form_enter_email,
+                surname: form_enter_surname,
+                phone: form_enter_phone,
                 captcha_code: form_error_captcha
             }
         });
@@ -203,6 +206,7 @@
         $(".fn_validate_register").validate({
             rules: {
                 name: "required",
+                surname: "required",
                 email: {
                     required: true,
                     email: true
@@ -212,6 +216,7 @@
             },
             messages: {
                 name: form_enter_name,
+                surname: form_enter_surname,
                 email: form_enter_email,
                 captcha_code: form_error_captcha,
                 password: form_enter_password

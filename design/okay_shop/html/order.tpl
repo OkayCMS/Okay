@@ -42,7 +42,13 @@
             <td class="purchase_image">
                 <a href="{$lang_link}products/{$purchase->product->url}">
                     {if $purchase->product->image}
-                        <img src="{$purchase->product->image->filename|resize:50:50}" alt="{$purchase->product_name|escape}" title="{$purchase->product_name|escape}">
+                        <picture>
+                            {if $settings->support_webp}
+                                <source type="image/webp" srcset="{$purchase->product->image->filename|resize:50:50}.webp">
+                            {/if}
+                            <source srcset="{$purchase->product->image->filename|resize:50:50}">
+                            <img src="{$purchase->product->image->filename|resize:50:50}" alt="{$purchase->product_name|escape}" title="{$purchase->product_name|escape}">
+                        </picture>
                     {else}
                         <img width="50" height="50" src="design/{$settings->theme}/images/no_image.png" alt="{$purchase->product->name|escape}" title="{$purchase->product->name|escape}">
                     {/if}
@@ -156,7 +162,7 @@
                     <td>
                         <span data-language="order_name">{$lang->order_name}</span>
                     </td>
-                    <td>{$order->name|escape}</td>
+                    <td>{$order->name|escape} {$order->surname|escape}</td>
                 </tr>
                 <tr>
                     <td>
@@ -217,7 +223,13 @@
 
                                     <span class="delivery_name">
                                         {if $payment_method->image}
-                                            <img src="{$payment_method->image|resize:50:50:false:$config->resized_payments_dir}"/>
+                                            <picture>
+                                                {if $settings->support_webp}
+                                                    <source type="image/webp" srcset="{$payment_method->image|resize:50:50:false:$config->resized_payments_dir}.webp">
+                                                {/if}
+                                                <source srcset="{$payment_method->image|resize:50:50:false:$config->resized_payments_dir}">
+                                                <img src="{$payment_method->image|resize:50:50:false:$config->resized_payments_dir}"/>
+                                            </picture>
                                         {/if}
                                         {$total_price_with_delivery = $cart->total_price}
                                         {if !$delivery->separate_payment && $cart->total_price < $delivery->free_from}

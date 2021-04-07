@@ -262,6 +262,9 @@ class ProductsView extends View {
         if(!empty($this->meta['keywords'])) {
             $this->meta['keywords']     = ' '.$this->meta['keywords'];
         }
+        if(!empty($this->meta['description'])) {
+            $this->meta['description']     = ' '.$this->meta['description'];
+        }
 
         if($this->set_canonical) {
             $this->meta['h1'] = $this->meta['title'] = $this->meta['keywords'] = $this->meta['description'] = '';
@@ -276,7 +279,7 @@ class ProductsView extends View {
         $this->design->smarty->registerPlugin('function', 'furl', array($this, 'filter_chpu_url'));
     }
 
-    public function filter_chpu_url($params, &$smarty) {
+    public function filter_chpu_url($params, $smarty) {
         if(is_array(reset($params))) {
             $params = reset($params);
         }

@@ -170,7 +170,7 @@
                 {* User account *}
                 <a class="account_link" href="{$lang_link}user">
                     <span class="small-hidden" data-language="index_account">{$lang->index_account}</span>
-                    <span class="account_name small-hidden">{$user->name|escape}</span>
+                    <span class="account_name small-hidden">{$user->name|escape} {$user->surname|escape}</span>
                 </a>
             {else}
                 {* Login *}
@@ -241,7 +241,13 @@
                         <a href="{$bi->url}" target="_blank">
                             {/if}
                             {if $bi->image}
-                                <img src="{$bi->image|resize:1170:390:false:$config->resized_banners_images_dir}" alt="{$bi->alt}" title="{$bi->title}"/>
+                                <picture>
+                                    {if $settings->support_webp}
+                                        <source type="image/webp" srcset="{$bi->image|resize:1170:390:false:$config->resized_banners_images_dir}.webp">
+                                    {/if}
+                                    <source srcset="{$bi->image|resize:1170:390:false:$config->resized_banners_images_dir}">
+                                    <img src="{$bi->image|resize:1170:390:false:$config->resized_banners_images_dir}" alt="{$bi->alt}" title="{$bi->title}"/>
+                                </picture>
                             {/if}
                             {if $bi->url}
                         </a>
