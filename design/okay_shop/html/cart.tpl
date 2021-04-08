@@ -54,7 +54,7 @@
                 <div class="col-sm-6">
                     <div class="form_group">
                         <input class="form_input placeholder_focus" name="phone" type="text" value="{$phone|escape}" data-language="form_phone" >
-                        <span class="form_placeholder">{$lang->form_phone}</span>
+                        <span class="form_placeholder">{$lang->form_phone}*</span>
                     </div>
                 </div>
             </div>
@@ -64,7 +64,7 @@
                 <div class="col-sm-6">
                     <div class="form_group">
                         <input class="form_input placeholder_focus" name="email" type="text" value="{$email|escape}" data-language="form_email" >
-                        <span class="form_placeholder">{$lang->form_email}*</span>
+                        <span class="form_placeholder">{$lang->form_email}</span>
                     </div>
                 </div>
                 {* User's address *}

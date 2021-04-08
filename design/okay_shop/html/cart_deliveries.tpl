@@ -14,7 +14,13 @@
 
                     <span class="delivery_name">
                         {if $delivery->image}
-                            <img src="{$delivery->image|resize:50:50:false:$config->resized_deliveries_dir}" />
+                            <picture>
+                                {if $settings->support_webp}
+                                    <source type="image/webp" srcset="{$delivery->image|resize:50:50:false:$config->resized_deliveries_dir}.webp">
+                                {/if}
+                                <source srcset="{$delivery->image|resize:50:50:false:$config->resized_deliveries_dir}">
+                                <img src="{$delivery->image|resize:50:50:false:$config->resized_deliveries_dir}" />
+                            </picture>
                         {/if}
 
                         {$delivery->name|escape}
@@ -54,7 +60,13 @@
 
                                 <span class="delivery_name">
                                     {if $payment_method->image}
-                                        <img src="{$payment_method->image|resize:50:50:false:$config->resized_payments_dir}" />
+                                        <picture>
+                                            {if $settings->support_webp}
+                                                <source type="image/webp" srcset="{$payment_method->image|resize:50:50:false:$config->resized_payments_dir}.webp">
+                                            {/if}
+                                            <source srcset="{$payment_method->image|resize:50:50:false:$config->resized_payments_dir}">
+                                            <img src="{$payment_method->image|resize:50:50:false:$config->resized_payments_dir}" />
+                                        </picture>
                                     {/if}
 
                                     {$total_price_with_delivery = $cart->total_price}

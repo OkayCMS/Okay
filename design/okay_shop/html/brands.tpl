@@ -13,9 +13,13 @@
             <div class="brand_item no_padding col-xs-6 col-sm-4 col-lg-3">
                 <a class="brand_link" data-brand="{$b->id}" href="{$lang_link}brands/{$b->url}">
                     {if $b->image}
-                        <div class="brand_image">
+                        <picture class="brand_image">
+                            {if $settings->support_webp}
+                                <source type="image/webp" srcset="{$b->image|resize:250:250:false:$config->resized_brands_dir}.webp">
+                            {/if}
+                            <source srcset="{$b->image|resize:250:250:false:$config->resized_brands_dir}">
                             <img class="brand_img" src="{$b->image|resize:250:250:false:$config->resized_brands_dir}" alt="{$b->name|escape}" title="{$b->name|escape}">
-                        </div>
+                        </picture>
                         <span>{$b->name|escape}</span>
                     {else}
                         <div class="brand_name">

@@ -170,12 +170,18 @@ class ImportAjax extends Import {
             $variant['name'] = trim($item['variant']);
         }
 
-        if (isset($item['price']) && !empty($item['price'])) {
-            $variant['price'] = str_replace(',', '.', str_replace(' ', '', trim($item['price'])));
+        if (isset($item['price'])) {
+            $price = str_replace(',', '.', str_replace(' ', '', trim($item['price'])));
+            if (!empty($price) || $price === '0.00' || $price === '0.0' || $price === '0') {
+                $variant['price'] = $price;
+            }
         }
-        
-        if (isset($item['compare_price']) && !empty($item['compare_price'])) {
-            $variant['compare_price'] = str_replace(',', '.', str_replace(' ', '', trim($item['compare_price'])));
+
+        if (isset($item['compare_price'])) {
+            $compare_price = str_replace(',', '.', str_replace(' ', '', trim($item['compare_price'])));
+            if (!empty($compare_price) || $compare_price === '0.00' || $compare_price === '0.0' || $compare_price === '0') {
+                $variant['compare_price'] = $compare_price;
+            }
         }
         
         if (isset($item['stock'])) {

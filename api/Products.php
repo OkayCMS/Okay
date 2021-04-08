@@ -632,28 +632,10 @@ class Products extends Okay {
 
     /*Удаление изображений*/
     public function delete_image($id) {
-        $query = $this->db->placehold("SELECT filename FROM __images WHERE id=?", $id);
-        $this->db->query($query);
-        $filename = $this->db->result('filename');
+        $this->image->delete_image($id, 'filename', 'images', $this->config->original_images_dir, $this->config->resized_images_dir);
+
         $query = $this->db->placehold("DELETE FROM __images WHERE id=? LIMIT 1", $id);
         $this->db->query($query);
-        $query = $this->db->placehold("SELECT count(*) as count FROM __images WHERE filename=? LIMIT 1", $filename);
-        $this->db->query($query);
-        $count = $this->db->result('count');
-        if($count == 0) {
-            $file = pathinfo($filename, PATHINFO_FILENAME);
-            $ext = pathinfo($filename, PATHINFO_EXTENSION);
-            
-            // Удалить все ресайзы
-            $rezised_images = glob($this->config->root_dir.$this->config->resized_images_dir.$file.".*x*.".$ext);
-            if(is_array($rezised_images)) {
-                foreach ($rezised_images as $f) {
-                    @unlink($f);
-                }
-            }
-            
-            @unlink($this->config->root_dir.$this->config->original_images_dir.$filename);
-        }
     }
 
     /*Выборка "соседних" товаров*/

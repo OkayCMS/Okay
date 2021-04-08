@@ -217,7 +217,7 @@
                                                 <div class="input-group">
                                                     <input class="form-control fn_purchase_amount" type="text" name="purchases[amount][{$purchase->id}]" value="{$purchase->amount}"/>
                                                     <span class="input-group-addon p-0 fn_purchase_units">
-                                                        {if $purchase->variant->units}{$purchase->variant->units|escape}{else}{$settings->units|escape}{/if}</span>
+                                                        {if $purchase->variant->units}{$purchase->variant->units|escape}{else}{$settings->units|escape}{/if}
                                                     </span>
                                                 </div>
                                             </div>

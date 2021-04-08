@@ -15,8 +15,8 @@ class OrderAdmin extends Okay {
             $order->address = $this->request->post('address');
             $order->comment = $this->request->post('comment');
             $order->note = $this->request->post('note');
-            $order->discount = $this->request->post('discount', 'floatr');
-            $order->coupon_discount = $this->request->post('coupon_discount', 'floatr');
+            $order->discount = $this->request->post('discount', 'float');
+            $order->coupon_discount = $this->request->post('coupon_discount', 'float');
             $order->delivery_id = $this->request->post('delivery_id', 'integer');
             $order->delivery_price = $this->request->post('delivery_price', 'float');
             $order->payment_method_id = $this->request->post('payment_method_id', 'integer');
