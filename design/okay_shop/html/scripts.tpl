@@ -10,6 +10,26 @@
             var date = new Date(0);
             document.cookie = "price_filter=; path=/; expires=" + date.toUTCString();
         });
+        const filter = new MmenuLight(
+            document.querySelector("#filter"),
+            "(max-width: 991px)"
+        );
+        const filter_drawer = filter.offcanvas({});
+        $(window).resize(function () {
+            if(window.matchMedia('(max-width: 991px)').matches) {
+                console.log($(window).width(), window.innerWidth);
+                $(".fn_filters_opener").on('click', function () {
+                    filter_drawer.open();
+                    $('.fn_mmenu_close').on('click', function (e) {
+                        e.preventDefault();
+                        filter_drawer.close();
+                    });
+                });
+            } else {
+                $(".fn_filters_opener").off();
+                $('.fn_mmenu_close').off();
+            }
+        }).resize();
     {/if}
     
     {* Предзаказ *}
