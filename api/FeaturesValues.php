@@ -366,13 +366,15 @@ class FeaturesValues extends Okay {
             $features_filter['feature_id'] = $feature_id;
         }
 
-        // TODO удалять с алиасов
         $this->delete_product_value(null, $value_id);
 
         if ($values = $this->get_features_values($features_filter)) {
             $values_ids = array();
             foreach ($values as $f) {
                 $values_ids[] = $f->id;
+                // удалим с алиасов
+                $query = $this->db->placehold("DELETE FROM __options_aliases_values WHERE translit=? AND feature_id=?", $f->translit, $f->feature_id);
+                $this->db->query($query);
             }
 
             $query = $this->db->placehold("DELETE FROM `__lang_features_values` WHERE `feature_value_id` in (?@)", $values_ids);
@@ -438,6 +440,10 @@ class FeaturesValues extends Okay {
 
         if (!empty($feature_value->translit)) {
             $feature_value->translit = strtr(strtolower(trim($feature_value->translit)), $this->spec_pairs);
+
+            $old_feature_value = $this->get_feature_value($id);
+            $query = $this->db->placehold("UPDATE __options_aliases_values SET translit=? WHERE translit=? AND feature_id=?", $feature_value->translit, $old_feature_value->translit, $old_feature_value->feature_id);
+            $this->db->query($query);
         }
 
         $result = $this->languages->get_description($feature_value, 'feature_value');
