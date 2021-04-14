@@ -14,7 +14,7 @@
     }
 
     /*Выборка значений свойств*/
-    $options = array();
+    $features_values = array();
     if(!empty($product_id)) {
         foreach($okay->features_values->get_features_values(array('product_id'=>$product_id)) as $fv) {
             $features_values[$fv->feature_id][] = $fv;
