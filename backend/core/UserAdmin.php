@@ -10,6 +10,7 @@ class UserAdmin extends Okay {
         if($this->request->method('post')) {
             $user->id = $this->request->post('id', 'integer');
             $user->name = $this->request->post('name');
+            $user->surname = $this->request->post('surname');
             $user->email = $this->request->post('email');
             $user->phone = $this->request->post('phone');
             $user->address = $this->request->post('address');
@@ -18,6 +19,8 @@ class UserAdmin extends Okay {
             /*Не допустить одинаковые email пользователей*/
             if(empty($user->name)) {
                 $this->design->assign('message_error', 'empty_name');
+            } elseif(empty($user->surname)) {
+                $this->design->assign('message_error', 'empty_surname');
             } elseif(empty($user->email)) {
                 $this->design->assign('message_error', 'empty_email');
             } elseif(($u = $this->users->get_user($user->email)) && $u->id!=$user->id) {

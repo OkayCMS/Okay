@@ -78,9 +78,10 @@
                             </div>
                             <div class="okay_list_heading okay_list_users_name">
 
-                                <span>{$btr->general_name|escape}</span>
+                                <span>{$btr->user_name|escape}</span>
                                 <a href="{url sort=name}" {if $sort == 'name'}class="selected"{/if}>{include file='svg_icon.tpl' svgId='sorts'}</a>
-
+                                <span>{$btr->user_surname|escape}</span>
+                                <a href="{url sort=surname}" {if $sort == 'surname'}class="selected"{/if}>{include file='svg_icon.tpl' svgId='sorts'}</a>
                             </div>
                             <div class="okay_list_heading okay_list_users_email">
                                 <span>Email</span>
@@ -111,7 +112,7 @@
 
                                         <div class="okay_list_boding okay_list_users_name">
                                             <a href="{url module=UserAdmin id=$user->id}">
-                                                {$user->name|escape}
+                                                {$user->name|escape} {$user->surname|escape}
                                             </a>
                                         </div>
 

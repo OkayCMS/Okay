@@ -170,7 +170,7 @@
                 {* User account *}
                 <a class="account_link" href="{$lang_link}user">
                     <span class="small-hidden" data-language="index_account">{$lang->index_account}</span>
-                    <span class="account_name small-hidden">{$user->name|escape}</span>
+                    <span class="account_name small-hidden">{$user->name|escape} {$user->surname|escape}</span>
                 </a>
             {else}
                 {* Login *}

@@ -258,3 +258,5 @@ $lang['features_catalog'] = "Категорії";
 $lang['selected_features_heading'] = "Ви вибрали:";
 $lang['selected_features_reset'] = "Очистити всі";
 $lang['amount_pieces'] = "шт.";
+$lang['form_surname'] = "Прізвище";
+$lang['form_enter_surname'] = "Введіть прізвище";
