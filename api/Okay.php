@@ -198,7 +198,7 @@ class Okay {
         $this->db->query("TRUNCATE TABLE `__lang_features_values`");
         $this->db->query("TRUNCATE TABLE `__lang_products`");
         $this->db->query("TRUNCATE TABLE `__lang_variants`");
-        $this->db->query("TRUNCATE TABLE `__options_aliases_values`");
+        $this->db->query("TRUNCATE TABLE `__features_values_aliases_values`");
         $this->db->query("TRUNCATE TABLE `__products`");
         $this->db->query("TRUNCATE TABLE `__products_categories`");
         $this->db->query("TRUNCATE TABLE `__products_features_values`");

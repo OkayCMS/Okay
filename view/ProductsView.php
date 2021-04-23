@@ -846,10 +846,10 @@ class ProductsView extends View {
                 }
                 // Если только одно значение одного свойства, получим для него все алиасы значения
                 if (count($filter['features']) == 1 && (count($translits = reset($filter['features']))) == 1) {
-                    $option_translit = reset($translits);
+                    $feature_value_translit = reset($translits);
                 }
-                foreach ($this->features_aliases->get_options_aliases_values(array('feature_id'=>array_keys($filter['features']), 'translit'=>$option_translit)) as $ov) {
-                    $parts['{$o_alias_'.$ov->variable.'}'] = $ov->value;
+                foreach ($this->features_aliases->get_features_values_aliases_values(array('feature_id'=>array_keys($filter['features']), 'translit'=>$feature_value_translit)) as $fvv) {
+                    $parts['{$fv_alias_'.$fvv->variable.'}'] = $fvv->value;
                 }
             }
 

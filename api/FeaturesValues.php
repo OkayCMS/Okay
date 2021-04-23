@@ -373,7 +373,7 @@ class FeaturesValues extends Okay {
             foreach ($values as $f) {
                 $values_ids[] = $f->id;
                 // удалим с алиасов
-                $query = $this->db->placehold("DELETE FROM __options_aliases_values WHERE translit=? AND feature_id=?", $f->translit, $f->feature_id);
+                $query = $this->db->placehold("DELETE FROM __features_values_aliases_values WHERE translit=? AND feature_id=?", $f->translit, $f->feature_id);
                 $this->db->query($query);
             }
 
@@ -442,7 +442,7 @@ class FeaturesValues extends Okay {
             $feature_value->translit = strtr(strtolower(trim($feature_value->translit)), $this->spec_pairs);
 
             $old_feature_value = $this->get_feature_value($id);
-            $query = $this->db->placehold("UPDATE __options_aliases_values SET translit=? WHERE translit=? AND feature_id=?", $feature_value->translit, $old_feature_value->translit, $old_feature_value->feature_id);
+            $query = $this->db->placehold("UPDATE __features_values_aliases_values SET translit=? WHERE translit=? AND feature_id=?", $feature_value->translit, $old_feature_value->translit, $old_feature_value->feature_id);
             $this->db->query($query);
         }
 

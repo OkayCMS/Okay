@@ -30,8 +30,8 @@ class FeaturesAliasesAdmin extends Okay {
                         $features_values[$fv->translit] = $fv;
                     }
 
-                    foreach ($this->features_aliases->get_options_aliases_values(array('feature_id'=>$feature->id)) as $oa) {
-                        $features_values[$oa->translit]->aliases[$oa->feature_alias_id] = $oa;
+                    foreach ($this->features_aliases->get_features_values_aliases_values(array('feature_id'=>$feature->id)) as $fva) {
+                        $features_values[$fva->translit]->aliases[$fva->feature_alias_id] = $fva;
                     }
                     $this->design->assign('features_values', $features_values);
 
@@ -150,7 +150,7 @@ class FeaturesAliasesAdmin extends Okay {
 
                     // Удалим все алиасы значений свойств для текущего языка
                     if(!empty($feature->id)) {
-                        $this->db->query("DELETE FROM __options_aliases_values WHERE feature_id=? AND lang_id=?", $feature->id, $this->languages->lang_id());
+                        $this->db->query("DELETE FROM __features_values_aliases_values WHERE feature_id=? AND lang_id=?", $feature->id, $this->languages->lang_id());
                     }
 
                     $features_values = array();
@@ -163,14 +163,14 @@ class FeaturesAliasesAdmin extends Okay {
                         foreach($this->request->post('options_aliases') as $o_translit=>$values) {
                             foreach($values as $feature_alias_id=>$value) {
                                 if (!empty($value) && isset($features_aliases[$feature_alias_id]) && isset($features_values[$o_translit])) {
-                                    $option_alias = new stdClass;
-                                    $option_alias->translit = $o_translit;
-                                    $option_alias->value    = $value;
-                                    $option_alias->lang_id  = $this->languages->lang_id();
-                                    $option_alias->feature_id       = $feature->id;
-                                    $option_alias->feature_alias_id = $feature_alias_id;
-                                    $this->features_aliases->add_option_alias_value($option_alias);
-                                    $features_values[$o_translit]->aliases[$feature_alias_id] = $option_alias;
+                                    $feature_value_alias = new stdClass;
+                                    $feature_value_alias->translit = $o_translit;
+                                    $feature_value_alias->value    = $value;
+                                    $feature_value_alias->lang_id  = $this->languages->lang_id();
+                                    $feature_value_alias->feature_id       = $feature->id;
+                                    $feature_value_alias->feature_alias_id = $feature_alias_id;
+                                    $this->features_aliases->add_feature_value_alias_value($feature_value_alias);
+                                    $features_values[$o_translit]->aliases[$feature_alias_id] = $feature_value_alias;
                                 }
                             }
                         }

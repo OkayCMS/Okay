@@ -210,7 +210,7 @@ class Features extends Okay {
 
             $query = $this->db->placehold("DELETE FROM __features WHERE id=? LIMIT 1", intval($id));
             $this->db->query($query);
-            $query = $this->db->placehold("DELETE FROM __options_aliases_values WHERE feature_id=?", intval($id));
+            $query = $this->db->placehold("DELETE FROM __features_values_aliases_values WHERE feature_id=?", intval($id));
             $this->db->query($query);
             $query = $this->db->placehold("DELETE FROM __categories_features WHERE feature_id=?", intval($id));
             $this->db->query($query);

@@ -14,7 +14,7 @@
                         <div class="okay_list">
                             <div class="okay_list_head">
                                 <div class="okay_list_heading feature_option_name">{$btr->feature_feature_alias_value|escape}</div>
-                                <div class="okay_list_heading feature_option_aliases">{$btr->feature_option_aliases_value|escape}</div>
+                                <div class="okay_list_heading feature_feature_value_aliases">{$btr->feature_feature_value_aliases_value|escape}</div>
                             </div>
                             <div class="okay_list_body">
                                 {foreach $features_values as $fv}
@@ -24,12 +24,12 @@
                                                 <div class="heading_box visible_xs">{$btr->feature_feature_alias_value|escape}</div>
                                                 {$fv->value|escape}
                                             </div>
-                                            <div class="okay_list_boding feature_option_aliases">
-                                                <div class="heading_box visible_xs">{$btr->feature_option_aliases_value|escape}</div>
+                                            <div class="okay_list_boding feature_feature_value_aliases">
+                                                <div class="heading_box visible_xs">{$btr->feature_feature_value_aliases_value|escape}</div>
                                                 {foreach $features_aliases as $fa}
                                                     <div class="feature_opt_aliases_list">
-                                                        <div class="heading_label option_alias_name">{$fa->name|escape}</div>
-                                                        <div class="option_alias_value">
+                                                        <div class="heading_label feature_value_alias_name">{$fa->name|escape}</div>
+                                                        <div class="feature_value_alias_value">
                                                             <input type="text" class="form-control" name="options_aliases[{$fv->translit}][{$fa->id}]" value="{$fv->aliases[{$fa->id}]->value|escape}">
                                                         </div>
                                                     </div>

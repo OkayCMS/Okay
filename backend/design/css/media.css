@@ -690,7 +690,7 @@
         line-height: inherit;
         padding: 5px;
     }
-    .options_aliases .okay_list_head{
+    .features_values_aliases .okay_list_head{
         display: none;
     }
     .theme_btn_heading a{
@@ -727,7 +727,7 @@
     .okay_list_order_stg_sts_status,
     .okay_list_heading.okay_list_delivery_photo,
     .okay_list_order_amount_price{display: none;}
-    .options_aliases .okay_list .okay_list_row {
+    .features_values_aliases .okay_list .okay_list_row {
         width: 100%;
         height: auto;
         min-height: 80px;
@@ -738,19 +738,19 @@
         align-items: center;
         -webkit-align-items: center;
     }
-    .options_aliases .okay_list .okay_list_row{
+    .features_values_aliases .okay_list .okay_list_row{
         -webkit-box-orient: vertical !important;
         -webkit-box-direction: normal !important;
         -webkit-flex-direction: column !important;
         -ms-flex-direction: column !important;
         flex-direction: column !important;
     }
-    .options_aliases .feature_option_name {
+    .features_values_aliases .feature_option_name {
         width: 100%;
         float: none!important;
         text-align: left;
     }
-    .options_aliases .feature_option_aliases {
+    .features_values_aliases .feature_feature_value_aliases {
         width: 100%;
         float: none!important;
         -webkit-box-orient: vertical !important;

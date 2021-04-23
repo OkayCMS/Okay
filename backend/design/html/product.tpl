@@ -931,7 +931,7 @@
                             {if $lang_id == $main_lang_id}
                             {literal}
                                 value.devbridgeAutocomplete({
-                                    serviceUrl:'ajax/options_autocomplete.php',
+                                    serviceUrl:'ajax/get_features_values.php',
                                     minChars:0,
                                     orientation:'auto',
                                     params: {feature_id:feature.id},
@@ -991,7 +991,7 @@
             new_value.find(".fn_minus").show();
 
             value_input.devbridgeAutocomplete({
-                serviceUrl:'ajax/options_autocomplete.php',
+                serviceUrl:'ajax/get_features_values.php',
                 minChars:0,
                 params: {feature_id:feature_id},
                 noCache: false,
@@ -1018,7 +1018,7 @@
             var feature_id = $(this).data("id"),
                 id_input = $(this).closest(".feature_value").find(".fn_value_id_input");
             $(this).devbridgeAutocomplete({
-                serviceUrl:'ajax/options_autocomplete.php',
+                serviceUrl:'ajax/get_features_values.php',
                 minChars:0,
                 params: {feature_id:feature_id},
                 noCache: false,

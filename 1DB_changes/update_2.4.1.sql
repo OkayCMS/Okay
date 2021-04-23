@@ -5,3 +5,5 @@ ALTER TABLE `ok_variants` ADD `cost` DECIMAL(14,2)  NOT NULL  DEFAULT '0.00'  AF
 ALTER TABLE `ok_variants` ADD `compare_cost` DECIMAL(14,2)  NULL  DEFAULT NULL  AFTER `price`;
 UPDATE `ok_variants` SET `cost` = `price`, `compare_cost` = `compare_price`;
 UPDATE ok_variants v LEFT JOIN ok_currencies c ON c.id=v.currency_id SET v.price = v.price*c.rate_to/c.rate_from, v.compare_price = v.compare_price*c.rate_to/c.rate_from;
+
+RENAME TABLE `ok_options_aliases_values` TO `ok_features_values_aliases_values`;
