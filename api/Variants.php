@@ -17,6 +17,8 @@ class Variants extends Okay {
         $select = $this->db->placehold("v.id, 
                 v.product_id,
                 v.weight,
+                v.cost,
+                NULLIF(v.compare_cost, 0) as compare_cost, 
                 v.price, 
                 NULLIF(v.compare_price, 0) as compare_price, 
                 v.sku, 
@@ -33,12 +35,12 @@ class Variants extends Okay {
         if ($count === true) {
             $select = "COUNT(DISTINCT v.id) as count";
         }
-
-        if (defined('IS_CLIENT')) {
+        
+        if ($GLOBALS['is_client'] === true) {
             $order = 'IF(stock=0, 0, 1) DESC, v.position, v.id';
         }
         
-        $joins .= "left join __currencies as c on(c.id=v.currency_id)";
+        $joins .= "LEFT JOIN __currencies c ON c.id=v.currency_id";
         
         if(isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));
@@ -92,12 +94,12 @@ class Variants extends Okay {
             return $this->db->result('count');
         } else {
             $variants = $this->db->results();
-            if (defined('IS_CLIENT') && !empty($variants)) {
-                foreach($variants as $row) {
-                    if ($row->rate_from != $row->rate_to && $row->currency_id) {
-                        $row->price = $row->price*$row->rate_to/$row->rate_from;
-                        $row->compare_price = $row->compare_price*$row->rate_to/$row->rate_from;
-                    }
+            if ($GLOBALS['is_client'] === true && !empty($variants)) {
+                $currency = $this->money->get_current_currency();
+                $coef = $currency->rate_from / $currency->rate_to;
+                foreach ($variants as $row) {
+                    $row->price = round($row->price * $coef, $currency->cents);
+                    $row->compare_price = round($row->compare_price * $coef, $currency->cents);
                 }
             }
             return $variants;
@@ -116,6 +118,8 @@ class Variants extends Okay {
                 v.id, 
                 v.product_id,
                 v.weight,
+                v.cost,
+                NULLIF(v.compare_cost, 0) as compare_cost, 
                 v.price, 
                 NULLIF(v.compare_price, 0) as compare_price, 
                 v.sku, 
@@ -129,7 +133,7 @@ class Variants extends Okay {
                 $lang_sql->fields
             FROM __variants v
             $lang_sql->join
-            left join __currencies as c on(c.id=v.currency_id) 
+            LEFT JOIN __currencies c ON c.id=v.currency_id
             WHERE 
                 1 
                 $variant_id_filter 
@@ -138,11 +142,11 @@ class Variants extends Okay {
         
         $this->db->query($query);
         $variant = $this->db->result();
-        if (defined('IS_CLIENT') && $variant->id) {
-            if ($variant->rate_from != $variant->rate_to && $variant->currency_id) {
-                $variant->price = $variant->price*$variant->rate_to/$variant->rate_from;
-                $variant->compare_price = $variant->compare_price*$variant->rate_to/$variant->rate_from;
-            }
+        if ($GLOBALS['is_client'] === true && !empty($variant)) {
+            $currency = $this->money->get_current_currency();
+            $coef = $currency->rate_from / $currency->rate_to;
+            $variant->price = round($variant->price * $coef, $currency->cents);
+            $variant->compare_price = round($variant->compare_price * $coef, $currency->cents);
         }
         return $variant;
     }

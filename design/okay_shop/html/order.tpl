@@ -68,7 +68,7 @@
             {* Price per unit *}
             <td class="purchase_price purchase__price--wrap">
                 <span class="nowrap">
-                    {($purchase->variant->price)|convert} {$currency->sign|escape} {if $purchase->units}/ {$purchase->units|escape}{/if}</span>
+                    {$purchase->price|format} {$currency->sign|escape} {if $purchase->units}/ {$purchase->units|escape}{/if}</span>
             </td>
 
             {* Quantity *}
@@ -76,7 +76,7 @@
 
             {* Extended price *}
             <td class="purchase_sum">
-                <span class="nowrap">{($purchase->price*$purchase->amount)|convert} {$currency->sign|escape}</span>
+                <span class="nowrap">{($purchase->price*$purchase->amount)|format} {$currency->sign|escape}</span>
             </td>
         </tr>
     {/foreach}
@@ -101,7 +101,7 @@
             </td>
             <td></td>
             <td>{$order->coupon->coupon_percent|escape} %</td>
-            <td>{$order->coupon_discount|convert} {$currency->sign|escape}</td>
+            <td>{$order->coupon_discount|format} {$currency->sign|escape}</td>
         </tr>
     {/if}
 
@@ -115,7 +115,7 @@
             <td></td>
             <td></td>
             {if !$order->separate_delivery}
-                <td>{$order->delivery_price|convert} {$currency->sign|escape}</td>
+                <td>{$order->delivery_price|format} {$currency->sign|escape}</td>
             {else}
                 <td></td>
             {/if}
@@ -127,7 +127,7 @@
         <tr>
             <td colspan="5" class="purchase_total">
                 <span data-language="cart_total_price">{$lang->cart_total_price}:</span>
-                <span class="total_sum nowrap">{$order->total_price|convert} {$currency->sign|escape}</span>
+                <span class="total_sum nowrap">{$order->total_price|format} {$currency->sign|escape}</span>
             </td>
         </tr>
     </tfoot>
@@ -236,7 +236,7 @@
                                             {$total_price_with_delivery = $cart->total_price + $delivery->price}
                                         {/if}
                                     
-                                        {$payment_method->name|escape} {$lang->cart_deliveries_to_pay} <span class="nowrap">{$order->total_price|convert:$payment_method->currency_id} {$all_currencies[$payment_method->currency_id]->sign}</span>
+                                        {$payment_method->name|escape} {$lang->cart_deliveries_to_pay} <span class="nowrap">{($order->total_price|convert:null:false:true)|convert:$payment_method->currency_id} {$all_currencies[$payment_method->currency_id]->sign}</span>
                                     </span>
                                 </label>
                                 <div class="delivery_description">

@@ -88,15 +88,19 @@ class ProductsAdmin extends Okay {
         // Обработка действий
         if($this->request->method('post')) {
             // Сохранение цен и наличия
-            $prices = $this->request->post('price');
+            $costs = $this->request->post('cost');
+            $currencies = $this->request->post('currency');
             $stocks = $this->request->post('stock');
 
-            foreach($prices as $id=>$price) {
+            foreach($costs as $id=>$cost) {
                 $stock = $stocks[$id];
+                $currency = $this->money->get_currency(intval($currencies[$id]));
                 if($stock == '∞' || $stock == '') {
                     $stock = null;
                 }
-                $this->variants->update_variant($id, array('price'=>str_replace(',', '.', $price), 'stock'=>$stock));
+                $cost = $cost > 0 ? (float)str_replace(',', '.', $cost) : 0;
+                $price = $cost > 0 ? $cost * $currency->rate_to/$currency->rate_from : 0;
+                $this->variants->update_variant($id, array('cost'=>$cost, 'price'=>$price, 'stock'=>$stock));
             }
             
             // Сортировка

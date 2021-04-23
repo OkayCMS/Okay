@@ -168,7 +168,7 @@
                                                 {/if}
                                             </a>
                                             <div class="hidden-lg-up mt-q">
-                                                <span class="text_primary text_600">{$product->variants[0]->price} {if isset($currencies[$product->variants[0]->currency_id])}
+                                                <span class="text_primary text_600">{$product->variants[0]->cost} {if isset($currencies[$product->variants[0]->currency_id])}
                                                           {$currencies[$product->variants[0]->currency_id]->code|escape}
                                                       {/if}</span>
                                                 <span class="text_500">{if $product->variants[0]->infinity}∞{else}{$product->variants[0]->stock}{/if} {if $product->variants[0]->units}{$product->variants[0]->units|escape}{else}{$settings->units|escape}{/if}</span>
@@ -185,7 +185,8 @@
                                         </div>
                                         <div class="okay_list_boding okay_list_price">
                                             <div class="input-group">
-                                                <input class="form-control {if $product->variants[0]->compare_price > 0}text_warning{/if}" type="text" name="price[{$product->variants[0]->id}]" value="{$product->variants[0]->price}">
+                                                <input class="form-control {if $product->variants[0]->compare_cost > 0}text_warning{/if}" type="text" name="cost[{$product->variants[0]->id}]" value="{$product->variants[0]->cost}">
+                                                <input type="hidden" name="currency[{$product->variants[0]->id}]" value="{$product->variants[0]->currency_id}">
                                                 <span class="input-group-addon">
                                                       {if isset($currencies[$product->variants[0]->currency_id])}
                                                           {$currencies[$product->variants[0]->currency_id]->code|escape}
@@ -255,7 +256,8 @@
                                                     </div>
                                                     <div class="okay_list_boding okay_list_price">
                                                         <div class="input-group">
-                                                            <input class="form-control" type="text" name="price[{$variant->id}]" value="{$variant->price}">
+                                                            <input class="form-control" type="text" name="cost[{$variant->id}]" value="{$variant->cost}">
+                                                            <input type="hidden" name="currency[{$variant->id}]" value="{$variant->currency_id}">
                                                             <span class="input-group-addon">
                                                                   {if isset($currencies[$variant->currency_id])}
                                                                       {$currencies[$variant->currency_id]->code}

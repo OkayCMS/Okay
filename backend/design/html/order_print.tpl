@@ -203,7 +203,7 @@
                 </span>
             </td>
             <td class="align_right">
-                <span class=view_purchase>{$purchase->price}</span> {$currency->sign|escape}
+                <span class=view_purchase>{$purchase->price|format}</span> {$currency->sign|escape}
             </td>
             <td class="align_right">            
                 <span class=view_purchase>
@@ -211,7 +211,7 @@
                 </span>
             </td>
             <td class="align_right">
-                <span class=view_purchase>{$purchase->price*$purchase->amount}</span> {$currency->sign|escape}
+                <span class=view_purchase>{(($purchase->price|round:$currency->cents)*$purchase->amount)|format}</span> {$currency->sign|escape}
             </td>
         </tr>
         {/foreach}
@@ -219,7 +219,7 @@
         {if $order->delivery_price>0}
         <tr>
             <td colspan=3>{$delivery->name|escape}{if $order->separate_delivery} ({$btr->general_paid_separately|escape}){/if}</td>
-            <td class="align_right">{$order->delivery_price|convert:$currency->id}&nbsp;{$currency->sign|escape}</td>
+            <td class="align_right">{$order->delivery_price|format}&nbsp;{$currency->sign|escape}</td>
         </tr>
         {/if}
         
@@ -238,12 +238,12 @@
         {if $order->coupon_discount>0}
         <tr>
             <th>{$btr->general_coupon|escape} {if $order->coupon_code} ({$order->coupon_code}){/if}</th>
-            <td>{$order->coupon_discount}&nbsp;{$currency->sign|escape}</td>
+            <td>{$order->coupon_discount|format}&nbsp;{$currency->sign|escape}</td>
         </tr>
         {/if}
         <tr>
             <th>{$btr->general_total|escape}</th>
-            <td class="total">{$order->total_price|convert:$currency->id}&nbsp;{$currency->sign|escape}</td>
+            <td class="total">{$order->total_price|format}&nbsp;{$currency->sign|escape}</td>
         </tr>
         {if $delivery}
         <tr>

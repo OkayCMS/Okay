@@ -6,6 +6,7 @@ class OrderAdmin extends Okay {
     
     public function fetch() {
         $order = new stdClass;
+        $currency = $this->money->get_currency();
         /*Прием информации о заказе*/
         if($this->request->method('post')) {
             $order->id = $this->request->post('id', 'integer');
@@ -17,9 +18,9 @@ class OrderAdmin extends Okay {
             $order->comment = $this->request->post('comment');
             $order->note = $this->request->post('note');
             $order->discount = $this->request->post('discount', 'float');
-            $order->coupon_discount = $this->request->post('coupon_discount', 'float');
+            $order->coupon_discount = round($this->request->post('coupon_discount', 'float'), $currency->cents);
             $order->delivery_id = $this->request->post('delivery_id', 'integer');
-            $order->delivery_price = $this->request->post('delivery_price', 'float');
+            $order->delivery_price = round($this->request->post('delivery_price', 'float'), $currency->cents);
             $order->payment_method_id = $this->request->post('payment_method_id', 'integer');
             $order->paid = $this->request->post('paid', 'integer');
             $order->user_id = $this->request->post('user_id', 'integer');
@@ -180,7 +181,7 @@ class OrderAdmin extends Okay {
                 if (($purchase->amount > $purchase->variant->stock || !$purchase->variant->stock) && !$hasVariantNotInStock) {
                     $hasVariantNotInStock = true;
                 }
-                $subtotal += $purchase->price*$purchase->amount;
+                $subtotal += round($purchase->price, $currency->cents)*$purchase->amount;
                 $purchases_count += $purchase->amount;
             }
             $this->design->assign('hasVariantNotInStock', $hasVariantNotInStock);

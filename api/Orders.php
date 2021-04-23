@@ -48,8 +48,13 @@ class Orders extends Okay {
             LIMIT 1
         ");
 
-        if($this->db->query($query)) {
-            return $this->db->result();
+        $this->db->query($query);
+        if($order = $this->db->result()){
+            if ($GLOBALS['is_client'] === true) {
+                $currency = $this->money->get_current_currency();
+                $order->total_price = $this->get_total_price($order, $currency);
+            }
+            return $order;
         } else {
             return false;
         }
@@ -261,7 +266,15 @@ class Orders extends Okay {
         
         $query = $this->db->placehold("SELECT * FROM __purchases WHERE 1 $order_id_filter ORDER BY id");
         $this->db->query($query);
-        return $this->db->results();
+        $purchases = $this->db->results();
+        if ($GLOBALS['is_client'] === true && !empty($purchases)) {
+            $currency = $this->money->get_current_currency();
+            $coef = $currency->rate_from/$currency->rate_to;
+            foreach ($purchases as $purchase) {
+                $purchase->price = round($purchase->price * $coef, $currency->cents);
+            }
+        }
+        return $purchases;
     }
 
     /*Обновление покупки(товара)*/
@@ -464,10 +477,25 @@ class Orders extends Okay {
         if(empty($order)) {
             return false;
         }
+        $currency = $this->money->get_currency();
+        $total_price = $this->get_total_price($order, $currency);
 
-        $query = $this->db->placehold("UPDATE __orders o SET o.total_price=IFNULL((SELECT SUM(p.price*p.amount)*(100-o.discount)/100 FROM __purchases p WHERE p.order_id=o.id), 0)+o.delivery_price*(1-IFNULL(o.separate_delivery, 0))-o.coupon_discount WHERE o.id=? LIMIT 1", $order->id);
+        $query = $this->db->placehold("UPDATE __orders o SET o.total_price=? WHERE o.id=? LIMIT 1", $total_price, $order->id);
         $this->db->query($query);
         return $order->id;
+    }
+
+    /*Вычисление итого заказа*/
+    public function get_total_price($order, $currency) {
+        $coef = $currency->rate_from/$currency->rate_to;
+        $order->delivery_price = round($order->delivery_price * $coef, $currency->cents);
+        $order->coupon_discount = round($order->coupon_discount * $coef, $currency->cents);
+        $this->db->query("SELECT SUM(round(p.price*?,?)*p.amount) as total_price FROM __purchases p WHERE p.order_id=?", $coef, $currency->cents, $order->id);
+        $total_price = $this->db->result('total_price');
+        $total_price = round($total_price * (100-$order->discount)/100, $currency->cents);
+        $total_price += $order->delivery_price;
+        $total_price -= $order->coupon_discount;
+        return $total_price;
     }
 
     public function get_neighbors_orders($filter)

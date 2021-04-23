@@ -93,33 +93,26 @@ class Products extends Okay {
         }
         
         if (isset($filter['feed'])) {
-            $joins .= $this->db->placehold(' inner join __variants v on v.product_id=p.id and v.feed=?', intval($filter['feed']));
+            $joins .= $this->db->placehold(' INNER JOIN __variants v ON v.product_id=p.id AND v.feed=?', intval($filter['feed']));
         }
-        
-        $first_currency = $this->money->get_currencies(array('enabled'=>1));
-        $first_currency = reset($first_currency);
-        $coef = 1;
-        if (isset($_SESSION['currency_id']) && $first_currency->id != $_SESSION['currency_id']) {
-            $currency = $this->money->get_currency(intval($_SESSION['currency_id']));
+
+        $currency = $this->money->get_current_currency();
             $coef = $currency->rate_from / $currency->rate_to;
-        }
         
         if (isset($filter['get_price'])) {
-            $select = "
-                floor(min(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)) as min,
-                floor(max(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)) as max
-            ";
+            $select = $this->db->placehold("
+                floor(min(round(pv.price*$coef,?))) as min,
+                floor(max(round(pv.price*$coef,?))) as max
+            ", $currency->cents, $currency->cents);
             $joins .= ' LEFT JOIN __variants pv ON pv.product_id = p.id';
-            $joins .= ' LEFT JOIN __currencies c ON c.id=pv.currency_id';
         } elseif (isset($filter['price'])) {
             if(isset($filter['price']['min'])) {
-                $where .= $this->db->placehold(" AND floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)>= ? ", $this->db->escape(trim($filter['price']['min'])));
+                $where .= $this->db->placehold(" AND floor(round(pv.price*$coef,?))>= ? ", $currency->cents, $this->db->escape(trim($filter['price']['min'])));
             }
             if(isset($filter['price']['max'])) {
-                $where .= $this->db->placehold(" AND floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)<= ? ", $this->db->escape(trim($filter['price']['max'])));
+                $where .= $this->db->placehold(" AND floor(round(pv.price*$coef,?))<= ? ", $currency->cents, $this->db->escape(trim($filter['price']['max'])));
             }
             $joins .= ' LEFT JOIN __variants pv ON pv.product_id = p.id';
-            $joins .= ' LEFT JOIN __currencies c ON c.id=pv.currency_id';
         }
         
         if (isset($filter['visible'])) {

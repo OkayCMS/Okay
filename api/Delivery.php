@@ -29,7 +29,16 @@ class Delivery extends Okay {
         ");
         
         $this->db->query($query);
-        return $this->db->result();
+        if($delivery = $this->db->result()){
+            if ($GLOBALS['is_client'] === true) {
+                $currency = $this->money->get_current_currency();
+                $delivery->free_from = round($delivery->free_from * $currency->rate_from/$currency->rate_to, $currency->cents);
+                $delivery->price = round($delivery->price * $currency->rate_from/$currency->rate_to, $currency->cents);
+            }
+            return $delivery;
+        } else {
+            return false;
+        }
     }
 
     /*Выборка всех способов доставки*/
@@ -52,7 +61,7 @@ class Delivery extends Okay {
                 $lang_sql->fields";
 
         if ($count === true) {
-            $select = "COUNT(DISTINCT c.id) as count";
+            $select = "COUNT(DISTINCT d.id) as count";
         }
 
         if(isset($filter['limit'])) {
@@ -94,7 +103,19 @@ class Delivery extends Okay {
         if ($count === true) {
             return $this->db->result('count');
         } else {
-            return $this->db->results();
+            if($deliveries = $this->db->results()){
+                if ($GLOBALS['is_client'] === true) {
+                    $currency = $this->money->get_current_currency();
+                    $coef = $currency->rate_from/$currency->rate_to;
+                    foreach ($deliveries as $delivery) {
+                        $delivery->free_from = round($delivery->free_from * $coef, $currency->cents);
+                        $delivery->price = round($delivery->price * $coef, $currency->cents);
+                    }
+                }
+                return $deliveries;
+            } else {
+                return false;
+            }
         }
     }
 

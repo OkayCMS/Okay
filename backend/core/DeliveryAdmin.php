@@ -8,12 +8,13 @@ class DeliveryAdmin extends Okay {
         $delivery = new stdClass;
         /*Принимаем данные о способе доставки*/
         if($this->request->method('post')) {
+            $currency = $this->money->get_currency();
             $delivery->id               = $this->request->post('id', 'integer');
             $delivery->enabled          = $this->request->post('enabled', 'boolean');
             $delivery->name             = $this->request->post('name');
             $delivery->description      = $this->request->post('description');
-            $delivery->price            = $this->request->post('price');
-            $delivery->free_from        = $this->request->post('free_from');
+            $delivery->price            = round($this->request->post('price', 'float'), $currency->cents);
+            $delivery->free_from        = round($this->request->post('free_from', 'float'), $currency->cents);
             $delivery->separate_payment    = $this->request->post('separate_payment','boolean');
 
             if(!$delivery_payments = $this->request->post('delivery_payments')) {

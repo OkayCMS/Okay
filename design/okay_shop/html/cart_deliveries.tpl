@@ -26,7 +26,7 @@
                         {$delivery->name|escape}
 
                         {if $cart->total_price < $delivery->free_from && $delivery->price>0 && !$delivery->separate_payment}
-                            <span class="nowrap">({$delivery->price|convert} {$currency->sign|escape})</span>
+                            <span class="nowrap">({$delivery->price|format} {$currency->sign|escape})</span>
                         {elseif $delivery->separate_payment}
                             <span data-language="cart_paid_separate">({$lang->cart_paid_separate})</span>
                         {elseif $cart->total_price >= $delivery->free_from && !$delivery->separate_payment}
@@ -75,7 +75,7 @@
                                     {/if}
 
                                     {$payment_method->name|escape} {$lang->cart_deliveries_to_pay}
-                                    <span class="nowrap">{$total_price_with_delivery|convert:$payment_method->currency_id} {$all_currencies[$payment_method->currency_id]->sign|escape}</span>
+                                    <span class="nowrap">{($total_price_with_delivery|convert:null:false:true)|convert:$payment_method->currency_id} {$all_currencies[$payment_method->currency_id]->sign|escape}</span>
                                 </span>
                             </label>
                             <div class="delivery_description">

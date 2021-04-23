@@ -43,9 +43,7 @@ class View extends Okay {
             exit;
         }
 
-        if (!defined('IS_CLIENT')) {
-            define('IS_CLIENT', true);
-        }
+        $GLOBALS['is_client'] = true;
         
         // Если инстанс класса уже существует - просто используем уже существующие переменные
         if(self::$view_instance) {

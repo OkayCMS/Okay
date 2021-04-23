@@ -133,7 +133,7 @@
                                 {* Product variants *}
                                 <select name="variant" class="fn_variant variant_select{if $product->variants|count < 2} hidden{/if}">
                                     {foreach $product->variants as $v}
-                                        <option{if $smarty.get.variant == $v->id} selected{/if} value="{$v->id}" data-price="{$v->price|convert}" data-stock="{$v->stock}"{if $v->compare_price > 0} data-cprice="{$v->compare_price|convert}"{/if}{if $v->sku} data-sku="{$v->sku|escape}"{/if} {if $v->units}data-units="{$v->units}"{/if}>{if $v->name}{$v->name|escape}{else}{$product->name|escape}{/if}</option>
+                                        <option{if $smarty.get.variant == $v->id} selected{/if} value="{$v->id}" data-price="{$v->price|format}" data-stock="{$v->stock}"{if $v->compare_price > 0} data-cprice="{$v->compare_price|format}"{/if}{if $v->sku} data-sku="{$v->sku|escape}"{/if} {if $v->units}data-units="{$v->units}"{/if}>{if $v->name}{$v->name|escape}{else}{$product->name|escape}{/if}</option>
                                     {/foreach}
                                 </select>
                             </div>
@@ -157,12 +157,12 @@
                             <div class="col-sm-6">
                                 {* Old price *}
                                 <div class="old_price{if !$product->variant->compare_price} hidden{/if}">
-                                    <span class="fn_old_price">{$product->variant->compare_price|convert}</span> {$currency->sign|escape}
+                                    <span class="fn_old_price">{$product->variant->compare_price|format}</span> {$currency->sign|escape}
                                 </div>
 
                                 {* Price *}
                                 <div class="price ">
-                                    <span class="fn_price" itemprop="price" content="{$product->variant->price|convert:'':false}">{$product->variant->price|convert}</span>
+                                    <span class="fn_price" itemprop="price" content="{$product->variant->price}">{$product->variant->price|format}</span>
                                     <span itemprop="priceCurrency" content="{$currency->code|escape}">{$currency->sign|escape}</span>
                                 </div>
                             </div>
@@ -519,7 +519,7 @@
 "offers": {
 "@type": "Offer",
 "priceCurrency": "{/literal}{$currency->code|escape}{literal}",
-"price": "{/literal}{$product->variant->price|convert:null:false}{literal}",
+"price": "{/literal}{$product->variant->price}{literal}",
 "priceValidUntil": "{/literal}{$smarty.now|date_format:'%Y-%m-%d'}{literal}",
 "itemCondition": "http://schema.org/NewCondition",
 {/literal}

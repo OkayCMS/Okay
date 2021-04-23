@@ -116,7 +116,7 @@
     <meta name="twitter:description" content="{$product->annotation|strip_tags|escape}">
     <meta name="twitter:image" content="{$product->image->filename|resize:330:300}">
     <meta name="twitter:data1" content="{$lang->cart_head_price}">
-    <meta name="twitter:label1" content="{$product->variant->price|convert:null:false} {$currency->code|escape}">
+    <meta name="twitter:label1" content="{$product->variant->price} {$currency->code|escape}">
     <meta name="twitter:data2" content="{$lang->meta_organization}">
     <meta name="twitter:label2" content="{$settings->site_name|escape}">
 {elseif $module == 'BlogView' && $post}

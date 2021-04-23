@@ -14,6 +14,7 @@ if($_POST['notification_type'] !== 'p2p-incoming')
 ////////////////////////////////////////////////
 // Выберем заказ из базы
 ////////////////////////////////////////////////
+$GLOBALS['is_client'] = false;
 $order = $okay->orders->get_order(intval($_POST['label']));
 if(empty($order))
 	err('Оплачиваемый заказ не найден');

@@ -155,6 +155,7 @@ class OrderView extends View {
         
         $form = '';
         if(!empty($module_name) && is_file("payment/$module_name/$module_name.php")) {
+            $GLOBALS['is_client'] = false;
             include_once("payment/$module_name/$module_name.php");
             $module = new $module_name();
             $form = $module->checkout_form($params['order_id']);

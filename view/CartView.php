@@ -42,19 +42,6 @@ class CartView extends View {
 
             $captcha_code =  $this->request->post('captcha_code', 'string');
 
-            // Скидка
-            $cart = $this->cart->get_cart();
-            $order->discount = $cart->discount;
-
-            if($cart->coupon) {
-                $order->coupon_discount = $cart->coupon_discount;
-                $order->coupon_code = $cart->coupon->code;
-            }
-
-            if(!empty($this->user->id)) {
-                $order->user_id = $this->user->id;
-            }
-
             /*Валидация данных клиента*/
             if(!$this->validate->is_name($order->name, true)) {
                 $this->design->assign('error', 'empty_name');
@@ -71,6 +58,19 @@ class CartView extends View {
             } elseif($this->settings->captcha_cart && !$this->validate->verify_captcha('captcha_cart', $captcha_code)) {
                 $this->design->assign('error', 'captcha');
             } else {
+                $GLOBALS['is_client'] = false;
+                // Скидка
+                $cart = $this->cart->get_cart();
+                $order->discount = $cart->discount;
+
+                if($cart->coupon) {
+                    $order->coupon_discount = $cart->coupon_discount;
+                    $order->coupon_code = $cart->coupon->code;
+                }
+
+                if(!empty($this->user->id)) {
+                    $order->user_id = $this->user->id;
+                }
                 // Добавляем заказ в базу
                 $order->lang_id = $this->languages->lang_id();
                 $order_id = $this->orders->add_order($order);

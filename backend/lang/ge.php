@@ -713,13 +713,7 @@ $backend_translations->currency_cents_display = 'ხურდის ასახ
 $backend_translations->currency_currencies = 'ვალუტა';
 $backend_translations->currency_delete = 'ვალუტის წაშლა';
 $backend_translations->currency_iso = 'ISO';
-$backend_translations->currency_message = 'ფასის ათწილადი ნიშნების რაოდენობა მოქმედებს მხოლოდ ფასების ასახვაზე.
-შესაძლებელია ვიზუალური შეცდომები ვალუტის კონვერტაციის დროს.
-
-მაგალითისათვის განვიხილოთ შემდეგი სიტუაცია: 
-პროდუქტის ღირებულებაა 98,10 ლარი.
-თუ ათწილადი ნიშნების რაოდენობა 0-ს ტოლია, ფასის ასახვა იქნება 98 ლარი.
-მაგრამ 10 ერთეული პროდუქტის ასახვა კალათში გამოისახება როგორც 981 ლარი.';
+$backend_translations->currency_message = 'საიტის მთავარი ვალუტაა ის, რომელიც პირველ რიგში ჩამოთვლილია. მთავარი ვალუტის შესაცვლელად, უბრალოდ გადაიტანეთ თქვენთვის საჭირო ვალუტა. ამ შემთხვევაში, ყველა ფასი გადაკეთდება კურსით მთავარ ვალუტაში.';
 $backend_translations->currency_name = 'დასახელება';
 $backend_translations->currency_rate = 'კურსი';
 $backend_translations->currency_recalculate = 'გადავთვალოთ ფასები';
@@ -865,8 +859,8 @@ $backend_translations->import_field_brand = 'ბრენდი';
 $backend_translations->import_field_name = 'პროდუქტის დასახელება';
 $backend_translations->import_field_variant = 'ვარიანტის დასახელება';
 $backend_translations->import_field_sku = 'კოდი';
-$backend_translations->import_field_price = 'ფასი';
-$backend_translations->import_field_compare_price = 'ძველი ფასი';
+$backend_translations->import_field_cost = 'ღირებულება';
+$backend_translations->import_field_compare_cost = 'ძველი ღირებულება';
 $backend_translations->import_field_currency = 'ვალუტის ID';
 $backend_translations->import_field_currency_code = 'ვალუტის code';
 $backend_translations->import_field_weight = 'წონა';

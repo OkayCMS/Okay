@@ -4,7 +4,7 @@
     }
     session_start();
     require_once('../api/Okay.php');
-    define('IS_CLIENT', true);
+    $GLOBALS['is_client'] = true;
     $okay = new Okay();
     /*Действия над товаром в сравнении*/
     $product_id = $okay->request->get('product', 'integer');

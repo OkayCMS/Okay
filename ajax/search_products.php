@@ -4,7 +4,7 @@
     }
     session_start();
     require_once('../api/Okay.php');
-    define('IS_CLIENT', true);
+    $GLOBALS['is_client'] = true;
     $okay = new Okay();
     $limit = 10;
 
@@ -71,12 +71,7 @@
     }
 
     /*Определяем валюту*/
-    $currencies = $okay->money->get_currencies(array('enabled'=>1));
-    if(isset($_SESSION['currency_id'])) {
-        $currency = $okay->money->get_currency($_SESSION['currency_id']);
-    } else {
-        $currency = reset($currencies);
-    }
+    $currency = $okay->money->get_current_currency();
 
     /*Подготавливаем данные для отображения в автокомплите*/
     foreach($products as $product) {
@@ -84,7 +79,7 @@
         if(isset($images[$product->id])) {
             $product->image = $okay->design->resize_modifier($images[$product->id], 35, 35);
         }
-        $suggestion->price = $okay->money->convert($variants[$product->id][0]->price, $currency->id);
+        $suggestion->price = $okay->money->format($variants[$product->id][0]->price);
         $suggestion->currency = $currency->sign;
         $suggestion->value = $product->name;
         $suggestion->data = $product;

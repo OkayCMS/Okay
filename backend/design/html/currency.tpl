@@ -16,6 +16,15 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="boxed boxed_attention">
+            <div class="">
+                {$btr->currency_message|escape}
+            </div>
+        </div>
+    </div>
+</div>
 
 {*Вывод ошибок*}
 {if $message_error}
@@ -225,16 +234,6 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="boxed boxed_attention">
-            <div class="">
-               {$btr->currency_message|escape}
-            </div>
-        </div>
-    </div>
-</div>
-
 <a data-toggle="modal" data-target="#fn_currency_recalculate" class="hidden"></a>
 <div id="fn_currency_delete" class="modal fade show" role="document">
     <div class="modal-dialog modal-md">
@@ -256,32 +255,6 @@
         </div>
     </div>
 </div>
-
-<div id="fn_currency_recalculate" class="modal fade show" role="document">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="card-header">
-                <div class="heading_modal"></div>
-            </div>
-            <div class="modal-body">
-                <button type="submit" class="btn btn_small btn_blue fn_recalculate_currency_confirm mx-h">
-                    {include file='svg_icon.tpl' svgId='checked'}
-                    <span>{$btr->index_yes|escape}</span>
-                </button>
-
-                <button type="button" class="btn btn_small btn-danger fn_recalculate_currency_dismiss mx-h" data-dismiss="modal">
-                    {include file='svg_icon.tpl' svgId='delete'}
-                    <span>{$btr->index_no|escape}</span>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    var сurrency_recalculate = '{$btr->currency_recalculate|escape}';
-    var сurrency_recalculate_rate = '{$btr->currency_recalculate_rate|escape}';
-</script>
 
 {* On document load *}
 {literal}
@@ -307,31 +280,6 @@
             $('input[type="hidden"][name="action"]').val('delete');
             $('input[type="hidden"][name="action_id"]').val(currency_to_delete);
             $(".fn_form_list").submit();
-        });
-        
-        // Подтвердили пересчет валюты
-        $(document).on("click", ".fn_recalculate_currency_confirm", function () {
-            $('input[name="recalculate"]').val(1);
-            confirm = false;
-            $(".fn_form_list").submit();
-        });
-        
-        // Отменили пересчет валют
-        $(document).on("click", ".fn_recalculate_currency_dismiss", function () {
-            $('input[name="recalculate"]').val(0);
-            confirm = false;
-            $(".fn_form_list").submit();
-        });
-
-        // Запоминаем id первой валюты, чтобы определить изменение базовой валюты
-        var base_currency_id = $('input[name*="currency[id]"]').val();
-
-        $(".fn_form_list").submit(function() {
-            if(base_currency_id != $('input[name*="currency[id]"]:first').val() && confirm) {
-                $('#fn_currency_recalculate .heading_modal').text(сurrency_recalculate + ' ' + $('input[name*="name"]:first').val() + ' ' + сurrency_recalculate_rate);
-                $('[data-target="#fn_currency_recalculate"]').trigger('click');
-                return false;
-            }
         });
     });
 

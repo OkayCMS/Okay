@@ -4,7 +4,7 @@
     }
     session_start();
     require_once('../api/Okay.php');
-    define('IS_CLIENT', true);
+    $GLOBALS['is_client'] = true;
     $okay = new Okay();
     /*Определяем пользователя*/
     if(isset($_SESSION['user_id']) && $user = $okay->users->get_user(intval($_SESSION['user_id']))) {
@@ -40,11 +40,7 @@
     $okay->design->assign('cart', $cart);
     /*Определяем валюту*/
     $currencies = $okay->money->get_currencies(array('enabled'=>1));
-    if(isset($_SESSION['currency_id'])) {
-        $currency = $okay->money->get_currency($_SESSION['currency_id']);
-    } else {
-        $currency = reset($currencies);
-    }
+    $currency = $okay->money->get_current_currency();
     $okay->design->assign('currency',    $currency);
 
     /*Выбираем доступные способы доставки и оплаты*/
@@ -79,7 +75,7 @@
         $result['cart_purchases'] = $okay->design->fetch('cart_purchases.tpl');
         $result['cart_deliveries'] = $okay->design->fetch('cart_deliveries.tpl');
         $result['currency_sign'] = $currency->sign;
-        $result['total_price'] = $okay->money->convert($cart->total_price, $currency->id);
+        $result['total_price'] = $cart->total_price;
         $result['total_products'] = $cart->total_products;
     } else {
         $result = array('result'=>0);

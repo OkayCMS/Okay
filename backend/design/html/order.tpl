@@ -183,7 +183,7 @@
                                                         {/if}
                                                     {/if}
                                                     <div class="hidden-lg-up mt-q">
-                                                        <span class="text_primary text_600">{$purchase->price}</span>
+                                                        <span class="text_primary text_600">{$purchase->price|format} {$currency->sign}</span>
                                                         <span class="hidden-md-up text_500">
                                                         {$purchase->amount} {if $purchase->variant->units}{$purchase->variant->units|escape}{else}{$settings->units|escape}{/if}</span>
                                                     </div>
@@ -223,7 +223,7 @@
                                             </div>
                                             <div class="okay_list_boding okay_list_order_amount_price">
                                                 <div class="text_dark">
-                                                    <span>{($purchase->price) * ($purchase->amount)}</span>
+                                                    <span>{(($purchase->price|round:$currency->cents)*$purchase->amount)|format}</span>
                                                     <span class="">{$currency->sign}</span>
                                                 </div>
                                             </div>
@@ -295,7 +295,7 @@
                             <div class="col-lg-6 col-md-12">
                                 {if $purchases}
                                     <div class="text_dark text_500 text-xs-right mr-1 mt-h">
-                                        <div class="h5">{$btr->order_sum|escape} {$subtotal} {$currency->sign|escape}</div>
+                                        <div class="h5">{$btr->order_sum|escape} {$subtotal|format} {$currency->sign|escape}</div>
                                     </div>
                                 {/if}
                             </div>
@@ -330,7 +330,7 @@
                                             </div>
                                             <div class="okay_list_boding okay_list_ordfig_price">
                                                 <div class="text_dark">
-                                                    <span>{($subtotal-$subtotal*$order->discount/100)|round:2}</span>
+                                                    <span>{($subtotal-$subtotal*$order->discount/100)|format}</span>
                                                     <span class="">{$currency->sign|escape}</span>
                                                 </div>
                                             </div>
@@ -349,7 +349,7 @@
                                             </div>
                                             <div class="okay_list_boding okay_list_ordfig_price">
                                                 <div class="text_dark">
-                                                    <span>{($subtotal-$subtotal*$order->discount/100-$order->coupon_discount)|round:2}</span>
+                                                    <span>{(round($subtotal-$subtotal*$order->discount/100, $currency->cents)-$order->coupon_discount)|format}</span>
                                                     <span class="">{$currency->sign|escape}</span>
                                                 </div>
                                             </div>
@@ -395,7 +395,7 @@
                                 </div>
                                 <div class="col-lg-8 col-md-12">
                                     <div class="text_dark text_500 text-xs-right mr-1 mt-1">
-                                        <div class="h5">{$btr->general_total|escape} {$order->total_price} {$currency->sign|escape}</div>
+                                        <div class="h5">{$btr->general_total|escape} {$order->total_price|format} {$currency->sign|escape}</div>
                                     </div>
                                     <div class="text_grey text_500 text-xs-right mr-1 mt-1">
                                         {if $payment_method}

@@ -91,6 +91,7 @@ class ImportAjax extends Import {
     // Импорт одного товара $item[column_name] = value;
     private function import_item($item) {
         $imported_item = new stdClass();
+        $currencies = $this->money->get_currencies();
         
         // Проверим не пустое ли название и артинкул (должно быть хоть что-то из них)
         if (empty($item['sku']) && empty($item['name'])) {
@@ -163,25 +164,46 @@ class ImportAjax extends Import {
         
         // Подготовим вариант товара
         $variant = array();
+        $variant['cost'] = 0;
+        $variant['compare_cost'] = 0;
         $variant['price'] = 0;
         $variant['compare_price'] = 0;
-        
+
         if (isset($item['variant'])) {
             $variant['name'] = trim($item['variant']);
         }
 
-        if (isset($item['price'])) {
-            $price = str_replace(',', '.', str_replace(' ', '', trim($item['price'])));
-            if (!empty($price) || $price === '0.00' || $price === '0.0' || $price === '0') {
-                $variant['price'] = $price;
+        // Если присутствует код валюты определяем её ID
+        if (isset($item['currency_code'])) {
+            foreach($currencies as $currency) {
+                if (trim($item['currency_code']) == $currency->code) {
+                    $variant['currency_id'] = $currency->id;
+                }
+            }
+        } elseif (isset($item['currency'])) {
+            $variant['currency_id'] = intval($item['currency']);
+        }
+
+        if (isset($item['cost'])) {
+            $cost = str_replace(',', '.', str_replace(' ', '', trim($item['cost'])));
+            if (!empty($cost) || $cost === '0.00' || $cost === '0.0' || $cost === '0') {
+                $variant['cost'] = (float)$cost;
             }
         }
 
-        if (isset($item['compare_price'])) {
-            $compare_price = str_replace(',', '.', str_replace(' ', '', trim($item['compare_price'])));
-            if (!empty($compare_price) || $compare_price === '0.00' || $compare_price === '0.0' || $compare_price === '0') {
-                $variant['compare_price'] = $compare_price;
+        if (isset($variant['cost']) && isset($variant['currency_id'])) {
+            $variant['price'] = $variant['cost'] * $currencies[$variant['currency_id']]->rate_to/$currencies[$variant['currency_id']]->rate_from;
+        }
+
+        if (isset($item['compare_cost'])) {
+            $compare_cost = str_replace(',', '.', str_replace(' ', '', trim($item['compare_cost'])));
+            if (!empty($compare_cost) || $compare_cost === '0.00' || $compare_cost === '0.0' || $compare_cost === '0') {
+                $variant['compare_cost'] = (float)$compare_cost;
             }
+        }
+
+        if (isset($variant['compare_cost']) && isset($variant['currency_id'])) {
+            $variant['compare_price'] = $variant['compare_cost'] * $currencies[$variant['currency_id']]->rate_to/$currencies[$variant['currency_id']]->rate_from;
         }
         
         if (isset($item['stock'])) {
@@ -195,10 +217,7 @@ class ImportAjax extends Import {
         if (isset($item['sku'])) {
             $variant['sku'] = trim($item['sku']);
         }
-        
-        if (isset($item['currency'])) {
-            $variant['currency_id'] = intval($item['currency']);
-        }
+
         if (isset($item['weight'])) {
             $variant['weight'] = str_replace(',', '.', str_replace(' ', '', trim($item['weight'])));
         }
@@ -206,16 +225,6 @@ class ImportAjax extends Import {
         if (isset($item['units'])) {
             $variant['units'] = $item['units'];
         }
-        
-        // Если присутствует код валюты определяем её ID
-        if (isset($item['currency_code'])) {		        
-            $currencies = $this->money->get_currencies();
-            foreach($currencies as $currencie) {
-              if (trim($item['currency_code']) == $currencie->code) {
-                $variant['currency_id'] = $currencie->id;
-              }
-            }           
-        }                   
         
         // Если задан артикул варианта, найдем этот вариант и соответствующий товар
         if (!empty($variant['sku'])) {

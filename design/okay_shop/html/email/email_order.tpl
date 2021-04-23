@@ -189,7 +189,7 @@
                                                             </td>
                                                             <td style=";padding-right:10px;white-space:nowrap" valign="middle">{$purchase->amount} {if $purchase->units}{$purchase->units|escape}{else}{$settings->units}{/if}</td>
                                                             <td align="right" nowrap="nowrap" valign="middle">
-                                                                <b>{$purchase->price|convert:$currency->id}&nbsp;{$currency->sign}</b>
+                                                                <b>{$purchase->price|format}&nbsp;{$currency->sign}</b>
                                                             </td>
                                                         </tr>
                                                     {/foreach}
@@ -222,7 +222,7 @@
                                                         <tr>
                                                             <td style="padding-right: 10px; white-space: nowrap; text-align: right;" valign="middle">{$delivery->name|escape}</td>
                                                             {if !$order->separate_delivery}
-                                                                <td align="right" nowrap="nowrap" valign="middle">{$order->delivery_price|convert:$currency->id}&nbsp;{$currency->sign}</td>
+                                                                <td align="right" nowrap="nowrap" valign="middle">{$order->delivery_price|format}&nbsp;{$currency->sign}</td>
                                                             {else}
                                                                 <td></td>
                                                             {/if}
@@ -230,7 +230,7 @@
                                                     {/if}
                                                     <tr>
                                                         <td style="padding-right: 10px; white-space: nowrap; text-align: right;" valign="middle"><span style="font-size:16px;"><strong>{$lang->email_order_total}</strong></span></td>
-                                                        <td align="right" nowrap="nowrap" valign="middle"><b><span style="font-size:16px;">{$order->total_price|convert:$currency->id}&nbsp;{$currency->sign}</span></b></td>
+                                                        <td align="right" nowrap="nowrap" valign="middle"><b><span style="font-size:16px;">{$order->total_price|format}&nbsp;{$currency->sign}</span></b></td>
                                                     </tr>
                                                     </tbody>
                                                 </table>

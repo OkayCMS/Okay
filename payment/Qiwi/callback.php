@@ -21,6 +21,7 @@ function updateBill($login, $password, $txn, $status)
 	$okay = new Okay();
 
 	// Выбираем оплачиваемый заказ
+    $GLOBALS['is_client'] = false;
 	$order = $okay->orders->get_order(intval($txn));
 	
 	// 210 = Счет не найден

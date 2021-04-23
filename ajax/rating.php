@@ -4,7 +4,7 @@
     }
     session_start();
     require_once('../api/Okay.php');
-    define('IS_CLIENT', true);
+    $GLOBALS['is_client'] = true;
     $okay = new Okay();
     if(isset($_POST['id']) && is_numeric($_POST['rating'])) {
         $product_id = intval(str_replace('product_', '', $_POST['id']));

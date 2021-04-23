@@ -713,13 +713,7 @@ $backend_translations->currency_cents_display = 'Відображення коп
 $backend_translations->currency_currencies = 'Валюти';
 $backend_translations->currency_delete = 'Видалити валюту';
 $backend_translations->currency_iso = 'Код ISO';
-$backend_translations->currency_message = 'Кількість десяткових знаків дробової частини ціни впливає лише на ВІДОБРАЖЕННЯ цін.
-Усі розрахунки ведуться з неокругленими даними.
-Це може призвести до візуальних помилок при конвертації валют і застосуванні знижок.
-Як приклад розглянемо таку ситуацію.
-Вартість товару – 98,10 руб.
-Якщо задати кількість десяткових знаків рівним 0, ціна буде показана як 98 руб.
-Проте вартість 10 одиниць у кошику буде показана як 981 руб.';
+$backend_translations->currency_message = 'Основною валютою сайту вважається та, яка стоїть першою в списку. Для того, щоб змінити основну валюту, просто перетягніть потрібну вам валюту на перше місце. При цьому всі ціни будуть перераховані за курсом в основну валюту.';
 $backend_translations->currency_name = 'Назва валюти';
 $backend_translations->currency_rate = 'Курс';
 $backend_translations->currency_recalculate = 'Перерахувати всі ціни у';
@@ -865,8 +859,8 @@ $backend_translations->import_field_brand = 'Бренд';
 $backend_translations->import_field_name = 'Назва товару';
 $backend_translations->import_field_variant = 'Назва варіанта';
 $backend_translations->import_field_sku = 'Артикул';
-$backend_translations->import_field_price = 'Ціна';
-$backend_translations->import_field_compare_price = 'Стара ціна';
+$backend_translations->import_field_cost = 'Вартість';
+$backend_translations->import_field_compare_cost = 'Стара вартість';
 $backend_translations->import_field_currency = 'ID валюти';
 $backend_translations->import_field_currency_code = 'Код валюти';
 $backend_translations->import_field_weight = 'Вага';
