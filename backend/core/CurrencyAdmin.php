@@ -40,7 +40,7 @@ class CurrencyAdmin extends Okay {
             // Удалить непереданные валюты
             $query = $this->db->placehold('DELETE FROM __currencies WHERE id NOT IN(?@)', $currencies_ids);
             $this->db->query($query);
-            
+
             // Пересчитать курсы
             $old_currency = $this->money->get_currency();
             $new_currency = reset($currencies);

@@ -6,8 +6,9 @@
     <div class="col-lg-7 col-md-7">
         <div class="wrap_heading">
             <div class="box_heading heading_page">
+ 		        {$btr->coupons_coupons}
                 {if $coupons_count}
-                    {$btr->coupons_coupons} - {$coupons_count}
+                    - {$coupons_count}
                 {/if}
             </div>
             <div class="box_btn_heading fn_add_coupon">

@@ -15,12 +15,14 @@ class UserView extends View {
         if($this->request->method('post') && $this->request->post('user_save')) {
             $user = new stdClass();
             $user->name       = $this->request->post('name');
+            $user->surname    = $this->request->post('surname');
             $user->email      = $this->request->post('email');
             $user->phone      = $this->request->post('phone');
             $user->address    = $this->request->post('address');
             $password         = $this->request->post('password');
             
             $this->design->assign('name', $user->name);
+            $this->design->assign('surname', $user->surname);
             $this->design->assign('email', $user->email);
             $this->design->assign('phone', $user->phone);
             $this->design->assign('address', $user->address);
@@ -33,6 +35,8 @@ class UserView extends View {
                 $this->design->assign('error', 'user_exists');
             } elseif(!$this->validate->is_name($user->name, true)) {
                 $this->design->assign('error', 'empty_name');
+            } elseif(!$this->validate->is_name($user->surname, true)) {
+                $this->design->assign('error', 'empty_surname');
             } elseif(!$this->validate->is_email($user->email, true)) {
                 $this->design->assign('error', 'empty_email');
             } elseif(!$this->validate->is_phone($user->phone)) {
@@ -52,6 +56,7 @@ class UserView extends View {
         } else {
             // Передаем в шаблон
             $this->design->assign('name', $this->user->name);
+            $this->design->assign('surname', $this->user->surname);
             $this->design->assign('email', $this->user->email);
             $this->design->assign('phone', $this->user->phone);
             $this->design->assign('address', $this->user->address);
@@ -69,7 +74,7 @@ class UserView extends View {
         $this->design->assign('orders_status', $orders_status);
         $this->design->assign('orders', $orders);
         
-        $this->design->assign('meta_title', $this->user->name);
+        $this->design->assign('meta_title', $this->user->name." ".$this->user->surname);
         $body = $this->design->fetch('user.tpl');
         
         return $body;

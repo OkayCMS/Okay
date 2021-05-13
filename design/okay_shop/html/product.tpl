@@ -30,7 +30,13 @@
                     {* Main product image *}
                     {if $product->image}
                         <a href="{$product->image->filename|resize:1800:1200:w}" data-fancybox="group" data-caption="{$product->name|escape}">
-                            <img class="fn_img product_img" itemprop="image" src="{$product->image->filename|resize:600:340}" alt="{$product->name|escape}" title="{$product->name|escape}">
+                            <picture>
+                                {if $settings->support_webp}
+                                    <source type="image/webp" srcset="{$product->image->filename|resize:600:340}.webp">
+                                {/if}
+                                <source srcset="{$product->image->filename|resize:600:340}">
+                                <img class="fn_img product_img" itemprop="image" src="{$product->image->filename|resize:600:340}" alt="{$product->name|escape}" title="{$product->name|escape}">
+                            </picture>
                         </a>
                     {else}
                         <img class="fn_img" src="design/{$settings->theme}/images/no_image.png" width="340" height="340" alt="{$product->name|escape}"/>
@@ -49,7 +55,13 @@
                         {foreach $product->images|cut as $i=>$image}
                             <div class="images_item">
                                 <a class="images_link" href="{$image->filename|resize:1800:1200:w}" data-fancybox="group" data-caption="{$product->name|escape} #{$image@iteration}">
-                                    <img src="{$image->filename|resize:75:75}" alt="{$product->name|escape}"/>
+                                    <picture>
+                                        {if $settings->support_webp}
+                                            <source type="image/webp" srcset="{$image->filename|resize:75:75}.webp">
+                                        {/if}
+                                        <source srcset="{$image->filename|resize:75:75}">
+                                        <img src="{$image->filename|resize:75:75}" alt="{$product->name|escape}"/>
+                                    </picture>
                                 </a>
                             </div>
                         {/foreach}
@@ -121,7 +133,7 @@
                                 {* Product variants *}
                                 <select name="variant" class="fn_variant variant_select{if $product->variants|count < 2} hidden{/if}">
                                     {foreach $product->variants as $v}
-                                        <option{if $smarty.get.variant == $v->id} selected{/if} value="{$v->id}" data-price="{$v->price|convert}" data-stock="{$v->stock}"{if $v->compare_price > 0} data-cprice="{$v->compare_price|convert}"{/if}{if $v->sku} data-sku="{$v->sku|escape}"{/if} {if $v->units}data-units="{$v->units}"{/if}>{if $v->name}{$v->name|escape}{else}{$product->name|escape}{/if}</option>
+                                        <option{if $smarty.get.variant == $v->id} selected{/if} value="{$v->id}" data-price="{$v->price|format}" data-stock="{$v->stock}"{if $v->compare_price > 0} data-cprice="{$v->compare_price|format}"{/if}{if $v->sku} data-sku="{$v->sku|escape}"{/if} {if $v->units}data-units="{$v->units}"{/if}>{if $v->name}{$v->name|escape}{else}{$product->name|escape}{/if}</option>
                                     {/foreach}
                                 </select>
                             </div>
@@ -145,12 +157,12 @@
                             <div class="col-sm-6">
                                 {* Old price *}
                                 <div class="old_price{if !$product->variant->compare_price} hidden{/if}">
-                                    <span class="fn_old_price">{$product->variant->compare_price|convert}</span> {$currency->sign|escape}
+                                    <span class="fn_old_price">{$product->variant->compare_price|format}</span> {$currency->sign|escape}
                                 </div>
 
                                 {* Price *}
                                 <div class="price ">
-                                    <span class="fn_price" itemprop="price" content="{$product->variant->price|convert:'':false}">{$product->variant->price|convert}</span>
+                                    <span class="fn_price" itemprop="price" content="{$product->variant->price}">{$product->variant->price|format}</span>
                                     <span itemprop="priceCurrency" content="{$currency->code|escape}">{$currency->sign|escape}</span>
                                 </div>
                             </div>
@@ -440,7 +452,13 @@
                 {* The post image *}
                 <a class="blog_image" href="{$lang_link}{$r_p->type_post}/{$r_p->url}">
                     {if $r_p->image}
-                        <img class="blog_img" src="{$r_p->image|resize:360:360:false:$config->resized_blog_dir}" />
+                        <picture>
+                            {if $settings->support_webp}
+                                <source type="image/webp" srcset="{$r_p->image|resize:360:360:false:$config->resized_blog_dir}.webp">
+                            {/if}
+                            <source srcset="{$r_p->image|resize:360:360:false:$config->resized_blog_dir}">
+                            <img class="blog_img" src="{$r_p->image|resize:360:360:false:$config->resized_blog_dir}" />
+                        </picture>
                     {/if}
                 </a>
 
@@ -501,7 +519,7 @@
 "offers": {
 "@type": "Offer",
 "priceCurrency": "{/literal}{$currency->code|escape}{literal}",
-"price": "{/literal}{$product->variant->price|convert:null:false}{literal}",
+"price": "{/literal}{$product->variant->price}{literal}",
 "priceValidUntil": "{/literal}{$smarty.now|date_format:'%Y-%m-%d'}{literal}",
 "itemCondition": "http://schema.org/NewCondition",
 {/literal}

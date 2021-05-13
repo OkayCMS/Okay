@@ -665,7 +665,10 @@ $backend_translations->user_groups_name = 'Имя группы';
 $backend_translations->user_groups_no = 'Нет групп пользователей';
 $backend_translations->user_groups_number = 'Кол-во пользователей';
 $backend_translations->user_last_ip = 'Последний IP';
-$backend_translations->user_name = 'Введите имя пользователя';
+$backend_translations->user_name = 'Имя';
+$backend_translations->user_enter_name = 'Введите имя пользователя';
+$backend_translations->user_surname = 'Фамилия';
+$backend_translations->user_enter_surname = 'Введите фамилию пользователя';
 $backend_translations->user_not_in_group = 'Не входит в группу';
 $backend_translations->user_options = 'Параметры пользователя';
 $backend_translations->user_orders = 'Заказы пользователя';
@@ -710,13 +713,7 @@ $backend_translations->currency_cents_display = 'Отображение копе
 $backend_translations->currency_currencies = 'Валюты';
 $backend_translations->currency_delete = 'Удалить валюту';
 $backend_translations->currency_iso = 'Код ISO';
-$backend_translations->currency_message = 'Количество десятичных знаков дробной части цены влияет только на ОТОБРАЖЕНИЕ цен.
-Все расчеты ведутся с неокругленными данными.
-Это может привести к визуальным ошибкам при конвертации валют и применении скидок.
-В качестве примера рассмотрим такую ситуацию.
-Стоимость товара 98,10 руб.
-Если задать количество десятичных знаков равным 0, цена будет показана как 98 руб.
-Однако стоимость 10 единиц в корзине будет показана как 981 руб.';
+$backend_translations->currency_message = 'Основной валютой сайта считается та, которая стоит первой в списке. Для того, чтобы сменить основную валюту, просто перетяните нужную вам валюту на первое место.';
 $backend_translations->currency_name = 'Название валюты';
 $backend_translations->currency_rate = 'Курс';
 $backend_translations->currency_recalculate = 'Пересчитать все цены в';
@@ -982,3 +979,4 @@ $backend_translations->recaptcha_v3_scores = 'reCAPTCHA V3 "Человечнос
 $backend_translations->integration_1c = 'Интеграция с 1С';
 $backend_translations->orders_all_statuses = 'Все статусы';
 $backend_translations->orders_all_labels = 'Все метки';
+$backend_translations->settings_enable_webp = 'Включить поддержку WebP';

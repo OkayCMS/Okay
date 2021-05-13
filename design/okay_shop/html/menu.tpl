@@ -6,9 +6,7 @@
                     {foreach $menu_items as $item}
                         {if $item->visible == 1}
                             <li class="menu_item menu_item_{$level} {if $item->submenus && $item->count_children_visible>0}menu_eventer{/if}">
-                                <a class="menu_link"{if $item->url} href="{if !preg_match('~^https?://~', {$item->url})}{$lang_link}{/if}{$item->url}"{/if} {if !$item->submenus && $item->is_target_blank}target="_blank"{/if}>
-                                    <span>{$item->name|escape}</span>
-                                 </a>
+                                <a class="menu_link"{if $item->url} href="{if !preg_match('~^https?://~', {$item->url})}{$lang_link}{/if}{$item->url}"{/if} {if !$item->submenus && $item->is_target_blank}target="_blank"{/if}>{$item->name|escape}</a>
                                 {menu_items_tree menu_items=$item->submenus level=$level + 1}
                             </li>
                         {/if}

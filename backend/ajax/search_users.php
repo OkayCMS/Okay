@@ -11,10 +11,12 @@
     $okay->db->query('SELECT 
             u.id, 
             u.name, 
+            u.surname, 
             u.email 
         FROM __users u 
         WHERE 
             u.name LIKE "%'.$okay->db->escape($keyword).'%" 
+            OR u.surname LIKE "%'.$okay->db->escape($keyword).'%" 
             OR u.email LIKE "%'.$okay->db->escape($keyword).'%"
         ORDER BY u.name 
         LIMIT ?
@@ -24,7 +26,7 @@
     $suggestions = array();
     foreach($users as $user) {
         $suggestion = new stdClass();
-        $suggestion->value = $user->name." ($user->email)";
+        $suggestion->value = $user->name." ".$user->surname." ($user->email)";
         $suggestion->data = $user;
         $suggestions[] = $suggestion;
     }

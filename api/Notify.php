@@ -211,7 +211,7 @@ class Notify extends Okay {
         $order_status = $this->orderstatus->get_status(array("status"=>intval($order->status_id)));
         $this->design->assign('order_status', reset($order_status));
         // В основной валюте
-        $this->design->assign('main_currency', $this->money->get_currency());
+        $this->design->assign('currency', $this->money->get_currency());
 
         // Перевод админки
         $backend_translations = $this->backend_translations;

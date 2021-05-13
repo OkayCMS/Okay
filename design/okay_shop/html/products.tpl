@@ -24,7 +24,7 @@
     </div>
 
     <div class="sidebar_top fn_features">
-    {include file='features.tpl'}
+        {include file='features.tpl'}
     </div>
 </div>
 

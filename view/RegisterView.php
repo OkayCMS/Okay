@@ -10,6 +10,7 @@ class RegisterView extends View {
             $user = new stdClass();
             $user->last_ip  = $_SERVER['REMOTE_ADDR'];
             $user->name     = $this->request->post('name');
+            $user->surname  = $this->request->post('surname');
             $user->email    = $this->request->post('email');
             $user->phone    = $this->request->post('phone');
             $user->address  = $this->request->post('address');
@@ -17,6 +18,7 @@ class RegisterView extends View {
             $captcha_code   = $this->request->post('captcha_code');
             
             $this->design->assign('name', $user->name);
+            $this->design->assign('surname', $user->surname);
             $this->design->assign('email', $user->email);
             $this->design->assign('phone', $user->phone);
             $this->design->assign('address', $user->address);
@@ -29,6 +31,8 @@ class RegisterView extends View {
                 $this->design->assign('error', 'user_exists');
             } elseif(!$this->validate->is_name($user->name, true)) {
                 $this->design->assign('error', 'empty_name');
+            } elseif(!$this->validate->is_name($user->surname, true)) {
+                $this->design->assign('error', 'empty_surname');
             } elseif(!$this->validate->is_email($user->email, true)) {
                 $this->design->assign('error', 'empty_email');
             } elseif(!$this->validate->is_phone($user->phone)) {

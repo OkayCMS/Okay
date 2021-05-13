@@ -29,7 +29,13 @@ class Delivery extends Okay {
         ");
         
         $this->db->query($query);
-        return $this->db->result();
+        $delivery = $this->db->result();
+            if (defined('IS_CLIENT') && isset($_SESSION['currency_id']) && $delivery->id) {
+            $currency = $this->money->get_currency(intval($_SESSION['currency_id']));
+            $delivery->free_from = round($delivery->free_from * $currency->rate_from/$currency->rate_to, $currency->cents);
+            $delivery->price = round($delivery->price * $currency->rate_from/$currency->rate_to, $currency->cents);
+        }
+        return $delivery;
     }
 
     /*Выборка всех способов доставки*/
@@ -52,7 +58,7 @@ class Delivery extends Okay {
                 $lang_sql->fields";
 
         if ($count === true) {
-            $select = "COUNT(DISTINCT c.id) as count";
+            $select = "COUNT(DISTINCT d.id) as count";
         }
 
         if(isset($filter['limit'])) {
@@ -94,7 +100,16 @@ class Delivery extends Okay {
         if ($count === true) {
             return $this->db->result('count');
         } else {
-            return $this->db->results();
+            $deliveries = $this->db->results();
+            if (defined('IS_CLIENT') && isset($_SESSION['currency_id']) && !empty($deliveries)) {
+                $currency = $this->money->get_currency(intval($_SESSION['currency_id']));
+                $coef = $currency->rate_from/$currency->rate_to;
+                foreach ($deliveries as $delivery) {
+                    $delivery->free_from = round($delivery->free_from * $coef, $currency->cents);
+                    $delivery->price = round($delivery->price * $coef, $currency->cents);
+                }
+            }
+            return $deliveries;
         }
     }
 

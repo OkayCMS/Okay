@@ -6,19 +6,21 @@ class OrderAdmin extends Okay {
     
     public function fetch() {
         $order = new stdClass;
+        $currency = $this->money->get_currency();
         /*Прием информации о заказе*/
         if($this->request->method('post')) {
             $order->id = $this->request->post('id', 'integer');
             $order->name = $this->request->post('name');
+            $order->surname = $this->request->post('surname');
             $order->email = $this->request->post('email');
             $order->phone = $this->request->post('phone');
             $order->address = $this->request->post('address');
             $order->comment = $this->request->post('comment');
             $order->note = $this->request->post('note');
-            $order->discount = $this->request->post('discount', 'floatr');
-            $order->coupon_discount = $this->request->post('coupon_discount', 'floatr');
+            $order->discount = $this->request->post('discount', 'float');
+            $order->coupon_discount = round($this->request->post('coupon_discount', 'float'), $currency->cents);
             $order->delivery_id = $this->request->post('delivery_id', 'integer');
-            $order->delivery_price = $this->request->post('delivery_price', 'float');
+            $order->delivery_price = round($this->request->post('delivery_price', 'float'), $currency->cents);
             $order->payment_method_id = $this->request->post('payment_method_id', 'integer');
             $order->paid = $this->request->post('paid', 'integer');
             $order->user_id = $this->request->post('user_id', 'integer');
@@ -179,7 +181,7 @@ class OrderAdmin extends Okay {
                 if (($purchase->amount > $purchase->variant->stock || !$purchase->variant->stock) && !$hasVariantNotInStock) {
                     $hasVariantNotInStock = true;
                 }
-                $subtotal += $purchase->price*$purchase->amount;
+                $subtotal += round($purchase->price, $currency->cents)*$purchase->amount;
                 $purchases_count += $purchase->amount;
             }
             $this->design->assign('hasVariantNotInStock', $hasVariantNotInStock);
@@ -195,6 +197,9 @@ class OrderAdmin extends Okay {
             }
             if(empty($order->name)) {
                 $order->name = $this->request->get('name', 'string');
+            }
+            if(empty($order->surname)) {
+                $order->surname = $this->request->get('surname', 'string');
             }
             if(empty($order->address)) {
                 $order->address = $this->request->get('address', 'string');

@@ -93,30 +93,25 @@ class Products extends Okay {
         }
         
         if (isset($filter['feed'])) {
-            $joins .= $this->db->placehold(' inner join __variants v on v.product_id=p.id and v.feed=?', intval($filter['feed']));
+            $joins .= $this->db->placehold(' INNER JOIN __variants v ON v.product_id=p.id AND v.feed=?', intval($filter['feed']));
         }
-        
-        $first_currency = $this->money->get_currencies(array('enabled'=>1));
-        $first_currency = reset($first_currency);
-        $coef = 1;
-        if (isset($_SESSION['currency_id']) && $first_currency->id != $_SESSION['currency_id']) {
-            $currency = $this->money->get_currency(intval($_SESSION['currency_id']));
-            $coef = $currency->rate_from / $currency->rate_to;
-        }
+
+        $currency = $this->money->get_current_currency();
+        $coef = $currency->rate_from/$currency->rate_to;
         
         if (isset($filter['get_price'])) {
-            $select = "
-                floor(min(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)) as min,
-                floor(max(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)) as max
-            ";
+            $select = $this->db->placehold("
+                floor(min(round(pv.price*c.rate_to/c.rate_from*$coef,?))) as min,
+                floor(max(round(pv.price*c.rate_to/c.rate_from*$coef,?))) as max
+            ", $currency->cents, $currency->cents);
             $joins .= ' LEFT JOIN __variants pv ON pv.product_id = p.id';
             $joins .= ' LEFT JOIN __currencies c ON c.id=pv.currency_id';
         } elseif (isset($filter['price'])) {
             if(isset($filter['price']['min'])) {
-                $where .= $this->db->placehold(" AND floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)>= ? ", $this->db->escape(trim($filter['price']['min'])));
+                $where .= $this->db->placehold(" AND floor(round(pv.price*c.rate_to/c.rate_from*$coef,?))>= ? ", $currency->cents, $this->db->escape(trim($filter['price']['min'])));
             }
             if(isset($filter['price']['max'])) {
-                $where .= $this->db->placehold(" AND floor(IF(pv.currency_id=0 OR c.id is null,pv.price, pv.price*c.rate_to/c.rate_from)*$coef)<= ? ", $this->db->escape(trim($filter['price']['max'])));
+                $where .= $this->db->placehold(" AND floor(round(pv.price*c.rate_to/c.rate_from*$coef,?))<= ? ", $currency->cents, $this->db->escape(trim($filter['price']['max'])));
             }
             $joins .= ' LEFT JOIN __variants pv ON pv.product_id = p.id';
             $joins .= ' LEFT JOIN __currencies c ON c.id=pv.currency_id';
@@ -632,28 +627,10 @@ class Products extends Okay {
 
     /*Удаление изображений*/
     public function delete_image($id) {
-        $query = $this->db->placehold("SELECT filename FROM __images WHERE id=?", $id);
-        $this->db->query($query);
-        $filename = $this->db->result('filename');
+        $this->image->delete_image($id, 'filename', 'images', $this->config->original_images_dir, $this->config->resized_images_dir);
+
         $query = $this->db->placehold("DELETE FROM __images WHERE id=? LIMIT 1", $id);
         $this->db->query($query);
-        $query = $this->db->placehold("SELECT count(*) as count FROM __images WHERE filename=? LIMIT 1", $filename);
-        $this->db->query($query);
-        $count = $this->db->result('count');
-        if($count == 0) {
-            $file = pathinfo($filename, PATHINFO_FILENAME);
-            $ext = pathinfo($filename, PATHINFO_EXTENSION);
-            
-            // Удалить все ресайзы
-            $rezised_images = glob($this->config->root_dir.$this->config->resized_images_dir.$file.".*x*.".$ext);
-            if(is_array($rezised_images)) {
-                foreach ($rezised_images as $f) {
-                    @unlink($f);
-                }
-            }
-            
-            @unlink($this->config->root_dir.$this->config->original_images_dir.$filename);
-        }
     }
 
     /*Выборка "соседних" товаров*/

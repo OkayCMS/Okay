@@ -287,11 +287,42 @@ function price_slider_init() {
 
 /* Document ready */
 $(function(){
-
-    $(document).on("click", ".fn_menu_toggle", function() {
-        $(this).next(".fn_menu_list").first().slideToggle(300);
-        return false;
+    // Главное меню на мобильном
+    const menu_header = new MmenuLight(
+        document.querySelector(".menu_group_header"),
+        "(max-width: 767px)"
+    );
+    const menu_header_navigator = menu_header.navigation({
+        title: $('#main_menu').data('title')
     });
+    const menu_header_drawer = menu_header.offcanvas({});
+
+    // Меню категорий на мобильном
+    const categories = new MmenuLight(
+        document.querySelector("#categories"),
+        "(max-width: 767px)"
+    );
+    const categories_navigator = categories.navigation({
+        title: $(categories.menu).data('title')
+    });
+    const categories_drawer = categories.offcanvas({});
+
+    $(window).resize(function () {
+        $(".fn_menu_header_opener").off();
+        $(".fn_menu_opener").off();
+        if(window.matchMedia('(max-width: 767px)').matches){
+            $(".fn_menu_header_opener").on('click', function () {
+                menu_header_drawer.open();
+            });
+            $(".fn_menu_opener").on('click', function () {
+                categories_drawer.open();
+            });
+        } else {
+            $(".fn_menu_opener").on('click', function () {
+                $(this).next('.categories_nav').slideToggle(300);
+            });
+        }
+    }).resize();
 
     $(function(){
         $(window).scroll(function() {
@@ -320,12 +351,6 @@ $(function(){
             $(this).addClass('active');
         }
     });
-
-    /* Главное меню для мобильных */
-    $('.fn_menu_switch').on("click", function(){
-        $('.menu').toggle("normal");
-        $('body').toggleClass('openmenu');
-    })
 
     //Фильтры мобильные, каталог мобильные
     $('.subswitch').click(function(){

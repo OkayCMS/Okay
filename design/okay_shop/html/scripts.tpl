@@ -10,6 +10,26 @@
             var date = new Date(0);
             document.cookie = "price_filter=; path=/; expires=" + date.toUTCString();
         });
+        const filter = new MmenuLight(
+            document.querySelector("#filter"),
+            "(max-width: 991px)"
+        );
+        const filter_drawer = filter.offcanvas({});
+        $(window).resize(function () {
+            if(window.matchMedia('(max-width: 991px)').matches) {
+                console.log($(window).width(), window.innerWidth);
+                $(".fn_filters_opener").on('click', function () {
+                    filter_drawer.open();
+                    $('.fn_mmenu_close').on('click', function (e) {
+                        e.preventDefault();
+                        filter_drawer.close();
+                    });
+                });
+            } else {
+                $(".fn_filters_opener").off();
+                $('.fn_mmenu_close').off();
+            }
+        }).resize();
     {/if}
     
     {* Предзаказ *}
@@ -78,6 +98,7 @@
     {/if}
 
     var form_enter_name = "{$lang->form_enter_name|escape}";
+    var form_enter_surname = "{$lang->form_enter_surname|escape}";
     var form_enter_phone = "{$lang->form_enter_phone|escape}";
     var form_error_captcha = "{$lang->form_error_captcha|escape}";
     var form_enter_email = "{$lang->form_enter_email|escape}";
@@ -160,15 +181,17 @@
         $(".fn_validate_cart").validate({
             rules: {
                 name: "required",
+                surname: "required",
+                phone: "required",
                 email: {
-                    required: true,
                     email: true
                 },
                 captcha_code: "required"
             },
             messages: {
                 name: form_enter_name,
-                email: form_enter_email,
+                surname: form_enter_surname,
+                phone: form_enter_phone,
                 captcha_code: form_error_captcha
             }
         });
@@ -203,6 +226,7 @@
         $(".fn_validate_register").validate({
             rules: {
                 name: "required",
+                surname: "required",
                 email: {
                     required: true,
                     email: true
@@ -212,6 +236,7 @@
             },
             messages: {
                 name: form_enter_name,
+                surname: form_enter_surname,
                 email: form_enter_email,
                 captcha_code: form_error_captcha,
                 password: form_enter_password

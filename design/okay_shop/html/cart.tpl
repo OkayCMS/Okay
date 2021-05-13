@@ -29,6 +29,9 @@
                     {if $error == 'empty_name'}
                         <span data-language="form_enter_name">{$lang->form_enter_name}</span>
                     {/if}
+                    {if $error == 'empty_surname'}
+                        <span data-language="form_enter_surname">{$lang->form_enter_surname}</span>
+                    {/if}
                     {if $error == 'empty_email'}
                         <span data-language="form_enter_email">{$lang->form_enter_email}</span>
                     {/if}
@@ -50,25 +53,37 @@
                     </div>
                 </div>
 
-                {* User's phone *}
+                {*vedastudio_surname*}
+                {* User's surname *}
                 <div class="col-sm-6">
                     <div class="form_group">
-                        <input class="form_input placeholder_focus" name="phone" type="text" value="{$phone|escape}" data-language="form_phone" >
-                        <span class="form_placeholder">{$lang->form_phone}</span>
+                        <input class="form_input placeholder_focus" name="surname" type="text" value="{$surname|escape}" data-language="form_surname" >
+                        <span class="form_placeholder">{$lang->form_surname}*</span>
                     </div>
                 </div>
             </div>
 
             <div class="row">
+                {* User's phone *}
+                <div class="col-sm-6">
+                    <div class="form_group">
+                        <input class="form_input placeholder_focus" name="phone" type="text" value="{$phone|escape}" data-language="form_phone" >
+                        <span class="form_placeholder">{$lang->form_phone}*</span>
+                    </div>
+                </div>
+
                 {* User's email *}
                 <div class="col-sm-6">
                     <div class="form_group">
                         <input class="form_input placeholder_focus" name="email" type="text" value="{$email|escape}" data-language="form_email" >
-                        <span class="form_placeholder">{$lang->form_email}*</span>
+                        <span class="form_placeholder">{$lang->form_email}</span>
                     </div>
                 </div>
+            </div>
+
+            <div class="row">
                 {* User's address *}
-                <div class="col-sm-6">
+                <div class="col-sm-12">
                     <div class="form_group">
                         <input class="form_input placeholder_focus" name="address" type="text" value="{$address|escape}" data-language="form_address" >
                         <span class="form_placeholder">{$lang->form_address}</span>

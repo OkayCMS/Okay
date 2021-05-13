@@ -42,7 +42,8 @@ class ReportStat extends Okay {
             $page = max(1, intval($filter['page']));
         }
         $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
-        
+        $currency = $this->money->get_currency();
+
         // Выбираем заказы
         $query = $this->db->placehold("SELECT
                 o.id,
@@ -50,7 +51,7 @@ class ReportStat extends Okay {
                 p.variant_id,
                 p.product_name,
                 p.variant_name,
-                SUM(p.price * p.amount) as sum_price,
+                SUM(round(p.price,?) * p.amount) as sum_price,
                 SUM(p.amount) as amount,
                 p.sku 
             FROM __purchases AS p
@@ -61,7 +62,7 @@ class ReportStat extends Okay {
             GROUP BY p.variant_id
             ORDER BY $sort_prod 
             $sql_limit
-        ");
+        ", $currency->cents);
         
         $this->db->query($query);
         return $this->db->results();
@@ -182,11 +183,12 @@ class ReportStat extends Okay {
             $period_filter = $this->db->placehold('AND (o.date BETWEEN ? AND ?)', $filter['date_from'], $filter['date_to']);
             $orders_join = ' LEFT JOIN __orders o ON o.id=pp.order_id ';
         }
-        
+
+        $currency = $this->money->get_currency();
         $query = $this->db->placehold("SELECT 
                 pc.category_id, 
                 SUM(pp.amount) as amount, 
-                SUM(pp.amount * pp.price) as price
+                SUM(pp.amount * round(pp.price, ?)) as price
                 FROM __purchases pp
                 LEFT JOIN __products p ON p.id=pp.product_id
                 $category_join
@@ -197,7 +199,7 @@ class ReportStat extends Okay {
                     $brand_filter
                     $period_filter
                 GROUP BY pc.category_id
-        ");
+        ", $currency->cents);
         $this->db->query($query);
         $result = array();
         foreach($this->db->results() as $v) {

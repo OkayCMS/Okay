@@ -46,7 +46,7 @@ class View extends Okay {
         if (!defined('IS_CLIENT')) {
             define('IS_CLIENT', true);
         }
-        
+
         // Если инстанс класса уже существует - просто используем уже существующие переменные
         if(self::$view_instance) {
             $this->currency     = &self::$view_instance->currency;
@@ -347,7 +347,7 @@ class View extends Okay {
     public function setHeaderLastModify($lastModify) {
         $lastModify=empty($lastModify)?date("Y-m-d H:i:s"):$lastModify;
         $tmpDate=date_parse($lastModify);
-        @$LastModified_unix=mktime( $tmpDate['hour'], $tmpDate['minute'], $tmpDate['second '], $tmpDate['month'],$tmpDate['day'],$tmpDate['year'] );
+        @$LastModified_unix=mktime( $tmpDate['hour'], $tmpDate['minute'], $tmpDate['second'], $tmpDate['month'],$tmpDate['day'],$tmpDate['year'] );
         //Проверка модификации страницы
         $LastModified = gmdate("D, d M Y H:i:s \G\M\T", $LastModified_unix);                
         $IfModifiedSince = false;

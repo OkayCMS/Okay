@@ -23,6 +23,7 @@ class CouponsAdmin extends Okay {
 
             /*Создание купона*/
             if($this->request->post("new_code")){
+                $currency = $this->money->get_currency();
                 $new_expire = $this->request->post('new_expire');
                 $new_coupon = new stdClass();
                 $new_coupon->id = $this->request->post('new_id', 'integer');
@@ -32,9 +33,9 @@ class CouponsAdmin extends Okay {
                 } else {
                     $new_coupon->expire = null;
                 }
-                $new_coupon->value = $this->request->post('new_value', 'float');
+                $new_coupon->value = round($this->request->post('new_value', 'float'), $currency->cents);
                 $new_coupon->type = $this->request->post('new_type', 'string');
-                $new_coupon->min_order_price = $this->request->post('new_min_order_price', 'float');
+                $new_coupon->min_order_price = round($this->request->post('new_min_order_price', 'float'), $currency->cents);
                 $new_coupon->single = $this->request->post('new_single', 'float');
 
                 // Не допустить одинаковые URL разделов.

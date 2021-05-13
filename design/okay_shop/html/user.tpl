@@ -17,6 +17,8 @@
                 <div class="message_error">
                     {if $error == 'empty_name'}
                         <span data-language="form_enter_name">{$lang->form_enter_name}</span>
+                    {elseif $error == 'empty_surname'}
+                        <span data-language="form_enter_surname">{$lang->form_enter_surname}</span>
                     {elseif $error == 'empty_email'}
                         <span data-language="form_enter_email">{$lang->form_enter_email}</span>
                     {elseif $error == 'empty_password'}
@@ -35,6 +37,12 @@
                 <div class="form_group">
                     <input class="form_input placeholder_focus" value="{$name|escape}" name="name" type="text" data-language="form_name" />
                     <span class="form_placeholder">{$lang->form_name}*</span>
+                </div>
+
+                {* User's surname *}
+                <div class="form_group">
+                    <input class="form_input placeholder_focus" value="{$surname|escape}" name="surname" type="text" data-language="form_surname" />
+                    <span class="form_placeholder">{$lang->form_surname}*</span>
                 </div>
 
                 {* User's email *}

@@ -123,13 +123,13 @@
                                             <span class="text_dark text_600">
                                                 <span class="hidden-xs-down">{$btr->general_sales_amount|escape} </span>
                                                 <span class="{if $category->price}text_primary {else}text_dark {/if}">
-                                                    {$category->price} {$currency->sign}
+                                                    {$category->price|format} {$currency->sign}
                                                 </span>
                                             </span>
                                         </div>
                                     </div>
                                     <div class="okay_list_boding okay_list_categorystats_total">
-                                        {if $category->price}<span class="text_dark">{$category->price} {$currency->sign}</span>{else}{$category->price} {$currency->sign}{/if}
+                                        {if $category->price}<span class="text_dark">{$category->price|format} {$currency->sign}</span>{else}{$category->price|format} {$currency->sign}{/if}
                                     </div>
                                     <div class="okay_list_boding okay_list_categorystats_setting">
                                         {if $category->amount}<span class="text_dark">{$category->amount} {$btr->reportstats_units}</span>{else}{$category->amount} {$btr->reportstats_units}{/if}
@@ -146,7 +146,7 @@
         <div class="row mt-1">
             <div class="col-lg-12 col-md-12">
                 <div class="text_dark text_500 text-xs-right mr-1 mt-h">
-                    <div class="h5">{$btr->general_total|escape} {$total_price} {$currency->sign|escape} <span class="text_grey">({$total_amount} {$btr->reportstats_units|escape})</span></div>
+                    <div class="h5">{$btr->general_total|escape} {$total_price|format} {$currency->sign|escape} <span class="text_grey">({$total_amount} {$btr->reportstats_units|escape})</span></div>
                 </div>
             </div>
         </div>

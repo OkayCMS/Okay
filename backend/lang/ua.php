@@ -665,7 +665,10 @@ $backend_translations->user_groups_name = 'Ім\'я групи';
 $backend_translations->user_groups_no = 'Немає груп користувачів';
 $backend_translations->user_groups_number = 'К-сть користувачів';
 $backend_translations->user_last_ip = 'Останній IP';
-$backend_translations->user_name = 'Введіть ім\'я користувача';
+$backend_translations->user_name = 'Ім\'я';
+$backend_translations->user_enter_name = 'Введіть ім\'я користувача';
+$backend_translations->user_surname = 'Прізвище';
+$backend_translations->user_enter_surname = 'Введіть прізвище користувача';
 $backend_translations->user_not_in_group = 'Не входить в групу';
 $backend_translations->user_options = 'Параметри користувача';
 $backend_translations->user_orders = 'Замовлення користувача';
@@ -710,13 +713,7 @@ $backend_translations->currency_cents_display = 'Відображення коп
 $backend_translations->currency_currencies = 'Валюти';
 $backend_translations->currency_delete = 'Видалити валюту';
 $backend_translations->currency_iso = 'Код ISO';
-$backend_translations->currency_message = 'Кількість десяткових знаків дробової частини ціни впливає лише на ВІДОБРАЖЕННЯ цін.
-Усі розрахунки ведуться з неокругленими даними.
-Це може призвести до візуальних помилок при конвертації валют і застосуванні знижок.
-Як приклад розглянемо таку ситуацію.
-Вартість товару – 98,10 руб.
-Якщо задати кількість десяткових знаків рівним 0, ціна буде показана як 98 руб.
-Проте вартість 10 одиниць у кошику буде показана як 981 руб.';
+$backend_translations->currency_message = 'Основною валютою сайту вважається та, яка стоїть першою в списку. Для того, щоб змінити основну валюту, просто перетягніть потрібну вам валюту на перше місце.';
 $backend_translations->currency_name = 'Назва валюти';
 $backend_translations->currency_rate = 'Курс';
 $backend_translations->currency_recalculate = 'Перерахувати всі ціни у';
@@ -982,3 +979,4 @@ $backend_translations->recaptcha_v3_scores = 'reCAPTCHA V3 "Людяність",
 $backend_translations->integration_1c = 'Інтеграція з 1С';
 $backend_translations->orders_all_statuses = 'Усі статуси';
 $backend_translations->orders_all_labels = 'Усі мітки';
+$backend_translations->settings_enable_webp = 'Включити підтримку WebP';

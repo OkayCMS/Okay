@@ -100,9 +100,13 @@
                 <div class="fleft">
                     <a class="all_brands_link" href="{$lang_link}brands/{$b->url}" data-brand="{$b->id}">
                         {if $b->image}
-                            <div class="brand_image">
+                            <picture class="brand_image">
+                                {if $settings->support_webp}
+                                    <source type="image/webp" srcset="{$b->image|resize:250:100:false:$config->resized_brands_dir}.webp">
+                                {/if}
+                                <source srcset="{$b->image|resize:250:100:false:$config->resized_brands_dir}">
                                 <img class="brand_img" src="{$b->image|resize:250:100:false:$config->resized_brands_dir}" alt="{$b->name|escape}" title="{$b->name|escape}">
-                            </div>
+                            </picture>
                             <span>{$b->name|escape}</span>
                         {else}
                             <div class="brand_name">
@@ -143,7 +147,13 @@
                             <div class="news_item no_padding col-sm-6">
                                 <a class="news_image" href="{$lang_link}{$post->type_post}/{$post->url}">
                                     {if $post->image}
-                                        <img class="news_img" src="{$post->image|resize:250:250:false:$config->resized_blog_dir}" alt="{$post->name|escape}" title="{$post->name|escape}"/>
+                                        <picture>
+                                            {if $settings->support_webp}
+                                                <source type="image/webp" srcset="{$post->image|resize:250:250:false:$config->resized_blog_dir}.webp">
+                                            {/if}
+                                            <source srcset="{$post->image|resize:250:250:false:$config->resized_blog_dir}">
+                                            <img class="news_img" src="{$post->image|resize:250:250:false:$config->resized_blog_dir}" alt="{$post->name|escape}" title="{$post->name|escape}"/>
+                                        </picture>
                                     {/if}
                                 </a>
 

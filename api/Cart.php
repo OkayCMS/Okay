@@ -75,7 +75,7 @@ class Cart extends Okay {
                         } else {
                             $cart->coupon->coupon_percent = $cart->coupon->value;
                             $cart->coupon_discount = $cart->total_price * ($cart->coupon->value)/100;
-                            $cart->total_price = $cart->total_price-$cart->coupon_discount;
+                            $cart->total_price -= $cart->coupon_discount;
                         }
                     } else {
                         unset($_SESSION['coupon_code']);

@@ -665,7 +665,10 @@ $backend_translations->user_groups_name = 'Group name';
 $backend_translations->user_groups_no = 'No groups to display';
 $backend_translations->user_groups_number = 'Number of users';
 $backend_translations->user_last_ip = 'Last IP';
-$backend_translations->user_name = 'Enter user name';
+$backend_translations->user_name = 'Name';
+$backend_translations->user_enter_name = 'Enter user name';
+$backend_translations->user_surname = 'Surname';
+$backend_translations->user_enter_surname = 'Enter the user surname';
 $backend_translations->user_not_in_group = 'Not in the group';
 $backend_translations->user_options = 'User Options';
 $backend_translations->user_orders = 'User orders';
@@ -710,13 +713,7 @@ $backend_translations->currency_cents_display = 'Display cents';
 $backend_translations->currency_currencies = 'Currencies';
 $backend_translations->currency_delete = 'Delete currency';
 $backend_translations->currency_iso = 'ISO code';
-$backend_translations->currency_message = 'The number of decimals of the fractional part of the price only affects the DISPLAY of the prices.
-All calculations are conducted with non-rounded data.
-This can lead to visual errors when converting currencies and applying discounts.
-As an example, consider this situation.
-The cost of the goods 98.10 $.
-If you set the number of decimal places to 0, the price will be shown as 98 $.
-However, the cost of 10 units in the basket will be shown as 981 $.';
+$backend_translations->currency_message = 'The main currency of the site is the one that is listed first. To change the main currency, simply drag the currency you need to the first place.';
 $backend_translations->currency_name = 'Currency name';
 $backend_translations->currency_rate = 'Rate';
 $backend_translations->currency_recalculate = 'Recalculate all prices in';
@@ -982,3 +979,4 @@ $backend_translations->recaptcha_v3_scores = 'reCAPTCHA V3 "Humanness", 0.0 exac
 $backend_translations->integration_1c = 'Integration with 1C';
 $backend_translations->orders_all_statuses = 'All Statuses';
 $backend_translations->orders_all_labels = 'All labels';
+$backend_translations->settings_enable_webp = 'Enable WebP support';

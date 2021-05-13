@@ -116,7 +116,7 @@
     <meta name="twitter:description" content="{$product->annotation|strip_tags|escape}">
     <meta name="twitter:image" content="{$product->image->filename|resize:330:300}">
     <meta name="twitter:data1" content="{$lang->cart_head_price}">
-    <meta name="twitter:label1" content="{$product->variant->price|convert:null:false} {$currency->code|escape}">
+    <meta name="twitter:label1" content="{$product->variant->price} {$currency->code|escape}">
     <meta name="twitter:data2" content="{$lang->meta_organization}">
     <meta name="twitter:label2" content="{$settings->site_name|escape}">
 {elseif $module == 'BlogView' && $post}
@@ -161,9 +161,11 @@
 {* Language attribute *}
 {foreach $languages as $l}
     {if $l->enabled}
-        <link rel="alternate" hreflang="{if $l@first}x-default{else}{$l->href_lang}{/if}" href="{preg_replace('/^(.+)\/$/', '$1', $l->url)}">
+        <link rel="alternate" hreflang="{$l->href_lang}" href="{preg_replace('/^(.+)\/$/', '$1', $l->url)}">
     {/if}
 {/foreach}
+{$first_language = $languages|reset}
+<link rel="alternate" hreflang="x-default" href="{preg_replace('/^(.+)\/$/', '$1', $first_language->url)}">
 
 <script>ut_tracker.start('render:recaptcha');</script>
 {if $settings->captcha_type == "v3"}

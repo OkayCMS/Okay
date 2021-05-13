@@ -149,14 +149,14 @@
                                     <span class="text_dark text_600">
                                         <span class="hidden-xs-down">Сумма продаж: </span>
                                         <span class="text_primary">
-                                            {$purchase->sum_price} {$currency->sign|escape}
+                                            {$purchase->sum_price|format} {$currency->sign|escape}
                                         </span>
                                     </span>
                                 </div>
                             </div>
 
                             <div class="okay_list_boding okay_list_reportstats_total">
-                                {$purchase->sum_price} {$currency->sign|escape}
+                                {$purchase->sum_price|format} {$currency->sign|escape}
                             </div>
 
                             <div class="okay_list_reportstats_setting">
@@ -170,7 +170,7 @@
         <div class="row mt-1">
             <div class="col-lg-12 col-md-12">
                 <div class="text_dark text_500 text-xs-right mr-1 mt-h">
-                    <div class="h5">{$btr->general_total|escape} {$total_summ|string_format:'%.2f'} {$currency->sign|escape}  <span class="text_grey">({$total_amount}  {$btr->reportstats_units})</span></div>
+                    <div class="h5">{$btr->general_total|escape} {$total_summ|format} {$currency->sign|escape}  <span class="text_grey">({$total_amount}  {$btr->reportstats_units})</span></div>
                 </div>
             </div>
         </div>
