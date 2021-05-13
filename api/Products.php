@@ -97,22 +97,24 @@ class Products extends Okay {
         }
 
         $currency = $this->money->get_current_currency();
-            $coef = $currency->rate_from / $currency->rate_to;
+        $coef = $currency->rate_from/$currency->rate_to;
         
         if (isset($filter['get_price'])) {
             $select = $this->db->placehold("
-                floor(min(round(pv.price*$coef,?))) as min,
-                floor(max(round(pv.price*$coef,?))) as max
+                floor(min(round(pv.price*c.rate_to/c.rate_from*$coef,?))) as min,
+                floor(max(round(pv.price*c.rate_to/c.rate_from*$coef,?))) as max
             ", $currency->cents, $currency->cents);
             $joins .= ' LEFT JOIN __variants pv ON pv.product_id = p.id';
+            $joins .= ' LEFT JOIN __currencies c ON c.id=pv.currency_id';
         } elseif (isset($filter['price'])) {
             if(isset($filter['price']['min'])) {
-                $where .= $this->db->placehold(" AND floor(round(pv.price*$coef,?))>= ? ", $currency->cents, $this->db->escape(trim($filter['price']['min'])));
+                $where .= $this->db->placehold(" AND floor(round(pv.price*c.rate_to/c.rate_from*$coef,?))>= ? ", $currency->cents, $this->db->escape(trim($filter['price']['min'])));
             }
             if(isset($filter['price']['max'])) {
-                $where .= $this->db->placehold(" AND floor(round(pv.price*$coef,?))<= ? ", $currency->cents, $this->db->escape(trim($filter['price']['max'])));
+                $where .= $this->db->placehold(" AND floor(round(pv.price*c.rate_to/c.rate_from*$coef,?))<= ? ", $currency->cents, $this->db->escape(trim($filter['price']['max'])));
             }
             $joins .= ' LEFT JOIN __variants pv ON pv.product_id = p.id';
+            $joins .= ' LEFT JOIN __currencies c ON c.id=pv.currency_id';
         }
         
         if (isset($filter['visible'])) {

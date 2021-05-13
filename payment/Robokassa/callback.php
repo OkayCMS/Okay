@@ -23,7 +23,6 @@ $crc = strtoupper($_POST['SignatureValue']);
 ////////////////////////////////////////////////
 // Выберем заказ из базы
 ////////////////////////////////////////////////
-$GLOBALS['is_client'] = false;
 $order = $okay->orders->get_order(intval($order_id));
 if(empty($order))
 	die('Оплачиваемый заказ не найден');

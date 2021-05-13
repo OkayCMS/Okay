@@ -31,6 +31,11 @@
                         <i class="fa fa-print"></i>
                     </a>
                 </div>
+                <div class="box_btn_heading">
+                    <a class="btn btn_small btn-info" target="_blank" href="../{$lang_link}order/{$order->url}">
+                        <span>{$btr->general_open|escape}</span>
+                    </a>
+                </div>
                 {*Метки заказа*}
                 <div class="box_btn_heading ml-h hidden-xs-down">
                     <div class="add_order_marker">

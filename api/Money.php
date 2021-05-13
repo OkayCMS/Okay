@@ -78,8 +78,8 @@ class Money extends Okay {
 
     /*Выборка текущей валюты*/
     public function get_current_currency() {
-        if(isset($_SESSION['currency_id']) && $GLOBALS['is_client'] === true) {
-            return $this->get_currency($_SESSION['currency_id']);
+        if(defined('IS_CLIENT') && isset($_SESSION['currency_id'])) {
+            return $this->get_currency(intval($_SESSION['currency_id']));
         } else {
             return reset($this->get_currencies(array('enabled'=>1)));
         }
@@ -133,7 +133,9 @@ class Money extends Okay {
     public function delete_currency($id) {
         if(!empty($id)) {
             //Назначим главную валюту для товаров с удаляемой валютой
-            $query = $this->db->placehold("UPDATE __variants SET cost=price, currency_id=? WHERE currency_id=?", $this->money->get_currency()->id, $id);
+            $currency = $this->money->get_currency(intval($id));
+            $coef = $currency->rate_to/$currency->rate_from;
+            $query = $this->db->placehold("UPDATE __variants SET price=price*?, currency_id=? WHERE currency_id=?", $coef, $this->money->get_currency()->id, $id);
             $this->db->query($query);
             $query = $this->db->placehold("DELETE FROM __currencies WHERE id=? LIMIT 1", intval($id));
             $this->db->query($query);
@@ -187,13 +189,7 @@ class Money extends Okay {
             $currency = $this->get_current_currency();
         }
 
-        // Точность отображения, знаков после запятой
-        $precision = isset($currency->cents)?$currency->cents:2;
-
         // Форматирование цены
-        return number_format($price, $precision, $this->settings->decimals_point, $this->settings->thousands_separator);
+        return number_format($price, $currency->cents, $this->settings->decimals_point, $this->settings->thousands_separator);
     }
-
-
-    
 }

@@ -52,7 +52,6 @@ $order_id = intval($_POST['ok_invoice']);
 ////////////////////////////////////////////////
 // Выберем заказ из базы
 ////////////////////////////////////////////////
-$GLOBALS['is_client'] = false;
 $order = $okay->orders->get_order(intval($order_id));
 if(empty($order))
 	my_exit('Оплачиваемый заказ не найден');

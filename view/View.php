@@ -43,8 +43,10 @@ class View extends Okay {
             exit;
         }
 
-        $GLOBALS['is_client'] = true;
-        
+        if (!defined('IS_CLIENT')) {
+            define('IS_CLIENT', true);
+        }
+
         // Если инстанс класса уже существует - просто используем уже существующие переменные
         if(self::$view_instance) {
             $this->currency     = &self::$view_instance->currency;

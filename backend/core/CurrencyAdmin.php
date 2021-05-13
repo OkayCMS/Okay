@@ -37,28 +37,31 @@ class CurrencyAdmin extends Okay {
                 $this->design->assign('wrong_iso', $wrong_iso);
             }
             
+            // Удалить непереданные валюты
+            $query = $this->db->placehold('DELETE FROM __currencies WHERE id NOT IN(?@)', $currencies_ids);
+            $this->db->query($query);
+
             // Пересчитать курсы
             $old_currency = $this->money->get_currency();
             $new_currency = reset($currencies);
             if($old_currency->id != $new_currency->id) {
                 $coef = $new_currency->rate_from/$new_currency->rate_to;
                 /*Пересчет цен по курсу валюты*/
-                $this->db->query("UPDATE __delivery SET price=price*?, free_from=free_from*?", $coef, $coef);
-                $this->db->query("UPDATE __orders SET delivery_price=delivery_price*?", $coef);
-                $this->db->query("UPDATE __orders SET total_price=total_price*?", $coef);
-                $this->db->query("UPDATE __purchases SET price=price*?", $coef);
-                $this->db->query("UPDATE __coupons SET value=value*? WHERE type='absolute'", $coef);
-                $this->db->query("UPDATE __coupons SET min_order_price=min_order_price*?", $coef);
-                $this->db->query("UPDATE __orders SET coupon_discount=coupon_discount*?", $coef);
+                if($this->request->post('recalculate') == 1) {
+                    $this->db->query("UPDATE __variants SET price=price*?, compare_price=compare_price*? where currency_id=0", $coef, $coef);
+                    $this->db->query("UPDATE __delivery SET price=price*?, free_from=free_from*?", $coef, $coef);
+                    $this->db->query("UPDATE __orders SET delivery_price=delivery_price*?", $coef);
+                    $this->db->query("UPDATE __orders SET total_price=total_price*?", $coef);
+                    $this->db->query("UPDATE __purchases SET price=price*?", $coef);
+                    $this->db->query("UPDATE __coupons SET value=value*? WHERE type='absolute'", $coef);
+                    $this->db->query("UPDATE __coupons SET min_order_price=min_order_price*?", $coef);
+                    $this->db->query("UPDATE __orders SET coupon_discount=coupon_discount*?", $coef);
+                }
                 
                 $this->db->query("UPDATE __currencies SET rate_from=1.0*rate_from*$new_currency->rate_to/$old_currency->rate_to");
                 $this->db->query("UPDATE __currencies SET rate_to=1.0*rate_to*$new_currency->rate_from/$old_currency->rate_from");
                 $this->db->query("UPDATE __currencies SET rate_to = rate_from WHERE id=?", $new_currency->id);
                 $this->db->query("UPDATE __currencies SET rate_to = 1, rate_from = 1 WHERE (rate_to=0 OR rate_from=0) AND id=?", $new_currency->id);
-
-                $this->db->query("UPDATE __variants v LEFT JOIN __currencies c ON c.id=v.currency_id SET v.price = v.cost*c.rate_to/c.rate_from, v.compare_price = v.compare_cost*c.rate_to/c.rate_from");
-            } else {
-                $this->db->query("UPDATE __variants v LEFT JOIN __currencies c ON c.id=v.currency_id SET v.price = v.cost*c.rate_to/c.rate_from, v.compare_price = v.compare_cost*c.rate_to/c.rate_from WHERE v.currency_id!=?", $new_currency->id);
             }
             
             // Отсортировать валюты

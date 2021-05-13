@@ -164,13 +164,37 @@ class ImportAjax extends Import {
         
         // Подготовим вариант товара
         $variant = array();
-        $variant['cost'] = 0;
-        $variant['compare_cost'] = 0;
         $variant['price'] = 0;
         $variant['compare_price'] = 0;
 
         if (isset($item['variant'])) {
             $variant['name'] = trim($item['variant']);
+        }
+
+        if (isset($item['price'])) {
+            $price = str_replace(',', '.', str_replace(' ', '', trim($item['price'])));
+            if (!empty($price) || $price === '0.00' || $price === '0.0' || $price === '0') {
+                $variant['price'] = $price;
+            }
+        }
+
+        if (isset($item['compare_price'])) {
+            $compare_price = str_replace(',', '.', str_replace(' ', '', trim($item['compare_price'])));
+            if (!empty($compare_price) || $compare_price === '0.00' || $compare_price === '0.0' || $compare_price === '0') {
+                $variant['compare_price'] = $compare_price;
+            }
+        }
+
+        if (isset($item['stock'])) {
+            if ($item['stock'] == '') {
+                $variant['stock'] = null;
+            } else {
+                $variant['stock'] = trim($item['stock']);
+            }
+        }
+        
+        if (isset($item['sku'])) {
+            $variant['sku'] = trim($item['sku']);
         }
 
         // Если присутствует код валюты определяем её ID
@@ -182,40 +206,6 @@ class ImportAjax extends Import {
             }
         } elseif (isset($item['currency'])) {
             $variant['currency_id'] = intval($item['currency']);
-        }
-
-        if (isset($item['cost'])) {
-            $cost = str_replace(',', '.', str_replace(' ', '', trim($item['cost'])));
-            if (!empty($cost) || $cost === '0.00' || $cost === '0.0' || $cost === '0') {
-                $variant['cost'] = (float)$cost;
-            }
-        }
-
-        if (isset($variant['cost']) && isset($variant['currency_id'])) {
-            $variant['price'] = $variant['cost'] * $currencies[$variant['currency_id']]->rate_to/$currencies[$variant['currency_id']]->rate_from;
-        }
-
-        if (isset($item['compare_cost'])) {
-            $compare_cost = str_replace(',', '.', str_replace(' ', '', trim($item['compare_cost'])));
-            if (!empty($compare_cost) || $compare_cost === '0.00' || $compare_cost === '0.0' || $compare_cost === '0') {
-                $variant['compare_cost'] = (float)$compare_cost;
-            }
-        }
-
-        if (isset($variant['compare_cost']) && isset($variant['currency_id'])) {
-            $variant['compare_price'] = $variant['compare_cost'] * $currencies[$variant['currency_id']]->rate_to/$currencies[$variant['currency_id']]->rate_from;
-        }
-        
-        if (isset($item['stock'])) {
-            if ($item['stock'] == '') {
-                $variant['stock'] = null;
-            } else {
-                $variant['stock'] = trim($item['stock']);
-            }
-        }
-        
-        if (isset($item['sku'])) {
-            $variant['sku'] = trim($item['sku']);
         }
 
         if (isset($item['weight'])) {

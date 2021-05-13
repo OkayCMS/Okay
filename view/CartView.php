@@ -58,7 +58,9 @@ class CartView extends View {
             } elseif($this->settings->captcha_cart && !$this->validate->verify_captcha('captcha_cart', $captcha_code)) {
                 $this->design->assign('error', 'captcha');
             } else {
-                $GLOBALS['is_client'] = false;
+                // установим валюту по-умолчанию
+                $_SESSION['currency_id'] = $this->money->get_currency()->id;
+
                 // Скидка
                 $cart = $this->cart->get_cart();
                 $order->discount = $cart->discount;

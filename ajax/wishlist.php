@@ -4,7 +4,7 @@
     }
     session_start();
     require_once('../api/Okay.php');
-    $GLOBALS['is_client'] = true;
+    define('IS_CLIENT', true);
     $okay = new Okay();
     $limit = 500;
     $id = $okay->request->get('id', 'integer');

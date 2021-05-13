@@ -14,7 +14,6 @@ if($_POST['ik_inv_st'] !== 'success')
 ////////////////////////////////////////////////
 // Выберем заказ из базы
 ////////////////////////////////////////////////
-$GLOBALS['is_client'] = false;
 $order = $okay->orders->get_order(intval($_POST['ik_pm_no']));
 if(empty($order))
 	err('Оплачиваемый заказ не найден');

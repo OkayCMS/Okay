@@ -4,7 +4,7 @@
     }
     session_start();
     require_once('../api/Okay.php');
-    $GLOBALS['is_client'] = true;
+    define('IS_CLIENT', true);
     $okay = new Okay();
     /*Определяем пользователя*/
     if(isset($_SESSION['user_id']) && $user = $okay->users->get_user(intval($_SESSION['user_id']))) {
