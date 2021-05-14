@@ -179,7 +179,7 @@ class Design extends Okay {
             $resized_filename_encoded = rawurlencode($resized_filename_encoded);
         }
         
-        // $resized_filename_encoded = rawurlencode($resized_filename_encoded);
+        $resized_filename_encoded = rawurlencode($resized_filename_encoded);
 
         if (!$resized_dir) {
             $resized_dir = $this->config->resized_images_dir;

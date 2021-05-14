@@ -35,7 +35,7 @@ class Image extends Okay {
             exit();
         }
         
-        // Если вайл удаленный (http://), зальем его себе
+        // Если файл удаленный (http://), зальем его себе
         if (preg_match("~^https?://~", $source_file)) {
             // Имя оригинального файла
             if(!$original_file = $this->download_image($source_file)) {
@@ -96,13 +96,12 @@ class Image extends Okay {
 
     /*Добавление параметров ресайза для изображения*/
     public function add_resize_params($filename, $width=0, $height=0, $set_watermark=false, $crop_params = array()) {
-        $path_parts = pathinfo($filename);
-        if('.' != $path_parts["dirname"]) {
-            $file = $path_parts["dirname"].'/'.$path_parts["filename"];
+        if('.' != ($dirname = pathinfo($filename,  PATHINFO_DIRNAME))) {
+            $file = $dirname.'/'.pathinfo($filename, PATHINFO_FILENAME);
         } else {
-            $file = $path_parts["filename"];
+            $file = pathinfo($filename, PATHINFO_FILENAME);
         }
-        $ext = $path_parts["extension"];
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
         
         if($width>0 || $height>0) {
             $resized_filename = $file.'.'.($width>0?$width:'').'x'.($height>0?$height:'').($set_watermark?'w':'');
@@ -276,9 +275,7 @@ class Image extends Okay {
      */
     private function image_constrain_gd($src_file, $dst_file, $max_w, $max_h, $watermark=null, $watermark_offet_x=0, $watermark_offet_y=0) {
         $quality = 100;
-        if (!is_dir($dst_dir = pathinfo($dst_file,PATHINFO_DIRNAME))) {
-           mkdir($dst_dir, 0777, true);
-        }
+
         // Параметры исходного изображения
         @list($src_w, $src_h, $src_type) = array_values(getimagesize($src_file));
         $src_type = image_type_to_mime_type($src_type);
@@ -417,9 +414,6 @@ class Image extends Okay {
         $thumb = new Imagick();
 
         $sharpen = 0.2;
-        if (!is_dir($dst_dir = pathinfo($dst_file,PATHINFO_DIRNAME))) {
-           mkdir($dst_dir, 0777, true);
-        }
         
         // Читаем изображение
         if(!$thumb->readImage($src_file)) {
