@@ -4,7 +4,7 @@
     }
     session_start();
     require_once('../api/Okay.php');
-    $GLOBALS['is_client'] = true;
+    define('IS_CLIENT', true);
     $okay = new Okay();
     /*Добавляем товары в корзину*/
     $okay->cart->add_item($okay->request->get('variant', 'integer'), $okay->request->get('amount', 'integer'));

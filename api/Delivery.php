@@ -29,16 +29,13 @@ class Delivery extends Okay {
         ");
         
         $this->db->query($query);
-        if($delivery = $this->db->result()){
-            if ($GLOBALS['is_client'] === true) {
-                $currency = $this->money->get_current_currency();
-                $delivery->free_from = round($delivery->free_from * $currency->rate_from/$currency->rate_to, $currency->cents);
-                $delivery->price = round($delivery->price * $currency->rate_from/$currency->rate_to, $currency->cents);
-            }
-            return $delivery;
-        } else {
-            return false;
+        $delivery = $this->db->result();
+            if (defined('IS_CLIENT') && isset($_SESSION['currency_id']) && $delivery->id) {
+            $currency = $this->money->get_currency(intval($_SESSION['currency_id']));
+            $delivery->free_from = round($delivery->free_from * $currency->rate_from/$currency->rate_to, $currency->cents);
+            $delivery->price = round($delivery->price * $currency->rate_from/$currency->rate_to, $currency->cents);
         }
+        return $delivery;
     }
 
     /*Выборка всех способов доставки*/
@@ -103,19 +100,16 @@ class Delivery extends Okay {
         if ($count === true) {
             return $this->db->result('count');
         } else {
-            if($deliveries = $this->db->results()){
-                if ($GLOBALS['is_client'] === true) {
-                    $currency = $this->money->get_current_currency();
-                    $coef = $currency->rate_from/$currency->rate_to;
-                    foreach ($deliveries as $delivery) {
-                        $delivery->free_from = round($delivery->free_from * $coef, $currency->cents);
-                        $delivery->price = round($delivery->price * $coef, $currency->cents);
-                    }
+            $deliveries = $this->db->results();
+            if (defined('IS_CLIENT') && isset($_SESSION['currency_id']) && !empty($deliveries)) {
+                $currency = $this->money->get_currency(intval($_SESSION['currency_id']));
+                $coef = $currency->rate_from/$currency->rate_to;
+                foreach ($deliveries as $delivery) {
+                    $delivery->free_from = round($delivery->free_from * $coef, $currency->cents);
+                    $delivery->price = round($delivery->price * $coef, $currency->cents);
                 }
-                return $deliveries;
-            } else {
-                return false;
             }
+            return $deliveries;
         }
     }
 

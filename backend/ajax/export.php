@@ -9,8 +9,8 @@ class ExportAjax extends Okay {
         'name'=>             'Product',
         'variant'=>          'Variant',
         'sku'=>              'SKU',
-        'cost'=>             'Cost',
-        'compare_cost'=>     'Old cost',
+        'price'=>            'Price',
+        'compare_price'=>    'Old price',
         'currency'=>         'Currency ID',
         'currency_code'=>    'Currency code',
         'weight'=>           'Weight',
@@ -175,8 +175,8 @@ class ExportAjax extends Okay {
             if(isset($products[$variant->product_id])) {
                 $v                    = array();
                 $v['variant']         = $variant->name;
-                $v['cost']            = $variant->cost;
-                $v['compare_cost']    = $variant->compare_cost;
+                $v['price']           = $variant->price;
+                $v['compare_price']   = $variant->compare_price;
                 $v['sku']             = $variant->sku;
                 $v['stock']           = $variant->stock;
                 $v['weight']          = $variant->weight;

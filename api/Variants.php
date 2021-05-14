@@ -17,8 +17,6 @@ class Variants extends Okay {
         $select = $this->db->placehold("v.id, 
                 v.product_id,
                 v.weight,
-                v.cost,
-                NULLIF(v.compare_cost, 0) as compare_cost, 
                 v.price, 
                 NULLIF(v.compare_price, 0) as compare_price, 
                 v.sku, 
@@ -30,13 +28,14 @@ class Variants extends Okay {
                 v.feed,
                 c.rate_from, 
                 c.rate_to, 
+                c.cents,                
                 $lang_sql->fields", $this->settings->max_order_amount);
 
         if ($count === true) {
             $select = "COUNT(DISTINCT v.id) as count";
         }
-        
-        if ($GLOBALS['is_client'] === true) {
+
+        if (defined('IS_CLIENT')) {
             $order = 'IF(stock=0, 0, 1) DESC, v.position, v.id';
         }
         
@@ -94,12 +93,19 @@ class Variants extends Okay {
             return $this->db->result('count');
         } else {
             $variants = $this->db->results();
-            if ($GLOBALS['is_client'] === true && !empty($variants)) {
-                $currency = $this->money->get_current_currency();
-                $coef = $currency->rate_from / $currency->rate_to;
+            if(defined('IS_CLIENT') && !empty($variants)) {
+                if(isset($_SESSION['currency_id'])) {
+                    $currency = $this->money->get_currency(intval($_SESSION['currency_id']));
+                    $currency_coef = $currency->rate_from / $currency->rate_to;
+                } else {
+                    $currency = null;
+                    $currency_coef = 1;
+                }
                 foreach ($variants as $row) {
-                    $row->price = round($row->price * $coef, $currency->cents);
-                    $row->compare_price = round($row->compare_price * $coef, $currency->cents);
+                    $coef = $currency_coef * $row->rate_to/$row->rate_from;
+                    $precision = isset($currency) ? $currency->cents : $row->cents;
+                    $row->price = round($row->price * $coef, $precision);
+                    $row->compare_price = round($row->compare_price * $coef, $precision);
                 }
             }
             return $variants;
@@ -118,8 +124,6 @@ class Variants extends Okay {
                 v.id, 
                 v.product_id,
                 v.weight,
-                v.cost,
-                NULLIF(v.compare_cost, 0) as compare_cost, 
                 v.price, 
                 NULLIF(v.compare_price, 0) as compare_price, 
                 v.sku, 
@@ -130,6 +134,7 @@ class Variants extends Okay {
                 v.feed,
                 c.rate_from, 
                 c.rate_to, 
+                c.cents,
                 $lang_sql->fields
             FROM __variants v
             $lang_sql->join
@@ -142,11 +147,18 @@ class Variants extends Okay {
         
         $this->db->query($query);
         $variant = $this->db->result();
-        if ($GLOBALS['is_client'] === true && !empty($variant)) {
-            $currency = $this->money->get_current_currency();
-            $coef = $currency->rate_from / $currency->rate_to;
-            $variant->price = round($variant->price * $coef, $currency->cents);
-            $variant->compare_price = round($variant->compare_price * $coef, $currency->cents);
+        if(defined('IS_CLIENT') && $variant->id) {
+            if(isset($_SESSION['currency_id'])) {
+                $currency = $this->money->get_currency(intval($_SESSION['currency_id']));
+                $currency_coef = $currency->rate_from / $currency->rate_to;
+            } else {
+                $currency = null;
+                $currency_coef = 1;
+            }
+            $coef = $currency_coef * $variant->rate_to/$variant->rate_from;
+            $precision = isset($currency) ? $currency->cents : $variant->cents;
+            $variant->price = round($variant->price * $coef, $precision);
+            $variant->compare_price = round($variant->compare_price * $coef, $precision);
         }
         return $variant;
     }

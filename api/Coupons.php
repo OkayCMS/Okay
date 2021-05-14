@@ -33,8 +33,8 @@ class Coupons extends Okay {
         ");
         $this->db->query($query);
         if($coupon = $this->db->result()) {
-            if ($GLOBALS['is_client'] === true) {
-                $currency = $this->money->get_current_currency();
+            if (defined('IS_CLIENT') && isset($_SESSION['currency_id'])) {
+                $currency = $this->money->get_currency(intval($_SESSION['currency_id']));
                 $coupon->min_order_price = round($coupon->min_order_price * $currency->rate_from/$currency->rate_to, $currency->cents);
                 if($coupon->type == 'absolute') {
                     $coupon->value = round($coupon->value * $currency->rate_from/$currency->rate_to, $currency->cents);

@@ -66,9 +66,13 @@ $okay->db->query("SELECT
         p.id as product_id, 
         p.url, 
         p.annotation, 
-        p.main_category_id as category_id
+        p.main_category_id as category_id, 
+        c.rate_from, 
+        c.rate_to, 
+        v.currency_id 
     FROM __variants v 
     LEFT JOIN __products p ON v.product_id=p.id
+    LEFT JOIN __currencies c ON c.id=v.currency_id
     LEFT JOIN __brands b on (b.id = p.brand_id)
     WHERE 
         1 
@@ -116,13 +120,25 @@ foreach($products as $p) {
     }
     $prev_product_id = $p->product_id;
 
-    $old_price = ($p->compare_price > 0 ? "<oldprice>$p->compare_price</oldprice>" : '');
+    //если задана валюта варианта - переводим к основной
+    if ($p->currency_id > 0) {
+        if ($p->rate_from != $p->rate_to) {
+            $p->price = $p->price*$p->rate_to/$p->rate_from;
+            $p->compare_price = $p->compare_price*$p->rate_to/$p->rate_from;
+        }
+        $price = round($p->price, 2);
+        $old_price = round($p->compare_price, 2);
+    } else {
+        $price = round($okay->money->convert($p->price, $main_currency->id, false),2);
+        $old_price = round($okay->money->convert($p->compare_price, $main_currency->id, false),2);
+    }
+    $old_price = ($old_price > 0 ? "<oldprice>$old_price</oldprice>" : '');
     print
     "
     <offer id='$p->variant_id' type='vendor.model' available='".($p->stock > 0 || $p->stock === null ? 'true' : 'false')."'>
     <url>".$okay->config->root_url.'/products/'.$p->url.$variant_url."</url>";
     print "
-    <price>$p->price</price>
+    <price>$price</price>
     $old_price
     <currencyId>".$currency_code."</currencyId>
     <categoryId>".$p->category_id."</categoryId>

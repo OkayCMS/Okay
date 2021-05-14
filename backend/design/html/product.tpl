@@ -272,11 +272,11 @@
                                         </div>
                                         <div class="okay_list_boding variants_item_price">
                                             <div class="heading_label">{$btr->general_price|escape}</div>
-                                            <input class="variant_input" name="variants[cost][]" type="text" value="{$variant->cost|escape}"/>
+                                            <input class="variant_input" name="variants[price][]" type="text" value="{$variant->price|escape}"/>
                                         </div>
                                         <div class="okay_list_boding variants_item_discount">
                                             <div class="heading_label">{$btr->general_old_price|escape}</div>
-                                            <input class="variant_input" name="variants[compare_cost][]" type="text" value="{$variant->compare_cost|escape}"/>
+                                            <input class="variant_input" name="variants[compare_price][]" type="text" value="{$variant->compare_price|escape}"/>
                                         </div>
                                         <div class="okay_list_boding variants_item_currency">
                                             <div class="heading_label">{$btr->general_currency|escape}</div>
@@ -351,11 +351,11 @@
                                     </div>
                                     <div class="okay_list_boding variants_item_price">
                                         <div class="heading_label">{$btr->general_price|escape}</div>
-                                        <input class="variant_input" name="variants[cost][]" type="text" value=""/>
+                                        <input class="variant_input" name="variants[price][]" type="text" value=""/>
                                     </div>
                                     <div class="okay_list_boding variants_item_discount">
                                         <div class="heading_label">{$btr->general_old_price|escape}</div>
-                                        <input class="variant_input" name="variants[compare_cost][]" type="text" value=""/>
+                                        <input class="variant_input" name="variants[compare_price][]" type="text" value=""/>
                                     </div>
                                     <div class="okay_list_boding variants_item_currency">
                                         <div class="heading_label">{$btr->general_currency|escape}</div>

@@ -142,14 +142,11 @@ class ProductAdmin extends Okay {
                         $feed = $this->request->post('feed');
                         $variants_ids = array();
                         foreach($variants as $index=>&$variant) {
-                            $currency = $this->money->get_currency(intval($variant->currency_id));
                             if($variant->stock == '∞' || $variant->stock == '') {
                                 $variant->stock = null;
                             }
-                            $variant->cost = $variant->cost > 0 ? (float)str_replace(',', '.', $variant->cost) : 0;
-                            $variant->price = $variant->cost > 0 ? $variant->cost * $currency->rate_to/$currency->rate_from : 0;
-                            $variant->compare_cost = $variant->compare_cost > 0 ? (float)str_replace(',', '.', $variant->compare_cost) : 0;
-                            $variant->compare_price = $variant->compare_cost > 0 ? $variant->compare_cost * $currency->rate_to/$currency->rate_from : 0;
+                            $variant->price = $variant->price > 0 ? str_replace(',', '.', $variant->price) : 0;
+                            $variant->compare_price = $variant->compare_price > 0 ? str_replace(',', '.', $variant->compare_price) : 0;
                             $variant->feed = (isset($feed[$variant->id]) ? 1 : 0);
                             
                             // Удалить файл

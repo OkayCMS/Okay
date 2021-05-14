@@ -12,7 +12,6 @@ $okay = new Okay();
 
 
 // Get the order
-$GLOBALS['is_client'] = false;
 $order = $okay->orders->get_order(intval($okay->request->post('invoice')));
 if(empty($order))
 	die('Order not found');
