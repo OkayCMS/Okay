@@ -495,16 +495,8 @@ class Products extends Okay {
             $images_ids[] = $this->add_image($new_id, $image->filename);
         }
 
-        $main_info = array();
         if (!empty($images_ids)) {
-            $main_info['main_image_id'] = reset($images_ids);
-        }
-        if (!empty($categories)) {
-            $main_info['main_category_id'] = reset($categories)->category_id;
-        }
-
-        if (!empty($main_info)) {
-            $this->products->update_product($new_id, $main_info);
+            $this->products->update_product($new_id, array('main_image_id'=>reset($images_ids)));
         }
         
         // Дублируем варианты
