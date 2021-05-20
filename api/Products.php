@@ -191,21 +191,21 @@ class Products extends Okay {
 
         if (!empty($filter['features'])) {
 
-            $lang_id_options_filter = '';
-            $lang_options_join      = '';
+            $lang_id_features_values_filter = '';
+            $lang_features_values_join      = '';
             // Алиас для таблицы без языков
-            $options_px = 'fv';
+            $features_values_px = 'fv';
             if (!empty($lang_id)) {
-                $lang_id_options_filter = $this->db->placehold("AND `lfv`.`lang_id`=?", $lang_id);
-                $lang_options_join = $this->db->placehold("LEFT JOIN `__lang_features_values` AS `lfv` ON `pf`.`value_id`=`lfv`.`feature_value_id`");
+                $lang_id_features_values_filter = $this->db->placehold("AND `lfv`.`lang_id`=?", $lang_id);
+                $lang_features_values_join = $this->db->placehold("LEFT JOIN `__lang_features_values` AS `lfv` ON `pf`.`value_id`=`lfv`.`feature_value_id`");
                 // Алиас для таблицы с языками
-                $options_px = 'lfv';
+                $features_values_px = 'lfv';
             }
 
             foreach ($filter['features'] as $feature_id=>$value) {
                 $features_values[] = $this->db->placehold("(
-                            `{$options_px}`.`translit` in(?@)
-                            AND `{$options_px}`.`feature_id`=?)", (array)$value, $feature_id);
+                            `{$features_values_px}`.`translit` in(?@)
+                            AND `{$features_values_px}`.`feature_id`=?)", (array)$value, $feature_id);
             }
 
             if (!empty($features_values)) {
@@ -214,10 +214,10 @@ class Products extends Okay {
                 $where .= $this->db->placehold(" AND `p`.`id` in (SELECT 
                         `pf`.`product_id`
                     FROM `__products_features_values` AS `pf`
-                    $lang_options_join
+                    $lang_features_values_join
                     LEFT JOIN `__features_values` AS `fv` ON `fv`.`id`=`pf`.`value_id`
                     WHERE ($features_values) 
-                    $lang_id_options_filter
+                    $lang_id_features_values_filter
                     GROUP BY `pf`.`product_id` HAVING COUNT(*) >= ?)", count($filter['features']));
             }
         }
