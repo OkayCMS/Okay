@@ -276,7 +276,6 @@ class ProductsAdmin extends Okay {
             $products_ids = array_keys($products);
             foreach($products as $product) {
                 $product->variants = array();
-                $product->properties = array();
             }
             
             $variants = $this->variants->get_variants(array('product_id'=>$products_ids));
