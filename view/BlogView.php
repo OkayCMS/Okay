@@ -144,7 +144,7 @@ class BlogView extends View {
         //lastModify
         $this->db->query("SELECT b.last_modify FROM __blog b WHERE b.type_post=?", $this->type_post);
         $last_modify = $this->db->results('last_modify');
-        $last_modify[] = $type_post == "news" ? $this->settings->lastModifyNews : $this->settings->lastModifyPosts;
+        $last_modify[] = $this->type_post == "news" ? $this->settings->lastModifyNews : $this->settings->lastModifyPosts;
         if ($this->page) {
             $last_modify[] = $this->page->last_modify;
         }
