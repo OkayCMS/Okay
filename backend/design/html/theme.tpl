@@ -43,7 +43,7 @@
             <div class="boxed boxed_warning">
                 <div class="heading_box">
                     {if $message_error == 'permissions'}
-                        {$btr->general_permissionse|escape} {$themes_dir}
+                        {$btr->general_permissions|escape} {$themes_dir}
                     {elseif $message_error == 'name_exists'}
                         {$btr->theme_exists|escape}
                     {else}
