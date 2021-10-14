@@ -84,36 +84,12 @@ class BlogView extends View {
         $related_products = array();
         foreach($this->blog->get_related_products(array('post_id'=>$post->id)) as $p) {
             $related_ids[] = $p->related_id;
-            $related_products[$p->related_id] = null;
         }
         if(!empty($related_ids)) {
-            $images_ids = array();
-            foreach($this->products->get_products(array('id'=>$related_ids, 'visible'=>1)) as $p) {
+            foreach($this->products->get_products_compile(array('id'=>$related_ids, 'visible'=>1)) as $p) {
                 $related_products[$p->id] = $p;
-                $images_ids[] = $p->main_image_id;
             }
 
-            if (!empty($images_ids)) {
-                $images = $this->products->get_images(array('id'=>$images_ids));
-                foreach ($images as $image) {
-                    if (isset($related_products[$image->product_id])) {
-                        $related_products[$image->product_id]->image = $image;
-                    }
-                }
-            }
-            $related_products_variants = $this->variants->get_variants(array('product_id'=>array_keys($related_products)));
-            foreach($related_products_variants as $related_product_variant) {
-                if(isset($related_products[$related_product_variant->product_id])) {
-                    $related_products[$related_product_variant->product_id]->variants[] = $related_product_variant;
-                }
-            }
-            foreach($related_products as $id=>$r) {
-                if(is_object($r)) {
-                    $r->variant = $r->variants[0];
-                } else {
-                    unset($related_products[$id]);
-                }
-            }
             $this->design->assign('related_products', $related_products);
         }
         
