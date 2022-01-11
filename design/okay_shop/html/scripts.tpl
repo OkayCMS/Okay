@@ -178,6 +178,7 @@
     }
 
     if($(".fn_validate_cart").length>0) {
+        var submitted_cart = false;
         $(".fn_validate_cart").validate({
             rules: {
                 name: "required",
@@ -193,20 +194,16 @@
                 surname: form_enter_surname,
                 phone: form_enter_phone,
                 captcha_code: form_error_captcha
-            }
-        });
-        
-        var submitted_cart = false;
-        $('.fn_validate_cart').on('submit', function () {
-            if ($('.fn_validate_cart').valid() === true) {
+            },
+            submitHandler: function(form) {
                 if (submitted_cart === true) {
                     return false;
                 } else {
                     submitted_cart = true;
+                    form.submit();
                 }
             }
         });
-        
     }
 
     if($(".fn_validate_login").length>0) {
