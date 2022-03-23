@@ -190,10 +190,16 @@ class FeaturesValues extends Okay {
             $translit_filter = $this->db->placehold("AND $px.`translit` IN (?@) ", (array)$filter['translit']);
         }
 
-        if(isset($filter['keyword'])) {
-            $keyword = $this->db->escape(trim($filter['keyword']));
-            if(!empty($keyword)) {
-                $keyword_filter = $this->db->placehold("AND $px.`value` LIKE '$keyword%' ");
+        if(!empty($filter['keyword'])) {
+            $keywords = explode(' ', $filter['keyword']);
+            $keyword_filter = ' ';
+            foreach($keywords as $keyword) {
+                $kw = $this->db->escape(trim($keyword));
+                if($kw!=='') {
+                    $keyword_filter .= $this->db->placehold("AND (
+                        $px.`value` LIKE '%$kw%' 
+                    ) ");
+                }
             }
         }
 

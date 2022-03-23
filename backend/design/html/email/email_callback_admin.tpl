@@ -21,7 +21,7 @@
         <tbody>
 
         <tr>
-            <td$lang_general border="0" valign="top" align="left" style="border: 0">
+            <td border="0" valign="top" align="left" style="border: 0">
                 <div style="border-width: 0px; border-style: solid; border-radius: 0px; border-color: rgb(204, 204, 204)">
                     <!-- CONTENT BEGIN  -->
                     <div>

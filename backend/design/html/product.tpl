@@ -926,7 +926,7 @@
                             value.val(feature.values[iv].value);
                             value.attr('name', "features_values_text["+feature.id+"][]");
                             id_input.attr('name', "features_values["+feature.id+"][]");
-                            id_input.val(feature.values[iv].id)
+                            id_input.val(feature.values[iv].id);
                             {/literal}
                             {if $lang_id == $main_lang_id}
                             {literal}

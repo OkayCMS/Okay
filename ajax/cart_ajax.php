@@ -51,7 +51,7 @@
     }
     $okay->design->assign('all_currencies', $okay->money->get_currencies());
 
-    /*Рабтаем с товарами в корзине*/
+    /*Работаем с товарами в корзине*/
     if (count($cart->purchases) > 0) {
         $coupon_code = trim($okay->request->get('coupon_code', 'string'));
         if(empty($coupon_code)) {
