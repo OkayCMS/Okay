@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6fc9608419bb3ec2d67226f7eaae99ec",
+    "content-hash": "c646467b949564a50589020810143c65",
     "packages": [
         {
             "name": "gregwar/cache",
@@ -123,12 +123,12 @@
             },
             "type": "library",
             "autoload": {
-                "classmap": [
-                    "Mobile_Detect.php"
-                ],
                 "psr-0": {
                     "Detection": "namespaced/"
-                }
+                },
+                "classmap": [
+                    "Mobile_Detect.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -150,6 +150,12 @@
                 "mobile detect",
                 "mobile detector",
                 "php mobile detect"
+            ],
+            "funding": [
+                {
+                    "url": "https://github.com/serbanghita",
+                    "type": "github"
+                }
             ],
             "time": "2021-02-19T21:22:57+00:00"
         },
@@ -217,20 +223,26 @@
                 }
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
+            "funding": [
+                {
+                    "url": "https://github.com/Synchro",
+                    "type": "github"
+                }
+            ],
             "time": "2021-02-19T15:28:08+00:00"
         },
         {
             "name": "smarty/smarty",
-            "version": "v3.1.39",
+            "version": "v3.1.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smarty-php/smarty.git",
-                "reference": "e27da524f7bcd7361e3ea5cdfa99c4378a7b5419"
+                "reference": "a2713ab89e6d773bc4819f11857af7f6b2e353a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/e27da524f7bcd7361e3ea5cdfa99c4378a7b5419",
-                "reference": "e27da524f7bcd7361e3ea5cdfa99c4378a7b5419",
+                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/a2713ab89e6d773bc4819f11857af7f6b2e353a9",
+                "reference": "a2713ab89e6d773bc4819f11857af7f6b2e353a9",
                 "shasum": ""
             },
             "require": {
@@ -274,7 +286,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2021-02-17T21:57:51+00:00"
+            "time": "2022-05-17T12:57:52+00:00"
         }
     ],
     "packages-dev": [],
@@ -289,5 +301,6 @@
         "ext-curl": "*",
         "ext-mbstring": "*"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }
