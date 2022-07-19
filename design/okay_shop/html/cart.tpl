@@ -53,7 +53,6 @@
                     </div>
                 </div>
 
-                {*vedastudio_surname*}
                 {* User's surname *}
                 <div class="col-sm-6">
                     <div class="form_group">

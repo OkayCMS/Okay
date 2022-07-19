@@ -42,12 +42,12 @@
                         <span class="fn_ajax_label_wrapper">
                             <span class="fn_labels_show box_labels_show box_btn_heading ml-h">{include file='svg_icon.tpl' svgId='tag'} <span>{$btr->general_select_label|escape}</span> </span>
 
-                            <div class='fn_labels_hide box_labels_hide'>
+                            <div class="fn_labels_hide box_labels_hide">
                                 <span class="heading_label">{$btr->general_labels|escape} <i class="fn_delete_labels_hide btn_close delete_labels_hide">{include file='svg_icon.tpl' svgId='delete'}</i></span>
                                 <ul class="option_labels_box">
                                     {foreach $labels as $l}
                                         <li class="fn_ajax_labels" data-order_id="{$order->id}"  style="background-color: #{$l->color|escape}">
-                                            <input id="l{$order->id}_{$l->id}" type="checkbox" class="hidden_check_1" name="order_labels[]"  value="{$l->id}" {if in_array($l->id, $order_labels) && is_array($order_labels)}checked=""{/if} />
+                                            <input id="l{$order->id}_{$l->id}" type="checkbox" class="hidden_check_1" value="{$l->id}" {if in_array($l->id, $order_labels) && is_array($order_labels)}checked=""{/if} />
                                             <label   for="l{$order->id}_{$l->id}" class="label_labels"><span>{$l->name|escape}</span></label>
                                         </li>
                                     {/foreach}

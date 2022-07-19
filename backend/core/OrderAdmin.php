@@ -26,8 +26,8 @@ class OrderAdmin extends Okay {
             $order->user_id = $this->request->post('user_id', 'integer');
             $order->lang_id = $this->request->post('entity_lang_id', 'integer');
             
-            if(!$order_labels = $this->request->post('order_labels')) {
-                $order_labels = array();
+            if(!$order_labels_ids = $this->request->post('order_labels')) {
+                $order_labels_ids = array();
             }
 
             $purchases = array();
@@ -52,7 +52,7 @@ class OrderAdmin extends Okay {
                     $this->design->assign('message_success', 'updated');
                 }
 
-                $this->orderlabels->update_order_labels($order->id, $order_labels);
+                $this->orderlabels->update_order_labels($order->id, $order_labels_ids);
 
                 if($order->id) {
                     /*Работа с покупками заказа*/
@@ -114,12 +114,12 @@ class OrderAdmin extends Okay {
             $order->id = $this->request->get('id', 'integer');
             $order = $this->orders->get_order(intval($order->id));
             // Метки заказа
-            $order_labels = array();
+            $order_labels_ids = array();
             if(isset($order->id)) {
                 $order_labels = $this->orderlabels->get_order_labels($order->id);
                 if($order_labels) {
                     foreach ($order_labels as $order_label) {
-                        $order_labels[] = $order_label->id;
+                        $order_labels_ids[] = $order_label->id;
                     }
                 }
             }
@@ -259,7 +259,7 @@ class OrderAdmin extends Okay {
         $labels = $this->orderlabels->get_labels();
         $this->design->assign('labels', $labels);
         
-        $this->design->assign('order_labels', $order_labels);
+        $this->design->assign('order_labels', $order_labels_ids);
         
         if($this->request->get('view') == 'print') {
             return $this->design->fetch('order_print.tpl');
