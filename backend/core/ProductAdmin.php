@@ -45,6 +45,7 @@ class ProductAdmin extends Okay {
             // Категории товара
             $product_categories = $this->request->post('categories');
             if(is_array($product_categories)) {
+                $pc = array();
                 foreach($product_categories as $c) {
                     $x = new stdClass;
                     $x->id = $c;
@@ -55,6 +56,7 @@ class ProductAdmin extends Okay {
             
             // Связанные товары
             if(is_array($this->request->post('related_products'))) {
+                $rp = array();
                 foreach($this->request->post('related_products') as $p) {
                     $rp[$p] = new stdClass;
                     $rp[$p]->product_id = $product->id;

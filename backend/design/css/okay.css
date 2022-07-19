@@ -5670,7 +5670,7 @@ div.mce-fullscreen {
 .feature_option_name {
     width: 250px;
 }
-.feature_option_aliases {
+.feature_feature_value_aliases {
     width: calc(100% - 250px);
     display: -webkit-box;
     display: -ms-flexbox;
@@ -5694,7 +5694,7 @@ div.mce-fullscreen {
     max-width: 33.333333%;
     min-height: 65px;
 }
-.option_alias_name{
+.feature_value_alias_name{
     text-align: left;
 }
 .feature_value_name{

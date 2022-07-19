@@ -26,6 +26,7 @@ class CartView extends View {
             $order->payment_method_id = $this->request->post('payment_method_id', 'integer');
             $order->delivery_id = $this->request->post('delivery_id', 'integer');
             $order->name        = $this->request->post('name');
+            $order->surname     = $this->request->post('surname');
             $order->email       = $this->request->post('email');
             $order->address     = $this->request->post('address');
             $order->phone       = $this->request->post('phone');
@@ -34,31 +35,21 @@ class CartView extends View {
 
             $this->design->assign('delivery_id', $order->delivery_id);
             $this->design->assign('name', $order->name);
+            $this->design->assign('surname', $order->surname);
             $this->design->assign('email', $order->email);
             $this->design->assign('phone', $order->phone);
             $this->design->assign('address', $order->address);
 
             $captcha_code =  $this->request->post('captcha_code', 'string');
 
-            // Скидка
-            $cart = $this->cart->get_cart();
-            $order->discount = $cart->discount;
-
-            if($cart->coupon) {
-                $order->coupon_discount = $cart->coupon_discount;
-                $order->coupon_code = $cart->coupon->code;
-            }
-
-            if(!empty($this->user->id)) {
-                $order->user_id = $this->user->id;
-            }
-
             /*Валидация данных клиента*/
             if(!$this->validate->is_name($order->name, true)) {
                 $this->design->assign('error', 'empty_name');
-            } elseif(!$this->validate->is_email($order->email, true)) {
+            } elseif(!$this->validate->is_name($order->surname, true)) {
+                $this->design->assign('error', 'empty_surname');
+            } elseif(!empty($order->email) && !$this->validate->is_email($order->email)) {
                 $this->design->assign('error', 'empty_email');
-            } elseif(!$this->validate->is_phone($order->phone)) {
+            } elseif(!$this->validate->is_phone($order->phone, true)) {
                 $this->design->assign('error', 'empty_phone');
             } elseif(!$this->validate->is_address($order->address)) {
                 $this->design->assign('error', 'empty_address');
@@ -67,6 +58,21 @@ class CartView extends View {
             } elseif($this->settings->captcha_cart && !$this->validate->verify_captcha('captcha_cart', $captcha_code)) {
                 $this->design->assign('error', 'captcha');
             } else {
+                // установим валюту по-умолчанию
+                $_SESSION['currency_id'] = $this->money->get_currency()->id;
+
+                // Скидка
+                $cart = $this->cart->get_cart();
+                $order->discount = $cart->discount;
+
+                if($cart->coupon) {
+                    $order->coupon_discount = $cart->coupon_discount;
+                    $order->coupon_code = $cart->coupon->code;
+                }
+
+                if(!empty($this->user->id)) {
+                    $order->user_id = $this->user->id;
+                }
                 // Добавляем заказ в базу
                 $order->lang_id = $this->languages->lang_id();
                 $order_id = $this->orders->add_order($order);
@@ -92,7 +98,9 @@ class CartView extends View {
                 }
 
                 // Отправляем письмо пользователю
-                $this->notify->email_order_user($order->id);
+                if(!empty($order->email)) {
+                    $this->notify->email_order_user($order->id);
+                }
 
                 // Отправляем письмо администратору
                 $this->notify->email_order_admin($order->id);
@@ -143,11 +151,13 @@ class CartView extends View {
             $last_order = reset($last_order);
             if($last_order) {
                 $this->design->assign('name', $last_order->name);
+                $this->design->assign('surname', $last_order->surname);
                 $this->design->assign('email', $last_order->email);
                 $this->design->assign('phone', $last_order->phone);
                 $this->design->assign('address', $last_order->address);
             } else {
                 $this->design->assign('name', $this->user->name);
+                $this->design->assign('surname', $this->user->surname);
                 $this->design->assign('email', $this->user->email);
                 $this->design->assign('phone', $this->user->phone);
                 $this->design->assign('address', $this->user->address);

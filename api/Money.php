@@ -19,7 +19,8 @@ class Money extends Okay {
             $this->thousands_separator = $this->settings->price_thousands_separator;
         }
         $this->design->smarty->registerPlugin('modifier', 'convert', array($this, 'convert'));
-        
+        $this->design->smarty->registerPlugin('modifier', 'format', array($this, 'format'));
+
         $this->init_currencies();
     }
 
@@ -75,6 +76,15 @@ class Money extends Okay {
         return $this->currency;
     }
 
+    /*Выборка текущей валюты*/
+    public function get_current_currency() {
+        if(defined('IS_CLIENT') && isset($_SESSION['currency_id'])) {
+            return $this->get_currency(intval($_SESSION['currency_id']));
+        } else {
+            return reset($this->get_currencies(array('enabled'=>1)));
+        }
+    }
+
     /*Добавление валюты*/
     public function add_currency($currency) {
         $currency = (object)$currency;
@@ -122,6 +132,11 @@ class Money extends Okay {
     /*Удаление валюты*/
     public function delete_currency($id) {
         if(!empty($id)) {
+            //Назначим главную валюту для товаров с удаляемой валютой
+            $currency = $this->money->get_currency(intval($id));
+            $coef = $currency->rate_to/$currency->rate_from;
+            $query = $this->db->placehold("UPDATE __variants SET price=price*?, currency_id=? WHERE currency_id=?", $coef, $this->money->get_currency()->id, $id);
+            $this->db->query($query);
             $query = $this->db->placehold("DELETE FROM __currencies WHERE id=? LIMIT 1", intval($id));
             $this->db->query($query);
             $this->db->query("DELETE FROM __lang_currencies WHERE currency_id=?", intval($id));
@@ -137,10 +152,8 @@ class Money extends Okay {
             } else {
                 $currency = $this->get_currency((string)$currency_id);
             }
-        } elseif(isset($_SESSION['currency_id'])) {
-            $currency = $this->get_currency($_SESSION['currency_id']);
         } else {
-            $currency = current($this->get_currencies(array('enabled'=>1)));
+            $currency = $this->get_current_currency();
         }
         
         $result = $price;
@@ -164,5 +177,19 @@ class Money extends Okay {
         }
         return $result;
     }
-    
+
+    public function format($price, $currency_id = null) {
+        if(isset($currency_id)) {
+            if(is_numeric($currency_id)) {
+                $currency = $this->get_currency((integer)$currency_id);
+            } else {
+                $currency = $this->get_currency((string)$currency_id);
+            }
+        } else {
+            $currency = $this->get_current_currency();
+        }
+
+        // Форматирование цены
+        return number_format($price, $currency->cents, $this->settings->decimals_point, $this->settings->thousands_separator);
+    }
 }

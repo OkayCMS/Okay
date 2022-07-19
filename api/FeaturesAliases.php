@@ -152,7 +152,7 @@ class FeaturesAliases extends Okay {
             $this->db->query($query);
             $query = $this->db->placehold("DELETE FROM __lang_features_aliases WHERE feature_alias_id=?", (int)$id);
             $this->db->query($query);
-            $query = $this->db->placehold("DELETE FROM __options_aliases_values WHERE feature_alias_id=?", (int)$id);
+            $query = $this->db->placehold("DELETE FROM __features_values_aliases_values WHERE feature_alias_id=?", (int)$id);
             $this->db->query($query);
         }
     }
@@ -231,39 +231,39 @@ class FeaturesAliases extends Okay {
         }
     }
 
-    public function add_option_alias_value($option_alias) {
-        $query = $this->db->placehold("INSERT INTO __options_aliases_values SET ?%", $option_alias);
+    public function add_feature_value_alias_value($feature_value_alias) {
+        $query = $this->db->placehold("INSERT INTO __features_values_aliases_values SET ?%", $feature_value_alias);
         $this->db->query($query);
         return true;
     }
 
     // метод возвращает значения алиасов для каждого свойства
-    public function get_options_aliases_values($filter = array()) {
+    public function get_features_values_aliases_values($filter = array()) {
 
         $feature_id_filter = '';
         $feature_alias_id_filter = '';
         $translit_filter = '';
-        $lang_id_filter = $this->db->placehold("AND ov.lang_id=?", $this->languages->lang_id());
+        $lang_id_filter = $this->db->placehold("AND fva.lang_id=?", $this->languages->lang_id());
 
         if(!empty($filter['feature_id'])) {
-            $feature_id_filter = $this->db->placehold('AND ov.feature_id in(?@)', (array)$filter['feature_id']);
+            $feature_id_filter = $this->db->placehold('AND fva.feature_id in(?@)', (array)$filter['feature_id']);
         }
         if(!empty($filter['feature_alias_id'])) {
-            $feature_alias_id_filter = $this->db->placehold('AND ov.feature_alias_id in(?@)', (array)$filter['feature_alias_id']);
+            $feature_alias_id_filter = $this->db->placehold('AND fva.feature_alias_id in(?@)', (array)$filter['feature_alias_id']);
         }
         if(!empty($filter['translit'])) {
-            $translit_filter = $this->db->placehold('AND ov.translit in(?@)', (array)$filter['translit']);
+            $translit_filter = $this->db->placehold('AND fva.translit in(?@)', (array)$filter['translit']);
         }
 
         $query = $this->db->placehold("SELECT
-                ov.feature_alias_id,
-                ov.translit,
-                ov.value,
-                ov.feature_id,
-                ov.lang_id,
+                fva.feature_alias_id,
+                fva.translit,
+                fva.value,
+                fva.feature_id,
+                fva.lang_id,
                 fa.variable
-            FROM __options_aliases_values AS ov
-            LEFT JOIN __features_aliases fa ON fa.id=ov.feature_alias_id
+            FROM __features_values_aliases_values AS fva
+            LEFT JOIN __features_aliases fa ON fa.id=fva.feature_alias_id
             WHERE
                 1
                 $feature_alias_id_filter

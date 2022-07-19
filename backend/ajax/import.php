@@ -91,6 +91,7 @@ class ImportAjax extends Import {
     // Импорт одного товара $item[column_name] = value;
     private function import_item($item) {
         $imported_item = new stdClass();
+        $currencies = $this->money->get_currencies();
         
         // Проверим не пустое ли название и артинкул (должно быть хоть что-то из них)
         if (empty($item['sku']) && empty($item['name'])) {
@@ -165,19 +166,25 @@ class ImportAjax extends Import {
         $variant = array();
         $variant['price'] = 0;
         $variant['compare_price'] = 0;
-        
+
         if (isset($item['variant'])) {
             $variant['name'] = trim($item['variant']);
         }
 
-        if (isset($item['price']) && !empty($item['price'])) {
-            $variant['price'] = str_replace(',', '.', str_replace(' ', '', trim($item['price'])));
+        if (isset($item['price'])) {
+            $price = str_replace(',', '.', str_replace(' ', '', trim($item['price'])));
+            if (!empty($price) || $price === '0.00' || $price === '0.0' || $price === '0') {
+                $variant['price'] = $price;
+            }
         }
-        
-        if (isset($item['compare_price']) && !empty($item['compare_price'])) {
-            $variant['compare_price'] = str_replace(',', '.', str_replace(' ', '', trim($item['compare_price'])));
+
+        if (isset($item['compare_price'])) {
+            $compare_price = str_replace(',', '.', str_replace(' ', '', trim($item['compare_price'])));
+            if (!empty($compare_price) || $compare_price === '0.00' || $compare_price === '0.0' || $compare_price === '0') {
+                $variant['compare_price'] = $compare_price;
+            }
         }
-        
+
         if (isset($item['stock'])) {
             if ($item['stock'] == '') {
                 $variant['stock'] = null;
@@ -189,10 +196,18 @@ class ImportAjax extends Import {
         if (isset($item['sku'])) {
             $variant['sku'] = trim($item['sku']);
         }
-        
-        if (isset($item['currency'])) {
+
+        // Если присутствует код валюты определяем её ID
+        if (isset($item['currency_code'])) {
+            foreach($currencies as $currency) {
+                if (trim($item['currency_code']) == $currency->code) {
+                    $variant['currency_id'] = $currency->id;
+                }
+            }
+        } elseif (isset($item['currency'])) {
             $variant['currency_id'] = intval($item['currency']);
         }
+
         if (isset($item['weight'])) {
             $variant['weight'] = str_replace(',', '.', str_replace(' ', '', trim($item['weight'])));
         }
@@ -200,16 +215,6 @@ class ImportAjax extends Import {
         if (isset($item['units'])) {
             $variant['units'] = $item['units'];
         }
-        
-        // Если присутствует код валюты определяем её ID
-        if (isset($item['currency_code'])) {		        
-            $currencies = $this->money->get_currencies();
-            foreach($currencies as $currencie) {
-              if (trim($item['currency_code']) == $currencie->code) {
-                $variant['currency_id'] = $currencie->id;
-              }
-            }           
-        }                   
         
         // Если задан артикул варианта, найдем этот вариант и соответствующий товар
         if (!empty($variant['sku'])) {

@@ -31,18 +31,23 @@
                         <i class="fa fa-print"></i>
                     </a>
                 </div>
+                <div class="box_btn_heading">
+                    <a class="btn btn_small btn-info" target="_blank" href="../{$lang_link}order/{$order->url}">
+                        <span>{$btr->general_open|escape}</span>
+                    </a>
+                </div>
                 {*Метки заказа*}
                 <div class="box_btn_heading ml-h hidden-xs-down">
                     <div class="add_order_marker">
                         <span class="fn_ajax_label_wrapper">
                             <span class="fn_labels_show box_labels_show box_btn_heading ml-h">{include file='svg_icon.tpl' svgId='tag'} <span>{$btr->general_select_label|escape}</span> </span>
 
-                            <div class='fn_labels_hide box_labels_hide'>
+                            <div class="fn_labels_hide box_labels_hide">
                                 <span class="heading_label">{$btr->general_labels|escape} <i class="fn_delete_labels_hide btn_close delete_labels_hide">{include file='svg_icon.tpl' svgId='delete'}</i></span>
                                 <ul class="option_labels_box">
                                     {foreach $labels as $l}
                                         <li class="fn_ajax_labels" data-order_id="{$order->id}"  style="background-color: #{$l->color|escape}">
-                                            <input id="l{$order->id}_{$l->id}" type="checkbox" class="hidden_check_1" name="order_labels[]"  value="{$l->id}" {if in_array($l->id, $order_labels) && is_array($order_labels)}checked=""{/if} />
+                                            <input id="l{$order->id}_{$l->id}" type="checkbox" class="hidden_check_1" value="{$l->id}" {if in_array($l->id, $order_labels) && is_array($order_labels)}checked=""{/if} />
                                             <label   for="l{$order->id}_{$l->id}" class="label_labels"><span>{$l->name|escape}</span></label>
                                         </li>
                                     {/foreach}
@@ -183,7 +188,7 @@
                                                         {/if}
                                                     {/if}
                                                     <div class="hidden-lg-up mt-q">
-                                                        <span class="text_primary text_600">{$purchase->price}</span>
+                                                        <span class="text_primary text_600">{$purchase->price|format} {$currency->sign}</span>
                                                         <span class="hidden-md-up text_500">
                                                         {$purchase->amount} {if $purchase->variant->units}{$purchase->variant->units|escape}{else}{$settings->units|escape}{/if}</span>
                                                     </div>
@@ -217,13 +222,13 @@
                                                 <div class="input-group">
                                                     <input class="form-control fn_purchase_amount" type="text" name="purchases[amount][{$purchase->id}]" value="{$purchase->amount}"/>
                                                     <span class="input-group-addon p-0 fn_purchase_units">
-                                                        {if $purchase->variant->units}{$purchase->variant->units|escape}{else}{$settings->units|escape}{/if}</span>
+                                                        {if $purchase->variant->units}{$purchase->variant->units|escape}{else}{$settings->units|escape}{/if}
                                                     </span>
                                                 </div>
                                             </div>
                                             <div class="okay_list_boding okay_list_order_amount_price">
                                                 <div class="text_dark">
-                                                    <span>{($purchase->price) * ($purchase->amount)}</span>
+                                                    <span>{(($purchase->price|round:$currency->cents)*$purchase->amount)|format}</span>
                                                     <span class="">{$currency->sign}</span>
                                                 </div>
                                             </div>
@@ -295,7 +300,7 @@
                             <div class="col-lg-6 col-md-12">
                                 {if $purchases}
                                     <div class="text_dark text_500 text-xs-right mr-1 mt-h">
-                                        <div class="h5">{$btr->order_sum|escape} {$subtotal} {$currency->sign|escape}</div>
+                                        <div class="h5">{$btr->order_sum|escape} {$subtotal|format} {$currency->sign|escape}</div>
                                     </div>
                                 {/if}
                             </div>
@@ -330,7 +335,7 @@
                                             </div>
                                             <div class="okay_list_boding okay_list_ordfig_price">
                                                 <div class="text_dark">
-                                                    <span>{($subtotal-$subtotal*$order->discount/100)|round:2}</span>
+                                                    <span>{($subtotal-$subtotal*$order->discount/100)|format}</span>
                                                     <span class="">{$currency->sign|escape}</span>
                                                 </div>
                                             </div>
@@ -349,7 +354,7 @@
                                             </div>
                                             <div class="okay_list_boding okay_list_ordfig_price">
                                                 <div class="text_dark">
-                                                    <span>{($subtotal-$subtotal*$order->discount/100-$order->coupon_discount)|round:2}</span>
+                                                    <span>{(round($subtotal-$subtotal*$order->discount/100, $currency->cents)-$order->coupon_discount)|format}</span>
                                                     <span class="">{$currency->sign|escape}</span>
                                                 </div>
                                             </div>
@@ -395,7 +400,7 @@
                                 </div>
                                 <div class="col-lg-8 col-md-12">
                                     <div class="text_dark text_500 text-xs-right mr-1 mt-1">
-                                        <div class="h5">{$btr->general_total|escape} {$order->total_price} {$currency->sign|escape}</div>
+                                        <div class="h5">{$btr->general_total|escape} {$order->total_price|format} {$currency->sign|escape}</div>
                                     </div>
                                     <div class="text_grey text_500 text-xs-right mr-1 mt-1">
                                         {if $payment_method}
@@ -441,8 +446,12 @@
                             <div class="boxes_inline text_dark text_600">{$order->date|date} {$order->date|time}</div>
                         </div>
                         <div class="mb-1">
-                            <div class="heading_label">{$btr->general_name|escape}</div>
+                            <div class="heading_label">{$btr->user_name|escape}</div>
                             <input name="name" class="form-control" type="text" value="{$order->name|escape}" />
+                        </div>
+                        <div class="mb-1">
+                            <div class="heading_label">{$btr->user_surname|escape}</div>
+                            <input name="surname" class="form-control" type="text" value="{$order->surname|escape}" />
                         </div>
                         <div class="mb-1">
                             <div class="heading_label">{$btr->general_phone|escape}</div>
@@ -483,7 +492,7 @@
                                         <div class="heading_label boxes_inline">
                                             {$btr->order_buyer|escape}
                                             <a href="{url module=UserAdmin id=$user->id}" target=_blank>
-                                                 {$user->name|escape}
+                                                 {$user->name|escape} {$user->surname|escape}
                                             </a>
                                         </div>
                                         <a href="javascript:;" data-hint="{$btr->users_delete|escape}" class="btn_close delete_grey fn_delete_user hint-bottom-right-t-info-s-small-mobile  hint-anim boxes_inline" >

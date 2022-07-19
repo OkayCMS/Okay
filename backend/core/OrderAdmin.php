@@ -6,26 +6,28 @@ class OrderAdmin extends Okay {
     
     public function fetch() {
         $order = new stdClass;
+        $currency = $this->money->get_currency();
         /*Прием информации о заказе*/
         if($this->request->method('post')) {
             $order->id = $this->request->post('id', 'integer');
             $order->name = $this->request->post('name');
+            $order->surname = $this->request->post('surname');
             $order->email = $this->request->post('email');
             $order->phone = $this->request->post('phone');
             $order->address = $this->request->post('address');
             $order->comment = $this->request->post('comment');
             $order->note = $this->request->post('note');
-            $order->discount = $this->request->post('discount', 'floatr');
-            $order->coupon_discount = $this->request->post('coupon_discount', 'floatr');
+            $order->discount = $this->request->post('discount', 'float');
+            $order->coupon_discount = round($this->request->post('coupon_discount', 'float'), $currency->cents);
             $order->delivery_id = $this->request->post('delivery_id', 'integer');
-            $order->delivery_price = $this->request->post('delivery_price', 'float');
+            $order->delivery_price = round($this->request->post('delivery_price', 'float'), $currency->cents);
             $order->payment_method_id = $this->request->post('payment_method_id', 'integer');
             $order->paid = $this->request->post('paid', 'integer');
             $order->user_id = $this->request->post('user_id', 'integer');
             $order->lang_id = $this->request->post('entity_lang_id', 'integer');
             
-            if(!$order_labels = $this->request->post('order_labels')) {
-                $order_labels = array();
+            if(!$order_labels_ids = $this->request->post('order_labels')) {
+                $order_labels_ids = array();
             }
 
             $purchases = array();
@@ -50,7 +52,7 @@ class OrderAdmin extends Okay {
                     $this->design->assign('message_success', 'updated');
                 }
 
-                $this->orderlabels->update_order_labels($order->id, $order_labels);
+                $this->orderlabels->update_order_labels($order->id, $order_labels_ids);
 
                 if($order->id) {
                     /*Работа с покупками заказа*/
@@ -112,12 +114,12 @@ class OrderAdmin extends Okay {
             $order->id = $this->request->get('id', 'integer');
             $order = $this->orders->get_order(intval($order->id));
             // Метки заказа
-            $order_labels = array();
+            $order_labels_ids = array();
             if(isset($order->id)) {
                 $order_labels = $this->orderlabels->get_order_labels($order->id);
                 if($order_labels) {
                     foreach ($order_labels as $order_label) {
-                        $order_labels[] = $order_label->id;
+                        $order_labels_ids[] = $order_label->id;
                     }
                 }
             }
@@ -179,7 +181,7 @@ class OrderAdmin extends Okay {
                 if (($purchase->amount > $purchase->variant->stock || !$purchase->variant->stock) && !$hasVariantNotInStock) {
                     $hasVariantNotInStock = true;
                 }
-                $subtotal += $purchase->price*$purchase->amount;
+                $subtotal += round($purchase->price, $currency->cents)*$purchase->amount;
                 $purchases_count += $purchase->amount;
             }
             $this->design->assign('hasVariantNotInStock', $hasVariantNotInStock);
@@ -195,6 +197,9 @@ class OrderAdmin extends Okay {
             }
             if(empty($order->name)) {
                 $order->name = $this->request->get('name', 'string');
+            }
+            if(empty($order->surname)) {
+                $order->surname = $this->request->get('surname', 'string');
             }
             if(empty($order->address)) {
                 $order->address = $this->request->get('address', 'string');
@@ -254,7 +259,7 @@ class OrderAdmin extends Okay {
         $labels = $this->orderlabels->get_labels();
         $this->design->assign('labels', $labels);
         
-        $this->design->assign('order_labels', $order_labels);
+        $this->design->assign('order_labels', $order_labels_ids);
         
         if($this->request->get('view') == 'print') {
             return $this->design->fetch('order_print.tpl');

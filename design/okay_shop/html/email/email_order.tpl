@@ -67,7 +67,7 @@
                                         <div style="text-align: left; font-family: 'Trebuchet MS'; font-size: 14px; color: rgb(51, 51, 51); line-height: 1.5">
                                             <span style="font-size:18px;">
                                                 <span style="font-family:trebuchet ms,helvetica,sans-serif;">
-                                                    <strong>{$lang->email_comment_hello} {$order->name|escape}</strong>
+                                                    <strong>{$lang->email_comment_hello} {$order->name|escape} {$order->surname|escape}</strong>
                                                 </span>
                                             </span>
                                             <br />
@@ -115,7 +115,7 @@
                                                     <tbody>
                                                     <tr>
                                                         <td style="background-color:#38c0f3; border-bottom: 1px solid #fff;"><span style="font-size:14px;"><span style="color:#ffffff;"><strong><span style="font-family:trebuchet ms,helvetica,sans-serif;">{$lang->email_order_name}</span></strong></span></span></td>
-                                                        <td style="border: 1px solid #38c0f3;"><span style="font-size:14px;">{$order->name|escape}</span></td>
+                                                        <td style="border: 1px solid #38c0f3;"><span style="font-size:14px;">{$order->name|escape} {$order->surname|escape}</span></td>
                                                     </tr>
                                                     <tr>
                                                         <td style="background-color:#38c0f3;border-bottom: 1px solid #fff;"><span style="font-size:14px;"><span style="color:#ffffff;"><strong><span style="font-family:trebuchet ms,helvetica,sans-serif;">{$lang->email_order_email}</span></strong></span></span></td>
@@ -189,7 +189,7 @@
                                                             </td>
                                                             <td style=";padding-right:10px;white-space:nowrap" valign="middle">{$purchase->amount} {if $purchase->units}{$purchase->units|escape}{else}{$settings->units}{/if}</td>
                                                             <td align="right" nowrap="nowrap" valign="middle">
-                                                                <b>{$purchase->price|convert:$currency->id}&nbsp;{$currency->sign}</b>
+                                                                <b>{$purchase->price|format}&nbsp;{$currency->sign}</b>
                                                             </td>
                                                         </tr>
                                                     {/foreach}
@@ -222,7 +222,7 @@
                                                         <tr>
                                                             <td style="padding-right: 10px; white-space: nowrap; text-align: right;" valign="middle">{$delivery->name|escape}</td>
                                                             {if !$order->separate_delivery}
-                                                                <td align="right" nowrap="nowrap" valign="middle">{$order->delivery_price|convert:$currency->id}&nbsp;{$currency->sign}</td>
+                                                                <td align="right" nowrap="nowrap" valign="middle">{$order->delivery_price|format}&nbsp;{$currency->sign}</td>
                                                             {else}
                                                                 <td></td>
                                                             {/if}
@@ -230,7 +230,7 @@
                                                     {/if}
                                                     <tr>
                                                         <td style="padding-right: 10px; white-space: nowrap; text-align: right;" valign="middle"><span style="font-size:16px;"><strong>{$lang->email_order_total}</strong></span></td>
-                                                        <td align="right" nowrap="nowrap" valign="middle"><b><span style="font-size:16px;">{$order->total_price|convert:$currency->id}&nbsp;{$currency->sign}</span></b></td>
+                                                        <td align="right" nowrap="nowrap" valign="middle"><b><span style="font-size:16px;">{$order->total_price|format}&nbsp;{$currency->sign}</span></b></td>
                                                     </tr>
                                                     </tbody>
                                                 </table>

@@ -63,19 +63,12 @@
     <nav class="top_nav">
         <div class="container">
             {* Main menu toggle button*}
-            <div class="fn_menu_switch menu_switch md-hidden"></div>
+            <div class="fn_menu_header_opener menu_switch md-hidden"></div>
 
-            {* Main menu *}
-            {*<ul class="menu mobile-hidden">
-                {foreach $pages as $p}
-                    {if $p->menu_id == 1}
-                        <li class="menu_item">
-                            <a class="menu_link" data-page="{$p->id}" href="{$lang_link}{$p->url}">{$p->name|escape}</a>
-                        </li>
-                    {/if}
-                {/foreach}
-            </ul>*}
-            {$menu_header}
+            {* Main menu - menu.tpl*}
+            <div class="mobile-hidden" id="main_menu" data-title="{$settings->site_name|escape}">
+                {$menu_header}
+            </div>
 
             {* Top info block *}
             <ul class="informers">
@@ -170,7 +163,7 @@
                 {* User account *}
                 <a class="account_link" href="{$lang_link}user">
                     <span class="small-hidden" data-language="index_account">{$lang->index_account}</span>
-                    <span class="account_name small-hidden">{$user->name|escape}</span>
+                    <span class="account_name small-hidden">{$user->name|escape} {$user->surname|escape}</span>
                 </a>
             {else}
                 {* Login *}
@@ -217,12 +210,13 @@
 
             <div class="categories">
                 {* Catalog heading *}
-                <div class="categories_heading fn_switch">
+                <div class="categories_heading fn_menu_opener">
                     {include file="svg.tpl" svgId="menu_icon"}
                     <span class="small-hidden" data-language="index_categories">{$lang->index_categories}</span>
                 </div>
-
-                {include file="categories.tpl"}
+                <div class="categories_nav">
+                    {include file="categories.tpl"}
+                </div>
             </div>
         </div>
     </div>
@@ -241,7 +235,13 @@
                         <a href="{$bi->url}" target="_blank">
                             {/if}
                             {if $bi->image}
-                                <img src="{$bi->image|resize:1170:390:false:$config->resized_banners_images_dir}" alt="{$bi->alt}" title="{$bi->title}"/>
+                                <picture>
+                                    {if $settings->support_webp}
+                                        <source type="image/webp" srcset="{$bi->image|resize:1170:390:false:$config->resized_banners_images_dir}.webp">
+                                    {/if}
+                                    <source srcset="{$bi->image|resize:1170:390:false:$config->resized_banners_images_dir}">
+                                    <img src="{$bi->image|resize:1170:390:false:$config->resized_banners_images_dir}" alt="{$bi->alt}" title="{$bi->title}"/>
+                                </picture>
                             {/if}
                             {if $bi->url}
                         </a>
@@ -407,6 +407,7 @@
 <script>ut_tracker.start('parsing:body_bottom:css');</script>
 {* Fancybox *}
 <link href="design/{$settings->theme|escape}/css/jquery.fancybox.min.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
+<link href="design/{$settings->theme|escape}/css/mmenu-light.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
 {if $smarty.get.module == 'ProductView' || $smarty.get.module == "BlogView"}
     <link href="design/{$settings->theme|escape}/css/font-awesome.min.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
     <link href="design/{$settings->theme|escape}/css/jssocials.css{if $css_version}?v={$css_version}{/if}" rel="stylesheet">
@@ -428,6 +429,8 @@
 
 {* Autocomplete *}
 <script src="design/{$settings->theme}/js/jquery.autocomplete-min.js{if $js_version}?v={$js_version}{/if}" defer></script>
+
+<script src="design/{$settings->theme}/js/mmenu-light.js{if $js_version}?v={$js_version}{/if}"></script>
 
 {$admintooltip}
 

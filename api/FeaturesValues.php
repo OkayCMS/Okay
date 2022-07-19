@@ -111,26 +111,26 @@ class FeaturesValues extends Okay {
         }
 
         if(isset($filter['features'])) {
-            $lang_id_options_filter = '';
-            $lang_options_join      = '';
+            $lang_id_features_values_filter = '';
+            $lang_features_values_join      = '';
             // Алиас для таблицы без языков
-            $options_px = 'fv';
+            $features_values_px = 'fv';
             if (!empty($lang_id)) {
-                $lang_id_options_filter = $this->db->placehold("AND `lfv`.`lang_id`=?", $lang_id);
-                $lang_options_join = $this->db->placehold("LEFT JOIN `__lang_features_values` AS `lfv` ON `lfv`.`feature_value_id`=`fv`.`id`");
+                $lang_id_features_values_filter = $this->db->placehold("AND `lfv`.`lang_id`=?", $lang_id);
+                $lang_features_values_join = $this->db->placehold("LEFT JOIN `__lang_features_values` AS `lfv` ON `lfv`.`feature_value_id`=`fv`.`id`");
                 // Алиас для таблицы с языками
-                $options_px = 'lfv';
+                $features_values_px = 'lfv';
             }
 
             $features_filter_array = array();
             foreach($filter['features'] as $feature_id=>$value) {
                 $features_filter_array[] = $this->db->placehold("(`fv`.`feature_id`=? OR `pf`.`product_id` in (SELECT `pf`.`product_id` FROM `__products_features_values` AS `pf`
                             LEFT JOIN `__features_values` AS `fv` ON `fv`.`id`=`pf`.`value_id`
-                            {$lang_options_join}
+                            {$lang_features_values_join}
                             WHERE
-                                `{$options_px}`.`translit` in(?@)
-                                AND `{$options_px}`.`feature_id`=?
-                                $lang_id_options_filter)) ", $feature_id, (array)$value, $feature_id);
+                                `{$features_values_px}`.`translit` in(?@)
+                                AND `{$features_values_px}`.`feature_id`=?
+                                $lang_id_features_values_filter)) ", $feature_id, (array)$value, $feature_id);
             }
 
             $features_filter = "AND (" . implode(" AND ", $features_filter_array) . ")";
@@ -173,10 +173,10 @@ class FeaturesValues extends Okay {
             $other_filter = substr($other_filter, 0, -4).")";
         }
 
-        $lang_options_sql = $this->languages->get_query(array('object'=>'feature_value', 'px_lang'=>$px, 'px'=>'fv'));
+        $lang_features_values_sql = $this->languages->get_query(array('object'=>'feature_value', 'px_lang'=>$px, 'px'=>'fv'));
         $lang_features_sql = $this->languages->get_query(array('object'=>'feature', 'px_lang'=>$fpx, 'px'=>'f'));
 
-        $lang_options_sql->fields  = $this->replace_lang_fields($lang_options_sql->fields, $px);
+        $lang_features_values_sql->fields  = $this->replace_lang_fields($lang_features_values_sql->fields, $px);
         $lang_features_sql->fields = $this->replace_lang_fields($lang_features_sql->fields, $fpx);
 
         if(isset($filter['value'])) {
@@ -190,10 +190,16 @@ class FeaturesValues extends Okay {
             $translit_filter = $this->db->placehold("AND $px.`translit` IN (?@) ", (array)$filter['translit']);
         }
 
-        if(isset($filter['keyword'])) {
-            $keyword = $this->db->escape(trim($filter['keyword']));
-            if(!empty($keyword)) {
-                $keyword_filter = $this->db->placehold("AND $px.`value` LIKE '$keyword%' ");
+        if(!empty($filter['keyword'])) {
+            $keywords = explode(' ', $filter['keyword']);
+            $keyword_filter = ' ';
+            foreach($keywords as $keyword) {
+                $kw = $this->db->escape(trim($keyword));
+                if($kw!=='') {
+                    $keyword_filter .= $this->db->placehold("AND (
+                        $px.`value` LIKE '%$kw%' 
+                    ) ");
+                }
             }
         }
 
@@ -213,7 +219,7 @@ class FeaturesValues extends Okay {
                 MAX(`f`.`yandex`)         AS `yandex`, 
                 MAX(`f`.`url_in_product`) AS `url_in_product`,
                 MAX(`fv`.`to_index`)      AS `to_index`,
-                $lang_options_sql->fields,
+                $lang_features_values_sql->fields,
                 $lang_features_sql->fields");
             $group_by = $this->db->placehold("GROUP BY `fv`.`id`");
             $order_by = $this->db->placehold("ORDER BY `f`.`position` ASC, `fv`.`position` ASC, `value` ASC");
@@ -224,7 +230,7 @@ class FeaturesValues extends Okay {
             FROM `__features_values` AS `fv`
             LEFT JOIN `__features` AS `f` ON `f`.`id`=`fv`.`feature_id`
             LEFT JOIN `__products_features_values` AS `pf` ON `pf`.`value_id`=`fv`.`id`
-            $lang_options_sql->join
+            $lang_features_values_sql->join
             $lang_features_sql->join
             $product_join
             $category_id_filter
@@ -366,13 +372,15 @@ class FeaturesValues extends Okay {
             $features_filter['feature_id'] = $feature_id;
         }
 
-        // TODO удалять с алиасов
         $this->delete_product_value(null, $value_id);
 
         if ($values = $this->get_features_values($features_filter)) {
             $values_ids = array();
             foreach ($values as $f) {
                 $values_ids[] = $f->id;
+                // удалим с алиасов
+                $query = $this->db->placehold("DELETE FROM __features_values_aliases_values WHERE translit=? AND feature_id=?", $f->translit, $f->feature_id);
+                $this->db->query($query);
             }
 
             $query = $this->db->placehold("DELETE FROM `__lang_features_values` WHERE `feature_value_id` in (?@)", $values_ids);
@@ -438,6 +446,10 @@ class FeaturesValues extends Okay {
 
         if (!empty($feature_value->translit)) {
             $feature_value->translit = strtr(strtolower(trim($feature_value->translit)), $this->spec_pairs);
+
+            $old_feature_value = $this->get_feature_value($id);
+            $query = $this->db->placehold("UPDATE __features_values_aliases_values SET translit=? WHERE translit=? AND feature_id=?", $feature_value->translit, $old_feature_value->translit, $old_feature_value->feature_id);
+            $this->db->query($query);
         }
 
         $result = $this->languages->get_description($feature_value, 'feature_value');

@@ -16,6 +16,15 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="boxed boxed_attention">
+            <div class="">
+                {$btr->currency_message|escape}
+            </div>
+        </div>
+    </div>
+</div>
 
 {*Вывод ошибок*}
 {if $message_error}
@@ -225,16 +234,6 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="boxed boxed_attention">
-            <div class="">
-               {$btr->currency_message|escape}
-            </div>
-        </div>
-    </div>
-</div>
-
 <a data-toggle="modal" data-target="#fn_currency_recalculate" class="hidden"></a>
 <div id="fn_currency_delete" class="modal fade show" role="document">
     <div class="modal-dialog modal-md">
@@ -308,14 +307,14 @@
             $('input[type="hidden"][name="action_id"]').val(currency_to_delete);
             $(".fn_form_list").submit();
         });
-        
+
         // Подтвердили пересчет валюты
         $(document).on("click", ".fn_recalculate_currency_confirm", function () {
             $('input[name="recalculate"]').val(1);
             confirm = false;
             $(".fn_form_list").submit();
         });
-        
+
         // Отменили пересчет валют
         $(document).on("click", ".fn_recalculate_currency_dismiss", function () {
             $('input[name="recalculate"]').val(0);

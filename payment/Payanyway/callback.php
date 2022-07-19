@@ -7,7 +7,6 @@ $okay = new Okay();
 
 require_once(dirname(__FILE__).'/PawInvoiceView.php');
 $pawView = new PawInvoiceView();
-
 if (isset($_REQUEST['invoice']))
 {
 	$order = $okay->orders->get_order(intval($_REQUEST['MNT_TRANSACTION_ID']));

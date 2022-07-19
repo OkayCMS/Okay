@@ -1,5 +1,7 @@
 <?php
 
+use WebPConvert\WebPConvert;
+
 require_once('Okay.php');
 
 class Image extends Okay {
@@ -20,7 +22,7 @@ class Image extends Okay {
      * @return $string имя файла превью
      */
     public function resize($filename, $original_images_dir = null, $resized_images_dir = null) {
-        list($source_file, $width , $height, $set_watermark, $crop_params) = $this->get_resize_params($filename);
+        list($source_file, $width , $height, $set_watermark, $crop_params, $pseudo_webp) = $this->get_resize_params($filename);
 
         $size = $width.'x'.$height.($set_watermark === true ? 'w' : '');
         if ($resized_images_dir === null || $resized_images_dir == $this->config->resized_images_dir) {
@@ -33,7 +35,7 @@ class Image extends Okay {
             exit();
         }
         
-        // Если вайл удаленный (http://), зальем его себе
+        // Если файл удаленный (http://), зальем его себе
         if (preg_match("~^https?://~", $source_file)) {
             // Имя оригинального файла
             if(!$original_file = $this->download_image($source_file)) {
@@ -79,19 +81,27 @@ class Image extends Okay {
         } else {
             $this->image_constrain_gd($originals_dir.$original_file, $preview_dir.$resized_file, $width, $height, $watermark, $watermark_offet_x, $watermark_offet_y);
         }
-        
-        return $preview_dir.$resized_file;
+
+        $destination = $preview_dir.$resized_file;
+
+        // Если запросили псевдо webp, создаем еще дубль такого изображения в формате webp
+        if ($pseudo_webp) {
+            $source = $destination;
+            $destination = $source.'.webp';
+            WebPConvert::convert($source, $destination);
+        }
+
+        return $destination;
     }
 
     /*Добавление параметров ресайза для изображения*/
     public function add_resize_params($filename, $width=0, $height=0, $set_watermark=false, $crop_params = array()) {
-        $path_parts = pathinfo($filename);
-        if('.' != $path_parts["dirname"]) {
-            $file = $path_parts["dirname"].'/'.$path_parts["filename"];
+        if('.' != ($dirname = pathinfo($filename,  PATHINFO_DIRNAME))) {
+            $file = $dirname.'/'.pathinfo($filename, PATHINFO_FILENAME);
         } else {
-            $file = $path_parts["filename"];
+            $file = pathinfo($filename, PATHINFO_FILENAME);
         }
-        $ext = $path_parts["extension"];
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
         
         if($width>0 || $height>0) {
             $resized_filename = $file.'.'.($width>0?$width:'').'x'.($height>0?$height:'').($set_watermark?'w':'');
@@ -109,7 +119,7 @@ class Image extends Okay {
     /*Выборка параметров изображения для ресайза*/
     public function get_resize_params($filename) {
         // Определаяем параметры ресайза
-        if(!preg_match('/(.+)\.([0-9]*)x([0-9]*)(w)?(\.(left|center|right)\.(top|center|bottom))?\.([^\.]+)$/', $filename, $matches)) {
+        if(!preg_match('/(.+)\.([0-9]*)x([0-9]*)(w)?(\.(left|center|right)\.(top|center|bottom))?\.([^.]+)(\.webp)?$/', $filename, $matches)) {
             return false;
         }
 
@@ -118,6 +128,7 @@ class Image extends Okay {
         $height = $matches[3];               // высота будущего изображения
         $set_watermark = $matches[4] == 'w'; // ставить ли водяной знак
         $ext = $matches[8];                  // расширение файла
+        $pseudo_webp = !empty($matches[9]);   // признак что запрашивается webp, но оригинал в jpeg или png
 
         // crop params
         $crop_params = [];
@@ -126,7 +137,7 @@ class Image extends Okay {
             $crop_params['y_pos'] = $matches[7];
         }
 
-        return array($file.'.'.$ext, $width, $height, $set_watermark, $crop_params);
+        return array($file.'.'.$ext, $width, $height, $set_watermark, $crop_params, $pseudo_webp);
     }
 
     /*Загрузка изображения*/
@@ -264,9 +275,7 @@ class Image extends Okay {
      */
     private function image_constrain_gd($src_file, $dst_file, $max_w, $max_h, $watermark=null, $watermark_offet_x=0, $watermark_offet_y=0) {
         $quality = 100;
-        if (!is_dir($dst_dir = pathinfo($dst_file,PATHINFO_DIRNAME))) {
-           mkdir($dst_dir, 0777, true);
-        }
+
         // Параметры исходного изображения
         @list($src_w, $src_h, $src_type) = array_values(getimagesize($src_file));
         $src_type = image_type_to_mime_type($src_type);
@@ -405,9 +414,6 @@ class Image extends Okay {
         $thumb = new Imagick();
 
         $sharpen = 0.2;
-        if (!is_dir($dst_dir = pathinfo($dst_file,PATHINFO_DIRNAME))) {
-           mkdir($dst_dir, 0777, true);
-        }
         
         // Читаем изображение
         if(!$thumb->readImage($src_file)) {
@@ -580,6 +586,13 @@ class Image extends Okay {
                                 @unlink($f);
                             }
                         }
+
+                        $rezised_images = glob($this->config->root_dir.$resized_dir.$file.".*x*.".$ext.".webp");
+                        if(is_array($rezised_images)) {
+                            foreach ($rezised_images as $f) {
+                                @unlink($f);
+                            }
+                        }
                     }
     
                     @unlink($this->config->root_dir.$original_dir.$filename);
@@ -604,6 +617,13 @@ class Image extends Okay {
                     // Удалить все ресайзы
                     if (!empty($resized_dir)) {
                         $rezised_images = glob($this->config->root_dir.$resized_dir.$file.".*x*.".$ext);
+                        if(is_array($rezised_images)) {
+                            foreach ($rezised_images as $f) {
+                                @unlink($f);
+                            }
+                        }
+
+                        $rezised_images = glob($this->config->root_dir.$resized_dir.$file.".*x*.".$ext.".webp");
                         if(is_array($rezised_images)) {
                             foreach ($rezised_images as $f) {
                                 @unlink($f);

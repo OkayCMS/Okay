@@ -42,7 +42,13 @@
             <td class="purchase_image">
                 <a href="{$lang_link}products/{$purchase->product->url}">
                     {if $purchase->product->image}
-                        <img src="{$purchase->product->image->filename|resize:50:50}" alt="{$purchase->product_name|escape}" title="{$purchase->product_name|escape}">
+                        <picture>
+                            {if $settings->support_webp}
+                                <source type="image/webp" srcset="{$purchase->product->image->filename|resize:50:50}.webp">
+                            {/if}
+                            <source srcset="{$purchase->product->image->filename|resize:50:50}">
+                            <img src="{$purchase->product->image->filename|resize:50:50}" alt="{$purchase->product_name|escape}" title="{$purchase->product_name|escape}">
+                        </picture>
                     {else}
                         <img width="50" height="50" src="design/{$settings->theme}/images/no_image.png" alt="{$purchase->product->name|escape}" title="{$purchase->product->name|escape}">
                     {/if}
@@ -62,7 +68,7 @@
             {* Price per unit *}
             <td class="purchase_price purchase__price--wrap">
                 <span class="nowrap">
-                    {($purchase->variant->price)|convert} {$currency->sign|escape} {if $purchase->units}/ {$purchase->units|escape}{/if}</span>
+                    {$purchase->price|format} {$currency->sign|escape} {if $purchase->units}/ {$purchase->units|escape}{/if}</span>
             </td>
 
             {* Quantity *}
@@ -70,7 +76,7 @@
 
             {* Extended price *}
             <td class="purchase_sum">
-                <span class="nowrap">{($purchase->price*$purchase->amount)|convert} {$currency->sign|escape}</span>
+                <span class="nowrap">{($purchase->price*$purchase->amount)|format} {$currency->sign|escape}</span>
             </td>
         </tr>
     {/foreach}
@@ -95,7 +101,7 @@
             </td>
             <td></td>
             <td>{$order->coupon->coupon_percent|escape} %</td>
-            <td>{$order->coupon_discount|convert} {$currency->sign|escape}</td>
+            <td>{$order->coupon_discount|format} {$currency->sign|escape}</td>
         </tr>
     {/if}
 
@@ -109,7 +115,7 @@
             <td></td>
             <td></td>
             {if !$order->separate_delivery}
-                <td>{$order->delivery_price|convert} {$currency->sign|escape}</td>
+                <td>{$order->delivery_price|format} {$currency->sign|escape}</td>
             {else}
                 <td></td>
             {/if}
@@ -121,7 +127,7 @@
         <tr>
             <td colspan="5" class="purchase_total">
                 <span data-language="cart_total_price">{$lang->cart_total_price}:</span>
-                <span class="total_sum nowrap">{$order->total_price|convert} {$currency->sign|escape}</span>
+                <span class="total_sum nowrap">{$order->total_price|format} {$currency->sign|escape}</span>
             </td>
         </tr>
     </tfoot>
@@ -156,7 +162,7 @@
                     <td>
                         <span data-language="order_name">{$lang->order_name}</span>
                     </td>
-                    <td>{$order->name|escape}</td>
+                    <td>{$order->name|escape} {$order->surname|escape}</td>
                 </tr>
                 <tr>
                     <td>
@@ -217,14 +223,20 @@
 
                                     <span class="delivery_name">
                                         {if $payment_method->image}
-                                            <img src="{$payment_method->image|resize:50:50:false:$config->resized_payments_dir}"/>
+                                            <picture>
+                                                {if $settings->support_webp}
+                                                    <source type="image/webp" srcset="{$payment_method->image|resize:50:50:false:$config->resized_payments_dir}.webp">
+                                                {/if}
+                                                <source srcset="{$payment_method->image|resize:50:50:false:$config->resized_payments_dir}">
+                                                <img src="{$payment_method->image|resize:50:50:false:$config->resized_payments_dir}"/>
+                                            </picture>
                                         {/if}
                                         {$total_price_with_delivery = $cart->total_price}
                                         {if !$delivery->separate_payment && $cart->total_price < $delivery->free_from}
                                             {$total_price_with_delivery = $cart->total_price + $delivery->price}
                                         {/if}
                                     
-                                        {$payment_method->name|escape} {$lang->cart_deliveries_to_pay} <span class="nowrap">{$order->total_price|convert:$payment_method->currency_id} {$all_currencies[$payment_method->currency_id]->sign}</span>
+                                        {$payment_method->name|escape} {$lang->cart_deliveries_to_pay} <span class="nowrap">{($order->total_price|convert:null:false:true)|convert:$payment_method->currency_id} {$all_currencies[$payment_method->currency_id]->sign}</span>
                                     </span>
                                 </label>
                                 <div class="delivery_description">

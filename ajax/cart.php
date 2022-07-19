@@ -13,11 +13,7 @@
 
     /*Определяем валюту*/
 	$currencies = $okay->money->get_currencies(array('enabled'=>1));
-    if(isset($_SESSION['currency_id'])) {
-        $currency = $okay->money->get_currency($_SESSION['currency_id']);
-    } else {
-        $currency = reset($currencies);
-    }
+    $currency = $okay->money->get_current_currency();
     $okay->design->assign('currency',	$currency);
 
     /*Определяем язык*/

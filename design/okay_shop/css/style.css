@@ -449,13 +449,6 @@ header a {
     left: 15px;
     background: url(../images/sprite.png) no-repeat -46px -304px;
 }
-.openmenu .menu_switch::before {
-    width: 14px;
-    height: 14px;
-    top: 12px;
-    left: 17px;
-    background-position: -48px -320px;
-}
 .informers {
     float: right;
 }
@@ -512,6 +505,7 @@ header a {
 }
 .wish_icon,
 .compare_icon,
+.filter_icon,
 .angle_icon {
     display: inline-block;
     vertical-align: middle;
@@ -526,7 +520,12 @@ header a {
 .compare_icon {
     background-position: 0px 0px;
 }
-.angle_icon    {
+.filter_icon {
+    width: 24px;
+    height: 20px;
+    background-position: -35px -49px;
+}
+.angle_icon {
     height: 10px;
     background-position: 0px -32px;
 }
@@ -734,36 +733,18 @@ header a {
     left: 0;
     min-width: 100%;
 }
-.category_item {
-    position: relative;
-}
-.category_link {
-    position: relative;
-    display: block;
-    padding: 6px 30px 6px 20px;
-    border-bottom: 1px solid #23aee2;
-}
-.category_item .arrow_right {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    top: 50%;
-    right: 12px;
-    margin-top: -8px;
-    font-size: 0;
-    color: #23aee2;
-}
 .cat_switch {
+    display: none;
     position: absolute;
     top: 0;
     right: 0;
     width: 40px;
-    height: 31px;
+    height: 36px;
 }
 .cat_switch::after {
     content: "";
     position: absolute;
-    top: 11px;
+    top: 13px;
     right: 15px;
     width: 16px;
     height: 8px;
@@ -1921,17 +1902,20 @@ header a {
 .selected_filter_box .selected_filter_item:hover .s_filter_link{
     color: #fff;
 }
-.filters_heading {
+.filters_button {
     position: relative;
     font-weight: bold;
     font-size: 18px;
     padding: 9px 15px;
     cursor: pointer;
 }
-.filters_heading .angle_icon {
+.mmenu_header {
+    display: none;
+}
+.filters_button .filter_icon {
     position: absolute;
     right: 20px;
-    top: 18px;
+    top: 14px;
 }
 .filter_item {
     line-height: 24px;
@@ -2250,10 +2234,6 @@ header a {
 }
 
 /* main menu */
-.menu_group_header{
-    float: left;
-}
-
 .menu_list_1{
     padding-left: 0px;
     list-style: none;

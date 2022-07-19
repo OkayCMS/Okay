@@ -59,7 +59,7 @@
                         {/if}
                         {if $features_aliases}
                             {foreach $features_aliases as $fa}
-                                <li>{literal}{$o_alias_{/literal}{$fa->variable}{literal}}{/literal} - {$btr->seo_patterns_ajax_feature_val|escape} ({$fa->name|escape})</li>
+                                <li>{literal}{$fv_alias_{/literal}{$fa->variable}{literal}}{/literal} - {$btr->seo_patterns_ajax_feature_val|escape} ({$fa->name|escape})</li>
                             {/foreach}
                         {/if}
 

@@ -19,7 +19,13 @@
         {* Product image *}
         <a class="preview_image" href="{if $smarty.get.module=='ComparisonView'}{$product->image->filename|resize:800:600:w}{else}{$lang_link}products/{$product->url}{/if}" {if $smarty.get.module=='ComparisonView'}data-fancybox="group" data-caption="{$product->name|escape}"{/if}>
             {if $product->image->filename}
-                <img class="fn_img preview_img" src="{$product->image->filename|resize:200:200}" alt="{$product->name|escape}" title="{$product->name|escape}"/>
+                <picture>
+                    {if $settings->support_webp}
+                        <source type="image/webp" srcset="{$product->image->filename|resize:200:200}.webp">
+                    {/if}
+                    <source srcset="{$product->image->filename|resize:200:200}">
+                    <img class="fn_img preview_img" src="{$product->image->filename|resize:200:200}" alt="{$product->name|escape}" title="{$product->name|escape}"/>
+                </picture>
             {else}
                 <img class="fn_img preview_img" src="design/{$settings->theme}/images/no_image.png" width="250" height="250" alt="{$product->name|escape}"/>
             {/if}
@@ -54,12 +60,12 @@
         <div class="price_container">
             {* Old price *}
             <div class="old_price{if !$product->variant->compare_price} hidden{/if}">
-                <span class="fn_old_price">{$product->variant->compare_price|convert}</span> <span>{$currency->sign|escape}</span>
+                <span class="fn_old_price">{$product->variant->compare_price|format}</span> <span>{$currency->sign|escape}</span>
             </div>
 
             {* Price *}
             <div class="price">
-                <span class="fn_price">{$product->variant->price|convert}</span> <span>{$currency->sign|escape}</span>
+                <span class="fn_price">{$product->variant->price|format}</span> <span>{$currency->sign|escape}</span>
             </div>
         </div>
 
@@ -79,7 +85,7 @@
             {* Product variants *}
             <select name="variant" class="fn_variant variant_select {if $product->variants|count == 1}hidden{/if}">
                 {foreach $product->variants as $v}
-                    <option value="{$v->id}" data-price="{$v->price|convert}" data-stock="{$v->stock}"{if $v->compare_price > 0} data-cprice="{$v->compare_price|convert}"{/if}{if $v->sku} data-sku="{$v->sku|escape}"{/if}>{if $v->name}{$v->name|escape}{else}{$product->name|escape}{/if}</option>
+                    <option value="{$v->id}" data-price="{$v->price|format}" data-stock="{$v->stock}"{if $v->compare_price > 0} data-cprice="{$v->compare_price|format}"{/if}{if $v->sku} data-sku="{$v->sku|escape}"{/if}>{if $v->name}{$v->name|escape}{else}{$product->name|escape}{/if}</option>
                 {/foreach}
             </select>
         </form>

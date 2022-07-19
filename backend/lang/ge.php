@@ -665,7 +665,10 @@ $backend_translations->user_groups_name = 'ჯგუფის დასახე
 $backend_translations->user_groups_no = 'მომხმარებელთა ჯგუფები არ არის';
 $backend_translations->user_groups_number = 'რ-ბა';
 $backend_translations->user_last_ip = 'ბოლოს დაფიქსირებული IP';
-$backend_translations->user_name = 'მიუთითეთ მომხმარებლის სახელი';
+$backend_translations->user_name = 'სახელი';
+$backend_translations->user_enter_name = 'მიუთითეთ მომხმარებლის სახელი';
+$backend_translations->user_surname = 'გვარი';
+$backend_translations->user_enter_surname = 'შეიყვანეთ მომხმარებლის გვარი';
 $backend_translations->user_not_in_group = 'არ შედის ჯგუფში';
 $backend_translations->user_options = 'მომხმარებლის პარამეტრები';
 $backend_translations->user_orders = 'მომხმარებლის შეკვეთები';
@@ -710,13 +713,7 @@ $backend_translations->currency_cents_display = 'ხურდის ასახ
 $backend_translations->currency_currencies = 'ვალუტა';
 $backend_translations->currency_delete = 'ვალუტის წაშლა';
 $backend_translations->currency_iso = 'ISO';
-$backend_translations->currency_message = 'ფასის ათწილადი ნიშნების რაოდენობა მოქმედებს მხოლოდ ფასების ასახვაზე.
-შესაძლებელია ვიზუალური შეცდომები ვალუტის კონვერტაციის დროს.
-
-მაგალითისათვის განვიხილოთ შემდეგი სიტუაცია: 
-პროდუქტის ღირებულებაა 98,10 ლარი.
-თუ ათწილადი ნიშნების რაოდენობა 0-ს ტოლია, ფასის ასახვა იქნება 98 ლარი.
-მაგრამ 10 ერთეული პროდუქტის ასახვა კალათში გამოისახება როგორც 981 ლარი.';
+$backend_translations->currency_message = 'საიტის მთავარი ვალუტაა ის, რომელიც პირველ რიგში ჩამოთვლილია. მთავარი ვალუტის შესაცვლელად, უბრალოდ გადაიტანეთ თქვენთვის საჭირო ვალუტა.';
 $backend_translations->currency_name = 'დასახელება';
 $backend_translations->currency_rate = 'კურსი';
 $backend_translations->currency_recalculate = 'გადავთვალოთ ფასები';
@@ -936,7 +933,7 @@ $backend_translations->menu_general_url = 'ბმული';
 $backend_translations->menu_general_target_blank = 'გავხსნათ ახალ ფანჯარაში';
 $backend_translations->menu_general_add = 'დაამატეთ საქონელი';
 $backend_translations->general_filter = 'ფილტრი';
-$backend_translations->feature_option_aliases_value = 'სინონიმები / ნაცვალსახელური ბრუნვები';
+$backend_translations->feature_feature_value_aliases_value = 'სინონიმები / ნაცვალსახელური ბრუნვები';
 $backend_translations->counters_counter_name = 'კოდის დასახელება';
 $backend_translations->counters_counter_position = 'კოდის მდებარეობა გვერდზე';
 $backend_translations->counters_counter_code = 'ჩასასმელი კოდი';
@@ -982,3 +979,4 @@ $backend_translations->recaptcha_v3_scores = 'reCAPTCHA V3 "Humanness", 0.0 ზ�
 $backend_translations->integration_1c = 'ინტეგრირება 1C';
 $backend_translations->orders_all_statuses = 'ყველა სტატუსი';
 $backend_translations->orders_all_labels = 'ყველა ნიშანი';
+$backend_translations->settings_enable_webp = 'მხარდაჭერის ჩართვა WebP';

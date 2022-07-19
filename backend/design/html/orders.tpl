@@ -186,7 +186,7 @@
                                     </div>
 
                                     <div class="okay_list_boding okay_list_orders_name">
-                                        <a href="{url module=OrderAdmin id=$order->id return=$smarty.server.REQUEST_URI}" class="text_dark text_bold">{$order->name|escape}</a>
+                                        <a href="{url module=OrderAdmin id=$order->id return=$smarty.server.REQUEST_URI}" class="text_dark text_bold">{$order->name|escape} {$order->surname|escape}</a>
                                         {if $order->note}
                                             <div class="note">{$order->note|escape}</div>
                                         {/if}

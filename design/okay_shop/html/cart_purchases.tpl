@@ -16,7 +16,13 @@
             <td class="purchase_image">
                 <a href="{$lang_link}products/{$purchase->product->url}">
                     {if $purchase->product->image}
-                        <img src="{$purchase->product->image->filename|resize:50:50}" alt="{$purchase->product->name|escape}" title="{$purchase->product->name|escape}">
+                        <picture>
+                            {if $settings->support_webp}
+                                <source type="image/webp" srcset="{$purchase->product->image->filename|resize:50:50}.webp">
+                            {/if}
+                            <source srcset="{$purchase->product->image->filename|resize:50:50}">
+                            <img src="{$purchase->product->image->filename|resize:50:50}" alt="{$purchase->product->name|escape}" title="{$purchase->product->name|escape}">
+                        </picture>
                     {else}
                         <img width="50" height="50" src="design/{$settings->theme}/images/no_image.png" alt="{$purchase->product->name|escape}" title="{$purchase->product->name|escape}">
                     {/if}
@@ -32,7 +38,7 @@
 
             {* Price per unit *}
             <td class="purchase__price--wrap">
-                <span class="nowrap">{($purchase->variant->price)|convert} {$currency->sign} {if $purchase->variant->units}/ {$purchase->variant->units|escape}{/if}</span>
+                <span class="nowrap">{$purchase->variant->price|format} {$currency->sign} {if $purchase->variant->units}/ {$purchase->variant->units|escape}{/if}</span>
             </td>
 
             {* Quantity *}
@@ -46,7 +52,7 @@
 
             {* Extended price *}
             <td class="purchase_sum">
-                <span class="nowrap">{($purchase->variant->price*$purchase->amount)|convert} {$currency->sign}</span>
+                <span class="nowrap">{($purchase->variant->price*$purchase->amount)|format} {$currency->sign}</span>
             </td>
 
             {* Remove button *}
@@ -78,7 +84,7 @@
                 <td class="text_left" data-language="cart_coupon">{$lang->cart_coupon}</td>
                 <td></td>
                 <td>{$cart->coupon->coupon_percent|escape} %</td>
-                <td>&minus; {$cart->coupon_discount|convert} {$currency->sign|escape}</td>
+                <td>&minus; {$cart->coupon_discount|format} {$currency->sign|escape}</td>
                 <td></td>
             </tr>
         {/if}
@@ -100,7 +106,7 @@
                     {/if}
                     {if $cart->coupon->min_order_price > 0}
                         <div class="message_success">
-                            {$lang->cart_coupon} {$cart->coupon->code|escape} {$lang->cart_coupon_min} {$cart->coupon->min_order_price|convert} {$currency->sign|escape}
+                            {$lang->cart_coupon} {$cart->coupon->code|escape} {$lang->cart_coupon_min} {$cart->coupon->min_order_price|format} {$currency->sign|escape}
                         </div>
                     {/if}
 
@@ -114,7 +120,7 @@
             <td {if $coupon_request}colspan="2"{else}colspan="5"{/if} class="purchase_total">
                 {* Total *}
                 <span data-language="cart_total_price">{$lang->cart_total_price}:</span>
-                <span class="total_sum nowrap">{$cart->total_price|convert} {$currency->sign|escape}</span>
+                <span class="total_sum nowrap">{$cart->total_price|format} {$currency->sign|escape}</span>
             </td>
 
             <td></td>

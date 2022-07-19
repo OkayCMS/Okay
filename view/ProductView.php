@@ -169,7 +169,7 @@ class ProductView extends View {
         $parts = array(
             '{$brand}'    => ($this->design->get_var('brand') ? $this->design->get_var('brand')->name : ''),
             '{$product}'  => ($product->name ? $product->name : ''),
-            '{$price}'    => ($product->variant->price != null ? $this->money->convert($product->variant->price, $this->currency->id, false).' '.$this->currency->sign : ''),
+            '{$price}'    => ($product->variant->price != null ? $product->variant->price.' '.$this->currency->sign : ''),
             '{$sitename}' => ($this->settings->site_name ? $this->settings->site_name : '')
         );
         

@@ -425,7 +425,7 @@
             union_second_value_id = $('input[name="union_second_value_id"]');
 
         $(".fn_union_main_value").devbridgeAutocomplete({
-            serviceUrl:'ajax/options_autocomplete.php',
+            serviceUrl:'ajax/get_features_values.php',
             minChars:0,
             params: {feature_id:{/literal}{$feature->id}{literal}},
             noCache: false,
@@ -439,7 +439,7 @@
         });
 
         $(".fn_union_second_value").devbridgeAutocomplete({
-            serviceUrl:'ajax/options_autocomplete.php',
+            serviceUrl:'ajax/get_features_values.php',
             minChars:0,
             params: {feature_id:{/literal}{$feature->id}{literal}},
             noCache: false,

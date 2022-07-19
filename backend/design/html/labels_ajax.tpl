@@ -10,6 +10,7 @@
     {if $order->labels}
         {foreach $order->labels as $l}
             <span class="tag" style="background-color:#{$l->color};" >{$l->name|escape}</span>
+            <input type="hidden" name="order_labels[]" value="{$l->id}">
         {/foreach}
     {/if}
 {/if}

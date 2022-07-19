@@ -72,7 +72,7 @@ $okay->db->query("SELECT
         v.currency_id 
     FROM __variants v 
     LEFT JOIN __products p ON v.product_id=p.id
-    left join __currencies as c on(c.id=v.currency_id)
+    LEFT JOIN __currencies c ON c.id=v.currency_id
     LEFT JOIN __brands b on (b.id = p.brand_id)
     WHERE 
         1 
@@ -119,7 +119,7 @@ foreach($products as $p) {
         $variant_url = '?variant='.$p->variant_id;
     }
     $prev_product_id = $p->product_id;
-    
+
     //если задана валюта варианта - переводим к основной
     if ($p->currency_id > 0) {
         if ($p->rate_from != $p->rate_to) {

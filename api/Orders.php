@@ -30,6 +30,7 @@ class Orders extends Okay {
                 o.date, 
                 o.user_id, 
                 o.name, 
+                o.surname, 
                 o.address, 
                 o.phone, 
                 o.email, 
@@ -47,8 +48,20 @@ class Orders extends Okay {
             LIMIT 1
         ");
 
-        if($this->db->query($query)) {
-            return $this->db->result();
+        $this->db->query($query);
+        if($order = $this->db->result()){
+            if (defined('IS_CLIENT') && isset($_SESSION['currency_id'])) {
+                $currency = $this->money->get_currency(intval($_SESSION['currency_id']));
+                $coef = $currency->rate_from / $currency->rate_to;
+                $order->delivery_price = round($order->delivery_price * $coef, $currency->cents);
+                $order->coupon_discount = round($order->coupon_discount * $coef, $currency->cents);
+                $this->db->query("SELECT SUM(round(p.price*?,?)*p.amount) as total_price FROM __purchases p WHERE p.order_id=?", $coef, $currency->cents, $order->id);
+                $order->total_price = $this->db->result('total_price');
+                $order->total_price = round($order->total_price * (100-$order->discount)/100, $currency->cents);
+                $order->total_price += $order->delivery_price;
+                $order->total_price -= $order->coupon_discount;
+            }
+            return $order;
         } else {
             return false;
         }
@@ -77,6 +90,7 @@ class Orders extends Okay {
                 o.date, 
                 o.user_id, 
                 o.name, 
+                o.surname, 
                 o.address, 
                 o.phone, 
                 o.email, 
@@ -135,6 +149,7 @@ class Orders extends Okay {
                 $keyword_filter .= $this->db->placehold(' AND (
                     o.id = "'.$this->db->escape(trim($keyword)).'" 
                     OR o.name LIKE "%'.$this->db->escape(trim($keyword)).'%" 
+                    OR o.surname LIKE "%'.$this->db->escape(trim($keyword)).'%" 
                     OR REPLACE(o.phone, "-", "")  LIKE "%'.$this->db->escape(str_replace('-', '', trim($keyword))).'%" 
                     OR o.address LIKE "%'.$this->db->escape(trim($keyword)).'%" 
                     OR o.email LIKE "%'.$this->db->escape(trim($keyword)).'%"
@@ -258,7 +273,15 @@ class Orders extends Okay {
         
         $query = $this->db->placehold("SELECT * FROM __purchases WHERE 1 $order_id_filter ORDER BY id");
         $this->db->query($query);
-        return $this->db->results();
+        $purchases = $this->db->results();
+        if (defined('IS_CLIENT') && isset($_SESSION['currency_id']) && !empty($purchases)) {
+            $currency = $this->money->get_currency(intval($_SESSION['currency_id']));
+            $coef = $currency->rate_from/$currency->rate_to;
+            foreach ($purchases as $purchase) {
+                $purchase->price = round($purchase->price * $coef, $currency->cents);
+            }
+        }
+        return $purchases;
     }
 
     /*Обновление покупки(товара)*/
@@ -462,13 +485,13 @@ class Orders extends Okay {
             return false;
         }
 
-        $query = $this->db->placehold("UPDATE __orders o SET o.total_price=IFNULL((SELECT SUM(p.price*p.amount)*(100-o.discount)/100 FROM __purchases p WHERE p.order_id=o.id), 0)+o.delivery_price*(1-IFNULL(o.separate_delivery, 0))-o.coupon_discount WHERE o.id=? LIMIT 1", $order->id);
+        $currency = $this->money->get_currency();
+        $query = $this->db->placehold("UPDATE __orders o SET o.total_price=IFNULL((SELECT round(SUM(round(p.price,?)*p.amount)*(100-o.discount)/100,?) FROM __purchases p WHERE p.order_id=o.id), 0)+round(o.delivery_price,?)*(1-IFNULL(o.separate_delivery, 0))-round(o.coupon_discount,?) WHERE o.id=? LIMIT 1", $currency->cents, $currency->cents, $currency->cents, $currency->cents, $order->id);
         $this->db->query($query);
         return $order->id;
     }
 
-    public function get_neighbors_orders($filter)
-    {
+    public function get_neighbors_orders($filter) {
         if (empty($filter['id'])) {
             return false;
         }

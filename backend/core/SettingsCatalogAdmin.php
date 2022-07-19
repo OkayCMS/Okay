@@ -32,6 +32,12 @@ class SettingsCatalogAdmin extends Okay {
             } else {
                 $this->settings->is_preorder = 0;
             }
+
+            if($this->request->post('support_webp', 'integer')){
+                $this->settings->support_webp = $this->request->post('support_webp', 'integer');
+            } else {
+                $this->settings->support_webp = 0;
+            }
             // Водяной знак
             $clear_image_cache = false;
 

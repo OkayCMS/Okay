@@ -262,6 +262,9 @@ class ProductsView extends View {
         if(!empty($this->meta['keywords'])) {
             $this->meta['keywords']     = ' '.$this->meta['keywords'];
         }
+        if(!empty($this->meta['description'])) {
+            $this->meta['description']     = ' '.$this->meta['description'];
+        }
 
         if($this->set_canonical) {
             $this->meta['h1'] = $this->meta['title'] = $this->meta['keywords'] = $this->meta['description'] = '';
@@ -276,7 +279,7 @@ class ProductsView extends View {
         $this->design->smarty->registerPlugin('function', 'furl', array($this, 'filter_chpu_url'));
     }
 
-    public function filter_chpu_url($params, &$smarty) {
+    public function filter_chpu_url($params, $smarty) {
         if(is_array(reset($params))) {
             $params = reset($params);
         }
@@ -480,12 +483,6 @@ class ProductsView extends View {
 
         $prices = array();
         $prices['current'] = $this->request->get('p');
-        if (isset($prices['current']['min'])) {
-            $prices['current']['min'] = $this->money->convert($prices['current']['min'], null, false, true);
-        }
-        if (isset($prices['current']['max'])) {
-            $prices['current']['max'] = $this->money->convert($prices['current']['max'], null, false, true);
-        }
         
         if (isset($prices['current']['min']) && isset($prices['current']['max']) && $prices['current']['max'] != '' && $prices['current']['min'] != '') {
             $filter['price'] = $prices['current'];
@@ -553,14 +550,6 @@ class ProductsView extends View {
             $prices['current'] = $filter['price'] = $price_filter['price_range'];
         }
 
-        if (!empty($filter['price']['min'])) {
-            $filter['price']['min'] = round($this->money->convert($filter['price']['min'], null, false));
-        }
-
-        if (!empty($filter['price']['max'])) {
-            $filter['price']['max'] = round($this->money->convert($filter['price']['max'], null, false));
-        }
-        
         // Если задано ключевое слово
         $keyword = $this->request->get('keyword');
         if (!empty($keyword)) {
@@ -737,15 +726,7 @@ class ProductsView extends View {
         $range_filter = $filter;
         $range_filter['get_price'] = 1;
         $prices->range = $this->products->get_products($range_filter);
-        
-        if (isset($prices->current->min)) {
-            $prices->current->min = round($this->money->convert($prices->current->min, null, false));
-        }
-        
-        if (isset($prices->current->max)) {
-            $prices->current->max = round($this->money->convert($prices->current->max, null, false));
-        }
-        
+
         // Вдруг вылезли за диапазон доступного...
         if (isset($prices->current->min) && $prices->range->min !== '') {
             if ($prices->current->min < $prices->range->min) {
@@ -865,10 +846,10 @@ class ProductsView extends View {
                 }
                 // Если только одно значение одного свойства, получим для него все алиасы значения
                 if (count($filter['features']) == 1 && (count($translits = reset($filter['features']))) == 1) {
-                    $option_translit = reset($translits);
+                    $feature_value_translit = reset($translits);
                 }
-                foreach ($this->features_aliases->get_options_aliases_values(array('feature_id'=>array_keys($filter['features']), 'translit'=>$option_translit)) as $ov) {
-                    $parts['{$o_alias_'.$ov->variable.'}'] = $ov->value;
+                foreach ($this->features_aliases->get_features_values_aliases_values(array('feature_id'=>array_keys($filter['features']), 'translit'=>$feature_value_translit)) as $fvv) {
+                    $parts['{$fv_alias_'.$fvv->variable.'}'] = $fvv->value;
                 }
             }
 
